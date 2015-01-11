@@ -20,6 +20,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return miniPlayerViewController?.trackTableViewController
         }
     }
+
+    let trialFeeds = [
+        "feed/http://spincoaster.com/feed",
+        "feed/http://matome.naver.jp/feed/topic/1Hinb"
+    ]
     
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.

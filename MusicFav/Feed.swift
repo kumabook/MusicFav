@@ -9,21 +9,38 @@
 import UIKit
 import SwiftyJSON
 
-class Feed {
-    let id:      String
-    let title:       String
-    let velocity:    Double
-    let curated:     Bool
-//    let featured:    Bool
+class Feed: Stream {
+    let id:          String
     let subscribers: Int
-    let website:     String
+    let title:       String
+    let description: String?
+    let language:    String?
+    let velocity:    Double?
+    let website:     String?
+    let topics:      [String]?
+    let status:      String?
+
+    let curated:     Bool?
+    let featured:    Bool?
+
     init(json: JSON) {
-        id          = json["feedId"].string!
-        title       = json["title"].string!
-        velocity    = json["velocity"].double!
-        curated     = json["curated"].bool!
-//        featured    = json["featured"].int!
+        if let fid = json["id"].string {
+            id      = fid
+        } else if let fid = json["feedId"].string {
+            id      = fid
+        } else {
+            id      = "unknownId"
+        }
         subscribers = json["subscribers"].int!
-        website     = json["website"].string!
+        title       = json["title"].string!
+        description = json["description"].string?
+        language    = json["language"].string?
+        velocity    = json["velocity"].double
+        website     = json["website"].string?
+        topics      = json["topics"].array?.map({$0.string!})
+        status      = json["status"].string
+
+        curated     = json["curated"].bool?
+        featured    = json["featured"].bool?
     }
 }

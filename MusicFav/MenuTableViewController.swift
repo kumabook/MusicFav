@@ -11,32 +11,42 @@ import ReactiveCocoa
 import LlamaKit
 
 
-class MenuTableViewController: UITableViewController {
+class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewDataSource {
     enum Section: Int {
-        case General      = 0
-        case FeedlyStream = 1
-        static let count  = 2
-
-        var title: String? {
-            switch self {
-            case .General:      return nil
-            case .FeedlyStream: return "Streams"
-            }
-        }
-    }
-    
-    enum GeneralMenu: Int {
-        case Home        = 0
+        case General     = 0
+        case Feedly      = 1
+        case Pocket      = 2
+        case Twitter     = 3
+        static let count = 4
 
         var title: String {
             switch self {
-            case .Home:      return "Home"
+            case .General: return "All"
+            case .Pocket:  return "Pocket"
+            case .Twitter: return "Twitter"
+            case .Feedly:  return "Feeds"
+            }
+        }
+        func child(viewController: MenuTableViewController, index: Int) -> AnyObject {
+            switch self {
+            case .General: return []
+            case .Pocket:  return []
+            case .Twitter: return []
+            case .Feedly:  return viewController.streams[index]
+            }
+        }
+        func numOfChild(viewController: MenuTableViewController) -> Int {
+            switch self {
+            case .General: return 0
+            case .Pocket:  return 0
+            case .Twitter: return 0
+            case .Feedly:  return viewController.streams.count
             }
         }
     }
 
-    var feedlyStreams                 = []
-    var subscriptions: [Subscription] = []
+    var treeView: RATreeView?
+    var streams:  [Stream] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,9 +59,17 @@ class MenuTableViewController: UITableViewController {
                                              target: self,
                                              action: "addStream")
         self.navigationItem.leftBarButtonItems  = [settingsButton, addStreamButton]
-
-        self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
-        self.fetchSubscriptions()
+        self.treeView = RATreeView(frame: self.view.frame)
+        self.treeView?.backgroundColor = UIColor.whiteColor()
+        self.treeView?.delegate = self;
+        self.treeView?.dataSource = self;
+        self.treeView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
+        self.view.addSubview(self.treeView!)
+        if FeedlyAPIClient.sharedInstance.isLoggedIn {
+            self.fetchSubscriptions()
+        } else {
+            self.fetchTrialFeeds()
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -64,61 +82,99 @@ class MenuTableViewController: UITableViewController {
             .deliverOn(MainScheduler())
             .start(
                 next: {subscriptions in
-                    println(subscriptions)
-                    self.subscriptions = subscriptions
+                    self.streams = subscriptions
                 },
                 error: {error in
                     println("--failure")
                 },
                 completed: {
-                    self.tableView.reloadData()
+                    self.treeView!.reloadData()
             })
     }
 
-
-    // MARK: - Table view data source
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return Section.count
+    func fetchTrialFeeds() {
+        let client      = FeedlyAPIClient.sharedInstance
+        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+        client.fetchFeedsByIds(appDelegate.trialFeeds)
+            .deliverOn(MainScheduler())
+            .start(
+                next: {feeds in
+                    self.streams = feeds
+                },
+                error: {error in
+                    println("--failure")
+                },
+                completed: {
+                    self.treeView!.reloadData()
+            })
     }
     
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return  Section(rawValue: section)!.title
-    }
-
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch Section(rawValue: section)! {
-        case .General:
-            return 1
-        case .FeedlyStream:
-            return subscriptions.count
+    // MARK: - RATreeView data source
+    
+    func treeView(treeView: RATreeView!, numberOfChildrenOfItem item: AnyObject!) -> Int {
+        if item == nil {
+            return Section.count
         }
-    }
-
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as UITableViewCell
-        switch Section(rawValue: indexPath.section)! {
-        case .General:
-            cell.textLabel?.text = GeneralMenu(rawValue: indexPath.item)?.title
-            return cell
-        case .FeedlyStream:
-            cell.textLabel?.text = subscriptions[indexPath.item].title
-            return cell
+        if let rawValue = item as? Int {
+            return Section(rawValue: rawValue)!.numOfChild(self)
         }
+        return 0
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        switch Section(rawValue: indexPath.section)! {
-        case .General:
-            switch GeneralMenu(rawValue: indexPath.item)! {
-            case .Home:
-                showStream(nil)
+    func treeView(treeView: RATreeView!, cellForItem item: AnyObject!) -> UITableViewCell! {
+        let cell = treeView.dequeueReusableCellWithIdentifier("reuseIdentifier") as UITableViewCell
+        if item == nil {
+            cell.textLabel?.text = "Nothing"
+        } else if let rawValue = item as? Int {
+            let section = Section(rawValue: rawValue)!
+            let num     = section.numOfChild(self)
+            if num > 0 {
+                cell.textLabel?.text = "\(section.title) (\(section.numOfChild(self)))"
+            } else {
+                cell.textLabel?.text = "\(section.title)"
             }
-        case .FeedlyStream:
-                showStream(subscriptions[indexPath.item].id)
+        } else if let stream = item as? Stream {
+            cell.textLabel?.text = "     " + stream.title
+        }
+        return cell
+    }
+    
+    func treeView(treeView: RATreeView!, child index: Int, ofItem item: AnyObject!) -> AnyObject! {
+        if item == nil {
+            return index
+        }
+        if let rawValue = item as? Int {
+            return Section(rawValue: rawValue)!.child(self, index: index)
+        }
+        return "Nothing"
+    }
+    
+    func treeView(treeView: RATreeView!, didSelectRowForItem item: AnyObject!) {
+        if item == nil {
+        } else if let rawValue = item as? Int {
+            showStream(section:Section(rawValue: rawValue)!)
+        } else if let stream = item as? Stream {
+            showStream(streamId:stream.id)
         }
     }
     
-    func showStream(streamId: String?) {
+    func showStream(#section: Section) {
+        let appDelegate        = UIApplication.sharedApplication().delegate as AppDelegate
+        let mainViewController = appDelegate.miniPlayerViewController?.mainViewController
+        switch section {
+        case .General:
+            mainViewController?.centerPanel = UINavigationController(rootViewController: TimelineTableViewController(streamId: nil))
+        case .Pocket:
+            return
+        case .Twitter:
+            return
+        case .Feedly:
+            return
+        }
+        mainViewController?.showCenterPanelAnimated(true)
+    }
+    
+    func showStream(#streamId: String?) {
         let appDelegate                 = UIApplication.sharedApplication().delegate as AppDelegate
         let mainViewController          = appDelegate.miniPlayerViewController?.mainViewController
         mainViewController?.centerPanel = UINavigationController(rootViewController: TimelineTableViewController(streamId: streamId))

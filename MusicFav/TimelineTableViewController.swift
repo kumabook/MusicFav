@@ -12,11 +12,6 @@ import LlamaKit
 import SwiftyJSON
 
 class TimelineTableViewController: UITableViewController {
-    
-    let trialFeeds = [
-        "feed/http://spincoaster.com/feed",
-        "feed/http://matome.naver.jp/feed/topic/1Hinb"
-    ]
     var currentIndex = 0
     
     enum State {
@@ -49,10 +44,6 @@ class TimelineTableViewController: UITableViewController {
     
     override func loadView() {
         super.loadView()
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "playlist"),
-                                                            style: UIBarButtonItemStyle.Plain,
-                                                           target: self,
-                                                           action: "showPlaylist")
     }
 
     override func viewDidLoad() {
@@ -60,6 +51,10 @@ class TimelineTableViewController: UITableViewController {
         let nib = UINib(nibName: "TimelineTableViewCell", bundle: nil)
         tableView.registerNib(nib, forCellReuseIdentifier: tableCellReuseIdentifier)
         clearsSelectionOnViewWillAppear = true
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "playlist"),
+            style: UIBarButtonItemStyle.Plain,
+            target: self,
+            action: "showPlaylist")
         
         indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         indicator.bounds = CGRect(x: 0,
@@ -76,8 +71,9 @@ class TimelineTableViewController: UITableViewController {
         reloadButton.setTitle("Sorry, network error occured.", forState:UIControlState.Normal)
         reloadButton.frame = CGRectMake(0, 0, tableView.frame.size.width, 44);
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "initialize", name: "loggedOut", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "initialize", name: "loggedIn", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "loadStream", name: "loggedOut", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "loadStream", name: "loggedIn", object: nil)
+
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action:"fetchLatestEntries", forControlEvents:UIControlEvents.ValueChanged)
         self.updateLastUpdated(nil)
@@ -95,11 +91,7 @@ class TimelineTableViewController: UITableViewController {
         
         entries = []
         tableView?.reloadData()
-        if let account = client.account {
-            fetchEntries()
-        } else {
-            appDelegate.miniPlayerViewController?.showOAuthViewController()
-        }
+        fetchEntries()
     }
     
     func showPlaylist() {
@@ -144,6 +136,8 @@ class TimelineTableViewController: UITableViewController {
         } else if FeedlyAPIClient.sharedInstance.isLoggedIn {
             signal = client.fetchAllEntries(newerThan: lastUpdated)
         } else {
+            self.refreshControl?.beginRefreshing()
+            self.refreshControl?.endRefreshing()
             return
         }
         self.refreshControl?.beginRefreshing()
@@ -162,7 +156,7 @@ class TimelineTableViewController: UITableViewController {
                         if let response:NSHTTPURLResponse = dic[key] as? NSHTTPURLResponse {
                             if response.statusCode == 401 {
                                 self.client.clearAllAccount()
-//                                self.loginWithOAuth()
+                                //TODO: Alert Dialog with login link
                             } else {
                             }
                         } else {
@@ -188,6 +182,8 @@ class TimelineTableViewController: UITableViewController {
         } else if FeedlyAPIClient.sharedInstance.isLoggedIn {
             signal = client.fetchAllEntries(continuation: streamContinuation)
         } else {
+            let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+            let trialFeeds  = appDelegate.trialFeeds
             if currentIndex < trialFeeds.count {
                 signal = client.fetchEntries(streamId: trialFeeds[currentIndex], continuation: nil)
                 currentIndex += 1
@@ -215,7 +211,7 @@ class TimelineTableViewController: UITableViewController {
                         if let response:NSHTTPURLResponse = dic[key] as? NSHTTPURLResponse {
                             if response.statusCode == 401 {
                                 self.client.clearAllAccount()
-//                                self.loginWithOAuth()
+                                //TODO: Alert Dialog with login link
                             } else {
                                 self.state = State.Error
                                 self.showReloadButton()

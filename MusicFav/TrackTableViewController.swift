@@ -135,7 +135,7 @@ class TrackTableViewController: UITableViewController {
     
     // MARK: UITableViewDelegate
     
-    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let p = playlist {
             let track = p.tracks[indexPath.item]
             let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate

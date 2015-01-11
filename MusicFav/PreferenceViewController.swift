@@ -57,10 +57,9 @@ class PreferenceViewController: UITableViewController {
     }
     
     func showLoginViewController() {
-        parentViewController?.dismissViewControllerAnimated(true, completion: {
-            let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-            appDelegate.miniPlayerViewController?.showOAuthViewController()
-        })
+        self.dismissViewControllerAnimated(false, nil)
+        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+        appDelegate.miniPlayerViewController?.showOAuthViewController()
     }
     
     func showLogoutDialog() {

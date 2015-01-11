@@ -9,19 +9,24 @@
 import UIKit
 import SwiftyJSON
 
-class Subscription: NSObject {
-    let id: String
-    let updated: Int
-    let title: String
-//    let categories: String
-//    let visualUrl: String
-    let website: String
+class Subscription: Stream {
+    let id:         String
+    let title:      String
+    let categories: [Category]
+    let website:    String
+    let visualUrl:  String?
+    let sortId:     String?
+    let updated:    Int
+    let added:      Int?
+
     init(json:JSON) {
         self.id         = json["id"].string!
-        self.updated    = json["updated"].int!
         self.title      = json["title"].string!
-//        self.categories = json["categories"].string!
-//        self.visualUrl  = json["visualUrl"].string!
         self.website    = json["website"].string!
+        self.categories = json["categories"].array!.map({Category(json: $0)})
+        self.visualUrl  = json["visualUrl"].string?
+        self.sortId     = json["sortid"].string?
+        self.updated    = json["updated"].int!
+        self.added      = json["added"].int?
     }
 }

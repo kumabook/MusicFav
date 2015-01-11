@@ -12,7 +12,7 @@ import ReactiveCocoa
 import LlamaKit
 
 struct FeedlyAPIClientConfig {
-    static let baseUrl      = "https://sandbox.feedly.com/"
+    static let baseUrl      = "https://sandbox.feedly.com"
     static let authPath     = "/v3/auth/auth"
     static let tokenPath    = "/v3/auth/token"
     static let accountType  = "Feedly"
@@ -20,8 +20,8 @@ struct FeedlyAPIClientConfig {
     static let clientSecret = "9ZUHFZ9N2ZQ0XM5ERU1Z"
     static let redirectUrl  = "http://localhost"
     static let scopeUrl     = "https://cloud.feedly.com/subscriptions"
-    static let authUrl      = String(format: "%@%@", baseUrl, authPath)
-    static let tokenUrl     = String(format: "%@%@", baseUrl, tokenPath)
+    static let authUrl      = String(format: "%@/%@", baseUrl, authPath)
+    static let tokenUrl     = String(format: "%@/%@", baseUrl, tokenPath)
     static let perPage      = 15
 }
 
@@ -235,17 +235,21 @@ class FeedlyAPIClient {
     func fetchFeedsByIds(ids: [String]) -> ColdSignal<[Feed]> {
         return ColdSignal { (sink, disposable) in
             let manager = AFHTTPRequestOperationManager()
-            let url = NSString(format: "%@//v3/feeds/.mget",
+            manager.requestSerializer = AFJSONRequestSerializer(writingOptions: NSJSONWritingOptions.PrettyPrinted)
+
+            let url = NSString(format: "%@/v3/feeds/.mget",
                 FeedlyAPIClientConfig.baseUrl)
         
             manager.requestSerializer.setValue(self.account?.accessToken.accessToken,
                 forHTTPHeaderField:"Authorization")
+
             manager.POST(url, parameters: ids,
                 success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
                     println(operation.response)
                     println(response)
                     let json = JSON(response)
-                    sink.put(.Next(Box(json["results"].array!.map({ Feed(json: $0)}))))
+                    print(json.array!)
+                    sink.put(.Next(Box(json.array!.map({ Feed(json: $0)}))))
                     sink.put(.Completed)
                 },
                 failure: { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in

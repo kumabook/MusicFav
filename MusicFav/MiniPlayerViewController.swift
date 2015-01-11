@@ -95,8 +95,7 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
     func showOAuthViewController() {
         let oauthvc = FeedlyOAuthViewController(nibName:"FeedlyOAuthViewController", bundle:NSBundle.mainBundle())
         let vc = UINavigationController(rootViewController: oauthvc)
-        self.presentViewController(vc, animated: true, {
-        })
+        self.presentViewController(vc, animated: true, nil)
     }
     
     func showMenu() {
