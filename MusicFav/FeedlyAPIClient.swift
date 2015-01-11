@@ -35,6 +35,9 @@ class FeedlyAPIClient {
 
     private var _account: NXOAuth2Account?
     private let userDefaults = NSUserDefaults.standardUserDefaults()
+    var isLoggedIn: Bool {
+        return account != nil
+    }
 
     var account: NXOAuth2Account? {
         get {
@@ -220,6 +223,30 @@ class FeedlyAPIClient {
                     sink.put(.Next(Box(json["results"].array!.map({ Feed(json: $0)}))))
                     sink.put(.Completed)
                     
+                },
+                failure: { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
+                    println(error)
+                    println(operation.response)
+                    sink.put(.Error(error))
+            })
+        }
+    }
+    
+    func fetchFeedsByIds(ids: [String]) -> ColdSignal<[Feed]> {
+        return ColdSignal { (sink, disposable) in
+            let manager = AFHTTPRequestOperationManager()
+            let url = NSString(format: "%@//v3/feeds/.mget",
+                FeedlyAPIClientConfig.baseUrl)
+        
+            manager.requestSerializer.setValue(self.account?.accessToken.accessToken,
+                forHTTPHeaderField:"Authorization")
+            manager.POST(url, parameters: ids,
+                success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
+                    println(operation.response)
+                    println(response)
+                    let json = JSON(response)
+                    sink.put(.Next(Box(json["results"].array!.map({ Feed(json: $0)}))))
+                    sink.put(.Completed)
                 },
                 failure: { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
                     println(error)

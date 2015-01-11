@@ -16,6 +16,10 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
     @IBOutlet weak var loginWebView: UIWebView!
     override func viewDidLoad() {
         super.viewDidLoad()
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"close",
+            style: UIBarButtonItemStyle.Plain,
+            target: self,
+            action: "close")
         self.loginWebView!.delegate = self
         setupOAuth2AccountStore()
         requestOAuth2Access()
@@ -25,6 +29,11 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+
+    func close() {
+        self.navigationController?.dismissViewControllerAnimated(true, nil)
+    }
+
     func setupOAuth2AccountStore() {
         NXOAuth2AccountStore.sharedStore().setClientID(FeedlyAPIClientConfig.clientId,
             secret: FeedlyAPIClientConfig.clientSecret,

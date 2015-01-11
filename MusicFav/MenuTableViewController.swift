@@ -117,18 +117,6 @@ class MenuTableViewController: UITableViewController {
                 showStream(subscriptions[indexPath.item].id)
         }
     }
-
-    func showLogoutDialog() {
-        let ac = UIAlertController(title: "Logout", message: "Are you sure you want to log out?", preferredStyle: UIAlertControllerStyle.Alert)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) in
-            self.logout()
-        }
-        let cancelAction = UIAlertAction(title: "Canel", style: UIAlertActionStyle.Cancel) { (action) in
-        }
-        ac.addAction(okAction)
-        ac.addAction(cancelAction)
-        presentViewController(ac, animated: true, completion: nil)
-    }
     
     func showStream(streamId: String?) {
         let appDelegate                 = UIApplication.sharedApplication().delegate as AppDelegate
@@ -137,14 +125,6 @@ class MenuTableViewController: UITableViewController {
         mainViewController?.showCenterPanelAnimated(true)
     }
 
-    func logout() {
-        let client = FeedlyAPIClient.sharedInstance
-        client.clearAllAccount()
-        client.profile = nil
-        let notification = NSNotification(name: "loggedOut", object: nil)
-        NSNotificationCenter.defaultCenter().postNotification(notification)
-
-    }
     func showPreference() {
         let prefvc = PreferenceViewController()
         presentViewController(UINavigationController(rootViewController:prefvc), animated: true, completion: nil)

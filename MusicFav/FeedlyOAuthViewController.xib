@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C78c" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C81f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
     </dependencies>
@@ -18,18 +18,17 @@
                 <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Yw9-S7-8pY">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="600" id="v8t-Me-Lzj"/>
-                    </constraints>
                 </webView>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="Yw9-S7-8pY" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="6Kk-zu-fjA"/>
                 <constraint firstAttribute="trailing" secondItem="Yw9-S7-8pY" secondAttribute="trailing" id="Jkx-FW-YwO"/>
+                <constraint firstAttribute="bottom" secondItem="Yw9-S7-8pY" secondAttribute="bottom" id="QVb-JU-hp0"/>
                 <constraint firstItem="Yw9-S7-8pY" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="Yaz-Ad-jwn"/>
+                <constraint firstItem="Yw9-S7-8pY" firstAttribute="top" secondItem="i5M-Pr-FkT" secondAttribute="top" id="mlL-bg-IQB"/>
             </constraints>
-            <point key="canvasLocation" x="280" y="165"/>
+            <point key="canvasLocation" x="295" y="199"/>
         </view>
     </objects>
 </document>

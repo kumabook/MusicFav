@@ -12,6 +12,13 @@ import LlamaKit
 import SwiftyJSON
 
 class TimelineTableViewController: UITableViewController {
+    
+    let trialFeeds = [
+        "feed/http://spincoaster.com/feed",
+        "feed/http://matome.naver.jp/feed/topic/1Hinb"
+    ]
+    var currentIndex = 0
+    
     enum State {
         case Normal
         case Fetching
@@ -91,16 +98,10 @@ class TimelineTableViewController: UITableViewController {
         if let account = client.account {
             fetchEntries()
         } else {
-            loginWithOAuth()
+            appDelegate.miniPlayerViewController?.showOAuthViewController()
         }
     }
     
-    func loginWithOAuth() {
-        let vc = FeedlyOAuthViewController(nibName:"FeedlyOAuthViewController", bundle:NSBundle.mainBundle())
-        self.presentViewController(vc, animated: true, {
-        })
-    }
-
     func showPlaylist() {
         let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         appDelegate.miniPlayerViewController?.mainViewController.showRightPanelAnimated(true)
@@ -136,13 +137,16 @@ class TimelineTableViewController: UITableViewController {
         if entries.count == 0 {
             return
         }
-        self.refreshControl?.beginRefreshing()
+
         var signal: ColdSignal<JSON>
         if let id = streamId {
             signal = client.fetchEntries(streamId:id, newerThan: lastUpdated)
-        } else {
+        } else if FeedlyAPIClient.sharedInstance.isLoggedIn {
             signal = client.fetchAllEntries(newerThan: lastUpdated)
+        } else {
+            return
         }
+        self.refreshControl?.beginRefreshing()
         signal.deliverOn(MainScheduler())
             .start(
                 next: {json in
@@ -158,7 +162,7 @@ class TimelineTableViewController: UITableViewController {
                         if let response:NSHTTPURLResponse = dic[key] as? NSHTTPURLResponse {
                             if response.statusCode == 401 {
                                 self.client.clearAllAccount()
-                                self.loginWithOAuth()
+//                                self.loginWithOAuth()
                             } else {
                             }
                         } else {
@@ -181,8 +185,16 @@ class TimelineTableViewController: UITableViewController {
         var signal: ColdSignal<JSON>
         if let id = streamId {
             signal = client.fetchEntries(streamId:id, continuation: streamContinuation)
-        } else {
+        } else if FeedlyAPIClient.sharedInstance.isLoggedIn {
             signal = client.fetchAllEntries(continuation: streamContinuation)
+        } else {
+            if currentIndex < trialFeeds.count {
+                signal = client.fetchEntries(streamId: trialFeeds[currentIndex], continuation: nil)
+                currentIndex += 1
+            } else {
+                self.hideIndicator()
+                return
+            }
         }
         signal.deliverOn(MainScheduler())
               .start(
@@ -203,7 +215,7 @@ class TimelineTableViewController: UITableViewController {
                         if let response:NSHTTPURLResponse = dic[key] as? NSHTTPURLResponse {
                             if response.statusCode == 401 {
                                 self.client.clearAllAccount()
-                                self.loginWithOAuth()
+//                                self.loginWithOAuth()
                             } else {
                                 self.state = State.Error
                                 self.showReloadButton()
