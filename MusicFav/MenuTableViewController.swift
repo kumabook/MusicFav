@@ -9,6 +9,7 @@
 import UIKit
 import ReactiveCocoa
 import LlamaKit
+import FeedlyKit
 
 
 class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewDataSource {

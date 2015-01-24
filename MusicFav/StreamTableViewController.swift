@@ -9,6 +9,7 @@
 import UIKit
 import ReactiveCocoa
 import LlamaKit
+import FeedlyKit
 
 class StreamTableViewController: UITableViewController {
 

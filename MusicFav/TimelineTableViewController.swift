@@ -10,6 +10,7 @@ import UIKit
 import ReactiveCocoa
 import LlamaKit
 import SwiftyJSON
+import FeedlyKit
 
 class TimelineTableViewController: UITableViewController {
     var currentIndex = 0
@@ -130,7 +131,7 @@ class TimelineTableViewController: UITableViewController {
             return
         }
 
-        var signal: ColdSignal<JSON>
+        var signal: ColdSignal<PaginatedEntryCollection>
         if let id = streamId {
             signal = client.fetchEntries(streamId:id, newerThan: lastUpdated)
         } else if FeedlyAPIClient.sharedInstance.isLoggedIn {
@@ -143,12 +144,12 @@ class TimelineTableViewController: UITableViewController {
         self.refreshControl?.beginRefreshing()
         signal.deliverOn(MainScheduler())
             .start(
-                next: {json in
-                    let entries = json["items"].array!.map({ Entry(json: $0)})
+                next: { paginatedCollection in
+                    let entries = paginatedCollection.items
                     for e in entries {
                         self.entries.insert(e, atIndex: 0)
                     }
-                    self.updateLastUpdated(json["update"].int64?)
+                    self.updateLastUpdated(paginatedCollection.updated)
                 },
                 error: {error in
                     let key = "com.alamofire.serialization.response.error.response"
@@ -176,7 +177,7 @@ class TimelineTableViewController: UITableViewController {
         }
         state = State.Fetching
         showIndicator()
-        var signal: ColdSignal<JSON>
+        var signal: ColdSignal<PaginatedEntryCollection>
         if let id = streamId {
             signal = client.fetchEntries(streamId:id, continuation: streamContinuation)
         } else if FeedlyAPIClient.sharedInstance.isLoggedIn {
@@ -194,16 +195,16 @@ class TimelineTableViewController: UITableViewController {
         }
         signal.deliverOn(MainScheduler())
               .start(
-                next: {json in
-                    let entries = json["items"].array!.map({ Entry(json: $0)})
+                next: {paginatedCollection in
+                    let entries = paginatedCollection.items
                     self.entries.extend(entries)
-                    self.streamContinuation = json["continuation"].string?
-                    if json["continuation"].string? == nil {
+                    self.streamContinuation = paginatedCollection.continuation
+                    if paginatedCollection.continuation == nil {
                         self.state = State.Complete
                     } else {
                         self.state = State.Normal
                     }
-                    self.updateLastUpdated(json["update"].int64?)
+                    self.updateLastUpdated(paginatedCollection.updated)
                 },
                 error: {error in
                     let key = "com.alamofire.serialization.response.error.response"
@@ -256,8 +257,8 @@ class TimelineTableViewController: UITableViewController {
 
         let entry = entries[indexPath.item]
         cell.titleLabel.text = entry.title
-        if let url = entry.visualUrl {
-            cell.thumbImgView.sd_setImageWithURL(NSURL(string:url))
+        if let visual = entry.visual? {
+            cell.thumbImgView.sd_setImageWithURL(NSURL(string:visual.url))
         } else {
             cell.thumbImgView.image = nil
         }
@@ -286,10 +287,12 @@ class TimelineTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let entry = entries[indexPath.item]
-        let vc    = EntryWebViewController()
-        if let urlString = entry.alternate {
-            vc.currentURL = NSURL(string: urlString)!
+        if let alternate = entry.alternate {
+            if alternate.count > 0 {
+                let vc = EntryWebViewController()
+                vc.currentURL = NSURL(string: alternate[0].href)!
+                navigationController?.pushViewController(vc, animated: true)
+            }
         }
-        navigationController?.pushViewController(vc, animated: true)
     }
 }

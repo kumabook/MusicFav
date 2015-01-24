@@ -8,6 +8,13 @@
 
 /* Begin PBXBuildFile section */
 		4DA132F8910CA7C9DF275FDC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1075FD21204567B3C7C82D56 /* libPods.a */; };
+		671664261A738DC5005FE005 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 671664251A738DC5005FE005 /* Playlist.swift */; };
+		671664281A738E2A005FE005 /* FeedlyKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671664271A738E2A005FE005 /* FeedlyKit.framework */; };
+		6716642A1A738E36005FE005 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671664291A738E36005FE005 /* Alamofire.framework */; };
+		6716642B1A738E3E005FE005 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671664291A738E36005FE005 /* Alamofire.framework */; };
+		6716642C1A738E3E005FE005 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 671664291A738E36005FE005 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6716642D1A738E3E005FE005 /* FeedlyKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671664271A738E2A005FE005 /* FeedlyKit.framework */; };
+		6716642E1A738E3E005FE005 /* FeedlyKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 671664271A738E2A005FE005 /* FeedlyKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		67254C791A493A570064E5DF /* TimelineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67254C771A493A570064E5DF /* TimelineTableViewCell.swift */; };
 		67254C7A1A493A570064E5DF /* TimelineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67254C781A493A570064E5DF /* TimelineTableViewCell.xib */; };
 		67254C7C1A4968F50064E5DF /* EntryWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67254C7B1A4968F50064E5DF /* EntryWebViewController.swift */; };
@@ -22,29 +29,21 @@
 		67277CE01A46F4BC002FD3E0 /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67277CDF1A46F4BC002FD3E0 /* MenuTableViewController.swift */; };
 		67277CE31A46F844002FD3E0 /* TimelineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67277CE11A46F844002FD3E0 /* TimelineTableViewController.swift */; };
 		67277CE41A46F844002FD3E0 /* TimelineTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67277CE21A46F844002FD3E0 /* TimelineTableViewController.xib */; };
-		67277CE61A4701C5002FD3E0 /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67277CE51A4701C5002FD3E0 /* Subscription.swift */; };
 		6727EDFE1A5AC1DE003C6A47 /* MiniPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6727EDFC1A5AC1DE003C6A47 /* MiniPlayerViewController.swift */; };
 		6727EDFF1A5AC1DE003C6A47 /* MiniPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6727EDFD1A5AC1DE003C6A47 /* MiniPlayerViewController.xib */; };
 		6728FA391A60580A00F693B3 /* PreferenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6728FA371A60580A00F693B3 /* PreferenceViewController.swift */; };
 		6728FA3A1A60580A00F693B3 /* PreferenceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6728FA381A60580A00F693B3 /* PreferenceViewController.xib */; };
 		6728FA3E1A60B9FD00F693B3 /* TrackTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6728FA3D1A60B9FD00F693B3 /* TrackTableViewController.swift */; };
-		67534C831A58F03600E77C89 /* Feed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67534C821A58F03600E77C89 /* Feed.swift */; };
-		67534C851A5907B500E77C89 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67534C841A5907B500E77C89 /* Profile.swift */; };
 		67554F091A4F127400F7AE72 /* TrackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */; };
 		67554F0A1A4F127400F7AE72 /* TrackTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */; };
-		675ED0721A4907A700C986F7 /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675ED0711A4907A700C986F7 /* Entry.swift */; };
-		67871C9F1A62EAE6005D2174 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67871C9E1A62EAE6005D2174 /* Category.swift */; };
 		67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */; };
 		67871CA31A62EBB1005D2174 /* StreamTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67871CA11A62EBB1005D2174 /* StreamTableViewController.xib */; };
-		67C95F511A4F210500744AD9 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C95F501A4F210500744AD9 /* Playlist.swift */; };
-		67C95F531A4F211900744AD9 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C95F521A4F211900744AD9 /* Track.swift */; };
 		67CB43F01A4ECD470010465E /* playlistify-userscript.js in Resources */ = {isa = PBXBuildFile; fileRef = 67CB43EF1A4ECD470010465E /* playlistify-userscript.js */; };
 		67CB43F21A4ED6D50010465E /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 67CB43F11A4ED6D50010465E /* main.js */; };
 		67CE596A1A51206D00C86681 /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67CE59691A51206D00C86681 /* MiniPlayerView.swift */; };
 		67CE596C1A51208000C86681 /* MiniPlayerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67CE596B1A51208000C86681 /* MiniPlayerView.xib */; };
 		67CE596E1A52CC0900C86681 /* SoundCloudAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67CE596D1A52CC0900C86681 /* SoundCloudAPIClient.swift */; };
 		67DB2A121A5588A6006BB490 /* MiniPlayerViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DB2A111A5588A6006BB490 /* MiniPlayerViewDelegate.swift */; };
-		67F7CF131A62EE9D008FB7AD /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F7CF121A62EE9D008FB7AD /* Stream.swift */; };
 		67F7CF151A635BD0008FB7AD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67F7CF141A635BD0008FB7AD /* Main.storyboard */; };
 		67F7D48A1A625A4F00A5AE68 /* LlamaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4851A625A4F00A5AE68 /* LlamaKit.framework */; };
 		67F7D48B1A625A4F00A5AE68 /* LlamaKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4851A625A4F00A5AE68 /* LlamaKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -52,6 +51,7 @@
 		67F7D4911A625A4F00A5AE68 /* ReactiveCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4881A625A4F00A5AE68 /* ReactiveCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		67F7D4921A625A4F00A5AE68 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */; };
 		67F7D4931A625A4F00A5AE68 /* SwiftyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		67FAC5571A738F6C00A32818 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FAC5561A738F6C00A32818 /* Track.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -74,6 +74,8 @@
 				67F7D48B1A625A4F00A5AE68 /* LlamaKit.framework in Embed Frameworks */,
 				67F7D4911A625A4F00A5AE68 /* ReactiveCocoa.framework in Embed Frameworks */,
 				67F7D4931A625A4F00A5AE68 /* SwiftyJSON.framework in Embed Frameworks */,
+				6716642E1A738E3E005FE005 /* FeedlyKit.framework in Embed Frameworks */,
+				6716642C1A738E3E005FE005 /* Alamofire.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -82,6 +84,9 @@
 
 /* Begin PBXFileReference section */
 		1075FD21204567B3C7C82D56 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		671664251A738DC5005FE005 /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
+		671664271A738E2A005FE005 /* FeedlyKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FeedlyKit.framework; path = Carthage/Build/iOS/FeedlyKit.framework; sourceTree = "<group>"; };
+		671664291A738E36005FE005 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		67254C771A493A570064E5DF /* TimelineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineTableViewCell.swift; sourceTree = "<group>"; };
 		67254C781A493A570064E5DF /* TimelineTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TimelineTableViewCell.xib; sourceTree = "<group>"; };
 		67254C7B1A4968F50064E5DF /* EntryWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntryWebViewController.swift; sourceTree = "<group>"; };
@@ -101,30 +106,22 @@
 		67277CDF1A46F4BC002FD3E0 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		67277CE11A46F844002FD3E0 /* TimelineTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineTableViewController.swift; sourceTree = "<group>"; };
 		67277CE21A46F844002FD3E0 /* TimelineTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TimelineTableViewController.xib; sourceTree = "<group>"; };
-		67277CE51A4701C5002FD3E0 /* Subscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Subscription.swift; path = Feedly/Subscription.swift; sourceTree = "<group>"; };
 		6727EDFC1A5AC1DE003C6A47 /* MiniPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerViewController.swift; sourceTree = "<group>"; };
 		6727EDFD1A5AC1DE003C6A47 /* MiniPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MiniPlayerViewController.xib; sourceTree = "<group>"; };
 		6728FA371A60580A00F693B3 /* PreferenceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferenceViewController.swift; sourceTree = "<group>"; };
 		6728FA381A60580A00F693B3 /* PreferenceViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferenceViewController.xib; sourceTree = "<group>"; };
 		6728FA3D1A60B9FD00F693B3 /* TrackTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewController.swift; sourceTree = "<group>"; };
-		67534C821A58F03600E77C89 /* Feed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Feed.swift; sourceTree = "<group>"; };
-		67534C841A5907B500E77C89 /* Profile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewCell.swift; sourceTree = "<group>"; };
 		67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrackTableViewCell.xib; sourceTree = "<group>"; };
-		675ED0711A4907A700C986F7 /* Entry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
 		677933A8B0BDDEAED4C720D5 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		67871C9E1A62EAE6005D2174 /* Category.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTableViewController.swift; sourceTree = "<group>"; };
 		67871CA11A62EBB1005D2174 /* StreamTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StreamTableViewController.xib; sourceTree = "<group>"; };
-		67C95F501A4F210500744AD9 /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
-		67C95F521A4F211900744AD9 /* Track.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		67CB43EF1A4ECD470010465E /* playlistify-userscript.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "playlistify-userscript.js"; path = "UserScript/playlistify-userscript.js"; sourceTree = "<group>"; };
 		67CB43F11A4ED6D50010465E /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = main.js; path = UserScript/main.js; sourceTree = "<group>"; };
 		67CE59691A51206D00C86681 /* MiniPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
 		67CE596B1A51208000C86681 /* MiniPlayerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MiniPlayerView.xib; sourceTree = "<group>"; };
 		67CE596D1A52CC0900C86681 /* SoundCloudAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundCloudAPIClient.swift; sourceTree = "<group>"; };
 		67DB2A111A5588A6006BB490 /* MiniPlayerViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerViewDelegate.swift; sourceTree = "<group>"; };
-		67F7CF121A62EE9D008FB7AD /* Stream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
 		67F7CF141A635BD0008FB7AD /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../Main.storyboard; sourceTree = "<group>"; };
 		67F7D4651A62458C00A5AE68 /* MusicFav.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = MusicFav.entitlements; sourceTree = "<group>"; };
 		67F7D4851A625A4F00A5AE68 /* LlamaKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LlamaKit.framework; path = Carthage/Build/iOS/LlamaKit.framework; sourceTree = "<group>"; };
@@ -132,6 +129,7 @@
 		67F7D4871A625A4F00A5AE68 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
 		67F7D4881A625A4F00A5AE68 /* ReactiveCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveCocoa.framework; path = Carthage/Build/iOS/ReactiveCocoa.framework; sourceTree = "<group>"; };
 		67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/iOS/SwiftyJSON.framework; sourceTree = "<group>"; };
+		67FAC5561A738F6C00A32818 /* Track.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		AE64EB6BF4DC7B67771E836D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -140,8 +138,12 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6716642D1A738E3E005FE005 /* FeedlyKit.framework in Frameworks */,
 				4DA132F8910CA7C9DF275FDC /* libPods.a in Frameworks */,
+				671664281A738E2A005FE005 /* FeedlyKit.framework in Frameworks */,
+				6716642A1A738E36005FE005 /* Alamofire.framework in Frameworks */,
 				67F7D4921A625A4F00A5AE68 /* SwiftyJSON.framework in Frameworks */,
+				6716642B1A738E3E005FE005 /* Alamofire.framework in Frameworks */,
 				67F7D48A1A625A4F00A5AE68 /* LlamaKit.framework in Frameworks */,
 				67F7D4901A625A4F00A5AE68 /* ReactiveCocoa.framework in Frameworks */,
 			);
@@ -245,14 +247,8 @@
 		67277CD51A450CB3002FD3E0 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				67871C9E1A62EAE6005D2174 /* Category.swift */,
-				67277CE51A4701C5002FD3E0 /* Subscription.swift */,
-				675ED0711A4907A700C986F7 /* Entry.swift */,
-				67C95F501A4F210500744AD9 /* Playlist.swift */,
-				67C95F521A4F211900744AD9 /* Track.swift */,
-				67534C821A58F03600E77C89 /* Feed.swift */,
-				67534C841A5907B500E77C89 /* Profile.swift */,
-				67F7CF121A62EE9D008FB7AD /* Stream.swift */,
+				67FAC5561A738F6C00A32818 /* Track.swift */,
+				671664251A738DC5005FE005 /* Playlist.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -324,6 +320,8 @@
 		7472929E5548D8618A0DE458 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				671664291A738E36005FE005 /* Alamofire.framework */,
+				671664271A738E2A005FE005 /* FeedlyKit.framework */,
 				67F7D4851A625A4F00A5AE68 /* LlamaKit.framework */,
 				67F7D4861A625A4F00A5AE68 /* Nimble.framework */,
 				67F7D4871A625A4F00A5AE68 /* Quick.framework */,
@@ -473,7 +471,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "/usr/local/bin/carthage copy-frameworks";
+			shellScript = "#/usr/local/bin/carthage copy-frameworks";
 		};
 		D2FAC3592B95938FC00F959C /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -513,29 +511,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				67277CDE1A46DF98002FD3E0 /* FeedlyAPIClient.swift in Sources */,
+				671664261A738DC5005FE005 /* Playlist.swift in Sources */,
 				67554F091A4F127400F7AE72 /* TrackTableViewCell.swift in Sources */,
-				67534C851A5907B500E77C89 /* Profile.swift in Sources */,
 				67277CE31A46F844002FD3E0 /* TimelineTableViewController.swift in Sources */,
-				67F7CF131A62EE9D008FB7AD /* Stream.swift in Sources */,
 				6728FA3E1A60B9FD00F693B3 /* TrackTableViewController.swift in Sources */,
+				67FAC5571A738F6C00A32818 /* Track.swift in Sources */,
 				6727EDFE1A5AC1DE003C6A47 /* MiniPlayerViewController.swift in Sources */,
-				67C95F511A4F210500744AD9 /* Playlist.swift in Sources */,
 				67CE596A1A51206D00C86681 /* MiniPlayerView.swift in Sources */,
 				6728FA391A60580A00F693B3 /* PreferenceViewController.swift in Sources */,
 				67254C791A493A570064E5DF /* TimelineTableViewCell.swift in Sources */,
 				67DB2A121A5588A6006BB490 /* MiniPlayerViewDelegate.swift in Sources */,
-				67277CE61A4701C5002FD3E0 /* Subscription.swift in Sources */,
 				67277CDB1A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift in Sources */,
 				67277CAE1A434304002FD3E0 /* AppDelegate.swift in Sources */,
-				675ED0721A4907A700C986F7 /* Entry.swift in Sources */,
 				67CE596E1A52CC0900C86681 /* SoundCloudAPIClient.swift in Sources */,
-				67534C831A58F03600E77C89 /* Feed.swift in Sources */,
-				67C95F531A4F211900744AD9 /* Track.swift in Sources */,
 				67277CB11A434304002FD3E0 /* MusicFav.xcdatamodeld in Sources */,
 				67254C7C1A4968F50064E5DF /* EntryWebViewController.swift in Sources */,
 				67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */,
 				67277CE01A46F4BC002FD3E0 /* MenuTableViewController.swift in Sources */,
-				67871C9F1A62EAE6005D2174 /* Category.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

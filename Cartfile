@@ -1,2 +1,2 @@
-github "SwiftyJSON/SwiftyJSON"       >= 2.1.2
+github "kumabook/FeedlyKit"       >= 0.0.1
 github "ReactiveCocoa/ReactiveCocoa" ~> 3.0.2
