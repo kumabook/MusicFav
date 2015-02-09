@@ -510,12 +510,15 @@
 				"$(SRCROOT)/Carthage/Build/iOS/LlamaKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/ReactiveCocoa.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftyJSON.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/FeedlyKit.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Realm.framework",
 			);
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#/usr/local/bin/carthage copy-frameworks";
+			shellScript = "/usr/local/bin/carthage copy-frameworks";
 		};
 		D2FAC3592B95938FC00F959C /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
