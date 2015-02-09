@@ -71,7 +71,7 @@ class SelectPlaylistTableViewController: UITableViewController {
         let playlist = playlists[indexPath.item]
         cell.titleLabel.text    = playlist.title
         cell.trackNumLabel.text = "\(playlist.tracks.count) tracks"
-        cell.thumbImageView.image = UIImage(named: "playlist_default_thumb")
+        cell.thumbImageView.image = UIImage(named: "default_thumb")
         return cell
     }
 

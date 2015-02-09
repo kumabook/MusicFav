@@ -258,9 +258,9 @@ class TimelineTableViewController: UITableViewController {
         let entry = entries[indexPath.item]
         cell.titleLabel.text = entry.title
         if let visual = entry.visual? {
-            cell.thumbImgView.sd_setImageWithURL(NSURL(string:visual.url))
+            cell.thumbImgView.sd_setImageWithURL(NSURL(string:visual.url), placeholderImage: UIImage(named: "default_thumb"))
         } else {
-            cell.thumbImgView.image = nil
+            cell.thumbImgView.image = UIImage(named: "default_thumb")
         }
 
         return cell
