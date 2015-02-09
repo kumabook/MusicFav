@@ -10,14 +10,19 @@ import UIKit
 import AVFoundation
 
 class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
-    var mainViewController:       JASidePanelController!
-    var timelineViewController:   TimelineTableViewController!
-    var trackTableViewController: TrackTableViewController!
-    var menuViewController:       MenuTableViewController!
-    private var queuePlayer:      AVQueuePlayer?
-    private var currentPlaylist:  Playlist = Playlist(url:"http://dummy")
-    private var currentIndex:     Int = Int.min
-    private var timeObserver:     AnyObject?
+    var mainViewController:          JASidePanelController!
+    var timelineViewController:      TimelineTableViewController!
+    var playlistTableViewController: PlaylistTableViewController!
+    var menuViewController:          MenuTableViewController!
+    private var queuePlayer:         AVQueuePlayer?
+    private var playlist:            Playlist?
+    private var currentIndex:        Int = Int.min
+    private var timeObserver:        AnyObject?
+    var currentPlaylist: Playlist? {
+        get {
+            return playlist
+        }
+    }
     
     @IBOutlet weak var mainViewContainer: UIView!
     var playButton:     UIButton!
@@ -27,10 +32,10 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
         super.init(nibName: "MiniPlayerViewController", bundle: NSBundle.mainBundle())
         mainViewController                      = JASidePanelController()
         timelineViewController                  = TimelineTableViewController(streamId: nil)
-        trackTableViewController                = TrackTableViewController()
+        playlistTableViewController             = PlaylistTableViewController()
         menuViewController                      = MenuTableViewController()
         mainViewController.leftPanel            = UINavigationController(rootViewController:menuViewController)
-        mainViewController.rightPanel           = UINavigationController(rootViewController:trackTableViewController)
+        mainViewController.rightPanel           = UINavigationController(rootViewController:playlistTableViewController)
         mainViewController.centerPanel          = UINavigationController(rootViewController:timelineViewController)
         mainViewController.view.backgroundColor = UIColor.whiteColor()
         mainViewController.allowRightSwipe      = false
@@ -67,6 +72,10 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
     }
     
     func updateViews() {
+        if playlist == nil {
+            return
+        }
+        let currentPlaylist = self.playlist!
         if currentIndex >= 0 && currentIndex < currentPlaylist.tracks.count {
             let track = currentPlaylist.tracks[currentIndex]
             self.miniPlayerView.titleLabel.text    = track.title
@@ -75,14 +84,16 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
                 let playingInfoCenter: AnyClass? = NSClassFromString("MPNowPlayingInfoCenter")
                 if let center: AnyClass = playingInfoCenter {
                     let albumArt = MPMediaItemArtwork(image:image)
-                    let info = [MPMediaItemPropertyTitle: track.title,
-                        MPMediaItemPropertyArtwork: albumArt]
+                    var info:[String:AnyObject]         = [:]
+                    info[MPMediaItemPropertyTitle]   = track.title
+                    info[MPMediaItemPropertyArtwork] = albumArt
                     MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = info
                 }
             })
             let playingInfoCenter: AnyClass? = NSClassFromString("MPNowPlayingInfoCenter")
             if let center: AnyClass = playingInfoCenter {
-                let info = [MPMediaItemPropertyTitle: track.title]
+                var info:[String:AnyObject]       = [:]
+                info[MPMediaItemPropertyTitle] = track.title
                 MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = info
             }
         } else {
@@ -110,17 +121,19 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
     
     func play(index: Int, playlist: Playlist) {
         println(self.currentIndex == index)
-        if self.currentIndex == index && self.currentPlaylist.url == playlist.url {
-            if let player = self.queuePlayer {
-                if player.items().count > 0 {
-                    player.play()
-                    self.miniPlayerView.state = MiniPlayerView.State.Play
+        if let _playlist = currentPlaylist {
+            if self.currentIndex == index && _playlist.id == playlist.id {
+                if let player = self.queuePlayer {
+                    if player.items().count > 0 {
+                        player.play()
+                        self.miniPlayerView.state = MiniPlayerView.State.Play
+                    }
                 }
+                return
             }
-            return
         }
-        self.currentPlaylist = playlist
-        let count            = self.currentPlaylist.tracks.count
+        self.playlist = playlist
+        let count            = playlist.tracks.count
         self.currentIndex    = index % count
         if let player = self.queuePlayer {
             player.pause()
@@ -132,7 +145,7 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
         
         var _playerItems: [AVPlayerItem] = []
         for i in 0..<count {
-            if let url = self.currentPlaylist.tracks[(index + i) % count].streamUrl {
+            if let url = playlist.tracks[(index + i) % count].streamUrl {
                 _playerItems.append(AVPlayerItem(URL:url))
             }
         }
@@ -153,12 +166,12 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
     }
     
     func toggle() {
-        if currentIndex == Int.min || queuePlayer == nil {
+        if currentIndex == Int.min || queuePlayer == nil || playlist == nil {
             return
         }
         switch self.miniPlayerView.state {
         case .Pause:
-            play(currentIndex, playlist: currentPlaylist)
+            play(currentIndex, playlist: currentPlaylist!)
         case .Play:
             queuePlayer!.pause()
             self.miniPlayerView.state = MiniPlayerView.State.Pause
@@ -166,7 +179,7 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
     }
     
     func previous() {
-        if currentIndex == Int.min {
+        if currentIndex == Int.min || playlist == nil {
             return
         }
         switch self.miniPlayerView.state {
@@ -174,12 +187,12 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
             currentIndex -= 1
             updateViews()
         case .Play:
-            play(currentIndex-1, playlist: currentPlaylist)
+            play(currentIndex-1, playlist: currentPlaylist!)
         }
     }
     
     func next() {
-        if currentIndex == Int.min {
+        if currentIndex == Int.min || playlist == nil {
             return
         }
         switch self.miniPlayerView.state {
@@ -187,7 +200,7 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
             currentIndex += 1
             updateViews()
         case .Play:
-            play(currentIndex+1, playlist: currentPlaylist)
+            play(currentIndex+1, playlist: currentPlaylist!)
         }
     }
     
@@ -212,8 +225,11 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
     
     func playerDidPlayToEndTime() {
         println("playerDidPlayToEndTime")
+        if playlist == nil {
+            return
+        }
         queuePlayer!.removeItem(queuePlayer!.currentItem)
-        currentIndex = (currentIndex + 1) % currentPlaylist.tracks.count
+        currentIndex = (currentIndex + 1) % currentPlaylist!.tracks.count
         updateViews()
     }
     

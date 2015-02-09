@@ -2,96 +2,229 @@
 //  PlaylistTableViewController.swift
 //  MusicFav
 //
-//  Created by Hiroki Kumamoto on 1/10/15.
+//  Created by Hiroki Kumamoto on 2/7/15.
 //  Copyright (c) 2015 Hiroki Kumamoto. All rights reserved.
 //
 
 import UIKit
 
-class PlaylistTableViewController: UITableViewController {
+class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
+    enum Section: Int {
+        case Playing     = 0
+        case Reading     = 1
+        case Favorites   = 2
+        static let count = 3
+        var title: String? {
+            get {
+                switch self {
+                case .Favorites:
+                    return "　　　　　　　Favorites"
+                default:
+                    return nil
+                }
+            }
+        }
+    }
+    let tableCellReuseIdentifier = "playlistTableViewCell"
+    let cellHeight: CGFloat      = 80
+    var playlists: [Playlist] = []
+    var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as AppDelegate } }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        clearsSelectionOnViewWillAppear = true
+        let nib = UINib(nibName: "PlaylistTableViewCell", bundle: nil)
+        tableView?.registerNib(nib, forCellReuseIdentifier:self.tableCellReuseIdentifier)
+        fetchPlaylists()
+    }
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+    override func viewWillAppear(animated: Bool) {
+        updateNavbar()
+    }
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+    func updateNavbar() {
+        let newPlaylistButton         = UIBarButtonItem(image: UIImage(named: "add_stream"),
+                                                        style: UIBarButtonItemStyle.Plain,
+                                                       target: self,
+                                                       action: "newPlaylist")
+        let showPlayingPlaylistButton = UIBarButtonItem(image: UIImage(named: "playing_playlist"),
+                                                        style: UIBarButtonItemStyle.Plain,
+                                                       target: self,
+                                                       action: "showPlayingPlaylist")
+        let showReadingPlaylistButton = UIBarButtonItem(image: UIImage(named: "reading_playlist"),
+                                                        style: UIBarButtonItemStyle.Plain,
+                                                       target: self,
+                                                       action: "showReadingPlaylist")
+        navigationItem.rightBarButtonItems  = []
+        navigationItem.rightBarButtonItems?.append(newPlaylistButton)
+        if appDelegate.playingPlaylist != nil {
+            navigationItem.rightBarButtonItems?.append(showPlayingPlaylistButton)
+        }
+        if appDelegate.readingPlaylist != nil {
+            navigationItem.rightBarButtonItems?.append(showReadingPlaylistButton)
+        }
+    }
+
+    func newPlaylist() {
+        showTitleEditAlertViewAtIndex(-1)
+    }
+
+    func showPlayingPlaylist() {
+        if let playlist = appDelegate.playingPlaylist {
+            let ptc = appDelegate.miniPlayerViewController!.playlistTableViewController
+            let ttc = TrackTableViewController()
+            ttc.playlist = playlist
+            ptc.navigationController?.popToRootViewControllerAnimated(false)
+            ptc.navigationController?.pushViewController(ttc, animated: false)
+        }
+    }
+
+    func showReadingPlaylist() {
+        if let playlist = appDelegate.readingPlaylist {
+            let ptc = appDelegate.miniPlayerViewController!.playlistTableViewController
+            let ttc = TrackTableViewController()
+            ttc.playlist = playlist
+            ptc.navigationController?.popToRootViewControllerAnimated(true)
+            ptc.navigationController?.pushViewController(ttc, animated: true)
+        }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    }
+
+    func fetchPlaylists() {
+        playlists = Playlist.findAll()
+        println(playlists)
+        tableView.reloadData()
+    }
+
+    func showTitleEditAlertViewAtIndex(index: Int) {
+        var title: String!
+        if index >= 0 { title = "Edit playlist title" }
+        else          { title = "New playlist" }
+        let alertView = UIAlertView(title: title,
+                                  message: "",
+                                 delegate: self,
+                        cancelButtonTitle: "Cancel",
+                        otherButtonTitles: "OK")
+        alertView.alertViewStyle = UIAlertViewStyle.PlainTextInput
+        alertView.tag = index
+        if index >= 0 { alertView.textFieldAtIndex(0)?.text = playlists[index].title }
+        else          { alertView.textFieldAtIndex(0)?.text = "" }
+        alertView.show()
+    }
+
+    func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
+        if (buttonIndex == alertView.cancelButtonIndex) { tableView.reloadData(); return }
+        let index = alertView.tag
+        let newTitle = alertView.textFieldAtIndex(0)!.text
+        if index >= 0 {
+            playlists[index].title = newTitle
+            PlaylistStore.save(playlists[index])
+        } else {
+            let playlist = Playlist(title: newTitle)
+            playlists.append(playlist)
+            PlaylistStore.save(playlist)
+        }
+        tableView.reloadData()
     }
 
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
-        // Return the number of sections.
-        return 0
+        return Section.count
+    }
+
+    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return Section(rawValue: section)?.title
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
-        // Return the number of rows in the section.
-        return 0
+        switch (Section(rawValue: section)!) {
+        case .Playing:   return 1
+        case .Reading:   return 1
+        case .Favorites: return playlists.count
+        }
     }
 
-    /*
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return self.cellHeight
+    }
+
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as UITableViewCell
-
-        // Configure the cell...
-
+        let cell = tableView.dequeueReusableCellWithIdentifier(self.tableCellReuseIdentifier, forIndexPath: indexPath) as PlaylistTableViewCell
+        switch (Section(rawValue: indexPath.section)!) {
+        case .Playing:
+            if let playlist = appDelegate.playingPlaylist {
+                cell.titleLabel.text       = "Now playing(\(playlist.title))"
+                cell.trackNumLabel.text    = "\(playlist.tracks.count) tracks"
+            } else {
+                cell.titleLabel.text       = "Not playing"
+                cell.trackNumLabel.text    = ""
+            }
+        case .Reading:
+            if let playlist = appDelegate.readingPlaylist {
+                cell.titleLabel.text       = "Now reading(\(playlist.title))"
+                cell.trackNumLabel.text    = "\(playlist.tracks.count) tracks"
+            } else {
+                cell.titleLabel.text       = "Not reading"
+                cell.trackNumLabel.text    = ""
+            }
+        case .Favorites:
+            let playlist = playlists[indexPath.item]
+            cell.titleLabel.text    = playlist.title
+            cell.trackNumLabel.text = "\(playlist.tracks.count) tracks"
+        }
+        cell.thumbImageView.image = UIImage(named: "default_thumb")
         return cell
     }
-    */
 
-    /*
-    // Override to support conditional editing of the table view.
+    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
+        let edit = UITableViewRowAction(style: .Default, title: "Edit") {
+            (action, indexPath) in
+            switch (Section(rawValue: indexPath.section)!) {
+            case .Favorites:
+                self.showTitleEditAlertViewAtIndex(indexPath.item)
+            default:
+                break
+            }
+        }
+        edit.backgroundColor = UIColor.greenColor()
+        let remove = UITableViewRowAction(style: .Default, title: "Remove") {
+            (action, indexPath) in
+            switch (Section(rawValue: indexPath.section)!) {
+            case .Favorites:
+                let playlist = self.playlists.removeAtIndex(indexPath.item)
+                PlaylistStore.remove(playlist)
+                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            default:
+                break
+            }
+        }
+        remove.backgroundColor = UIColor.redColor()
+        return [remove, edit]
+    }
+
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the specified item to be editable.
         return true
     }
-    */
 
-    /*
-    // Override to support editing the table view.
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
     }
-    */
 
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        switch (Section(rawValue: indexPath.section)!) {
+        case .Playing:
+            showPlayingPlaylist()
+        case .Reading:
+            showReadingPlaylist()
+        case .Favorites:
+            let playlist = playlists[indexPath.item]
+            let ttc = TrackTableViewController()
+            ttc.playlist = playlist
+            navigationController?.popViewControllerAnimated(true)
+            navigationController?.pushViewController(ttc, animated: true)
+        }
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

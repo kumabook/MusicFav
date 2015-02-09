@@ -18,42 +18,96 @@ class TrackTableViewController: UITableViewController {
     let cellHeight: CGFloat      = 80
     
     var playlist: Playlist? = nil
+    var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as AppDelegate }}
+    var isReadingPlaylist: Bool {
+        get {
+            if playlist != nil && appDelegate.readingPlaylist != nil {
+                return playlist!.id == appDelegate.readingPlaylist!.id
+            }
+            return false
+        }
+    }
+    var isPlayingPlaying: Bool {
+        get {
+            if playlist != nil && appDelegate.readingPlaylist != nil {
+                return playlist!.id == appDelegate.readingPlaylist!.id
+            }
+            return false
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.clearsSelectionOnViewWillAppear = true
+        clearsSelectionOnViewWillAppear = true
         let nib = UINib(nibName: "TrackTableViewCell", bundle: nil)
-        self.tableView?.registerNib(nib, forCellReuseIdentifier:self.tableCellReuseIdentifier)
-        let showFavListButton          = UIBarButtonItem(image: UIImage(named: "fav_list"),
-            style: UIBarButtonItemStyle.Plain,
-            target: self,
-            action: "showFavoritePlaylist")
-        let showCurrentPlaylistButton  = UIBarButtonItem(image: UIImage(named: "current_playlist"),
-            style: UIBarButtonItemStyle.Plain,
-            target: self,
-            action: "showCurrentPlaylist")
-        let favPlaylistButton = UIBarButtonItem(image: UIImage(named: "fav_playlist"),
-            style: UIBarButtonItemStyle.Plain,
-            target: self,
-            action: "favPlaylist")
-        self.navigationItem.rightBarButtonItems  = [showCurrentPlaylistButton, favPlaylistButton, showFavListButton]
-        
+        tableView?.registerNib(nib, forCellReuseIdentifier:self.tableCellReuseIdentifier)
+        updateNavbar()
+        fetchTrackDetails()
     }
     
+    func updateNavbar() {
+        let showFavListButton         = UIBarButtonItem(image: UIImage(named: "fav_list"),
+                                                        style: UIBarButtonItemStyle.Plain,
+                                                       target: self,
+                                                       action: "showFavoritePlaylist")
+        let showPlayingPlaylistButton = UIBarButtonItem(image: UIImage(named: "playing_playlist"),
+                                                        style: UIBarButtonItemStyle.Plain,
+                                                       target: self,
+                                                       action: "showPlayingPlaylist")
+        let showReadingPlaylistButton = UIBarButtonItem(image: UIImage(named: "reading_playlist"),
+                                                        style: UIBarButtonItemStyle.Plain,
+                                                       target: self,
+                                                       action: "showReadingPlaylist")
+        let favPlaylistButton         = UIBarButtonItem(image: UIImage(named: "fav_playlist"),
+                                                        style: UIBarButtonItemStyle.Plain,
+                                                       target: self,
+                                                       action: "favPlaylist")
+
+        navigationItem.rightBarButtonItems  = []
+        navigationItem.rightBarButtonItems?.append(showFavListButton)
+        if appDelegate.playingPlaylist != nil {
+            navigationItem.rightBarButtonItems?.append(showPlayingPlaylistButton)
+        }
+        if isReadingPlaylist {
+            navigationItem.rightBarButtonItems?.append(favPlaylistButton)
+        } else if appDelegate.readingPlaylist != nil {
+            navigationItem.rightBarButtonItems?.append(showReadingPlaylistButton)
+        }
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     func showFavoritePlaylist() {
-        //        self.navigationController?.pushViewController(TrackTableViewController(), animated: true)
+        navigationController?.popToRootViewControllerAnimated(true)
     }
     
-    func showCurrentPlaylist() {
-        
+    func showPlayingPlaylist() {
+        appDelegate.miniPlayerViewController?.playlistTableViewController.showPlayingPlaylist()
+    }
+
+    func showReadingPlaylist() {
+        appDelegate.miniPlayerViewController?.playlistTableViewController.showReadingPlaylist()
     }
     
     func favPlaylist() {
-        
+        if let currentPlaylist = playlist {
+            currentPlaylist.save()
+            appDelegate.miniPlayerViewController?.playlistTableViewController.fetchPlaylists()
+        }
+    }
+
+    func showSelectPlaylistViewController(track: Track) {
+        let ptc = SelectPlaylistTableViewController()
+        ptc.callback = {(playlist: Playlist?) in
+            if let p = playlist {
+                p.appendTrack(track)
+            }
+            ptc.callback = nil
+        }
+        let nvc = UINavigationController(rootViewController: ptc)
+        self.navigationController?.presentViewController(nvc, animated: true, completion: nil)
     }
     
     func fetchTrackDetails() {
@@ -87,21 +141,10 @@ class TrackTableViewController: UITableViewController {
             }
         }
     }
-    
-    /*
-    // MARK: - Navigation
-    
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-    // Get the new view controller using [segue destinationViewController].
-    // Pass the selected object to the new view controller.
-    }
-    */
-    
+
     // MARK: UITableViewDataSource
     
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        //#warning Incomplete method implementation -- Return the number of sections
         return 1
     }
     
@@ -127,18 +170,45 @@ class TrackTableViewController: UITableViewController {
             return cell
         } else {
             cell.trackNameLabel.text = ""
-            cell.durationLabel.text = ""
+            cell.durationLabel.text  = ""
             cell.thumbImgView.sd_setImageWithURL(nil)
             return cell
         }
     }
+
+    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
+        let remove = UITableViewRowAction(style: .Default, title: "Remove") {
+            (action, indexPath) in
+            let track = self.playlist!.tracks.removeAtIndex(indexPath.item)
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        }
+        remove.backgroundColor = UIColor.redColor()
+        let register = UITableViewRowAction(style: .Default, title: "Register") {
+            (action, indexPath) in
+            let track = self.playlist!.tracks[indexPath.item]
+            self.showSelectPlaylistViewController(track)
+        }
+        register.backgroundColor = UIColor.blueColor()
+        if isReadingPlaylist {
+            return [register]
+        } else {
+            return [register, remove]
+        }
+    }
+
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+
+    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    }
+
     
     // MARK: UITableViewDelegate
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let p = playlist {
             let track = p.tracks[indexPath.item]
-            let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
             appDelegate.miniPlayerViewController?.play(indexPath.item, playlist: p)
         }
     }

@@ -10,19 +10,66 @@ import UIKit
 import SwiftyJSON
 
 class Playlist {
-    let url:   String
+    let id:   String
     var title: String
     var tracks: [Track]
 
-    init(url: String) {
-        self.title  = ""
-        self.url    = url
+    private class func dateFormatter() -> NSDateFormatter {
+        let dateFormatter = NSDateFormatter()
+        dateFormatter.dateFormat = "yyyyMMddHHmmss"
+        return dateFormatter
+    }
+
+    init(title: String) {
+        self.id     = "created-\(Playlist.dateFormatter().stringFromDate(NSDate()))"
+        self.title  = title
         self.tracks = []
     }
 
     init(json: JSON) {
+        id     = json["url"].string!
         title  = json["title"].string!
-        url    = json["url"].string!
         tracks = json["tracks"].array!.map({ Track(json: $0) })
+    }
+
+    init(store: PlaylistStore) {
+        id     = store.id
+        title  = store.title
+        tracks = [] as [Track]
+        for trackStore in store.tracks {
+            tracks.append(Track(store:trackStore as TrackStore))
+        }
+    }
+
+    func toStoreObject() -> PlaylistStore {
+        let store    = PlaylistStore()
+        store.id     = id
+        store.title  = title
+        store.tracks.addObjects(tracks.map({ $0.toStoreObject() }))
+        return store
+    }
+
+    func save() {
+        PlaylistStore.save(self)
+    }
+
+    func remove() {
+        PlaylistStore.remove(self)
+    }
+
+    func removeTrackAtIndex(index: UInt) {
+        PlaylistStore.removeTrackAtIndex(index, playlist: self)
+    }
+
+    func appendTrack(track: Track) {
+        PlaylistStore.appendTrack(track, playlist: self)
+    }
+
+    class func findAll() -> [Playlist] {
+        return PlaylistStore.findAll()
+    }
+
+    class func removeAll() {
+        PlaylistStore.removeAll()
     }
 }

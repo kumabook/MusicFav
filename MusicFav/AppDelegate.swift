@@ -15,12 +15,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window:                   UIWindow?
     var miniPlayerViewController: MiniPlayerViewController?
-    var trackTableViewController: TrackTableViewController? {
+    var readingPlaylist:          Playlist?
+    var playingPlaylist:         Playlist? {
         get {
-            return miniPlayerViewController?.trackTableViewController
+            return miniPlayerViewController?.currentPlaylist
         }
     }
-
     let trialFeeds = [
         "feed/http://spincoaster.com/feed",
         "feed/http://matome.naver.jp/feed/topic/1Hinb"

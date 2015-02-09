@@ -69,7 +69,6 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
 
         if let url = currentURL {
             self.loadURL(currentURL!)
-            self.playlist = Playlist(url: url.absoluteString!)
         }
         updateViews()
     }
@@ -93,17 +92,12 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
                 let json: AnyObject? = NSJSONSerialization.JSONObjectWithData(body.dataUsingEncoding(NSUTF8StringEncoding)!, options: NSJSONReadingOptions.AllowFragments, error: nil)
                 
                 let playlist = Playlist(json: JSON(json!))
-                if self.playlist!.url == playlist.url {
-                    if !playlist.title.isEmpty {
-                        self.playlist!.title = playlist.title
-                    }
-                }
                 if playlist.tracks.count > 0 {
-                    self.playlist!.tracks.extend(playlist.tracks)
+                    self.playlist = playlist
                     let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-                    appDelegate.trackTableViewController?.playlist = self.playlist!
-                    appDelegate.trackTableViewController?.tableView?.reloadData()
-                    appDelegate.trackTableViewController?.fetchTrackDetails()
+                    appDelegate.readingPlaylist = self.playlist!
+                    appDelegate.miniPlayerViewController?.playlistTableViewController.updateNavbar()
+                    appDelegate.miniPlayerViewController?.playlistTableViewController.tableView.reloadData()
                 }
             }
         }
@@ -149,16 +143,6 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
     }
     
     // MARK: - WKNavigationDelegate
-    
-    func webView(webView: WKWebView, didCommitNavigation navigation: WKNavigation!) {
-        if let url = webView.URL?.absoluteString? {
-            self.playlist = Playlist(url: url)
-        } else {
-            let dateFormatter = NSDateFormatter()
-            dateFormatter.dateFormat = "yyyy/MM/dd HH:mm:ss"
-            self.playlist = Playlist(url: "unknown-\(dateFormatter.stringFromDate(NSDate()))")
-        }
-    }
     
     func webView(webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
         print("didFailNavigation")

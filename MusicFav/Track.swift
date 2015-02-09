@@ -18,7 +18,7 @@ class Track {
     let provider:     Provider
     let url:          String
     let serviceId:    String
-    var title:        String
+    var title:        String?
     var streamUrl:    NSURL?
     var thumbnailUrl: NSURL?
     var duration:     NSTimeInterval
@@ -44,6 +44,34 @@ class Track {
         duration       = video.duration
         streamUrl      = streamURLs[XCDYouTubeVideoQuality.Medium360.rawValue]
         thumbnailUrl   = video.mediumThumbnailURL
+    }
+
+    func toStoreObject() -> TrackStore {
+        var store          = TrackStore()
+        store.url          = url
+        store.providerRaw  = provider.rawValue
+        store.serviceId    = serviceId
+        store.title        = title
+        if let s           = streamUrl    { store.streamUrl    = s.absoluteString }
+        if let t           = thumbnailUrl { store.thumbnailUrl = t.absoluteString }
+        store.duration     = Int(duration)
+
+        return store
+    }
+
+    init(store: TrackStore) {
+        provider  = Provider(rawValue: store.providerRaw)!
+        title     = store.title
+        url       = store.url
+        serviceId = store.serviceId
+        duration  = NSTimeInterval(store.duration)
+
+        if let s = store.streamUrl    { streamUrl    = NSURL(string: s) }
+        if let t = store.thumbnailUrl { thumbnailUrl = NSURL(string: t) }
+    }
+
+    class func findBy(#url: String) {
+        TrackStore.findBy(url: url)
     }
 }
 

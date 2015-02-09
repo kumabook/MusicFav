@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14D72i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" selectionStyle="default" indentationWidth="0.0" id="KGk-i7-Jjw" customClass="PlaylistTableViewCell" customModule="MusicFav" customModuleProvider="target">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="80"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Nx2-sw-dTn">
+                        <rect key="frame" x="97" y="3" width="70" height="71"/>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c10-vl-81A">
+                        <rect key="frame" x="175" y="1" width="120" height="45"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="45" id="J27-MC-AEM"/>
+                            <constraint firstAttribute="width" constant="120" id="h0r-Jh-vHr"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="N songs" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p1w-yb-fbN">
+                        <rect key="frame" x="248" y="51" width="64" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="c10-vl-81A" firstAttribute="leading" secondItem="Nx2-sw-dTn" secondAttribute="trailing" constant="8" id="1Cd-06-pxF"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="p1w-yb-fbN" secondAttribute="bottom" constant="-1" id="AN9-84-h7X"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="p1w-yb-fbN" secondAttribute="trailing" id="EeQ-Oq-3uC"/>
+                    <constraint firstItem="c10-vl-81A" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="1" id="MsZ-uJ-coD"/>
+                    <constraint firstItem="Nx2-sw-dTn" firstAttribute="bottom" secondItem="H2p-sc-9uM" secondAttribute="bottomMargin" constant="3" id="RCP-kR-2ZO"/>
+                    <constraint firstItem="Nx2-sw-dTn" firstAttribute="top" secondItem="c10-vl-81A" secondAttribute="top" constant="2" id="To0-7W-FEr"/>
+                    <constraint firstItem="Nx2-sw-dTn" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-7" id="Y0G-Cf-8bP"/>
+                    <constraint firstItem="c10-vl-81A" firstAttribute="top" secondItem="Nx2-sw-dTn" secondAttribute="top" id="bZf-0O-HZ1"/>
+                    <constraint firstItem="Nx2-sw-dTn" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="89" id="vbf-Uh-mt0"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="c10-vl-81A" secondAttribute="trailing" constant="17" id="wGe-rK-cIG"/>
+                </constraints>
+                <variation key="default">
+                    <mask key="constraints">
+                        <exclude reference="Y0G-Cf-8bP"/>
+                        <exclude reference="bZf-0O-HZ1"/>
+                    </mask>
+                </variation>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="thumbImageView" destination="Nx2-sw-dTn" id="dfu-op-ody"/>
+                <outlet property="titleLabel" destination="c10-vl-81A" id="Xfg-nQ-j23"/>
+                <outlet property="trackNumLabel" destination="p1w-yb-fbN" id="8hd-zD-hRc"/>
+            </connections>
+            <point key="canvasLocation" x="340" y="278"/>
+        </tableViewCell>
+    </objects>
+</document>
