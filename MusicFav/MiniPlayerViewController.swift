@@ -78,24 +78,24 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
         let currentPlaylist = self.playlist!
         if currentIndex >= 0 && currentIndex < currentPlaylist.tracks.count {
             let track = currentPlaylist.tracks[currentIndex]
-            self.miniPlayerView.titleLabel.text    = track.title
-            self.miniPlayerView.durationLabel.text = "00:00"
-            self.miniPlayerView.thumbImgView.sd_setImageWithURL(track.thumbnailUrl, completed: { (image, error, cacheType, url) -> Void in
-                let playingInfoCenter: AnyClass? = NSClassFromString("MPNowPlayingInfoCenter")
-                if let center: AnyClass = playingInfoCenter {
-                    let albumArt = MPMediaItemArtwork(image:image)
-                    var info:[String:AnyObject]         = [:]
-                    info[MPMediaItemPropertyTitle]   = track.title
-                    info[MPMediaItemPropertyArtwork] = albumArt
-                    MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = info
-                }
-            })
             let playingInfoCenter: AnyClass? = NSClassFromString("MPNowPlayingInfoCenter")
             if let center: AnyClass = playingInfoCenter {
                 var info:[String:AnyObject]       = [:]
                 info[MPMediaItemPropertyTitle] = track.title
                 MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = info
             }
+            self.miniPlayerView.titleLabel.text    = track.title
+            self.miniPlayerView.durationLabel.text = "00:00"
+            self.miniPlayerView.thumbImgView.sd_setImageWithURL(track.thumbnailUrl, completed: { (image, error, cacheType, url) -> Void in
+                let playingInfoCenter: AnyClass? = NSClassFromString("MPNowPlayingInfoCenter")
+                if let center: AnyClass = playingInfoCenter {
+                    let albumArt                                          = MPMediaItemArtwork(image:image)
+                    var info:[String:AnyObject]                           = [:]
+                    info[MPMediaItemPropertyTitle]                        = track.title
+                    info[MPMediaItemPropertyArtwork]                      = albumArt
+                    MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = info
+                }
+            })
         } else {
             self.miniPlayerView.titleLabel.text    = "..."
             self.miniPlayerView.durationLabel.text = "--:--"
