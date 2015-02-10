@@ -9,6 +9,7 @@
 import UIKit
 
 class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
+    let NEW_PLAYLIST_INDEX = -1
     enum Section: Int {
         case Playing     = 0
         case Reading     = 1
@@ -27,7 +28,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     }
     let tableCellReuseIdentifier = "playlistTableViewCell"
     let cellHeight: CGFloat      = 80
-    var playlists: [Playlist] = []
+    var playlists: [Playlist]    = []
     var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as AppDelegate } }
 
     override func viewDidLoad() {
@@ -43,15 +44,15 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     }
 
     func updateNavbar() {
-        let newPlaylistButton         = UIBarButtonItem(image: UIImage(named: "add_stream"),
-                                                        style: UIBarButtonItemStyle.Plain,
-                                                       target: self,
-                                                       action: "newPlaylist")
-        navigationItem.rightBarButtonItems  = [newPlaylistButton]
+        let newPlaylistButton = UIBarButtonItem(image: UIImage(named: "add_stream"),
+                                                style: UIBarButtonItemStyle.Plain,
+                                               target: self,
+                                               action: "newPlaylist")
+        navigationItem.rightBarButtonItems = [newPlaylistButton]
     }
 
     func newPlaylist() {
-        showTitleEditAlertViewAtIndex(-1)
+        showTitleEditAlertViewAtIndex(NEW_PLAYLIST_INDEX)
     }
 
     func showPlayingPlaylist() {
@@ -107,7 +108,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         if index >= 0 {
             playlists[index].title = newTitle
             PlaylistStore.save(playlists[index])
-        } else {
+        } else if index == NEW_PLAYLIST_INDEX {
             let playlist = Playlist(title: newTitle)
             playlists.append(playlist)
             PlaylistStore.save(playlist)
