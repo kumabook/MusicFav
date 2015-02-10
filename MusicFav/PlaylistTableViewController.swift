@@ -187,7 +187,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             case .Favorites:
                 self.showTitleEditAlertViewAtIndex(indexPath.item)
             default:
-                break
+                tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
             }
         }
         edit.backgroundColor = UIColor.greenColor()
@@ -199,7 +199,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
                 PlaylistStore.remove(playlist)
                 tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             default:
-                break
+                tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
             }
         }
         remove.backgroundColor = UIColor.redColor()
@@ -214,6 +214,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        tableView.deselectRowAtIndexPath(indexPath, animated: true)
         switch (Section(rawValue: indexPath.section)!) {
         case .Playing:
             showPlayingPlaylist()
