@@ -47,22 +47,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
                                                         style: UIBarButtonItemStyle.Plain,
                                                        target: self,
                                                        action: "newPlaylist")
-        let showPlayingPlaylistButton = UIBarButtonItem(image: UIImage(named: "playing_playlist"),
-                                                        style: UIBarButtonItemStyle.Plain,
-                                                       target: self,
-                                                       action: "showPlayingPlaylist")
-        let showReadingPlaylistButton = UIBarButtonItem(image: UIImage(named: "reading_playlist"),
-                                                        style: UIBarButtonItemStyle.Plain,
-                                                       target: self,
-                                                       action: "showReadingPlaylist")
-        navigationItem.rightBarButtonItems  = []
-        navigationItem.rightBarButtonItems?.append(newPlaylistButton)
-        if appDelegate.playingPlaylist != nil {
-            navigationItem.rightBarButtonItems?.append(showPlayingPlaylistButton)
-        }
-        if appDelegate.readingPlaylist != nil {
-            navigationItem.rightBarButtonItems?.append(showReadingPlaylistButton)
-        }
+        navigationItem.rightBarButtonItems  = [newPlaylistButton]
     }
 
     func newPlaylist() {
