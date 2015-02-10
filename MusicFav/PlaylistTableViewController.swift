@@ -18,7 +18,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             get {
                 switch self {
                 case .Favorites:
-                    return "　　　　　　　Favorites"
+                    return " "
                 default:
                     return nil
                 }
