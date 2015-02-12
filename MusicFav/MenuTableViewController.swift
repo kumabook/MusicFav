@@ -13,41 +13,46 @@ import FeedlyKit
 
 
 class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewDataSource {
-    enum Section: Int {
-        case General     = 0
-        case Feedly      = 1
-        case Pocket      = 2
-        case Twitter     = 3
-        static let count = 4
+    enum Section {
+        case All
+        case FeedlyCategory(FeedlyKit.Category)
+        case Pocket
+        case Twitter
 
         var title: String {
             switch self {
-            case .General: return "All"
-            case .Pocket:  return "Pocket"
-            case .Twitter: return "Twitter"
-            case .Feedly:  return "Feeds"
+            case .All:            return "All"
+            case .Pocket:         return "Pocket"
+            case .Twitter:        return "Twitter"
+            case .FeedlyCategory(let category):
+                return category.label
             }
         }
-        func child(viewController: MenuTableViewController, index: Int) -> AnyObject {
+        func child(streamsOfCategories: [FeedlyKit.Category:[Stream]], index: Int) -> AnyObject {
             switch self {
-            case .General: return []
-            case .Pocket:  return []
-            case .Twitter: return []
-            case .Feedly:  return viewController.streams[index]
+            case .All:            return []
+            case .Pocket:         return []
+            case .Twitter:        return []
+            case .FeedlyCategory(let category):
+                if let streams = streamsOfCategories[category] { return streams[index] }
+                else                                           { return [] }
             }
         }
-        func numOfChild(viewController: MenuTableViewController) -> Int {
+        func numOfChild(streamsOfCategories: [FeedlyKit.Category:[Stream]]) -> Int {
             switch self {
-            case .General: return 0
-            case .Pocket:  return 0
-            case .Twitter: return 0
-            case .Feedly:  return viewController.streams.count
+            case .All:            return 0
+            case .Pocket:         return 0
+            case .Twitter:        return 0
+            case .FeedlyCategory(let category):
+                if let streams = streamsOfCategories[category] { return streams.count }
+                else                                           { return 0 }
             }
         }
     }
 
-    var treeView: RATreeView?
-    var streams:  [Stream] = []
+    var treeView:            RATreeView?
+    var sections:            [Section]                      = []
+    var streamsOfCategories: [FeedlyKit.Category: [Stream]] = [:]
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -59,31 +64,58 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
                                               style: UIBarButtonItemStyle.Plain,
                                              target: self,
                                              action: "addStream")
-        self.navigationItem.leftBarButtonItems  = [settingsButton, addStreamButton]
-        self.treeView = RATreeView(frame: self.view.frame)
-        self.treeView?.backgroundColor = UIColor.whiteColor()
-        self.treeView?.delegate = self;
-        self.treeView?.dataSource = self;
-        self.treeView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
-        self.view.addSubview(self.treeView!)
-        if FeedlyAPIClient.sharedInstance.isLoggedIn {
-            self.fetchSubscriptions()
-        } else {
-            self.fetchTrialFeeds()
-        }
+        navigationItem.leftBarButtonItems  = [settingsButton, addStreamButton]
+        treeView = RATreeView(frame: self.view.frame)
+        treeView?.backgroundColor = UIColor.whiteColor()
+        treeView?.delegate = self;
+        treeView?.dataSource = self;
+        treeView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
+        view.addSubview(self.treeView!)
+
+        fetch()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
-    
+
+    func fetch() {
+        sections = [Section.All, Section.Pocket]
+        if FeedlyAPIClient.sharedInstance.isLoggedIn {
+            fetchCategories()
+        } else {
+            fetchTrialFeeds()
+        }
+    }
+
+    func fetchCategories() {
+        FeedlyAPIClient.sharedInstance.fetchCategories()
+            .deliverOn(MainScheduler())
+            .start(next: {categories in
+                for category in categories {
+                    self.streamsOfCategories[category] = []
+                    self.sections.append(Section.FeedlyCategory(category))
+                    println("id \(category.id) label \(category.label)")
+                }
+            },
+            error: {error in
+            },
+            completed: {
+             self.fetchSubscriptions()
+        });
+    }
+
     func fetchSubscriptions() {
         let client = FeedlyAPIClient.sharedInstance
         client.fetchSubscriptions()
             .deliverOn(MainScheduler())
             .start(
                 next: {subscriptions in
-                    self.streams = subscriptions
+                    for subscription in subscriptions {
+                        for c in subscription.categories {
+                            self.streamsOfCategories[c]!.append(subscription)
+                        }
+                    }
                 },
                 error: {error in
                     println("--failure")
@@ -100,7 +132,8 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
             .deliverOn(MainScheduler())
             .start(
                 next: {feeds in
-                    self.streams = feeds
+                    let samplesCategory = FeedlyKit.Category(id: "feed/musicfav-samples", label: "Sample Feeds")
+                    self.streamsOfCategories = [samplesCategory:feeds]
                 },
                 error: {error in
                     println("--failure")
@@ -114,10 +147,10 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     
     func treeView(treeView: RATreeView!, numberOfChildrenOfItem item: AnyObject!) -> Int {
         if item == nil {
-            return Section.count
+            return sections.count
         }
-        if let rawValue = item as? Int {
-            return Section(rawValue: rawValue)!.numOfChild(self)
+        if let index = item as? Int {
+            return sections[index].numOfChild(streamsOfCategories)
         }
         return 0
     }
@@ -126,11 +159,11 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         let cell = treeView.dequeueReusableCellWithIdentifier("reuseIdentifier") as UITableViewCell
         if item == nil {
             cell.textLabel?.text = "Nothing"
-        } else if let rawValue = item as? Int {
-            let section = Section(rawValue: rawValue)!
-            let num     = section.numOfChild(self)
+        } else if let index = item as? Int {
+            let section = sections[index]
+            let num     = section.numOfChild(streamsOfCategories)
             if num > 0 {
-                cell.textLabel?.text = "\(section.title) (\(section.numOfChild(self)))"
+                cell.textLabel?.text = "\(section.title) (\(section.numOfChild(streamsOfCategories)))"
             } else {
                 cell.textLabel?.text = "\(section.title)"
             }
@@ -144,32 +177,32 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         if item == nil {
             return index
         }
-        if let rawValue = item as? Int {
-            return Section(rawValue: rawValue)!.child(self, index: index)
+        if let sectionIndex = item as? Int {
+            return sections[sectionIndex].child(streamsOfCategories, index: index)
         }
         return "Nothing"
     }
     
     func treeView(treeView: RATreeView!, didSelectRowForItem item: AnyObject!) {
         if item == nil {
-        } else if let rawValue = item as? Int {
-            showStream(section:Section(rawValue: rawValue)!)
+        } else if let index = item as? Int {
+            showStream(section:sections[index])
         } else if let stream = item as? Stream {
             showStream(streamId:stream.id)
         }
     }
-    
+
     func showStream(#section: Section) {
         let appDelegate        = UIApplication.sharedApplication().delegate as AppDelegate
         let mainViewController = appDelegate.miniPlayerViewController?.mainViewController
         switch section {
-        case .General:
+        case .All:
             mainViewController?.centerPanel = UINavigationController(rootViewController: TimelineTableViewController(streamId: nil))
         case .Pocket:
             return
         case .Twitter:
             return
-        case .Feedly:
+        case .FeedlyCategory(let category):
             return
         }
         mainViewController?.showCenterPanelAnimated(true)

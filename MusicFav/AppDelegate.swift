@@ -9,6 +9,9 @@
 import UIKit
 import CoreData
 import AVFoundation
+import ReactiveCocoa
+import LlamaKit
+
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,7 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window:                   UIWindow?
     var miniPlayerViewController: MiniPlayerViewController?
     var readingPlaylist:          Playlist?
-    var playingPlaylist:         Playlist? {
+    var playingPlaylist:          Playlist? {
         get {
             return miniPlayerViewController?.currentPlaylist
         }
@@ -35,9 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let audioSession = AVAudioSession()
         audioSession.setCategory(AVAudioSessionCategoryPlayback, error: nil)
         application.beginReceivingRemoteControlEvents()
-        
         if let feedlyAccount = FeedlyAPIClient.sharedInstance.account {
-        } else {
         }
         return true
     }

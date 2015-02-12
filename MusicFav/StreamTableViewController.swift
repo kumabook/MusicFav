@@ -39,27 +39,24 @@ class StreamTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
-        if isLoggedIn {
-            fetchSubscriptions()
-        }
-        fetchFeedsOfMusicTopic()
-    }
-
-    override func loadView() {
-        super.loadView()
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"close",
-                                                                style: UIBarButtonItemStyle.Plain,
-                                                               target: self,
-                                                               action: "close")
+        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title:"close",
+                                                           style: UIBarButtonItemStyle.Plain,
+                                                          target: self,
+                                                          action: "close")
         self.navigationItem.title = "Import to MusicFav"
+        fetch()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+
+    func fetch() {
+        fetchFeedsOfMusicTopic()
+    }
+
     func fetchSubscriptions() {
         client.fetchSubscriptions()
             .deliverOn(MainScheduler())

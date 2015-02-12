@@ -40,6 +40,12 @@ class FeedlyAPIClient {
         return account != nil
     }
 
+    var client: CloudAPIClient {
+        get {
+            CloudAPIClient.Config.accessToken = account?.accessToken.accessToken
+            return CloudAPIClient()
+        }
+    }
     var account: NXOAuth2Account? {
         get {
             if let a = _account {
@@ -76,21 +82,21 @@ class FeedlyAPIClient {
             _profile = profile
         }
     }
-    
+
     func clearAllAccount() {
         let store = NXOAuth2AccountStore.sharedStore() as NXOAuth2AccountStore
         for account in store.accounts as [NXOAuth2Account] {
             if account.accountType == "Feedly" {
-                _account = account
                 store.removeAccount(account)
             }
         }
+        _account = nil
     }
-    
+
     func fetchProfile() -> ColdSignal<Profile> {
         return ColdSignal { (sink, disposable) in
-            let client = FeedlyKit.CloudAPIClient()
-            client.fetchProfile({ (req, res, profile, error) -> Void in
+            let c = self.client
+            c.fetchProfile({ (req, res, profile, error) -> Void in
                 if let e = error {
                     sink.put(.Error(e))
                 } else {
@@ -100,11 +106,11 @@ class FeedlyAPIClient {
             })
         }
     }
-    
+
     func fetchSubscriptions() -> ColdSignal<[Subscription]> {
         return ColdSignal { (sink, disposable) in
-            let client = FeedlyKit.CloudAPIClient()
-            client.fetchSubscriptions({ (req, res, subscriptions, error) -> Void in
+            let c = self.client
+            c.fetchSubscriptions({ (req, res, subscriptions, error) -> Void in
                 if let e = error {
                     sink.put(.Error(e))
                 } else {
@@ -132,6 +138,7 @@ class FeedlyAPIClient {
         }
         return fetchEntries(streamId: streamId, params: params)
     }
+
     func fetchAllEntries(#newerThan: Int64) -> ColdSignal<PaginatedEntryCollection> {
         var params = [
             "count": String(FeedlyAPIClientConfig.perPage),
@@ -158,14 +165,11 @@ class FeedlyAPIClient {
             return fetchEntries(streamId: "topic/music", params: params)
         }
     }
-    
 
     func fetchEntries(#streamId: String, params: AnyObject) -> ColdSignal<PaginatedEntryCollection> {
         return ColdSignal { (sink, disposable) in
-            let client = FeedlyKit.CloudAPIClient()
             var paginationParams = PaginationParams()
-            
-            client.fetchContents(streamId, paginationParams:paginationParams, completionHandler: { (req, res, entries, error) -> Void in
+            self.client.fetchContents(streamId, paginationParams:paginationParams, completionHandler: { (req, res, entries, error) -> Void in
                 if let e = error {
                     sink.put(.Error(e))
                 } else {
@@ -175,12 +179,11 @@ class FeedlyAPIClient {
             })
         }
     }
-    
+
     func fetchFeedsByIds(feedIds: [String]) -> ColdSignal<[Feed]> {
         return ColdSignal { (sink, disposable) in
-            let client = FeedlyKit.CloudAPIClient()
             var paginationParams = PaginationParams()
-            client.fetchFeeds(feedIds, completionHandler: { (req, res, feeds, error) -> Void in
+            self.client.fetchFeeds(feedIds, completionHandler: { (req, res, feeds, error) -> Void in
                 if let e = error {
                     sink.put(.Error(e))
                 } else {
@@ -192,7 +195,20 @@ class FeedlyAPIClient {
         }
     }
 
-    
+    func fetchCategories() -> ColdSignal<[FeedlyKit.Category]> {
+        return ColdSignal { (sink, disposable) in
+            let c = self.client
+            c.fetchCategories({ (req, res, categories, error) -> Void in
+                if let e = error {
+                    sink.put(.Error(e))
+                } else {
+                    sink.put(.Next(Box(categories!)))
+                    sink.put(.Completed)
+                }
+            })
+        }
+    }
+
     func fetchFeedsByTopic(topic: String) -> ColdSignal<[Feed]> {
         return ColdSignal { (sink, disposable) in
             let manager = AFHTTPRequestOperationManager()
@@ -208,7 +224,6 @@ class FeedlyAPIClient {
                     let json = JSON(response)
                     sink.put(.Next(Box(json["results"].array!.map({ Feed(json: $0)}))))
                     sink.put(.Completed)
-                    
                 },
                 failure: { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
                     println(error)

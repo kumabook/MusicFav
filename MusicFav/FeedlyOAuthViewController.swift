@@ -68,7 +68,7 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
             .deliverOn(MainScheduler())
             .start(
                 next: {profile in
-                    println(profile)
+                    println(profile.id)
                     client.profile = profile
                 },
                 error: {error in
@@ -107,16 +107,4 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
         }
         return true
     }
-
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
