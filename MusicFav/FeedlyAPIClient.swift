@@ -211,24 +211,21 @@ class FeedlyAPIClient {
 
     func fetchFeedsByTopic(topic: String) -> ColdSignal<[Feed]> {
         return ColdSignal { (sink, disposable) in
-            let manager = AFHTTPRequestOperationManager()
-            let url = NSString(format: "%@/v3/search/feeds",
-                FeedlyAPIClientConfig.baseUrl)
-
-            manager.requestSerializer.setValue(self.account?.accessToken.accessToken,
-                forHTTPHeaderField:"Authorization")
-            manager.GET(url, parameters: ["query": "#" + topic],
-                success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
-                    println(operation.response)
-                    println(response)
-                    let json = JSON(response)
-                    sink.put(.Next(Box(json["results"].array!.map({ Feed(json: $0)}))))
-                    sink.put(.Completed)
-                },
-                failure: { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
-                    println(error)
-                    println(operation.response)
-                    sink.put(.Error(error))
+            let query = SearchQueryOfFeed(query:"#" + topic)
+            query.locale = "ja_JP"
+            let c = self.client
+            c.searchFeeds(query, completionHandler: { (req, res, feedResults, error) -> Void in
+                if let e = error {
+                    sink.put(.Error(e))
+                } else {
+                    if let _feedResults = feedResults {
+                        println(_feedResults.hint)
+                        println(_feedResults.related)
+                        println(_feedResults.results)
+                        sink.put(.Next(Box(_feedResults.results)))
+                        sink.put(.Completed)
+                    }
+                }
             })
         }
     }
