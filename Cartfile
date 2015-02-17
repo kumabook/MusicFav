@@ -1,4 +1,6 @@
 github "ReactiveCocoa/ReactiveCocoa" ~> 3.0.2
 github "LlamaKit/LlamaKit"           ~> 0.5.0
 github "kumabook/FeedlyKit"          >= 0.0.2
+github "Quick/Quick"                 == 0.2.0
+github "Quick/Nimble"                == 0.3.0
 github "realm/realm-cocoa"
