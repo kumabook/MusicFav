@@ -79,6 +79,39 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         super.didReceiveMemoryWarning()
     }
 
+    func showPreference() {
+        let prefvc = PreferenceViewController()
+        presentViewController(UINavigationController(rootViewController:prefvc), animated: true, completion: nil)
+    }
+
+    func addStream() {
+        let stvc = StreamTableViewController()
+        presentViewController(UINavigationController(rootViewController:stvc), animated: true, completion: nil)
+    }
+
+    func showStream(#section: Section) {
+        let appDelegate        = UIApplication.sharedApplication().delegate as AppDelegate
+        let mainViewController = appDelegate.miniPlayerViewController?.mainViewController
+        switch section {
+        case .All:
+            mainViewController?.centerPanel = UINavigationController(rootViewController: TimelineTableViewController(streamId: nil))
+        case .Pocket:
+            return
+        case .Twitter:
+            return
+        case .FeedlyCategory(let category):
+            return
+        }
+        mainViewController?.showCenterPanelAnimated(true)
+    }
+
+    func showStream(#streamId: String?) {
+        let appDelegate                 = UIApplication.sharedApplication().delegate as AppDelegate
+        let mainViewController          = appDelegate.miniPlayerViewController?.mainViewController
+        mainViewController?.centerPanel = UINavigationController(rootViewController: TimelineTableViewController(streamId: streamId))
+        mainViewController?.showCenterPanelAnimated(true)
+    }
+
     func fetch() {
         sections = [Section.All, Section.Pocket]
         if FeedlyAPIClient.sharedInstance.isLoggedIn {
@@ -191,37 +224,5 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         } else if let stream = item as? Stream {
             showStream(streamId:stream.id)
         }
-    }
-
-    func showStream(#section: Section) {
-        let appDelegate        = UIApplication.sharedApplication().delegate as AppDelegate
-        let mainViewController = appDelegate.miniPlayerViewController?.mainViewController
-        switch section {
-        case .All:
-            mainViewController?.centerPanel = UINavigationController(rootViewController: TimelineTableViewController(streamId: nil))
-        case .Pocket:
-            return
-        case .Twitter:
-            return
-        case .FeedlyCategory(let category):
-            return
-        }
-        mainViewController?.showCenterPanelAnimated(true)
-    }
-    
-    func showStream(#streamId: String?) {
-        let appDelegate                 = UIApplication.sharedApplication().delegate as AppDelegate
-        let mainViewController          = appDelegate.miniPlayerViewController?.mainViewController
-        mainViewController?.centerPanel = UINavigationController(rootViewController: TimelineTableViewController(streamId: streamId))
-        mainViewController?.showCenterPanelAnimated(true)
-    }
-
-    func showPreference() {
-        let prefvc = PreferenceViewController()
-        presentViewController(UINavigationController(rootViewController:prefvc), animated: true, completion: nil)
-    }
-    func addStream() {
-        let stvc = StreamTableViewController()
-        presentViewController(UINavigationController(rootViewController:stvc), animated: true, completion: nil)
     }
 }
