@@ -47,7 +47,6 @@
 		67DA46561A86103B0048B29C /* PlaylistStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DA46551A86103B0048B29C /* PlaylistStore.swift */; };
 		67DA46581A8610A70048B29C /* TrackStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DA46571A8610A70048B29C /* TrackStore.swift */; };
 		67DA465B1A8651CA0048B29C /* PlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DA46591A8651CA0048B29C /* PlaylistTableViewController.swift */; };
-		67DA465C1A8651CA0048B29C /* PlaylistTableViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67DA465A1A8651CA0048B29C /* PlaylistTableViewController.xib */; };
 		67DA465F1A8656A90048B29C /* PlaylistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DA465D1A8656A90048B29C /* PlaylistTableViewCell.swift */; };
 		67DA46601A8656A90048B29C /* PlaylistTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67DA465E1A8656A90048B29C /* PlaylistTableViewCell.xib */; };
 		67DA46621A87B3AB0048B29C /* SelectPlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DA46611A87B3AB0048B29C /* SelectPlaylistTableViewController.swift */; };
@@ -136,7 +135,6 @@
 		67DA46551A86103B0048B29C /* PlaylistStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistStore.swift; sourceTree = "<group>"; };
 		67DA46571A8610A70048B29C /* TrackStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackStore.swift; sourceTree = "<group>"; };
 		67DA46591A8651CA0048B29C /* PlaylistTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewController.swift; sourceTree = "<group>"; };
-		67DA465A1A8651CA0048B29C /* PlaylistTableViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaylistTableViewController.xib; sourceTree = "<group>"; };
 		67DA465D1A8656A90048B29C /* PlaylistTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewCell.swift; sourceTree = "<group>"; };
 		67DA465E1A8656A90048B29C /* PlaylistTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaylistTableViewCell.xib; sourceTree = "<group>"; };
 		67DA46611A87B3AB0048B29C /* SelectPlaylistTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectPlaylistTableViewController.swift; sourceTree = "<group>"; };
@@ -329,7 +327,6 @@
 			children = (
 				6728FA3D1A60B9FD00F693B3 /* TrackTableViewController.swift */,
 				67DA46591A8651CA0048B29C /* PlaylistTableViewController.swift */,
-				67DA465A1A8651CA0048B29C /* PlaylistTableViewController.xib */,
 				67DA46611A87B3AB0048B29C /* SelectPlaylistTableViewController.swift */,
 			);
 			name = Right;
@@ -479,7 +476,6 @@
 				67F7CF151A635BD0008FB7AD /* Main.storyboard in Resources */,
 				67277CB81A434304002FD3E0 /* Images.xcassets in Resources */,
 				67254C7A1A493A570064E5DF /* TimelineTableViewCell.xib in Resources */,
-				67DA465C1A8651CA0048B29C /* PlaylistTableViewController.xib in Resources */,
 				67277CDC1A46DE0E002FD3E0 /* FeedlyOAuthViewController.xib in Resources */,
 				67554F0A1A4F127400F7AE72 /* TrackTableViewCell.xib in Resources */,
 				6727EDFF1A5AC1DE003C6A47 /* MiniPlayerViewController.xib in Resources */,
