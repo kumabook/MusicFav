@@ -101,7 +101,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
             error: {error in
             },
             completed: {
-             self.fetchSubscriptions()
+                self.fetchSubscriptions()
         });
     }
 
@@ -133,6 +133,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
             .start(
                 next: {feeds in
                     let samplesCategory = FeedlyKit.Category(id: "feed/musicfav-samples", label: "Sample Feeds")
+                    self.sections.append(Section.FeedlyCategory(samplesCategory))
                     self.streamsOfCategories = [samplesCategory:feeds]
                 },
                 error: {error in

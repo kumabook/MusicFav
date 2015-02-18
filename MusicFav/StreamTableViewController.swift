@@ -11,17 +11,16 @@ import ReactiveCocoa
 import LlamaKit
 import FeedlyKit
 
-class StreamTableViewController: UITableViewController {
-
+class StreamTableViewController: UITableViewController, UISearchBarDelegate {
+    let SEARCH_BAR_HEIGHT: CGFloat = 40
     enum Section: Int {
-        case SearchResult        = 0
-        case FeedsWithMusicTopic = 1
-        static let count         = 2
+        case SearchResult = 0
+        static let count  = 1
         var title: String? {
             get {
                 switch self {
-                case .FeedsWithMusicTopic:
-                    return "Popular feeds"
+                case .SearchResult:
+                    return nil
                 default:
                     return nil
                 }
@@ -29,14 +28,13 @@ class StreamTableViewController: UITableViewController {
         }
     }
     let client = FeedlyAPIClient.sharedInstance
+    var searchDisposable: Disposable?
     var isLoggedIn: Bool {
         get {
             return client.account != nil
         }
     }
-    var subscriptions:     [Subscription] = []
-    var feedsOfMusicTopic: [Feed]         = []
-
+    var feeds: [Feed] = []
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
@@ -44,55 +42,52 @@ class StreamTableViewController: UITableViewController {
                                                            style: UIBarButtonItemStyle.Plain,
                                                           target: self,
                                                           action: "close")
-        self.navigationItem.title = "Import to MusicFav"
-        fetch()
+        let searchBar                  = UISearchBar(frame:CGRectMake(0, 0, view.bounds.size.width, SEARCH_BAR_HEIGHT))
+        searchBar.placeholder          = "URL or keyword"
+        searchBar.delegate             = self
+        self.tableView.tableHeaderView = searchBar
+        self.navigationItem.title      = "Import to MusicFav"        
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
-    func fetch() {
-        fetchFeedsOfMusicTopic()
-    }
-
-    func fetchSubscriptions() {
-        client.fetchSubscriptions()
-            .deliverOn(MainScheduler())
-            .start(
-                next: {subscriptions in
-                    println(subscriptions)
-                    self.subscriptions = subscriptions
-                },
-                error: {error in
-                    self.alertNetworkFailure()
-                },
-                completed: {
-                    self.tableView.reloadData()
-                    if let sub = self.subscriptions.first as Subscription? {
-                    }
-            })
-    }
-    
-    func fetchFeedsOfMusicTopic() {
-        let account = client.account
-        client.fetchFeedsByTopic("music")
+    func searchFeeds(text: String) {
+        if searchDisposable != nil && !searchDisposable!.disposed {
+            searchDisposable!.dispose()
+        }
+        feeds = []
+        tableView.reloadData()
+        if text.lengthOfBytesUsingEncoding(NSStringEncoding.allZeros) == 0 {
+            return
+        }
+        let query = SearchQueryOfFeed(query: text)
+        searchDisposable = client.searchFeeds(query)
             .deliverOn(MainScheduler())
             .start(
                 next: {feeds in
-                    println(feeds)
-                    self.feedsOfMusicTopic = feeds
+                    self.feeds = feeds
                 },
                 error: {error in
-                    self.alertNetworkFailure()
+                    let ac = FeedlyAPIClient.alertController(error: error, handler: { (action) in })
+                    self.presentViewController(ac, animated: true, completion: nil)
                 },
                 completed: {
                     self.tableView.reloadData()
             })
     }
-    
-    
+
+    // MARK: - UISearchBarDelegate delegate
+
+    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+        searchFeeds(searchBar.text)
+    }
+
+    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+        searchFeeds(searchBar.text)
+    }
+
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -106,31 +101,38 @@ class StreamTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch (Section(rawValue: section)!) {
         case .SearchResult:
-            return 0
-        case .FeedsWithMusicTopic:
-            return feedsOfMusicTopic.count
+            return feeds.count
         }
     }
 
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as UITableViewCell
+        if let searchResultsTableView = searchDisplayController?.searchResultsTableView {
+            if tableView == searchResultsTableView {
+                println("search results")
+            }
+        }
         switch Section(rawValue: indexPath.section)! {
-        case .FeedsWithMusicTopic:
-            cell.textLabel?.text = feedsOfMusicTopic[indexPath.item].title
+        case .SearchResult:
+            let feed = feeds[indexPath.item]
+            cell.textLabel?.text = "\(feed.title) \(feed.subscribers) subscribers"
         default:
             break
         }
         return cell
     }
-    
+
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let feed = feeds[indexPath.item]
+        if isLoggedIn {
+            let ctc = CategoryTableViewController()
+            ctc.feed = feed
+            navigationController?.pushViewController(ctc, animated: true)
+        }
+    }
+
     func close() {
         self.navigationController?.dismissViewControllerAnimated(true, nil)
-    }
-    
-    func alertNetworkFailure() {
-        let ac = UIAlertController(title: "Network error", message: "Network error occured", preferredStyle: UIAlertControllerStyle.Alert)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) in
-        }
     }
 }

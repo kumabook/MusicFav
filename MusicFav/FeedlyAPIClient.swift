@@ -11,6 +11,7 @@ import SwiftyJSON
 import ReactiveCocoa
 import LlamaKit
 import FeedlyKit
+import Alamofire
 
 struct FeedlyAPIClientConfig {
     static let baseUrl      = "https://sandbox.feedly.com"
@@ -27,6 +28,13 @@ struct FeedlyAPIClientConfig {
 }
 
 class FeedlyAPIClient {
+    class func alertController(#error:NSError, handler: (UIAlertAction!) -> Void) -> UIAlertController {
+        let ac = UIAlertController(title: "Network error", message: "Network error occured", preferredStyle: UIAlertControllerStyle.Alert)
+        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: handler)
+        ac.addAction(okAction)
+        return ac
+    }
+
     class var sharedInstance : FeedlyAPIClient {
         struct Static {
             static let instance : FeedlyAPIClient = FeedlyAPIClient()
@@ -209,12 +217,10 @@ class FeedlyAPIClient {
         }
     }
 
-    func fetchFeedsByTopic(topic: String) -> ColdSignal<[Feed]> {
+    func searchFeeds(query: SearchQueryOfFeed) -> ColdSignal<[Feed]> {
         return ColdSignal { (sink, disposable) in
-            let query = SearchQueryOfFeed(query:"#" + topic)
-            query.locale = "ja_JP"
             let c = self.client
-            c.searchFeeds(query, completionHandler: { (req, res, feedResults, error) -> Void in
+            let req = c.searchFeeds(query, completionHandler: { (req, res, feedResults, error) -> Void in
                 if let e = error {
                     sink.put(.Error(e))
                 } else {
@@ -227,6 +233,7 @@ class FeedlyAPIClient {
                     }
                 }
             })
+            disposable.addDisposable({ req.cancel() })
         }
     }
 }

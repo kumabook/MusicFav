@@ -17,4 +17,5 @@
 #import <SDWebImage/UIImageView+WebCache.h>
 #import <XCDYouTubeKit/XCDYouTubeKit.h>
 #import <RATreeView/RATreeView.h>
+#import <MBProgressHUD/MBProgressHUD.h>
 #endif
