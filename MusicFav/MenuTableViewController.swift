@@ -70,7 +70,8 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
                                              target: self,
                                              action: "addStream")
         navigationItem.leftBarButtonItems  = [settingsButton, addStreamButton]
-        let f = self.view.frame
+        view.backgroundColor = UIColor.whiteColor()
+        let f = view.frame
         treeView = RATreeView(frame: CGRect(x: 0, y: 0, width: appDelegate.leftVisibleWidth!, height: f.height))
         treeView?.backgroundColor = UIColor.whiteColor()
         treeView?.delegate = self;
