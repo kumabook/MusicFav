@@ -25,10 +25,7 @@ class CategoryTableViewController: UITableViewController {
                                                             style: UIBarButtonItemStyle.Plain,
                                                            target: self,
                                                            action: "newCategory")
-        HUD = MBProgressHUD(view: self.view)
-        HUD.customView = UIImageView(image:UIImage(named:"checkmark"))
-        HUD.mode = MBProgressHUDModeCustomView;
-        HUD.labelText = "Completed";
+        HUD = MBProgressHUD.createCompletedHUD(self.view)
         navigationController?.view.addSubview(HUD)
         fetch()
     }
@@ -82,14 +79,10 @@ class CategoryTableViewController: UITableViewController {
                 let ac = FeedlyAPIClient.alertController(error: e, handler: { (action) in })
                 self.presentViewController(ac, animated: true, completion: nil)
             } else {
-                self.HUD.show(true)
-                let delayInSeconds = 1.0
-                let startTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delayInSeconds * Double(NSEC_PER_SEC)))
-                self.HUD.hide(true, afterDelay:1)
-                dispatch_after(startTime, dispatch_get_main_queue()) { () -> Void in
+                self.HUD.show(true , duration: 1.0, after: { () -> Void in
                     self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
                     return
-                }
+                })
             }
         }
     }

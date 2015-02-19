@@ -28,7 +28,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         "feed/http://spincoaster.com/feed",
         "feed/http://matome.naver.jp/feed/topic/1Hinb"
     ]
-    
+
+    var leftVisibleWidth:  CGFloat? { get { return miniPlayerViewController?.mainViewController.leftVisibleWidth } }
+    var rightVisibleWidth: CGFloat? { get { return miniPlayerViewController?.mainViewController.rightVisibleWidth } }
+
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         self.window                      = UIWindow(frame: UIScreen.mainScreen().bounds)

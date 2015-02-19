@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		4DA132F8910CA7C9DF275FDC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1075FD21204567B3C7C82D56 /* libPods.a */; };
 		6701D4A81A93A3D5006BFEC6 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6701D4A71A93A3D5006BFEC6 /* CategoryTableViewController.swift */; };
+		6701D4AD1A95048C006BFEC6 /* HUDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6701D4AC1A95048C006BFEC6 /* HUDExtension.swift */; };
 		671664261A738DC5005FE005 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 671664251A738DC5005FE005 /* Playlist.swift */; };
 		6716642A1A738E36005FE005 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671664291A738E36005FE005 /* Alamofire.framework */; };
 		6716642B1A738E3E005FE005 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671664291A738E36005FE005 /* Alamofire.framework */; };
@@ -95,6 +96,7 @@
 /* Begin PBXFileReference section */
 		1075FD21204567B3C7C82D56 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		6701D4A71A93A3D5006BFEC6 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
+		6701D4AC1A95048C006BFEC6 /* HUDExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HUDExtension.swift; sourceTree = "<group>"; };
 		671664251A738DC5005FE005 /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		671664271A738E2A005FE005 /* FeedlyKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FeedlyKit.framework; path = Carthage/Build/iOS/FeedlyKit.framework; sourceTree = "<group>"; };
 		671664291A738E36005FE005 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
@@ -178,6 +180,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6701D4A91A94F308006BFEC6 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				6701D4AC1A95048C006BFEC6 /* HUDExtension.swift */,
+			);
+			name = Util;
+			sourceTree = "<group>";
+		};
 		67254C7D1A499FC70064E5DF /* UserScript */ = {
 			isa = PBXGroup;
 			children = (
@@ -210,6 +220,7 @@
 		67277CAA1A434304002FD3E0 /* MusicFav */ = {
 			isa = PBXGroup;
 			children = (
+				6701D4A91A94F308006BFEC6 /* Util */,
 				67F7D4651A62458C00A5AE68 /* MusicFav.entitlements */,
 				67254C7D1A499FC70064E5DF /* UserScript */,
 				67277CD51A450CB3002FD3E0 /* Model */,
@@ -565,6 +576,7 @@
 				67DB2A121A5588A6006BB490 /* MiniPlayerViewDelegate.swift in Sources */,
 				67277CDB1A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift in Sources */,
 				67DA465F1A8656A90048B29C /* PlaylistTableViewCell.swift in Sources */,
+				6701D4AD1A95048C006BFEC6 /* HUDExtension.swift in Sources */,
 				67277CAE1A434304002FD3E0 /* AppDelegate.swift in Sources */,
 				67CE596E1A52CC0900C86681 /* SoundCloudAPIClient.swift in Sources */,
 				6701D4A81A93A3D5006BFEC6 /* CategoryTableViewController.swift in Sources */,
