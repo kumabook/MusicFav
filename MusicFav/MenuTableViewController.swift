@@ -11,7 +11,6 @@ import ReactiveCocoa
 import LlamaKit
 import FeedlyKit
 
-
 class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewDataSource {
     enum Section {
         case All
@@ -58,6 +57,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     var apiClient:   FeedlyAPIClient  { get { return FeedlyAPIClient.sharedInstance }}
     var appDelegate: AppDelegate      { get { return UIApplication.sharedApplication().delegate as AppDelegate }}
 
+    var refreshControl: UIRefreshControl?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -78,6 +78,11 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         treeView?.dataSource = self;
         treeView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
         view.addSubview(self.treeView!)
+
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action:"fetch", forControlEvents:UIControlEvents.ValueChanged)
+        treeView?.addResreshControl(refreshControl!)
+
         HUD = MBProgressHUD.createCompletedHUD(self.view)
         navigationController?.view.addSubview(HUD)
 
@@ -129,6 +134,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     }
 
     func fetchCategories() {
+        self.refreshControl?.beginRefreshing()
         apiClient.fetchCategories()
             .deliverOn(MainScheduler())
             .start(next: {categories in
@@ -139,13 +145,17 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
                 }
             },
             error: {error in
+                self.refreshControl?.endRefreshing()
+                return
             },
             completed: {
+                self.refreshControl?.endRefreshing()
                 self.fetchSubscriptions()
         });
     }
 
     func fetchSubscriptions() {
+        self.refreshControl?.beginRefreshing()
         apiClient.fetchSubscriptions()
             .deliverOn(MainScheduler())
             .start(
@@ -157,14 +167,17 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
                     }
                 },
                 error: {error in
-                    println("--failure")
+                    self.refreshControl?.endRefreshing()
+                    return
                 },
                 completed: {
+                    self.refreshControl?.endRefreshing()
                     self.treeView!.reloadData()
             })
     }
 
     func fetchTrialFeeds() {
+        self.refreshControl?.beginRefreshing()
         apiClient.fetchFeedsByIds(appDelegate.trialFeeds)
             .deliverOn(MainScheduler())
             .start(
@@ -174,9 +187,11 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
                     self.streamsOfCategories = [samplesCategory:feeds]
                 },
                 error: {error in
-                    println("--failure")
+                    self.refreshControl?.endRefreshing()
+                    return
                 },
                 completed: {
+                    self.refreshControl?.endRefreshing()
                     self.treeView!.reloadData()
             })
     }
