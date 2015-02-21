@@ -27,32 +27,32 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
                 return category.label
             }
         }
-        func child(streamsOfCategories: [FeedlyKit.Category:[Stream]], index: Int) -> AnyObject {
+        func child(streamListDic: [FeedlyKit.Category:[Stream]], index: Int) -> AnyObject {
             switch self {
             case .All:            return []
             case .Pocket:         return []
             case .Twitter:        return []
             case .FeedlyCategory(let category):
-                if let streams = streamsOfCategories[category] { return streams[index] }
+                if let streams = streamListDic[category] { return streams[index] }
                 else                                           { return [] }
             }
         }
-        func numOfChild(streamsOfCategories: [FeedlyKit.Category:[Stream]]) -> Int {
+        func numOfChild(streamListDic: [FeedlyKit.Category:[Stream]]) -> Int {
             switch self {
             case .All:            return 0
             case .Pocket:         return 0
             case .Twitter:        return 0
             case .FeedlyCategory(let category):
-                if let streams = streamsOfCategories[category] { return streams.count }
+                if let streams = streamListDic[category] { return streams.count }
                 else                                           { return 0 }
             }
         }
     }
 
-    var treeView:            RATreeView?
-    var HUD:                 MBProgressHUD!
-    var sections:            [Section]                      = []
-    var streamsOfCategories: [FeedlyKit.Category: [Stream]] = [:]
+    var treeView:      RATreeView?
+    var HUD:           MBProgressHUD!
+    var sections:      [Section]                      = []
+    var streamListDic: [FeedlyKit.Category: [Stream]] = [:]
 
     var apiClient:   FeedlyAPIClient  { get { return FeedlyAPIClient.sharedInstance }}
     var appDelegate: AppDelegate      { get { return UIApplication.sharedApplication().delegate as AppDelegate }}
@@ -80,13 +80,13 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         view.addSubview(self.treeView!)
 
         refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action:"fetch", forControlEvents:UIControlEvents.ValueChanged)
+        refreshControl?.addTarget(self, action:"refresh", forControlEvents:UIControlEvents.ValueChanged)
         treeView?.addResreshControl(refreshControl!)
 
         HUD = MBProgressHUD.createCompletedHUD(self.view)
         navigationController?.view.addSubview(HUD)
 
-        fetch()
+        refresh()
     }
 
     override func didReceiveMemoryWarning() {
@@ -124,76 +124,57 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         mainViewController?.showCenterPanelAnimated(true)
     }
 
-    func fetch() {
+    func refresh() {
         sections = [Section.All, Section.Pocket]
+        self.refreshControl?.beginRefreshing()
+        fetch().deliverOn(MainScheduler()).start(
+            next: { (_sections, _streamListDic) in
+                self.sections.extend(_sections)
+                self.refreshControl?.endRefreshing();
+                self.streamListDic = _streamListDic;  return
+            }, error: { error in
+                self.refreshControl?.endRefreshing(); return
+            }, completed: {
+                self.treeView?.reloadData();          return
+        })
+    }
+
+    func fetch() -> ColdSignal<([Section], [FeedlyKit.Category: [Stream]])> {
         if apiClient.isLoggedIn {
-            fetchCategories()
+            return fetchSubscriptions()
         } else {
-            fetchTrialFeeds()
+            return fetchTrialFeeds()
         }
     }
 
-    func fetchCategories() {
-        self.refreshControl?.beginRefreshing()
-        apiClient.fetchCategories()
-            .deliverOn(MainScheduler())
-            .start(next: {categories in
-                for category in categories {
-                    self.streamsOfCategories[category] = []
-                    self.sections.append(Section.FeedlyCategory(category))
-                    println("id \(category.id) label \(category.label)")
-                }
-            },
-            error: {error in
-                self.refreshControl?.endRefreshing()
-                return
-            },
-            completed: {
-                self.refreshControl?.endRefreshing()
-                self.fetchSubscriptions()
-        });
-    }
-
-    func fetchSubscriptions() {
-        self.refreshControl?.beginRefreshing()
-        apiClient.fetchSubscriptions()
-            .deliverOn(MainScheduler())
-            .start(
-                next: {subscriptions in
+    func fetchSubscriptions() -> ColdSignal<([Section], [FeedlyKit.Category: [Stream]])> {
+        return apiClient.fetchCategories().merge({categoryListSignal in
+            self.apiClient.fetchSubscriptions().map({ subscriptions in
+                return categoryListSignal.map({ categories in
+                    let sections = categories.map({ Section.FeedlyCategory($0) })
+                    var streamListDic: [FeedlyKit.Category: [Stream]] = [:]
+                    for category in categories {
+                        streamListDic[category] = [] as [Stream]
+                    }
                     for subscription in subscriptions {
-                        for c in subscription.categories {
-                            self.streamsOfCategories[c]!.append(subscription)
+                        for category in subscription.categories {
+                            streamListDic[category]!.append(subscription)
                         }
                     }
-                },
-                error: {error in
-                    self.refreshControl?.endRefreshing()
-                    return
-                },
-                completed: {
-                    self.refreshControl?.endRefreshing()
-                    self.treeView!.reloadData()
+                    return (sections, streamListDic)
+                })
             })
+        })
     }
 
-    func fetchTrialFeeds() {
-        self.refreshControl?.beginRefreshing()
-        apiClient.fetchFeedsByIds(appDelegate.trialFeeds)
-            .deliverOn(MainScheduler())
-            .start(
-                next: {feeds in
-                    let samplesCategory = FeedlyKit.Category(id: "feed/musicfav-samples", label: "Sample Feeds")
-                    self.sections.append(Section.FeedlyCategory(samplesCategory))
-                    self.streamsOfCategories = [samplesCategory:feeds]
-                },
-                error: {error in
-                    self.refreshControl?.endRefreshing()
-                    return
-                },
-                completed: {
-                    self.refreshControl?.endRefreshing()
-                    self.treeView!.reloadData()
-            })
+    func fetchTrialFeeds() -> ColdSignal<([Section], [FeedlyKit.Category: [Stream]])> {
+        return apiClient.fetchFeedsByIds(self.appDelegate.trialFeeds).map({feeds in
+            let samplesCategory = FeedlyKit.Category(id: "feed/musicfav-samples",
+                                                  label: "Sample Feeds")
+            let section = Section.FeedlyCategory(samplesCategory)
+            let streamListDic = [samplesCategory:feeds] as [FeedlyKit.Category: [Stream]]
+            return ([section], streamListDic)
+        })
     }
 
     func unsubscribeTo(subscription: Subscription, index: Int, category: FeedlyKit.Category) {
@@ -206,7 +187,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
                 FeedlyAPIClient.alertController(error: e, handler: { (action) -> Void in })
             } else {
                 self.HUD.show(true , duration: 1.0, after: { () -> Void in
-                    self.streamsOfCategories[category]!.removeAtIndex(index)
+                    self.streamListDic[category]!.removeAtIndex(index)
                     self.treeView!.deleteItemsAtIndexes(NSIndexSet(index: index),
                              inParent: self.treeView!.parentForItem(subscription),
                         withAnimation: RATreeViewRowAnimationRight)
@@ -223,7 +204,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
             return sections.count
         }
         if let index = item as? Int {
-            return sections[index].numOfChild(streamsOfCategories)
+            return sections[index].numOfChild(streamListDic)
         }
         return 0
     }
@@ -234,9 +215,9 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
             cell.textLabel?.text = "Nothing"
         } else if let index = item as? Int {
             let section = sections[index]
-            let num     = section.numOfChild(streamsOfCategories)
+            let num     = section.numOfChild(streamListDic)
             if num > 0 {
-                cell.textLabel?.text = "\(section.title) (\(section.numOfChild(streamsOfCategories)))"
+                cell.textLabel?.text = "\(section.title) (\(section.numOfChild(streamListDic)))"
             } else {
                 cell.textLabel?.text = "\(section.title)"
             }
@@ -251,7 +232,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
             return index
         }
         if let sectionIndex = item as? Int {
-            return sections[sectionIndex].child(streamsOfCategories, index: index)
+            return sections[sectionIndex].child(streamListDic, index: index)
         }
         return "Nothing"
     }
@@ -282,7 +263,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         case .Twitter:
             break
         case .FeedlyCategory(let category):
-            if var streams = streamsOfCategories[category] {
+            if var streams = streamListDic[category] {
                 if let subscription = item as? Subscription {
                     var index: Int?
                     for i in 0..<streams.count {
