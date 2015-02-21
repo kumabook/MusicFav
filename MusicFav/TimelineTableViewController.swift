@@ -24,7 +24,7 @@ class TimelineTableViewController: UITableViewController {
     
     let client = FeedlyAPIClient.sharedInstance
     var entries:[Entry] = []
-    let tableCellReuseIdentifier = "timelineTableViewCell"
+    let swipeTableCellReuseIdentifier = "MCSwipeTableViewCell"
     var streamId:           String?
     var streamContinuation: String?
     var state       = State.Normal
@@ -33,6 +33,28 @@ class TimelineTableViewController: UITableViewController {
     var indicator:    UIActivityIndicatorView!
     var reloadButton: UIButton!
     var lastUpdated: Int64 = 0
+
+    var swipeCellBackgroundColor = UIColor(red: 227/255, green: 227/255, blue: 227/255, alpha: 1.0)
+    var markAsSavedColor: UIColor {
+        get { return UIColor(red:  71/255, green: 234/255, blue: 126/255, alpha: 1.0) }
+    }
+    var markAsReadColor: UIColor {
+        get { return UIColor(red: 219/255, green:  36/255, blue:  91/255, alpha: 1.0) }
+    }
+    var markAsSavedImageView: UIView {
+        get {
+            var imageView = UIImageView(image: UIImage(named: "pin"))
+            imageView.contentMode = UIViewContentMode.Center
+            return imageView
+        }
+    }
+    var markAsReadImageView: UIView {
+        get {
+            var imageView = UIImageView(image: UIImage(named: "checkmark"))
+            imageView.contentMode = UIViewContentMode.Center
+            return imageView
+        }
+    }
 
     init(streamId: String?) {
         self.streamId = streamId
@@ -49,8 +71,8 @@ class TimelineTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let nib = UINib(nibName: "TimelineTableViewCell", bundle: nil)
-        tableView.registerNib(nib, forCellReuseIdentifier: tableCellReuseIdentifier)
+        tableView.registerClass(MCSwipeTableViewCell.self, forCellReuseIdentifier: swipeTableCellReuseIdentifier)
+        
         clearsSelectionOnViewWillAppear = true
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "playlist"),
             style: UIBarButtonItemStyle.Plain,
@@ -230,6 +252,30 @@ class TimelineTableViewController: UITableViewController {
             })
     }
 
+    func markAsRead(indexPath: NSIndexPath) {
+        let entry = entries[indexPath.item]
+        if self.client.isLoggedIn {
+            FeedlyAPIClient.sharedInstance.client.markEntriesAsRead([entry.id], completionHandler: { (req, res, error) -> Void in
+                if let e = error { println("Failed to mark as read") }
+                else             { println("Succeeded in marking as read") }
+            })
+        }
+        self.entries.removeAtIndex(indexPath.row)
+        self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+    }
+
+    func markAsSaved(indexPath: NSIndexPath) {
+        let entry = entries[indexPath.item]
+        if self.client.isLoggedIn {
+            FeedlyAPIClient.sharedInstance.client.markEntriesAsSaved([entry.id], completionHandler: { (req, res, error) -> Void in
+                if let e = error { println("Failed to mark as saved") }
+                else             { println("Succeeded in marking as saved") }
+            })
+        }
+        self.entries.removeAtIndex(indexPath.row)
+        self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -253,36 +299,53 @@ class TimelineTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(tableCellReuseIdentifier, forIndexPath: indexPath) as TimelineTableViewCell
+        let entry = entries[indexPath.row]
+        let cell = tableView.dequeueReusableCellWithIdentifier(swipeTableCellReuseIdentifier, forIndexPath:indexPath) as MCSwipeTableViewCell
+        if cell.respondsToSelector("setSeparatorInset:") {
+            cell.separatorInset = UIEdgeInsetsZero
+        }
+        cell.contentView.backgroundColor = UIColor.whiteColor()
+        cell.selectionStyle = .Gray
+        cell.defaultColor   = swipeCellBackgroundColor
 
-        let entry = entries[indexPath.item]
-        cell.titleLabel.text = entry.title
-        if let visual = entry.visual? {
+        cell.setSwipeGestureWithView(markAsSavedImageView,
+                              color: markAsSavedColor,
+                               mode: .Switch,
+                              state: .State1) { (cell, state, mode) in
+                                println("cancel mark as save")
+        }
+        cell.setSwipeGestureWithView(markAsSavedImageView,
+                                color: markAsSavedColor,
+                                 mode: .Exit,
+                                state: MCSwipeTableViewCellState.State2) { (cell, state, mode) in
+                                    self.markAsSaved(self.tableView.indexPathForCell(cell)!)
+        }
+        cell.setSwipeGestureWithView(markAsReadImageView,
+                                color: markAsReadColor,
+                                 mode: .Switch,
+                                state: .State3) { (cell, state, mode) in
+                                    println("cancel mark as read")
+        }
+
+        cell.setSwipeGestureWithView(markAsReadImageView,
+                                color: markAsReadColor,
+                                 mode: .Exit,
+                                state: .State4) { (cell, state, mode) in
+                                    self.markAsRead(self.tableView.indexPathForCell(cell)!)
+        }
+
+        cell.textLabel?.text = entry.title
+/*        if let visual = entry.visual? {
             cell.thumbImgView.sd_setImageWithURL(NSURL(string:visual.url), placeholderImage: UIImage(named: "default_thumb"))
         } else {
             cell.thumbImgView.image = UIImage(named: "default_thumb")
         }
-
+*/
         return cell
     }
-    
-    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
-        let markAsRead = UITableViewRowAction(style: .Default, title: "Mark as Read") {
-            (action, indexPath) in
-            let entry = self.entries.removeAtIndex(indexPath.item)
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        }
-        
-        markAsRead.backgroundColor = UIColor.redColor()
-        
-        return [markAsRead]
-    }
-    
+
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
-    }
-    
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        return false
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {

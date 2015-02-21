@@ -18,4 +18,5 @@
 #import <XCDYouTubeKit/XCDYouTubeKit.h>
 #import <RATreeView/RATreeView.h>
 #import <MBProgressHUD/MBProgressHUD.h>
+#import <MCSwipeTableViewCell/MCSwipeTableViewCell.h>
 #endif
