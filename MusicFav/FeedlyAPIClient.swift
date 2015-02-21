@@ -103,8 +103,7 @@ class FeedlyAPIClient {
 
     func fetchProfile() -> ColdSignal<Profile> {
         return ColdSignal { (sink, disposable) in
-            let c = self.client
-            c.fetchProfile({ (req, res, profile, error) -> Void in
+            let req = self.client.fetchProfile({ (req, res, profile, error) -> Void in
                 if let e = error {
                     sink.put(.Error(e))
                 } else {
@@ -112,13 +111,13 @@ class FeedlyAPIClient {
                     sink.put(.Completed)
                 }
             })
+            disposable.addDisposable({ req.cancel() })
         }
     }
 
     func fetchSubscriptions() -> ColdSignal<[Subscription]> {
         return ColdSignal { (sink, disposable) in
-            let c = self.client
-            c.fetchSubscriptions({ (req, res, subscriptions, error) -> Void in
+            let req = self.client.fetchSubscriptions({ (req, res, subscriptions, error) -> Void in
                 if let e = error {
                     sink.put(.Error(e))
                 } else {
@@ -126,6 +125,7 @@ class FeedlyAPIClient {
                     sink.put(.Completed)
                 }
             })
+            disposable.addDisposable({ req.cancel() })
         }
     }
 
@@ -172,7 +172,7 @@ class FeedlyAPIClient {
 
     func fetchEntries(#streamId: String, paginationParams: PaginationParams) -> ColdSignal<PaginatedEntryCollection> {
         return ColdSignal { (sink, disposable) in
-            self.client.fetchContents(streamId, paginationParams: paginationParams, completionHandler: { (req, res, entries, error) -> Void in
+            let req = self.client.fetchContents(streamId, paginationParams: paginationParams, completionHandler: { (req, res, entries, error) -> Void in
                 if let e = error {
                     sink.put(.Error(e))
                 } else {
@@ -180,14 +180,13 @@ class FeedlyAPIClient {
                     sink.put(.Completed)
                 }
             })
-            return
+            disposable.addDisposable({ req.cancel() })
         }
     }
 
     func fetchFeedsByIds(feedIds: [String]) -> ColdSignal<[Feed]> {
         return ColdSignal { (sink, disposable) in
-            var paginationParams = PaginationParams()
-            self.client.fetchFeeds(feedIds, completionHandler: { (req, res, feeds, error) -> Void in
+            let req = self.client.fetchFeeds(feedIds, completionHandler: { (req, res, feeds, error) -> Void in
                 if let e = error {
                     sink.put(.Error(e))
                 } else {
@@ -196,13 +195,13 @@ class FeedlyAPIClient {
                     sink.put(.Completed)
                 }
             })
+            disposable.addDisposable({ req.cancel() })
         }
     }
 
     func fetchCategories() -> ColdSignal<[FeedlyKit.Category]> {
         return ColdSignal { (sink, disposable) in
-            let c = self.client
-            c.fetchCategories({ (req, res, categories, error) -> Void in
+            let req = self.client.fetchCategories({ (req, res, categories, error) -> Void in
                 if let e = error {
                     sink.put(.Error(e))
                 } else {
@@ -210,13 +209,13 @@ class FeedlyAPIClient {
                     sink.put(.Completed)
                 }
             })
+            disposable.addDisposable({ req.cancel() })
         }
     }
 
     func searchFeeds(query: SearchQueryOfFeed) -> ColdSignal<[Feed]> {
         return ColdSignal { (sink, disposable) in
-            let c = self.client
-            let req = c.searchFeeds(query, completionHandler: { (req, res, feedResults, error) -> Void in
+            let req = self.client.searchFeeds(query, completionHandler: { (req, res, feedResults, error) -> Void in
                 if let e = error {
                     sink.put(.Error(e))
                 } else {
