@@ -268,10 +268,16 @@ class TimelineTableViewController: UITableViewController {
     func markAsSaved(indexPath: NSIndexPath) {
         let entry = entries[indexPath.item]
         if self.client.isLoggedIn {
-            FeedlyAPIClient.sharedInstance.client.markEntriesAsSaved([entry.id], completionHandler: { (req, res, error) -> Void in
+            let client = FeedlyAPIClient.sharedInstance.client
+            client.markEntriesAsSaved([entry.id], completionHandler: { (req, res, error) -> Void in
                 if let e = error { println("Failed to mark as saved") }
                 else             { println("Succeeded in marking as saved") }
             })
+            client.markEntriesAsRead([entry.id], completionHandler: { (req, res, error) -> Void in
+                if let e = error { println("Failed to mark as read") }
+                else             { println("Succeeded in marking as read") }
+            })
+
         }
         self.entries.removeAtIndex(indexPath.row)
         self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
