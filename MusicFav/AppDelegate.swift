@@ -41,7 +41,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let audioSession = AVAudioSession()
         audioSession.setCategory(AVAudioSessionCategoryPlayback, error: nil)
         application.beginReceivingRemoteControlEvents()
-        if let feedlyAccount = FeedlyAPIClient.sharedInstance.account {
+        let feedlyAPIClient = FeedlyAPIClient.sharedInstance
+        if feedlyAPIClient.profile == nil {
+            feedlyAPIClient.clearAllAccount()
         }
         return true
     }
