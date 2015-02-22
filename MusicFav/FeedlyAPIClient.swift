@@ -129,28 +129,27 @@ class FeedlyAPIClient {
         }
     }
 
-    func fetchEntries(#streamId: String, newerThan: Int64) -> ColdSignal<PaginatedEntryCollection> {
-        var paginationParams       = PaginationParams()
-        paginationParams.count     = FeedlyAPIClientConfig.perPage
-        paginationParams.newerThan = newerThan
+    func fetchEntries(#streamId: String, newerThan: Int64, unreadOnly: Bool) -> ColdSignal<PaginatedEntryCollection> {
+        var paginationParams        = PaginationParams()
+        paginationParams.unreadOnly = unreadOnly
+        paginationParams.count      = FeedlyAPIClientConfig.perPage
+        paginationParams.newerThan  = newerThan
         return fetchEntries(streamId: streamId, paginationParams: paginationParams)
     }
 
-    func fetchEntries(#streamId: String, continuation: String?) -> ColdSignal<PaginatedEntryCollection> {
+    func fetchEntries(#streamId: String, continuation: String?, unreadOnly: Bool) -> ColdSignal<PaginatedEntryCollection> {
         var paginationParams          = PaginationParams()
+        paginationParams.unreadOnly   = unreadOnly
         paginationParams.count        = FeedlyAPIClientConfig.perPage
         paginationParams.continuation = continuation
         return fetchEntries(streamId: streamId, paginationParams: paginationParams)
     }
 
-    func fetchAllEntries(#newerThan: Int64) -> ColdSignal<PaginatedEntryCollection> {
-        var paginationParams       = PaginationParams()
-        paginationParams.count     = FeedlyAPIClientConfig.perPage
-        paginationParams.newerThan = newerThan
-        var params = [
-            "count": String(FeedlyAPIClientConfig.perPage),
-            "newerThan": String(newerThan)
-        ]
+    func fetchAllEntries(#newerThan: Int64, unreadOnly: Bool) -> ColdSignal<PaginatedEntryCollection> {
+        var paginationParams        = PaginationParams()
+        paginationParams.unreadOnly = unreadOnly
+        paginationParams.count      = FeedlyAPIClientConfig.perPage
+        paginationParams.newerThan  = newerThan
         if let userId = profile?.id {
             return fetchEntries(streamId: "user/\(userId)/category/global.all", paginationParams: paginationParams)
         } else {
@@ -158,15 +157,18 @@ class FeedlyAPIClient {
         }
     }
 
-    func fetchAllEntries(#continuation: String?) -> ColdSignal<PaginatedEntryCollection> {
-        var paginationParams = PaginationParams()
-        paginationParams.count = FeedlyAPIClientConfig.perPage
+    func fetchAllEntries(#continuation: String?, unreadOnly: Bool) -> ColdSignal<PaginatedEntryCollection> {
+        var paginationParams          = PaginationParams()
+        paginationParams.unreadOnly   = unreadOnly
+        paginationParams.count        = FeedlyAPIClientConfig.perPage
         paginationParams.continuation = continuation
 
         if let userId = profile?.id {
             return fetchEntries(streamId: "user/\(userId)/category/global.all", paginationParams: paginationParams)
         } else {
-            return fetchEntries(streamId: "topic/music", paginationParams: paginationParams)
+            return ColdSignal { (sink, disposable) in
+                sink.put(.Error(NSError(domain: "musicfav", code: 403, userInfo: ["reason":"no account"])))
+            }
         }
     }
 
@@ -190,7 +192,6 @@ class FeedlyAPIClient {
                 if let e = error {
                     sink.put(.Error(e))
                 } else {
-                    print(feeds)
                     sink.put(.Next(Box(feeds!)))
                     sink.put(.Completed)
                 }
@@ -220,9 +221,6 @@ class FeedlyAPIClient {
                     sink.put(.Error(e))
                 } else {
                     if let _feedResults = feedResults {
-                        println(_feedResults.hint)
-                        println(_feedResults.related)
-                        println(_feedResults.results)
                         sink.put(.Next(Box(_feedResults.results)))
                         sink.put(.Completed)
                     }

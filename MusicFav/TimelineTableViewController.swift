@@ -33,6 +33,7 @@ class TimelineTableViewController: UITableViewController {
     var indicator:    UIActivityIndicatorView!
     var reloadButton: UIButton!
     var lastUpdated: Int64 = 0
+    var unreadOnly = true
 
     var swipeCellBackgroundColor = UIColor(red: 227/255, green: 227/255, blue: 227/255, alpha: 1.0)
     var markAsSavedColor: UIColor {
@@ -155,9 +156,9 @@ class TimelineTableViewController: UITableViewController {
 
         var signal: ColdSignal<PaginatedEntryCollection>
         if let id = streamId {
-            signal = client.fetchEntries(streamId:id, newerThan: lastUpdated)
+            signal = client.fetchEntries(streamId:id, newerThan: lastUpdated, unreadOnly: unreadOnly)
         } else if FeedlyAPIClient.sharedInstance.isLoggedIn {
-            signal = client.fetchAllEntries(newerThan: lastUpdated)
+            signal = client.fetchAllEntries(newerThan: lastUpdated, unreadOnly: unreadOnly)
         } else {
             self.refreshControl?.beginRefreshing()
             self.refreshControl?.endRefreshing()
@@ -201,14 +202,14 @@ class TimelineTableViewController: UITableViewController {
         showIndicator()
         var signal: ColdSignal<PaginatedEntryCollection>
         if let id = streamId {
-            signal = client.fetchEntries(streamId:id, continuation: streamContinuation)
+            signal = client.fetchEntries(streamId:id, continuation: streamContinuation, unreadOnly: unreadOnly)
         } else if FeedlyAPIClient.sharedInstance.isLoggedIn {
-            signal = client.fetchAllEntries(continuation: streamContinuation)
+            signal = client.fetchAllEntries(continuation: streamContinuation, unreadOnly: unreadOnly)
         } else {
             let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
             let trialFeeds  = appDelegate.trialFeeds
             if currentIndex < trialFeeds.count {
-                signal = client.fetchEntries(streamId: trialFeeds[currentIndex], continuation: nil)
+                signal = client.fetchEntries(streamId: trialFeeds[currentIndex], continuation: nil, unreadOnly: unreadOnly)
                 currentIndex += 1
             } else {
                 self.hideIndicator()
