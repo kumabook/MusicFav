@@ -157,8 +157,6 @@ class TimelineTableViewController: UITableViewController {
         var signal: ColdSignal<PaginatedEntryCollection>
         if let id = streamId {
             signal = client.fetchEntries(streamId:id, newerThan: lastUpdated, unreadOnly: unreadOnly)
-        } else if FeedlyAPIClient.sharedInstance.isLoggedIn {
-            signal = client.fetchAllEntries(newerThan: lastUpdated, unreadOnly: unreadOnly)
         } else {
             self.refreshControl?.beginRefreshing()
             self.refreshControl?.endRefreshing()
@@ -203,8 +201,6 @@ class TimelineTableViewController: UITableViewController {
         var signal: ColdSignal<PaginatedEntryCollection>
         if let id = streamId {
             signal = client.fetchEntries(streamId:id, continuation: streamContinuation, unreadOnly: unreadOnly)
-        } else if FeedlyAPIClient.sharedInstance.isLoggedIn {
-            signal = client.fetchAllEntries(continuation: streamContinuation, unreadOnly: unreadOnly)
         } else {
             let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
             let trialFeeds  = appDelegate.trialFeeds

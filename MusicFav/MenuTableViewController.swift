@@ -13,23 +13,24 @@ import FeedlyKit
 
 class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewDataSource {
     enum Section {
-        case All
+        case GlobalResource(Stream)
         case FeedlyCategory(FeedlyKit.Category)
         case Pocket
         case Twitter
 
         var title: String {
             switch self {
-            case .All:            return "All"
-            case .Pocket:         return "Pocket"
-            case .Twitter:        return "Twitter"
+            case .GlobalResource(let stream):
+                return stream.title
+            case .Pocket:  return "Pocket"
+            case .Twitter: return "Twitter"
             case .FeedlyCategory(let category):
                 return category.label
             }
         }
         func child(streamListDic: [FeedlyKit.Category:[Stream]], index: Int) -> AnyObject {
             switch self {
-            case .All:            return []
+            case .GlobalResource: return []
             case .Pocket:         return []
             case .Twitter:        return []
             case .FeedlyCategory(let category):
@@ -39,7 +40,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         }
         func numOfChild(streamListDic: [FeedlyKit.Category:[Stream]]) -> Int {
             switch self {
-            case .All:            return 0
+            case .GlobalResource: return 0
             case .Pocket:         return 0
             case .Twitter:        return 0
             case .FeedlyCategory(let category):
@@ -58,6 +59,18 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     var appDelegate: AppDelegate      { get { return UIApplication.sharedApplication().delegate as AppDelegate }}
 
     var refreshControl: UIRefreshControl?
+
+    func defaultSections() -> [Section] {
+        if let userId = apiClient.profile?.id {
+            return [.GlobalResource(FeedlyKit.Category.All(userId)),
+                    .GlobalResource(FeedlyKit.Tag.Saved(userId)),
+                    .GlobalResource(FeedlyKit.Tag.Read(userId)),
+                    .GlobalResource(FeedlyKit.Category.Uncategorized(userId))]
+        }
+        else {
+            return []
+        }
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -106,14 +119,11 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     func showStream(#section: Section) {
         let mainViewController = appDelegate.miniPlayerViewController?.mainViewController
         switch section {
-        case .All:
-            mainViewController?.centerPanel = UINavigationController(rootViewController: TimelineTableViewController(streamId: nil))
-        case .Pocket:
-            return
-        case .Twitter:
-            return
-        case .FeedlyCategory(let category):
-            return
+        case .GlobalResource(let stream):
+            mainViewController?.centerPanel = UINavigationController(rootViewController: TimelineTableViewController(streamId: stream.id))
+        case .Pocket:  return
+        case .Twitter: return
+        case .FeedlyCategory(let category): return
         }
         mainViewController?.showCenterPanelAnimated(true)
     }
@@ -125,7 +135,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     }
 
     func refresh() {
-        sections = [Section.All, Section.Pocket]
+        sections = defaultSections()
         self.refreshControl?.beginRefreshing()
         fetch().deliverOn(MainScheduler()).start(
             next: { (_sections, _streamListDic) in
@@ -256,12 +266,9 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     func treeView(treeView: RATreeView!, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowForItem item: AnyObject!) {
         let sectionIndex = treeView.parentForItem(item) as Int
         switch sections[sectionIndex] {
-        case .All:
-            break
-        case .Pocket:
-            break
-        case .Twitter:
-            break
+        case .GlobalResource: break
+        case .Pocket:         break
+        case .Twitter:        break
         case .FeedlyCategory(let category):
             if var streams = streamListDic[category] {
                 if let subscription = item as? Subscription {

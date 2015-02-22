@@ -145,33 +145,6 @@ class FeedlyAPIClient {
         return fetchEntries(streamId: streamId, paginationParams: paginationParams)
     }
 
-    func fetchAllEntries(#newerThan: Int64, unreadOnly: Bool) -> ColdSignal<PaginatedEntryCollection> {
-        var paginationParams        = PaginationParams()
-        paginationParams.unreadOnly = unreadOnly
-        paginationParams.count      = FeedlyAPIClientConfig.perPage
-        paginationParams.newerThan  = newerThan
-        if let userId = profile?.id {
-            return fetchEntries(streamId: "user/\(userId)/category/global.all", paginationParams: paginationParams)
-        } else {
-            return fetchEntries(streamId: "topic/music", paginationParams: paginationParams)
-        }
-    }
-
-    func fetchAllEntries(#continuation: String?, unreadOnly: Bool) -> ColdSignal<PaginatedEntryCollection> {
-        var paginationParams          = PaginationParams()
-        paginationParams.unreadOnly   = unreadOnly
-        paginationParams.count        = FeedlyAPIClientConfig.perPage
-        paginationParams.continuation = continuation
-
-        if let userId = profile?.id {
-            return fetchEntries(streamId: "user/\(userId)/category/global.all", paginationParams: paginationParams)
-        } else {
-            return ColdSignal { (sink, disposable) in
-                sink.put(.Error(NSError(domain: "musicfav", code: 403, userInfo: ["reason":"no account"])))
-            }
-        }
-    }
-
     func fetchEntries(#streamId: String, paginationParams: PaginationParams) -> ColdSignal<PaginatedEntryCollection> {
         return ColdSignal { (sink, disposable) in
             let req = self.client.fetchContents(streamId, paginationParams: paginationParams, completionHandler: { (req, res, entries, error) -> Void in
