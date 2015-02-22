@@ -35,28 +35,6 @@ class TimelineTableViewController: UITableViewController {
     var lastUpdated: Int64 = 0
     var unreadOnly = true
 
-    var swipeCellBackgroundColor = UIColor(red: 227/255, green: 227/255, blue: 227/255, alpha: 1.0)
-    var markAsSavedColor: UIColor {
-        get { return UIColor(red:  71/255, green: 234/255, blue: 126/255, alpha: 1.0) }
-    }
-    var markAsReadColor: UIColor {
-        get { return UIColor(red: 219/255, green:  36/255, blue:  91/255, alpha: 1.0) }
-    }
-    var markAsSavedImageView: UIView {
-        get {
-            var imageView = UIImageView(image: UIImage(named: "pin"))
-            imageView.contentMode = UIViewContentMode.Center
-            return imageView
-        }
-    }
-    var markAsReadImageView: UIView {
-        get {
-            var imageView = UIImageView(image: UIImage(named: "checkmark"))
-            imageView.contentMode = UIViewContentMode.Center
-            return imageView
-        }
-    }
-
     init(streamId: String?) {
         self.streamId = streamId
         super.init(nibName: "TimelineTableViewController", bundle: NSBundle.mainBundle())
@@ -305,39 +283,14 @@ class TimelineTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let entry = entries[indexPath.row]
         let cell = tableView.dequeueReusableCellWithIdentifier(timelineTableCellReuseIdentifier, forIndexPath:indexPath) as TimelineTableViewCell
-        if cell.respondsToSelector("setSeparatorInset:") {
-            cell.separatorInset = UIEdgeInsetsZero
-        }
-        cell.contentView.backgroundColor = UIColor.whiteColor()
-        cell.selectionStyle = .Gray
-        cell.defaultColor   = swipeCellBackgroundColor
-
-        cell.setSwipeGestureWithView(markAsSavedImageView,
-                              color: markAsSavedColor,
-                               mode: .Switch,
-                              state: .State1) { (cell, state, mode) in
-                                println("cancel mark as save")
-        }
-        cell.setSwipeGestureWithView(markAsSavedImageView,
-                                color: markAsSavedColor,
-                                 mode: .Exit,
-                                state: MCSwipeTableViewCellState.State2) { (cell, state, mode) in
-                                    self.markAsSaved(self.tableView.indexPathForCell(cell)!)
-        }
-        cell.setSwipeGestureWithView(markAsReadImageView,
-                                color: markAsReadColor,
-                                 mode: .Switch,
-                                state: .State3) { (cell, state, mode) in
-                                    println("cancel mark as read")
-        }
-
-        cell.setSwipeGestureWithView(markAsReadImageView,
-                                color: markAsReadColor,
-                                 mode: .Exit,
-                                state: .State4) { (cell, state, mode) in
-                                    self.markAsRead(self.tableView.indexPathForCell(cell)!)
-        }
-
+        cell.prepareSwipeViews(
+            onMarkAsSaved: { (cell) -> Void in
+                self.markAsSaved(self.tableView.indexPathForCell(cell)!)
+                return
+            }, onMarkAsRead: { (cell) -> Void in
+                self.markAsRead(self.tableView.indexPathForCell(cell)!)
+                return
+        })
         cell.titleLabel?.text = entry.title
         if let visual = entry.visual {
             cell.thumbImgView.sd_setImageWithURL(NSURL(string:visual.url), placeholderImage: UIImage(named: "default_thumb"))
