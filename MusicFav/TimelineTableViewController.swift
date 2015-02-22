@@ -24,7 +24,7 @@ class TimelineTableViewController: UITableViewController {
     
     let client = FeedlyAPIClient.sharedInstance
     var entries:[Entry] = []
-    let swipeTableCellReuseIdentifier = "MCSwipeTableViewCell"
+    let timelineTableCellReuseIdentifier = "TimelineTableViewCell"
     var streamId:           String?
     var streamContinuation: String?
     var state       = State.Normal
@@ -72,8 +72,9 @@ class TimelineTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.registerClass(MCSwipeTableViewCell.self, forCellReuseIdentifier: swipeTableCellReuseIdentifier)
-        
+        let nib = UINib(nibName: "TimelineTableViewCell", bundle: nil)
+        tableView.registerNib(nib, forCellReuseIdentifier: timelineTableCellReuseIdentifier)
+
         clearsSelectionOnViewWillAppear = true
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "playlist"),
             style: UIBarButtonItemStyle.Plain,
@@ -303,7 +304,7 @@ class TimelineTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let entry = entries[indexPath.row]
-        let cell = tableView.dequeueReusableCellWithIdentifier(swipeTableCellReuseIdentifier, forIndexPath:indexPath) as MCSwipeTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(timelineTableCellReuseIdentifier, forIndexPath:indexPath) as TimelineTableViewCell
         if cell.respondsToSelector("setSeparatorInset:") {
             cell.separatorInset = UIEdgeInsetsZero
         }
@@ -337,13 +338,13 @@ class TimelineTableViewController: UITableViewController {
                                     self.markAsRead(self.tableView.indexPathForCell(cell)!)
         }
 
-        cell.textLabel?.text = entry.title
-/*        if let visual = entry.visual? {
+        cell.titleLabel?.text = entry.title
+        if let visual = entry.visual {
             cell.thumbImgView.sd_setImageWithURL(NSURL(string:visual.url), placeholderImage: UIImage(named: "default_thumb"))
         } else {
             cell.thumbImgView.image = UIImage(named: "default_thumb")
         }
-*/
+
         return cell
     }
 

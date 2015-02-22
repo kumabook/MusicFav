@@ -8,7 +8,7 @@
 
 import UIKit
 
-class TimelineTableViewCell: UITableViewCell {
+class TimelineTableViewCell: MCSwipeTableViewCell {
 
     @IBOutlet weak var thumbImgView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
