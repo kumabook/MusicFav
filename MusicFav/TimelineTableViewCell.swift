@@ -11,10 +11,10 @@ import UIKit
 class TimelineTableViewCell: MCSwipeTableViewCell {
     var swipeCellBackgroundColor = UIColor(red: 227/255, green: 227/255, blue: 227/255, alpha: 1.0)
     var markAsSavedColor: UIColor {
-        get { return UIColor(red:  71/255, green: 234/255, blue: 126/255, alpha: 1.0) }
+        get { return ColorHelper.greenColor }
     }
     var markAsReadColor: UIColor {
-        get { return UIColor(red: 219/255, green:  36/255, blue:  91/255, alpha: 1.0) }
+        get { return ColorHelper.redColor }
     }
     var markAsSavedImageView: UIView {
         get {
