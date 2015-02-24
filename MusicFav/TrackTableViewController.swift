@@ -168,17 +168,17 @@ class TrackTableViewController: UITableViewController {
             let track = self.playlist!.tracks.removeAtIndex(indexPath.item)
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
-        remove.backgroundColor = UIColor.redColor()
-        let register = UITableViewRowAction(style: .Default, title: "Register") {
+        remove.backgroundColor = ColorHelper.redColor
+        let copy = UITableViewRowAction(style: .Default, title: "Copy") {
             (action, indexPath) in
             let track = self.playlist!.tracks[indexPath.item]
             self.showSelectPlaylistViewController(track)
         }
-        register.backgroundColor = UIColor.blueColor()
+        copy.backgroundColor = ColorHelper.greenColor
         if isReadingPlaylist {
-            return [register]
+            return [copy]
         } else {
-            return [register, remove]
+            return [copy, remove]
         }
     }
 

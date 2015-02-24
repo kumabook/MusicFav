@@ -167,7 +167,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     }
 
     override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
-        let edit = UITableViewRowAction(style: .Default, title: "Edit") {
+        let edit = UITableViewRowAction(style: .Default, title: "Edit title") {
             (action, indexPath) in
             switch (Section(rawValue: indexPath.section)!) {
             case .Favorites:
@@ -176,7 +176,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
                 tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
             }
         }
-        edit.backgroundColor = UIColor.greenColor()
+        edit.backgroundColor = ColorHelper.greenColor
         let remove = UITableViewRowAction(style: .Default, title: "Remove") {
             (action, indexPath) in
             switch (Section(rawValue: indexPath.section)!) {
@@ -188,8 +188,8 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
                 tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
             }
         }
-        remove.backgroundColor = UIColor.redColor()
-        return [remove, edit]
+        remove.backgroundColor = ColorHelper.redColor
+        return [edit, remove]
     }
 
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
