@@ -16,6 +16,7 @@ import LlamaKit
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
+    var appearanceManager:        AppearanceManager?
     var window:                   UIWindow?
     var miniPlayerViewController: MiniPlayerViewController?
     var readingPlaylist:          Playlist?
@@ -33,7 +34,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var rightVisibleWidth: CGFloat? { get { return miniPlayerViewController?.mainViewController.rightVisibleWidth } }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        // Override point for customization after application launch.
+        self.appearanceManager           = AppearanceManager()
+        self.appearanceManager?.apply()
         self.window                      = UIWindow(frame: UIScreen.mainScreen().bounds)
         self.miniPlayerViewController    = MiniPlayerViewController()
         self.window?.rootViewController  = self.miniPlayerViewController
