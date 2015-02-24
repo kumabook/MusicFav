@@ -25,7 +25,7 @@ class TimelineTableViewController: UITableViewController {
     let client = FeedlyAPIClient.sharedInstance
     var entries:[Entry] = []
     let timelineTableCellReuseIdentifier = "TimelineTableViewCell"
-    var streamId:           String?
+    var stream:             Stream?
     var streamContinuation: String?
     var state       = State.Normal
     var isFetching  = false
@@ -35,8 +35,8 @@ class TimelineTableViewController: UITableViewController {
     var lastUpdated: Int64 = 0
     var unreadOnly = true
 
-    init(streamId: String?) {
-        self.streamId = streamId
+    init(stream: Stream?) {
+        self.stream = stream
         super.init(nibName: "TimelineTableViewController", bundle: NSBundle.mainBundle())
     }
 
@@ -91,10 +91,16 @@ class TimelineTableViewController: UITableViewController {
     func loadStream() {
         let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         appDelegate.miniPlayerViewController?.mainViewController.showCenterPanelAnimated(true)
-        
+        if stream == nil {
+            if let userId = client.profile?.id {
+                stream = FeedlyKit.Category.All(userId)
+            }
+        }
         entries = []
         tableView?.reloadData()
         fetchEntries()
+        if let title = stream?.title { self.navigationItem.title = title }
+        else                         { self.navigationItem.title = "Sample feeds" }
     }
     
     func showPlaylist() {
@@ -134,7 +140,7 @@ class TimelineTableViewController: UITableViewController {
         }
 
         var signal: ColdSignal<PaginatedEntryCollection>
-        if let id = streamId {
+        if let id = stream?.id {
             signal = client.fetchEntries(streamId:id, newerThan: lastUpdated, unreadOnly: unreadOnly)
         } else {
             self.refreshControl?.beginRefreshing()
@@ -178,13 +184,13 @@ class TimelineTableViewController: UITableViewController {
         state = State.Fetching
         showIndicator()
         var signal: ColdSignal<PaginatedEntryCollection>
-        if let id = streamId {
+        if let id = stream?.id {
             signal = client.fetchEntries(streamId:id, continuation: streamContinuation, unreadOnly: unreadOnly)
         } else {
             let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-            let trialFeeds  = appDelegate.trialFeeds
-            if currentIndex < trialFeeds.count {
-                signal = client.fetchEntries(streamId: trialFeeds[currentIndex], continuation: nil, unreadOnly: unreadOnly)
+            let sampleFeeds  = appDelegate.sampleFeeds
+            if currentIndex < sampleFeeds.count {
+                signal = client.fetchEntries(streamId: sampleFeeds[currentIndex], continuation: nil, unreadOnly: unreadOnly)
                 currentIndex += 1
             } else {
                 self.hideIndicator()

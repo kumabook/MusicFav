@@ -120,7 +120,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         let mainViewController = appDelegate.miniPlayerViewController?.mainViewController
         switch section {
         case .GlobalResource(let stream):
-            mainViewController?.centerPanel = UINavigationController(rootViewController: TimelineTableViewController(streamId: stream.id))
+            mainViewController?.centerPanel = UINavigationController(rootViewController: TimelineTableViewController(stream: stream))
         case .Pocket:  return
         case .Twitter: return
         case .FeedlyCategory(let category): return
@@ -128,9 +128,9 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         mainViewController?.showCenterPanelAnimated(true)
     }
 
-    func showStream(#streamId: String?) {
+    func showStream(#stream: Stream?) {
         let mainViewController          = appDelegate.miniPlayerViewController?.mainViewController
-        mainViewController?.centerPanel = UINavigationController(rootViewController: TimelineTableViewController(streamId: streamId))
+        mainViewController?.centerPanel = UINavigationController(rootViewController: TimelineTableViewController(stream: stream))
         mainViewController?.showCenterPanelAnimated(true)
     }
 
@@ -178,7 +178,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     }
 
     func fetchTrialFeeds() -> ColdSignal<([Section], [FeedlyKit.Category: [Stream]])> {
-        return apiClient.fetchFeedsByIds(self.appDelegate.trialFeeds).map({feeds in
+        return apiClient.fetchFeedsByIds(self.appDelegate.sampleFeeds).map({feeds in
             let samplesCategory = FeedlyKit.Category(id: "feed/musicfav-samples",
                                                   label: "Sample Feeds")
             let section = Section.FeedlyCategory(samplesCategory)
@@ -252,7 +252,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         } else if let index = item as? Int {
             showStream(section:sections[index])
         } else if let stream = item as? Stream {
-            showStream(streamId:stream.id)
+            showStream(stream:stream)
         }
     }
 

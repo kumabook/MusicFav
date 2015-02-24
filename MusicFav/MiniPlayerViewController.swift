@@ -31,7 +31,7 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
     override init() {
         super.init(nibName: "MiniPlayerViewController", bundle: NSBundle.mainBundle())
         mainViewController                      = JASidePanelController()
-        timelineViewController                  = TimelineTableViewController(streamId: nil)
+        timelineViewController                  = TimelineTableViewController(stream: nil)
         playlistTableViewController             = PlaylistTableViewController()
         menuViewController                      = MenuTableViewController()
         mainViewController.leftPanel            = UINavigationController(rootViewController:menuViewController)

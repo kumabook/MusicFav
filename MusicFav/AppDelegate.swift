@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return miniPlayerViewController?.currentPlaylist
         }
     }
-    let trialFeeds = [
+    let sampleFeeds = [
         "feed/http://spincoaster.com/feed",
         "feed/http://matome.naver.jp/feed/topic/1Hinb"
     ]
