@@ -19,6 +19,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var appearanceManager:        AppearanceManager?
     var window:                   UIWindow?
     var miniPlayerViewController: MiniPlayerViewController?
+    var player:                   Player<PlayerObserver>?
     var readingPlaylist:          Playlist?
     var playingPlaylist:          Playlist? {
         get {
@@ -34,12 +35,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var rightVisibleWidth: CGFloat? { get { return miniPlayerViewController?.mainViewController.rightVisibleWidth } }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        self.appearanceManager           = AppearanceManager()
-        self.appearanceManager?.apply()
-        self.window                      = UIWindow(frame: UIScreen.mainScreen().bounds)
-        self.miniPlayerViewController    = MiniPlayerViewController()
-        self.window?.rootViewController  = self.miniPlayerViewController
-        self.window?.makeKeyAndVisible()
+        player                      = Player()
+        appearanceManager           = AppearanceManager()
+        appearanceManager?.apply()
+        window                      = UIWindow(frame: UIScreen.mainScreen().bounds)
+        miniPlayerViewController    = MiniPlayerViewController()
+        window?.rootViewController  = self.miniPlayerViewController
+        window?.makeKeyAndVisible()
         let audioSession = AVAudioSession()
         audioSession.setCategory(AVAudioSessionCategoryPlayback, error: nil)
         application.beginReceivingRemoteControlEvents()

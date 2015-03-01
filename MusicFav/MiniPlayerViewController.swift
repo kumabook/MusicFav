@@ -29,11 +29,12 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
     var timelineViewController:      TimelineTableViewController!
     var playlistTableViewController: PlaylistTableViewController!
     var menuViewController:          MenuTableViewController!
-    var player:                      Player<PlayerObserver>?
     var currentPlaylist:             Playlist? { get { return player?.currentPlaylist }}
     var currentTrack:                Track?    { get { return player?.currentTrack }}
     var miniPlayerObserver:          MiniPlayerObserver!
-    
+    var app:                         UIApplication { get { return UIApplication.sharedApplication() }}
+    var appDelegate:                 AppDelegate   { get { return app.delegate as AppDelegate }}
+    var player:                      Player<PlayerObserver>? { get { return appDelegate.player }}
     @IBOutlet weak var mainViewContainer: UIView!
     @IBOutlet weak var miniPlayerView:    MiniPlayerView!
 
@@ -49,7 +50,6 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
         mainViewController.centerPanel          = UINavigationController(rootViewController:timelineViewController)
         mainViewController.view.backgroundColor = UIColor.whiteColor()
         mainViewController.allowRightSwipe      = false
-        player                                  = Player()
         miniPlayerObserver                      = MiniPlayerObserver(miniPlayerViewController: self)
     }
     
@@ -125,12 +125,10 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
     }
     
     func showMenu() {
-        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         appDelegate.miniPlayerViewController?.mainViewController.showLeftPanelAnimated(true)
     }
 
     func showPlaylist() {
-        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         appDelegate.miniPlayerViewController?.mainViewController.showRightPanelAnimated(true)
     }
     

@@ -6,7 +6,6 @@
 //  Copyright (c) 2015 Hiroki Kumamoto. All rights reserved.
 //
 
-import Foundation
 import UIKit
 import AVFoundation
 
@@ -152,10 +151,6 @@ enum PlayerState {
         var time = CMTimeMakeWithSeconds(1.0, 1)
         self.timeObserver = player.addPeriodicTimeObserverForInterval(time, queue:nil, usingBlock:self.updateTime)
         player.addObserver(self.proxy, forKeyPath: "status", options: NSKeyValueObservingOptions.allZeros, context: nil)
-        let notificationCenter = NSNotificationCenter.defaultCenter()
-        notificationCenter.addObserver(self, selector: "playerDidPlayToEndTime:",
-                                                 name: AVPlayerItemDidPlayToEndTimeNotification,
-                                               object: nil)
         player.play()
         state = .Play
     }
