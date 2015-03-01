@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Hiroki Kumamoto. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 class AppearanceManager {
     func apply() {

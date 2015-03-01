@@ -6,7 +6,7 @@
 //  Copyright (c) 2015 Hiroki Kumamoto. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 struct ColorHelper {
     static let themeColor = UIColor(red: 240/255, green: 139/255, blue:  51/255, alpha: 1.0)

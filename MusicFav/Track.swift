@@ -7,6 +7,7 @@
 //
 
 import SwiftyJSON
+import XCDYouTubeKit
 import UIKit
 
 enum Provider: String {

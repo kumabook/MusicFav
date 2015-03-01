@@ -10,6 +10,7 @@ import UIKit
 import SwiftyJSON
 import ReactiveCocoa
 import LlamaKit
+import AFNetworking
 
 struct SoundCloudAPIClientConfig {
     static let baseUrl   = "http://api.soundcloud.com"

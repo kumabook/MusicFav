@@ -1,4 +1,5 @@
-platform :ios, '7.0'
+platform :ios, '8.0'
+use_frameworks!
 pod 'NXOAuth2Client',       '>= 1.2.2'
 pod 'AFNetworking',         '>= 2.0'
 pod 'JASidePanels',         '>= 1.3'

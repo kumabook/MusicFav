@@ -9,7 +9,7 @@
 import UIKit
 import ReactiveCocoa
 import LlamaKit
-
+import NXOAuth2Client
 
 class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
 

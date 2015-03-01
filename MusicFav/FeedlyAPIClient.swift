@@ -12,6 +12,7 @@ import ReactiveCocoa
 import LlamaKit
 import FeedlyKit
 import Alamofire
+import NXOAuth2Client
 
 struct FeedlyAPIClientConfig {
     static let baseUrl      = "https://sandbox.feedly.com"

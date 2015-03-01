@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4DA132F8910CA7C9DF275FDC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1075FD21204567B3C7C82D56 /* libPods.a */; };
 		6701D4A81A93A3D5006BFEC6 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6701D4A71A93A3D5006BFEC6 /* CategoryTableViewController.swift */; };
 		6701D4AD1A95048C006BFEC6 /* HUDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6701D4AC1A95048C006BFEC6 /* HUDExtension.swift */; };
 		671664261A738DC5005FE005 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 671664251A738DC5005FE005 /* Playlist.swift */; };
@@ -64,6 +63,7 @@
 		67F7D4921A625A4F00A5AE68 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */; };
 		67F7D4931A625A4F00A5AE68 /* SwiftyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		67FAC5571A738F6C00A32818 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FAC5561A738F6C00A32818 /* Track.swift */; };
+		76DBFB24E45726C28C7E6397 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C231C8D483ACF959FE482B6 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,7 +96,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		1075FD21204567B3C7C82D56 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		1C231C8D483ACF959FE482B6 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6701D4A71A93A3D5006BFEC6 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
 		6701D4AC1A95048C006BFEC6 /* HUDExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HUDExtension.swift; sourceTree = "<group>"; };
 		671664251A738DC5005FE005 /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
@@ -116,7 +116,6 @@
 		67277CC01A434304002FD3E0 /* MusicFavTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MusicFavTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		67277CC51A434304002FD3E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		67277CC61A434304002FD3E0 /* MusicFavTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicFavTests.swift; sourceTree = "<group>"; };
-		67277CD81A4540C3002FD3E0 /* MusicFav-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MusicFav-Bridging-Header.h"; sourceTree = "<group>"; };
 		67277CD91A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedlyOAuthViewController.swift; sourceTree = "<group>"; };
 		67277CDA1A46DE0E002FD3E0 /* FeedlyOAuthViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedlyOAuthViewController.xib; sourceTree = "<group>"; };
 		67277CDD1A46DF98002FD3E0 /* FeedlyAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedlyAPIClient.swift; sourceTree = "<group>"; };
@@ -164,13 +163,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				67AF8E231A922AB80043DF33 /* FeedlyKit.framework in Frameworks */,
-				4DA132F8910CA7C9DF275FDC /* libPods.a in Frameworks */,
 				6716642A1A738E36005FE005 /* Alamofire.framework in Frameworks */,
 				67F7D4921A625A4F00A5AE68 /* SwiftyJSON.framework in Frameworks */,
 				676629B71A85AA3100F3FD33 /* Realm.framework in Frameworks */,
 				6716642B1A738E3E005FE005 /* Alamofire.framework in Frameworks */,
 				67F7D48A1A625A4F00A5AE68 /* LlamaKit.framework in Frameworks */,
 				67F7D4901A625A4F00A5AE68 /* ReactiveCocoa.framework in Frameworks */,
+				76DBFB24E45726C28C7E6397 /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -240,7 +239,6 @@
 				67F7CF141A635BD0008FB7AD /* Main.storyboard */,
 				67277CAF1A434304002FD3E0 /* MusicFav.xcdatamodeld */,
 				67277CAB1A434304002FD3E0 /* Supporting Files */,
-				67277CD81A4540C3002FD3E0 /* MusicFav-Bridging-Header.h */,
 			);
 			path = MusicFav;
 			sourceTree = "<group>";
@@ -380,7 +378,7 @@
 				67F7D4871A625A4F00A5AE68 /* Quick.framework */,
 				67F7D4881A625A4F00A5AE68 /* ReactiveCocoa.framework */,
 				67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */,
-				1075FD21204567B3C7C82D56 /* libPods.a */,
+				1C231C8D483ACF959FE482B6 /* Pods.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -408,6 +406,7 @@
 				E2928A6EB267485F295D2A93 /* Copy Pods Resources */,
 				67277CFF1A471959002FD3E0 /* Embed Frameworks */,
 				67C4A36B1A62948400E6BB67 /* ShellScript */,
+				AB552B6E71CD4410AB4381B5 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -529,6 +528,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "#/usr/local/bin/carthage copy-frameworks";
+		};
+		AB552B6E71CD4410AB4381B5 /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		D2FAC3592B95938FC00F959C /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -726,7 +740,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "ec58641f-2866-405e-b12a-3b7ed8c5c4da";
-				SWIFT_OBJC_BRIDGING_HEADER = "MusicFav/MusicFav-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -748,7 +762,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "ec58641f-2866-405e-b12a-3b7ed8c5c4da";
-				SWIFT_OBJC_BRIDGING_HEADER = "MusicFav/MusicFav-Bridging-Header.h";
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

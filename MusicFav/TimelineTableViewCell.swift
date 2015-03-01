@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MCSwipeTableViewCell
 
 class TimelineTableViewCell: MCSwipeTableViewCell {
     var swipeCellBackgroundColor = UIColor(red: 227/255, green: 227/255, blue: 227/255, alpha: 1.0)

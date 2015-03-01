@@ -10,6 +10,7 @@ import UIKit
 import ReactiveCocoa
 import LlamaKit
 import FeedlyKit
+import MBProgressHUD
 
 class CategoryTableViewController: UITableViewController {
     let client = FeedlyAPIClient.sharedInstance

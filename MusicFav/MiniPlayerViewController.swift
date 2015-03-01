@@ -8,6 +8,8 @@
 
 import UIKit
 import AVFoundation
+import JASidePanels
+import MediaPlayer
 
 class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
     var mainViewController:          JASidePanelController!
