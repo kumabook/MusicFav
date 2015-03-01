@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C81f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14D72i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -37,19 +37,9 @@
                     <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
                     <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
                 </imageView>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zGd-Na-EBN">
-                    <rect key="frame" x="417" y="30" width="43" height="21"/>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                    <nil key="highlightedColor"/>
-                </label>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="titletitletitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qYt-Ht-l6h">
-                    <rect key="frame" x="405" y="8" width="60" height="20"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="20" id="Q33-Kb-M71"/>
-                        <constraint firstAttribute="width" constant="60" id="d6S-t0-Gwt"/>
-                    </constraints>
-                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zGd-Na-EBN">
+                    <rect key="frame" x="420" y="37" width="39" height="18"/>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
@@ -65,6 +55,16 @@
                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                     </state>
                 </button>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="titletitletitle" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qYt-Ht-l6h">
+                    <rect key="frame" x="399" y="8" width="60" height="20"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="20" id="Q33-Kb-M71"/>
+                        <constraint firstAttribute="width" constant="60" id="d6S-t0-Gwt"/>
+                    </constraints>
+                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <nil key="highlightedColor"/>
+                </label>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
@@ -72,11 +72,11 @@
                 <constraint firstItem="qYt-Ht-l6h" firstAttribute="top" secondItem="g2Z-Oq-YId" secondAttribute="topMargin" id="Afh-zE-Fu8"/>
                 <constraint firstAttribute="centerY" secondItem="kPN-nM-sik" secondAttribute="centerY" id="FQH-8a-57H"/>
                 <constraint firstAttribute="centerY" secondItem="rq6-Xf-LdK" secondAttribute="centerY" id="Ge1-3L-Bhj"/>
-                <constraint firstAttribute="trailing" secondItem="qYt-Ht-l6h" secondAttribute="trailing" id="NAv-dq-g67"/>
+                <constraint firstAttribute="trailing" secondItem="qYt-Ht-l6h" secondAttribute="trailing" constant="6" id="NAv-dq-g67"/>
                 <constraint firstAttribute="centerX" secondItem="kPN-nM-sik" secondAttribute="centerX" constant="-2.5" id="OM3-lQ-Jd5"/>
-                <constraint firstItem="qYt-Ht-l6h" firstAttribute="centerX" secondItem="zGd-Na-EBN" secondAttribute="centerX" constant="-3" id="Z5r-UO-CF5"/>
+                <constraint firstItem="qYt-Ht-l6h" firstAttribute="centerX" secondItem="zGd-Na-EBN" secondAttribute="centerX" constant="-10.5" id="Z5r-UO-CF5"/>
                 <constraint firstAttribute="centerY" secondItem="rli-jO-BsB" secondAttribute="centerY" id="nio-An-cNV"/>
-                <constraint firstAttribute="bottom" secondItem="zGd-Na-EBN" secondAttribute="bottom" constant="9" id="o3V-Cy-8dx"/>
+                <constraint firstAttribute="bottom" secondItem="zGd-Na-EBN" secondAttribute="bottom" constant="5" id="o3V-Cy-8dx"/>
                 <constraint firstItem="kPN-nM-sik" firstAttribute="leading" secondItem="rq6-Xf-LdK" secondAttribute="trailing" constant="38" id="puQ-Ns-dSW"/>
             </constraints>
             <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>

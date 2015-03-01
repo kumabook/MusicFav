@@ -101,8 +101,8 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
             })
         } else {
             MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = nil
-            self.miniPlayerView.titleLabel.text                   = "..."
-            self.miniPlayerView.durationLabel.text                = "--:--"
+            self.miniPlayerView.titleLabel.text                   = "no track"
+            self.miniPlayerView.durationLabel.text                = "00:00"
             self.miniPlayerView.thumbImgView.sd_setImageWithURL(nil)
         }
     }
