@@ -8,8 +8,11 @@
 
 import UIKit
 import MCSwipeTableViewCell
+import Snap
 
 class TimelineTableViewCell: MCSwipeTableViewCell {
+    let padding:       CGFloat   = 5.0
+    let labelFontSize: CGFloat   = 20.0
     var swipeCellBackgroundColor = UIColor(red: 227/255, green: 227/255, blue: 227/255, alpha: 1.0)
     var markAsSavedColor: UIColor {
         get { return ColorHelper.greenColor }
@@ -19,16 +22,50 @@ class TimelineTableViewCell: MCSwipeTableViewCell {
     }
     var markAsSavedImageView: UIView {
         get {
-            var imageView = UIImageView(image: UIImage(named: "pin"))
+            let view              = UIView()
+            let label             = UILabel()
+            let imageView         = UIImageView(image: UIImage(named: "pin"))
+            label.text            = "Mark as Save"
+            label.textColor       = UIColor.whiteColor()
+            label.font            = UIFont.boldSystemFontOfSize(self.labelFontSize)
             imageView.contentMode = UIViewContentMode.Center
-            return imageView
+            
+            view.addSubview(label)
+            view.addSubview(imageView)
+            
+            label.snp_makeConstraints { make in
+                make.right.equalTo(imageView.snp_left).with.offset(-self.padding)
+                make.centerY.equalTo(view.snp_centerY)
+            }
+            imageView.snp_makeConstraints { make in
+                make.centerX.equalTo(view.snp_centerX)
+                make.centerY.equalTo(view.snp_centerY)
+            }
+            return view
         }
     }
     var markAsReadImageView: UIView {
         get {
-            var imageView = UIImageView(image: UIImage(named: "checkmark"))
+            let view              = UIView()
+            let label             = UILabel()
+            let imageView         = UIImageView(image: UIImage(named: "checkmark"))
+            label.text            = "Mark as Read"
+            label.textColor       = UIColor.whiteColor()
+            label.font            = UIFont.boldSystemFontOfSize(self.labelFontSize)
             imageView.contentMode = UIViewContentMode.Center
-            return imageView
+
+            view.addSubview(label)
+            view.addSubview(imageView)
+
+            label.snp_makeConstraints { make in
+                make.left.equalTo(imageView.snp_right).with.offset(self.padding)
+                make.centerY.equalTo(view.snp_centerY)
+            }
+            imageView.snp_makeConstraints { make in
+                make.centerX.equalTo(view.snp_centerX)
+                make.centerY.equalTo(view.snp_centerY)
+            }
+            return view
         }
     }
 
