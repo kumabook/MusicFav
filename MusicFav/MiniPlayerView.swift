@@ -9,21 +9,15 @@
 import UIKit
 
 class MiniPlayerView: UIView {
-
-    enum State {
-        case Play
-        case Pause
-    }
-
     @IBOutlet weak var thumbImgView:   UIImageView!
     @IBOutlet weak var durationLabel:  UILabel!
     @IBOutlet weak var titleLabel:     UILabel!
     @IBOutlet weak var playButton:     UIButton!
     @IBOutlet weak var previousButton: UIButton!
     @IBOutlet weak var nextButton:     UIButton!
-    var delegate: MiniPlayerViewDelegate?
-    private var _state = State.Pause
-    var state: State {
+    var delegate:       MiniPlayerViewDelegate?
+    private var _state: PlayerState = .Pause
+    var state: PlayerState {
         get { return _state }
         set(newState) { _state = newState; updatePlayButton() }
     }
@@ -51,7 +45,7 @@ class MiniPlayerView: UIView {
         thumbImgView.addGestureRecognizer(singleTap)
 
         playButton.setImage(UIImage(named: "pause"), forState: UIControlState.Normal)
-        self._state = State.Pause
+        self._state = .Pause
     }
 
     func updatePlayButton() {

@@ -11,30 +11,32 @@ import AVFoundation
 import JASidePanels
 import MediaPlayer
 
-class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
+class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
+    class MiniPlayerObserver: PlayerObserver {
+        let vc: MiniPlayerViewController
+        init(miniPlayerViewController: MiniPlayerViewController) {
+            vc = miniPlayerViewController
+            super.init()
+        }
+        override func timeUpdated()      { vc.updateViews() }
+        override func didPlayToEndTime() { vc.updateViews() }
+        override func statusChanged()    { vc.updateViews() }
+        override func trackChanged()     { vc.updateViews() }
+        override func started()          { vc.updateViews() }
+        override func ended()            { vc.updateViews() }
+    }
     var mainViewController:          JASidePanelController!
     var timelineViewController:      TimelineTableViewController!
     var playlistTableViewController: PlaylistTableViewController!
     var menuViewController:          MenuTableViewController!
-    private var queuePlayer:         AVQueuePlayer?
-    private var playlist:            Playlist?
-    private var currentIndex:        Int = Int.min
-    private var timeObserver:        AnyObject?
-    var currentPlaylist: Playlist? {
-        get {
-            return playlist
-        }
-    }
-
-    var currentTrack: Track? {
-        get {
-            return playlist?.tracks[currentIndex]
-        }
-    }
+    var player:                      Player<PlayerObserver>?
+    var currentPlaylist:             Playlist? { get { return player?.currentPlaylist }}
+    var currentTrack:                Track?    { get { return player?.currentTrack }}
+    var miniPlayerObserver:          MiniPlayerObserver!
     
     @IBOutlet weak var mainViewContainer: UIView!
-    var playButton:     UIButton!
-    @IBOutlet weak var miniPlayerView: MiniPlayerView!
+    @IBOutlet weak var miniPlayerView:    MiniPlayerView!
+
 
     override init() {
         super.init(nibName: "MiniPlayerViewController", bundle: NSBundle.mainBundle())
@@ -47,6 +49,8 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
         mainViewController.centerPanel          = UINavigationController(rootViewController:timelineViewController)
         mainViewController.view.backgroundColor = UIColor.whiteColor()
         mainViewController.allowRightSwipe      = false
+        player                                  = Player()
+        miniPlayerObserver                      = MiniPlayerObserver(miniPlayerViewController: self)
     }
     
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
@@ -60,7 +64,6 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
     override func loadView() {
         super.loadView()
         miniPlayerView.delegate = self
-        println(miniPlayerView.frame.size)
         mainViewContainer.addSubview(mainViewController.view)
         mainViewController.view.frame = mainViewContainer.bounds
         view.bringSubviewToFront(miniPlayerView)
@@ -68,7 +71,8 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.updateViews()
+        updateViews()
+        player?.addObserver(miniPlayerObserver)
     }
     
     override func viewWillLayoutSubviews() {
@@ -87,8 +91,14 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
                 info[MPMediaItemPropertyTitle]                        = track.title
                 MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = info
             }
-            self.miniPlayerView.titleLabel.text    = track.title
-            self.miniPlayerView.durationLabel.text = "00:00"
+            miniPlayerView.titleLabel.text = track.title
+            if let currentSec = player?.currentSec {
+                let str = NSString(format:"%02d:%02d", Int(floor(currentSec / 60)), Int(floor(currentSec % 60)))
+                miniPlayerView.durationLabel.text = str
+            } else {
+                miniPlayerView.durationLabel.text = "00:00"
+            }
+
             self.miniPlayerView.thumbImgView.sd_setImageWithURL(track.thumbnailUrl, completed: { (image, error, cacheType, url) -> Void in
                 let playingInfoCenter: AnyClass? = NSClassFromString("MPNowPlayingInfoCenter")
                 if let center: AnyClass = playingInfoCenter {
@@ -101,10 +111,11 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
             })
         } else {
             MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = nil
-            self.miniPlayerView.titleLabel.text                   = "no track"
-            self.miniPlayerView.durationLabel.text                = "00:00"
-            self.miniPlayerView.thumbImgView.sd_setImageWithURL(nil)
+            miniPlayerView.titleLabel.text    = "no track"
+            miniPlayerView.durationLabel.text = "00:00"
+            miniPlayerView.thumbImgView.sd_setImageWithURL(nil)
         }
+        miniPlayerView.state = player!.currentState
     }
     
     func showOAuthViewController() {
@@ -124,145 +135,25 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
     }
     
     func play(index: Int, playlist: Playlist) {
-        println(self.currentIndex == index)
-        if let _playlist = currentPlaylist {
-            if self.currentIndex == index && _playlist.id == playlist.id {
-                if let player = self.queuePlayer {
-                    if player.items().count > 0 {
-                        player.play()
-                        self.miniPlayerView.state = MiniPlayerView.State.Play
-                    }
-                }
-                return
-            }
-        }
-        self.playlist = playlist
-        let count            = playlist.tracks.count
-        self.currentIndex    = index % count
-        if let player = self.queuePlayer {
-            player.pause()
-            player.removeTimeObserver(self.timeObserver)
-            player.removeAllItems()
-            player.removeObserver(self, forKeyPath: "status")
-        }
-        
-        
-        var _playerItems: [AVPlayerItem] = []
-        for i in 0..<count {
-            if let url = playlist.tracks[(index + i) % count].streamUrl {
-                _playerItems.append(AVPlayerItem(URL:url))
-            }
-        }
-        let player = AVQueuePlayer(items: _playerItems)
-        self.queuePlayer = player
-        player.seekToTime(kCMTimeZero)
-        var time = CMTimeMakeWithSeconds(1.0, 1)
-        self.timeObserver = player.addPeriodicTimeObserverForInterval(time, queue:nil, usingBlock:self.updateTime)
-        player.addObserver(self, forKeyPath: "status", options: NSKeyValueObservingOptions.allZeros, context: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self,
-            selector: "playerDidPlayToEndTime",
-            name: AVPlayerItemDidPlayToEndTimeNotification,
-            object: nil)
-        
-        player.play()
-        self.miniPlayerView.state = MiniPlayerView.State.Play
-        self.updateViews()
+        player?.play(index, playlist: playlist)
     }
-    
-    func toggle() {
-        if currentIndex == Int.min || queuePlayer == nil || playlist == nil {
-            return
-        }
-        switch self.miniPlayerView.state {
-        case .Pause:
-            play(currentIndex, playlist: currentPlaylist!)
-        case .Play:
-            queuePlayer!.pause()
-            self.miniPlayerView.state = MiniPlayerView.State.Pause
-        }
-    }
-    
-    func previous() {
-        if currentIndex == Int.min || playlist == nil {
-            return
-        }
-        switch self.miniPlayerView.state {
-        case .Pause:
-            currentIndex -= 1
-            updateViews()
-        case .Play:
-            play(currentIndex-1, playlist: currentPlaylist!)
-        }
-    }
-    
-    func next() {
-        if currentIndex == Int.min || playlist == nil {
-            return
-        }
-        switch self.miniPlayerView.state {
-        case .Pause:
-            currentIndex += 1
-            updateViews()
-        case .Play:
-            play(currentIndex+1, playlist: currentPlaylist!)
-        }
-    }
-    
-    override func observeValueForKeyPath(keyPath: String, ofObject object: AnyObject, change: [NSObject : AnyObject], context: UnsafeMutablePointer<Void>) {
-        if queuePlayer == nil {
-            return
-        }
-        
-        if object as? NSObject == queuePlayer && keyPath  == "status" {
-            switch queuePlayer!.status {
-            case .ReadyToPlay:
-                self.updateViews()
-                break
-            case .Failed:
-                // notify error
-                break
-            case .Unknown:
-                break
-            }
-        }
-    }
-    
-    func playerDidPlayToEndTime() {
-        println("playerDidPlayToEndTime")
-        if playlist == nil {
-            return
-        }
-        queuePlayer!.removeItem(queuePlayer!.currentItem)
-        currentIndex = (currentIndex + 1) % currentPlaylist!.tracks.count
-        updateViews()
-    }
-    
-    func updateTime(time: CMTime) {
-        if let player = queuePlayer {
-            let currentSec  = CMTimeGetSeconds(time)
-            let durationSec = CMTimeGetSeconds(player.currentItem.duration)
-            self.miniPlayerView.durationLabel.text = NSString(format:"%02d:%02d", Int(floor(currentSec / 60)), Int(floor(currentSec % 60)))
-        }
-    }
-    
+
     // MARK: - MiniPlayerViewDelegate -
     
     func miniPlayerViewPlayButtonTouched() {
-        toggle()
+        player?.toggle()
     }
     
     func miniPlayerViewPreviousButtonTouched() {
-        self.previous()
+        player?.previous()
     }
     
     func miniPlayerViewNextButtonTouched() {
-        self.next()
+        player?.next()
     }
     
     func miniPlayerViewThumbImgTouched() {
-        if currentIndex == Int.min {
-            return
+        if let track = player?.currentTrack {
         }
-        showPlaylist()
     }
 }

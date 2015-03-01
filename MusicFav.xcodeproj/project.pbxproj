@@ -11,7 +11,6 @@
 		6701D4AD1A95048C006BFEC6 /* HUDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6701D4AC1A95048C006BFEC6 /* HUDExtension.swift */; };
 		671664261A738DC5005FE005 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 671664251A738DC5005FE005 /* Playlist.swift */; };
 		6716642A1A738E36005FE005 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671664291A738E36005FE005 /* Alamofire.framework */; };
-		6716642B1A738E3E005FE005 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671664291A738E36005FE005 /* Alamofire.framework */; };
 		6716642C1A738E3E005FE005 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 671664291A738E36005FE005 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6716642E1A738E3E005FE005 /* FeedlyKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 671664271A738E2A005FE005 /* FeedlyKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6724E1C51A9C9E9900D8E0FA /* ColorHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6724E1C41A9C9E9900D8E0FA /* ColorHelper.swift */; };
@@ -35,6 +34,7 @@
 		6728FA391A60580A00F693B3 /* PreferenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6728FA371A60580A00F693B3 /* PreferenceViewController.swift */; };
 		6728FA3A1A60580A00F693B3 /* PreferenceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6728FA381A60580A00F693B3 /* PreferenceViewController.xib */; };
 		6728FA3E1A60B9FD00F693B3 /* TrackTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6728FA3D1A60B9FD00F693B3 /* TrackTableViewController.swift */; };
+		6747CEB41AA3204900A6A16B /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6747CEB31AA3204900A6A16B /* Player.swift */; };
 		67554F091A4F127400F7AE72 /* TrackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */; };
 		67554F0A1A4F127400F7AE72 /* TrackTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */; };
 		676629B71A85AA3100F3FD33 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 676629B61A85AA3100F3FD33 /* Realm.framework */; };
@@ -127,6 +127,7 @@
 		6728FA371A60580A00F693B3 /* PreferenceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferenceViewController.swift; sourceTree = "<group>"; };
 		6728FA381A60580A00F693B3 /* PreferenceViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferenceViewController.xib; sourceTree = "<group>"; };
 		6728FA3D1A60B9FD00F693B3 /* TrackTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewController.swift; sourceTree = "<group>"; };
+		6747CEB31AA3204900A6A16B /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewCell.swift; sourceTree = "<group>"; };
 		67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrackTableViewCell.xib; sourceTree = "<group>"; };
 		676629B61A85AA3100F3FD33 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
@@ -166,7 +167,6 @@
 				6716642A1A738E36005FE005 /* Alamofire.framework in Frameworks */,
 				67F7D4921A625A4F00A5AE68 /* SwiftyJSON.framework in Frameworks */,
 				676629B71A85AA3100F3FD33 /* Realm.framework in Frameworks */,
-				6716642B1A738E3E005FE005 /* Alamofire.framework in Frameworks */,
 				67F7D48A1A625A4F00A5AE68 /* LlamaKit.framework in Frameworks */,
 				67F7D4901A625A4F00A5AE68 /* ReactiveCocoa.framework in Frameworks */,
 				76DBFB24E45726C28C7E6397 /* Pods.framework in Frameworks */,
@@ -225,6 +225,7 @@
 		67277CAA1A434304002FD3E0 /* MusicFav */ = {
 			isa = PBXGroup;
 			children = (
+				6747CEB21AA31A7000A6A16B /* Player */,
 				6701D4A91A94F308006BFEC6 /* Util */,
 				67F7D4651A62458C00A5AE68 /* MusicFav.entitlements */,
 				67254C7D1A499FC70064E5DF /* UserScript */,
@@ -356,6 +357,14 @@
 				6727EDFD1A5AC1DE003C6A47 /* MiniPlayerViewController.xib */,
 			);
 			name = Global;
+			sourceTree = "<group>";
+		};
+		6747CEB21AA31A7000A6A16B /* Player */ = {
+			isa = PBXGroup;
+			children = (
+				6747CEB31AA3204900A6A16B /* Player.swift */,
+			);
+			name = Player;
 			sourceTree = "<group>";
 		};
 		676629B51A85A43500F3FD33 /* Persistent */ = {
@@ -593,6 +602,7 @@
 				67CE596A1A51206D00C86681 /* MiniPlayerView.swift in Sources */,
 				6728FA391A60580A00F693B3 /* PreferenceViewController.swift in Sources */,
 				67254C791A493A570064E5DF /* TimelineTableViewCell.swift in Sources */,
+				6747CEB41AA3204900A6A16B /* Player.swift in Sources */,
 				67DB2A121A5588A6006BB490 /* MiniPlayerViewDelegate.swift in Sources */,
 				67277CDB1A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift in Sources */,
 				67DA465F1A8656A90048B29C /* PlaylistTableViewCell.swift in Sources */,

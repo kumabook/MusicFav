@@ -78,15 +78,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             
             switch event.subtype {
             case UIEventSubtype.RemoteControlPlay:
-                self.miniPlayerViewController?.toggle()
+                self.miniPlayerViewController?.player?.toggle()
             case UIEventSubtype.RemoteControlPause:
-                self.miniPlayerViewController?.toggle()
+                self.miniPlayerViewController?.player?.toggle()
             case UIEventSubtype.RemoteControlTogglePlayPause:
-                self.miniPlayerViewController?.toggle()
+                self.miniPlayerViewController?.player?.toggle()
             case UIEventSubtype.RemoteControlPreviousTrack:
-                self.miniPlayerViewController?.previous()
+                self.miniPlayerViewController?.player?.previous()
             case UIEventSubtype.RemoteControlNextTrack:
-                self.miniPlayerViewController?.next()
+                self.miniPlayerViewController?.player?.next()
             default:
                 break;
             }
