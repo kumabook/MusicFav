@@ -38,7 +38,6 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
     @IBOutlet weak var mainViewContainer: UIView!
     @IBOutlet weak var miniPlayerView:    MiniPlayerView!
 
-
     override init() {
         super.init(nibName: "MiniPlayerViewController", bundle: NSBundle.mainBundle())
         mainViewController                      = JASidePanelController()
@@ -92,9 +91,8 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
                 MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = info
             }
             miniPlayerView.titleLabel.text = track.title
-            if let currentSec = player?.currentSec {
-                let str = NSString(format:"%02d:%02d", Int(floor(currentSec / 60)), Int(floor(currentSec % 60)))
-                miniPlayerView.durationLabel.text = str
+            if let (current, total) = player?.secondPair {
+                miniPlayerView.durationLabel.text = TimeHelper.timeStr(Float(current))
             } else {
                 miniPlayerView.durationLabel.text = "00:00"
             }
@@ -152,6 +150,8 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
     
     func miniPlayerViewThumbImgTouched() {
         if let track = player?.currentTrack {
+            let pvc = PlayerViewController()
+            presentViewController(UINavigationController(rootViewController: pvc), animated: true, completion: nil)
         }
     }
 }

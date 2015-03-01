@@ -35,9 +35,9 @@ class MiniPlayerView: UIView {
         view.frame = self.bounds;
         view.autoresizingMask = UIViewAutoresizing.FlexibleWidth|UIViewAutoresizing.FlexibleHeight;
         self.addSubview(view)
-        self.playButton.addTarget(self,     action: "playButtonTapped",     forControlEvents: UIControlEvents.TouchUpInside)
+        self.playButton.addTarget(    self, action: "playButtonTapped",     forControlEvents: UIControlEvents.TouchUpInside)
         self.previousButton.addTarget(self, action: "previousButtonTapped", forControlEvents: UIControlEvents.TouchUpInside)
-        self.nextButton.addTarget(self,     action: "nextButtonTapped",     forControlEvents: UIControlEvents.TouchUpInside)
+        self.nextButton.addTarget(    self, action: "nextButtonTapped",     forControlEvents: UIControlEvents.TouchUpInside)
         
         let singleTap = UITapGestureRecognizer(target:self, action:"thumbnailImgTapped")
         singleTap.numberOfTapsRequired = 1;

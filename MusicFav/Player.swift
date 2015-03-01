@@ -1,4 +1,3 @@
-//
 //  Player.swift
 //  MusicFav
 //
@@ -80,12 +79,13 @@ enum PlayerState {
     private var queuePlayer:  AVQueuePlayer?
     private var playlist:     Playlist?
     private var currentIndex: Int = Int.min
-    private var currentTime:  CMTime?
+    private var currentTime:  CMTime? { get { return queuePlayer?.currentTime() }}
+    private var count:        Int?    { get { return currentPlaylist?.tracks.count }}
     private var timeObserver: AnyObject?
     private var state:        PlayerState
     private var proxy:        AVQueuePlayerNotificationProxy
     private var statusProxy:  ObserverProxy?;
-    private var endProxy:  ObserverProxy?;
+    private var endProxy:     ObserverProxy?;
     override init() {
         state = .Pause
         proxy = AVQueuePlayerNotificationProxy()
@@ -111,11 +111,22 @@ enum PlayerState {
     func ended()                   { for o in observers { o.ended() }}
     func errorOccured()            { for o in observers { o.errorOccured() }}
 
-    var currentPlaylist: Playlist?   { get { return playlist }}
-    var currentTrack:    Track?      { get { return playlist?.tracks[currentIndex] }}
-    var currentSec:      Float64?    { get { return currentTime == nil ? nil : CMTimeGetSeconds(currentTime!) }}
-    var currentState:    PlayerState { get { return state }}
-    var totalSec:        Float64?    { get { return queuePlayer == nil ? nil : CMTimeGetSeconds(queuePlayer!.currentItem.duration) }}
+    var avPlayer:         AVPlayer?   { get { return queuePlayer }}
+    var playerItemsCount: Int?        { get { return queuePlayer?.items().count }}
+    var currentPlaylist:  Playlist?   { get { return playlist }}
+    var currentTrack:     Track?      { get { return playlist?.tracks[currentIndex] }}
+    var currentState:     PlayerState { get { return state }}
+    var secondPair:       (Float64, Float64)? {
+        get {
+            if let count = playerItemsCount {
+                if count == 0 { return nil }
+                if let item = queuePlayer?.currentItem {
+                    return (CMTimeGetSeconds(item.currentTime()), CMTimeGetSeconds(item.duration))
+                }
+            }
+            return nil
+        }
+    }
 
     func play(index: Int, playlist: Playlist) {
         if let _playlist = currentPlaylist {
@@ -177,7 +188,7 @@ enum PlayerState {
             currentIndex -= 1
             statusChanged()
         case .Play:
-            play(currentIndex-1, playlist: currentPlaylist!)
+            play(currentIndex - 1, playlist: currentPlaylist!)
         }
     }
 
@@ -187,10 +198,10 @@ enum PlayerState {
         }
         switch state {
         case .Pause:
-            currentIndex += 1
+            currentIndex = (currentIndex + 1) % count!
             statusChanged()
         case .Play:
-            play(currentIndex+1, playlist: currentPlaylist!)
+            play(currentIndex + 1 % count!, playlist: currentPlaylist!)
         }
     }
 
@@ -199,7 +210,7 @@ enum PlayerState {
             return
         }
         queuePlayer!.removeItem(queuePlayer!.currentItem)
-        currentIndex = (currentIndex + 1) % currentPlaylist!.tracks.count
+        currentIndex = (currentIndex + 1) % count!
         ended()
     }
 
@@ -218,8 +229,11 @@ enum PlayerState {
 
     func updateTime(time: CMTime) {
         if let player = queuePlayer {
-            currentTime  = time
             timeUpdated()
         }
+    }
+
+    func seekToTime(time: CMTime) {
+        queuePlayer?.seekToTime(time)
     }
 }
