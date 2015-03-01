@@ -25,6 +25,12 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
             return playlist
         }
     }
+
+    var currentTrack: Track? {
+        get {
+            return playlist?.tracks[currentIndex]
+        }
+    }
     
     @IBOutlet weak var mainViewContainer: UIView!
     var playButton:     UIButton!
@@ -74,16 +80,11 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
     }
     
     func updateViews() {
-        if playlist == nil {
-            return
-        }
-        let currentPlaylist = self.playlist!
-        if currentIndex >= 0 && currentIndex < currentPlaylist.tracks.count {
-            let track = currentPlaylist.tracks[currentIndex]
+        if let track = currentTrack {
             let playingInfoCenter: AnyClass? = NSClassFromString("MPNowPlayingInfoCenter")
             if let center: AnyClass = playingInfoCenter {
-                var info:[String:AnyObject]       = [:]
-                info[MPMediaItemPropertyTitle] = track.title
+                var info:[String:AnyObject]                           = [:]
+                info[MPMediaItemPropertyTitle]                        = track.title
                 MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = info
             }
             self.miniPlayerView.titleLabel.text    = track.title
@@ -99,8 +100,9 @@ class MiniPlayerViewController:   UIViewController, MiniPlayerViewDelegate {
                 }
             })
         } else {
-            self.miniPlayerView.titleLabel.text    = "..."
-            self.miniPlayerView.durationLabel.text = "--:--"
+            MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = nil
+            self.miniPlayerView.titleLabel.text                   = "..."
+            self.miniPlayerView.durationLabel.text                = "--:--"
             self.miniPlayerView.thumbImgView.sd_setImageWithURL(nil)
         }
     }
