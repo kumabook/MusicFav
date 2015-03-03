@@ -20,6 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window:                   UIWindow?
     var miniPlayerViewController: MiniPlayerViewController?
     var player:                   Player<PlayerObserver>?
+    var playerView:               PlayerView?
     var readingPlaylist:          Playlist?
     var playingPlaylist:          Playlist? {
         get {

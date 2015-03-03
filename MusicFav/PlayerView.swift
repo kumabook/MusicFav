@@ -10,6 +10,7 @@ import UIKit
 import AVFoundation
 
 class PlayerView: UIButton {
+    var videoEnabled = false
     var player: AVPlayer {
         get {
             let layer: AVPlayerLayer = self.layer as AVPlayerLayer

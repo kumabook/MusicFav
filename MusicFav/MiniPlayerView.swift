@@ -9,7 +9,7 @@
 import UIKit
 
 class MiniPlayerView: UIView {
-    @IBOutlet weak var thumbImgView:   UIImageView!
+    @IBOutlet weak var playerView:     PlayerView!
     @IBOutlet weak var durationLabel:  UILabel!
     @IBOutlet weak var titleLabel:     UILabel!
     @IBOutlet weak var playButton:     UIButton!
@@ -38,11 +38,7 @@ class MiniPlayerView: UIView {
         self.playButton.addTarget(    self, action: "playButtonTapped",     forControlEvents: UIControlEvents.TouchUpInside)
         self.previousButton.addTarget(self, action: "previousButtonTapped", forControlEvents: UIControlEvents.TouchUpInside)
         self.nextButton.addTarget(    self, action: "nextButtonTapped",     forControlEvents: UIControlEvents.TouchUpInside)
-        
-        let singleTap = UITapGestureRecognizer(target:self, action:"thumbnailImgTapped")
-        singleTap.numberOfTapsRequired = 1;
-        thumbImgView.userInteractionEnabled = true
-        thumbImgView.addGestureRecognizer(singleTap)
+        self.playerView.addTarget(    self, action: "thumbnailImgTapped",   forControlEvents: UIControlEvents.TouchUpInside)
 
         playButton.setImage(UIImage(named: "pause"), forState: UIControlState.Normal)
         self._state = .Pause
@@ -53,7 +49,7 @@ class MiniPlayerView: UIView {
         case .Pause:
             playButton.setImage(UIImage(named: "pause"), forState: UIControlState.Normal)
         case .Play:
-            playButton.setImage(UIImage(named: "play"), forState: UIControlState.Normal)
+            playButton.setImage(UIImage(named: "play"),  forState: UIControlState.Normal)
         }
     }
     

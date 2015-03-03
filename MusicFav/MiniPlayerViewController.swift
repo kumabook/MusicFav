@@ -73,6 +73,14 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
         updateViews()
         player?.addObserver(miniPlayerObserver)
     }
+
+    override func viewWillDisappear(animated: Bool) {
+        miniPlayerView.playerView.player = AVPlayer()
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        if let avPlayer = player?.avPlayer { miniPlayerView.playerView.player = avPlayer }
+    }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -96,8 +104,9 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
             } else {
                 miniPlayerView.durationLabel.text = "00:00"
             }
-
-            self.miniPlayerView.thumbImgView.sd_setImageWithURL(track.thumbnailUrl, completed: { (image, error, cacheType, url) -> Void in
+            self.miniPlayerView.playerView.sd_setBackgroundImageWithURL(track.thumbnailUrl,
+                forState: UIControlState.allZeros,
+               completed: { (image, error, cacheType, url) -> Void in
                 let playingInfoCenter: AnyClass? = NSClassFromString("MPNowPlayingInfoCenter")
                 if let center: AnyClass = playingInfoCenter {
                     let albumArt                                          = MPMediaItemArtwork(image:image)
@@ -111,7 +120,7 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
             MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = nil
             miniPlayerView.titleLabel.text    = "no track"
             miniPlayerView.durationLabel.text = "00:00"
-            miniPlayerView.thumbImgView.sd_setImageWithURL(nil)
+            miniPlayerView.playerView.setBackgroundImage(nil, forState: UIControlState.allZeros)
         }
         miniPlayerView.state = player!.currentState
     }
@@ -132,6 +141,7 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
     
     func play(index: Int, playlist: Playlist) {
         player?.play(index, playlist: playlist)
+        if let avPlayer = player?.avPlayer { miniPlayerView.playerView.player = avPlayer }
     }
 
     // MARK: - MiniPlayerViewDelegate -
@@ -151,6 +161,7 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
     func miniPlayerViewThumbImgTouched() {
         if let track = player?.currentTrack {
             let pvc = PlayerViewController()
+            pvc.playerView = miniPlayerView.playerView
             presentViewController(UINavigationController(rootViewController: pvc), animated: true, completion: nil)
         }
     }

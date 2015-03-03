@@ -128,6 +128,14 @@ class PlayerViewController: UIViewController {
         player?.addObserver(modalPlayerObserver)
     }
 
+    override func viewWillDisappear(animated: Bool) {
+        playerView.player = AVPlayer()
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        if let avPlayer = player?.avPlayer { playerView.player = avPlayer }
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -172,7 +180,6 @@ class PlayerViewController: UIViewController {
         if let track = currentTrack {
             navigationItem.title = track.title
             if let avPlayer = player?.avPlayer {
-                playerView.player = avPlayer
                 playerView.sd_setBackgroundImageWithURL(nil, forState: UIControlState.allZeros)
             } else {
                 playerView.sd_setBackgroundImageWithURL(track.thumbnailUrl, forState: UIControlState.allZeros)
