@@ -47,7 +47,6 @@
 		67CE596C1A51208000C86681 /* MiniPlayerView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67CE596B1A51208000C86681 /* MiniPlayerView.xib */; };
 		67CE596E1A52CC0900C86681 /* SoundCloudAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67CE596D1A52CC0900C86681 /* SoundCloudAPIClient.swift */; };
 		67D935981AA369C40061C1A0 /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D935961AA369C40061C1A0 /* PlayerViewController.swift */; };
-		67D935991AA369C40061C1A0 /* PlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67D935971AA369C40061C1A0 /* PlayerViewController.xib */; };
 		67D9359D1AA37E8F0061C1A0 /* TimeHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D9359C1AA37E8F0061C1A0 /* TimeHelper.swift */; };
 		67D9359F1AA38CDD0061C1A0 /* PlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D9359E1AA38CDD0061C1A0 /* PlayerView.swift */; };
 		67DA46561A86103B0048B29C /* PlaylistStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DA46551A86103B0048B29C /* PlaylistStore.swift */; };
@@ -143,7 +142,6 @@
 		67CE596B1A51208000C86681 /* MiniPlayerView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MiniPlayerView.xib; sourceTree = "<group>"; };
 		67CE596D1A52CC0900C86681 /* SoundCloudAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundCloudAPIClient.swift; sourceTree = "<group>"; };
 		67D935961AA369C40061C1A0 /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
-		67D935971AA369C40061C1A0 /* PlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlayerViewController.xib; sourceTree = "<group>"; };
 		67D9359C1AA37E8F0061C1A0 /* TimeHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeHelper.swift; sourceTree = "<group>"; };
 		67D9359E1AA38CDD0061C1A0 /* PlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerView.swift; sourceTree = "<group>"; };
 		67DA46551A86103B0048B29C /* PlaylistStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistStore.swift; sourceTree = "<group>"; };
@@ -362,7 +360,6 @@
 			isa = PBXGroup;
 			children = (
 				67D935961AA369C40061C1A0 /* PlayerViewController.swift */,
-				67D935971AA369C40061C1A0 /* PlayerViewController.xib */,
 				67277CD91A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift */,
 				67277CDA1A46DE0E002FD3E0 /* FeedlyOAuthViewController.xib */,
 				6727EDFC1A5AC1DE003C6A47 /* MiniPlayerViewController.swift */,
@@ -515,7 +512,6 @@
 				67254C7A1A493A570064E5DF /* TimelineTableViewCell.xib in Resources */,
 				67277CDC1A46DE0E002FD3E0 /* FeedlyOAuthViewController.xib in Resources */,
 				67554F0A1A4F127400F7AE72 /* TrackTableViewCell.xib in Resources */,
-				67D935991AA369C40061C1A0 /* PlayerViewController.xib in Resources */,
 				6727EDFF1A5AC1DE003C6A47 /* MiniPlayerViewController.xib in Resources */,
 				67CB43F21A4ED6D50010465E /* main.js in Resources */,
 				67DA46601A8656A90048B29C /* PlaylistTableViewCell.xib in Resources */,
