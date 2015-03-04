@@ -9,8 +9,15 @@
 import UIKit
 import AVFoundation
 import Snap
+import SDWebImage
 
-class PlayerViewController: UIViewController {
+class PlayerViewController: UIViewController, DraggableCoverViewControllerDelegate {
+    let thumbnailWidth:  CGFloat = 75.0
+    let thumbnailHeight: CGFloat = 60.0
+    enum Mode {
+        case FullScreen
+        case Mini
+    }
     class ModalPlayerObserver: PlayerObserver {
         let vc: PlayerViewController
         init(playerViewController: PlayerViewController) {
@@ -30,20 +37,25 @@ class PlayerViewController: UIViewController {
     let paddingBottomTime  = 5.0
     let controlPanelHeight = 80
 
-    var controlPanel:       UIView!
-    var slider:             UISlider!
-    var previousButton:     UIButton!
-    var nextButton:         UIButton!
-    var currentLabel:       UILabel!
-    var totalLabel:         UILabel!
-    var playerView:         PlayerView!
+    var controlPanel:        UIView!
+    var slider:              UISlider!
+    var previousButton:      UIButton!
+    var nextButton:          UIButton!
+    var currentLabel:        UILabel!
+    var totalLabel:          UILabel!
+    var playerView:          PlayerView!
 
-    var app:                UIApplication { get { return UIApplication.sharedApplication() }}
-    var appDelegate:        AppDelegate   { get { return app.delegate as AppDelegate }}
-    var player:             Player<PlayerObserver>? { get { return appDelegate.player }}
-    var currentPlaylist:    Playlist? { get { return player?.currentPlaylist }}
-    var currentTrack:       Track?    { get { return player?.currentTrack }}
+    var app:                 UIApplication { get { return UIApplication.sharedApplication() }}
+    var appDelegate:         AppDelegate   { get { return app.delegate as AppDelegate }}
+    var player:              Player<PlayerObserver>? { get { return appDelegate.player }}
+    var currentPlaylist:     Playlist? { get { return player?.currentPlaylist }}
+    var currentTrack:        Track?    { get { return player?.currentTrack }}
     var modalPlayerObserver: ModalPlayerObserver!
+    var thumbnailView:       UIView { get { return playerView }}
+    var containerView:       UIView { get { return self.view }}
+
+    var parent:              DraggableCoverViewController?
+    var mode:                Mode = .Mini
 
     override init() {
         super.init()
@@ -81,9 +93,9 @@ class PlayerViewController: UIViewController {
         previousButton.setBackgroundImage(UIImage(named: "previous"), forState: UIControlState.allZeros)
         nextButton.addTarget(    self, action: "next",     forControlEvents: UIControlEvents.TouchUpInside)
         previousButton.addTarget(self, action: "previous", forControlEvents: UIControlEvents.TouchUpInside)
-        playerView.addTarget(    self, action: "toggle",   forControlEvents: UIControlEvents.TouchUpInside)
-        view.addSubview(controlPanel)
+        playerView.addTarget(    self, action: "fullScreenOrToggle",   forControlEvents: UIControlEvents.TouchUpInside)
         view.addSubview(playerView)
+        view.addSubview(controlPanel)
         controlPanel.backgroundColor = ColorHelper.themeColorLight
         controlPanel.addSubview(currentLabel)
         controlPanel.addSubview(totalLabel)
@@ -117,13 +129,6 @@ class PlayerViewController: UIViewController {
             make.right.equalTo(self.controlPanel.snp_right).with.offset(-self.paddingSide)
             make.bottom.equalTo(self.controlPanel.snp_bottom).with.offset(-self.paddingBottom)
         }
-        playerView.snp_makeConstraints { (make) -> () in
-            make.left.equalTo(self.view.snp_left)
-            make.right.equalTo(self.view.snp_right)
-            make.top.equalTo(self.view.snp_top)
-            make.bottom.equalTo(self.controlPanel.snp_top)
-            make.width.equalTo(self.view.snp_width)
-        }
         updateViews()
         player?.addObserver(modalPlayerObserver)
     }
@@ -133,7 +138,9 @@ class PlayerViewController: UIViewController {
     }
 
     override func viewWillAppear(animated: Bool) {
-        if let avPlayer = player?.avPlayer { playerView.player = avPlayer }
+        if let avPlayer = player?.avPlayer {
+            playerView.player = avPlayer
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -146,6 +153,56 @@ class PlayerViewController: UIViewController {
 
     func previous() {
         player?.previous()
+    }
+
+    func setDraggableCoverView(parent: DraggableCoverViewController) {
+        self.parent = parent
+    }
+
+    func minimizeCoverView(parent: DraggableCoverViewController) {
+        view.clipsToBounds = true
+        view.frame = CGRect(x: 0,
+                            y: 0,
+                        width: thumbnailWidth,
+                       height: thumbnailHeight)
+        playerView.snp_removeConstraints()
+        playerView.snp_makeConstraints { (make) -> () in
+            make.left.equalTo(self.view.snp_left)
+            make.right.equalTo(self.view.snp_right)
+            make.top.equalTo(self.view.snp_top)
+            make.bottom.equalTo(self.view.snp_bottom)
+            make.width.equalTo(self.view.snp_width)
+        }
+        updateViews()
+        view.layoutIfNeeded()
+    }
+
+    func maximizeCoverView(parent: DraggableCoverViewController) {
+        let f = parent.view.frame
+        view.frame = CGRect(x: 0, y: 0, width: f.width, height: f.height)
+        playerView.snp_removeConstraints()
+        playerView.snp_makeConstraints { (make) -> () in
+            make.left.equalTo(self.view.snp_left)
+            make.right.equalTo(self.view.snp_right)
+            make.top.equalTo(self.view.snp_top)
+            make.bottom.equalTo(self.view.snp_bottom).offset(-self.thumbnailHeight)
+            make.width.equalTo(self.view.snp_width)
+        }
+        updateViews()
+        view.layoutIfNeeded()
+    }
+
+    func fullScreenOrToggle() {
+        switch mode {
+        case .FullScreen:
+            mode = .Mini
+            parent?.minimizeCoverView()
+            updateViews()
+        case .Mini:
+            mode = .FullScreen
+            parent?.maximizeCoverView()
+            updateViews()
+        }
     }
 
     func toggle() {
@@ -177,6 +234,24 @@ class PlayerViewController: UIViewController {
     }
 
     func updateViews() {
+        switch mode {
+        case .FullScreen:
+            controlPanel.hidden   = false
+            currentLabel.hidden   = false
+            totalLabel.hidden     = false
+            slider.hidden         = false
+            nextButton.hidden     = false
+            previousButton.hidden = false
+            view.bringSubviewToFront(controlPanel)
+        case .Mini:
+            controlPanel.hidden   = true
+            currentLabel.hidden   = true
+            totalLabel.hidden     = true
+            slider.hidden         = true
+            nextButton.hidden     = true
+            previousButton.hidden = true
+            view.bringSubviewToFront(playerView)
+        }
         if let track = currentTrack {
             navigationItem.title = track.title
             if let avPlayer = player?.avPlayer {
@@ -185,11 +260,15 @@ class PlayerViewController: UIViewController {
                 playerView.sd_setBackgroundImageWithURL(track.thumbnailUrl, forState: UIControlState.allZeros)
             }
         } else {
-            totalLabel.text = "00:00"
+            totalLabel.text   = "00:00"
+            currentLabel.text = "00:00"
             playerView.sd_setBackgroundImageWithURL(nil, forState: UIControlState.allZeros)
         }
         if let (current, total) = player?.secondPair {
             if !slider.tracking { updateViewsOfTime(current: current, total: total) }
+        }
+        if let avPlayer = player?.avPlayer {
+            playerView.player = avPlayer
         }
     }
 

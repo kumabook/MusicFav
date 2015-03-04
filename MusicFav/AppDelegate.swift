@@ -18,6 +18,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var appearanceManager:        AppearanceManager?
     var window:                   UIWindow?
+    var coverViewController:      DraggableCoverViewController?
     var miniPlayerViewController: MiniPlayerViewController?
     var player:                   Player<PlayerObserver>?
     var playerView:               PlayerView?
@@ -41,7 +42,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         appearanceManager?.apply()
         window                      = UIWindow(frame: UIScreen.mainScreen().bounds)
         miniPlayerViewController    = MiniPlayerViewController()
-        window?.rootViewController  = self.miniPlayerViewController
+        coverViewController         = DraggableCoverViewController(coverViewController: PlayerViewController(),
+                                                                   floorViewController: miniPlayerViewController!)
+        window?.rootViewController  = self.coverViewController
         window?.makeKeyAndVisible()
         let audioSession = AVAudioSession()
         audioSession.setCategory(AVAudioSessionCategoryPlayback, error: nil)
