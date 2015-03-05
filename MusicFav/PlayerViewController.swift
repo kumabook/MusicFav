@@ -165,6 +165,10 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         super.didReceiveMemoryWarning()
     }
 
+    func toggle() {
+        player?.toggle()
+    }
+
     func next() {
         player?.next()
     }
@@ -221,10 +225,6 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
             parent?.maximizeCoverView()
             updateViews()
         }
-    }
-
-    func toggle() {
-        player?.toggle()
     }
 
     func previewSeek() {
