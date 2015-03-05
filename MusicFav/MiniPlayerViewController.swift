@@ -73,14 +73,6 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
         updateViews()
         player?.addObserver(miniPlayerObserver)
     }
-
-    override func viewWillDisappear(animated: Bool) {
-        miniPlayerView.playerView.player = AVPlayer()
-    }
-
-    override func viewWillAppear(animated: Bool) {
-        if let avPlayer = player?.avPlayer { miniPlayerView.playerView.player = avPlayer }
-    }
     
     override func viewWillLayoutSubviews() {
         super.viewWillLayoutSubviews()
@@ -141,7 +133,6 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
     
     func play(index: Int, playlist: Playlist) {
         player?.play(index, playlist: playlist)
-        if let avPlayer = player?.avPlayer { miniPlayerView.playerView.player = avPlayer }
     }
 
     // MARK: - MiniPlayerViewDelegate -
