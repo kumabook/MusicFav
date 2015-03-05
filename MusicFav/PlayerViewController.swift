@@ -33,13 +33,16 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
     }
 
     let paddingSide        = 15.0
-    let paddingBottom      = 30.0
+    let paddingBottom      = 15.0
     let paddingBottomTime  = 5.0
-    let controlPanelHeight = 80
+    let controlPanelHeight = 130.0
+    let buttonSize         = 40.0
+    let buttonPadding      = 30.0
 
     var controlPanel:        UIView!
     var slider:              UISlider!
     var previousButton:      UIButton!
+    var playButton:          UIButton!
     var nextButton:          UIButton!
     var currentLabel:        UILabel!
     var totalLabel:          UILabel!
@@ -82,6 +85,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         totalLabel             = UILabel()
         slider                 = UISlider()
         nextButton             = UIButton()
+        playButton             = UIButton()
         previousButton         = UIButton()
         playerView             = PlayerView()
 
@@ -90,8 +94,10 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         slider.addTarget(self, action: "stopSeek", forControlEvents: UIControlEvents.TouchUpInside)
         slider.addTarget(self, action: "cancelSeek", forControlEvents: UIControlEvents.TouchUpOutside)
         nextButton.setBackgroundImage(    UIImage(named: "next"),     forState: UIControlState.allZeros)
+        playButton.setBackgroundImage(    UIImage(named: "play"),     forState: UIControlState.allZeros)
         previousButton.setBackgroundImage(UIImage(named: "previous"), forState: UIControlState.allZeros)
         nextButton.addTarget(    self, action: "next",     forControlEvents: UIControlEvents.TouchUpInside)
+        playButton.addTarget(    self, action: "toggle",   forControlEvents: UIControlEvents.TouchUpInside)
         previousButton.addTarget(self, action: "previous", forControlEvents: UIControlEvents.TouchUpInside)
         playerView.addTarget(    self, action: "fullScreenOrToggle",   forControlEvents: UIControlEvents.TouchUpInside)
         view.addSubview(playerView)
@@ -101,6 +107,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         controlPanel.addSubview(totalLabel)
         controlPanel.addSubview(slider)
         controlPanel.addSubview(nextButton)
+        controlPanel.addSubview(playButton)
         controlPanel.addSubview(previousButton)
         controlPanel.snp_makeConstraints { make in
             make.left.equalTo(self.view.snp_left)
@@ -110,24 +117,34 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         }
         currentLabel.snp_makeConstraints { make in
             make.left.equalTo(self.controlPanel.snp_left).with.offset(self.paddingSide)
-            make.bottom.equalTo(self.controlPanel.snp_bottom).with.offset(-self.paddingBottomTime)
+            make.top.equalTo(self.controlPanel.snp_top).with.offset(self.paddingBottomTime)
         }
         totalLabel.snp_makeConstraints { make in
             make.right.equalTo(self.controlPanel.snp_right).with.offset(-self.paddingSide)
-            make.bottom.equalTo(self.controlPanel.snp_bottom).with.offset(-self.paddingBottomTime)
+            make.top.equalTo(self.controlPanel.snp_top).with.offset(self.paddingBottomTime)
         }
         slider.snp_makeConstraints { make in
-            make.left.equalTo(self.previousButton.snp_right).with.offset(self.paddingSide)
-            make.right.equalTo(self.nextButton.snp_left).with.offset(-self.paddingSide)
-            make.bottom.equalTo(self.controlPanel.snp_bottom).with.offset(-self.paddingBottom)
+            make.left.equalTo(self.controlPanel.snp_left).with.offset(self.paddingSide)
+            make.right.equalTo(self.controlPanel.snp_right).with.offset(-self.paddingSide)
+            make.top.equalTo(self.currentLabel.snp_bottom).with.offset(self.paddingBottom)
         }
         previousButton.snp_makeConstraints { make in
-            make.left.equalTo(self.controlPanel.snp_left).with.offset(self.paddingSide)
-            make.bottom.equalTo(self.controlPanel.snp_bottom).with.offset(-self.paddingBottom)
+            make.right.equalTo(self.playButton.snp_left).with.offset(-self.buttonPadding)
+            make.centerY.equalTo(self.playButton.snp_centerY)
+            make.width.equalTo(self.buttonSize)
+            make.height.equalTo(self.buttonSize)
+        }
+        playButton.snp_makeConstraints { (make) -> () in
+            make.centerX.equalTo(self.controlPanel.snp_centerX)
+            make.top.equalTo(self.slider.snp_bottom).with.offset(self.paddingBottom)
+            make.width.equalTo(self.buttonSize * 3/5)
+            make.height.equalTo(self.buttonSize * 3/5)
         }
         nextButton.snp_makeConstraints { make in
-            make.right.equalTo(self.controlPanel.snp_right).with.offset(-self.paddingSide)
-            make.bottom.equalTo(self.controlPanel.snp_bottom).with.offset(-self.paddingBottom)
+            make.left.equalTo(self.playButton.snp_right).with.offset(self.buttonPadding)
+            make.centerY.equalTo(self.playButton.snp_centerY)
+            make.width.equalTo(self.buttonSize)
+            make.height.equalTo(self.buttonSize)
         }
         updateViews()
         player?.addObserver(modalPlayerObserver)
@@ -252,6 +269,14 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
             nextButton.hidden     = true
             previousButton.hidden = true
             view.bringSubviewToFront(playerView)
+        }
+        if let state = player?.currentState {
+            switch (state) {
+            case .Play:
+                playButton.setBackgroundImage(UIImage(named: "play"), forState: UIControlState.allZeros)
+            case .Pause:
+                playButton.setBackgroundImage(UIImage(named: "pause"), forState: UIControlState.allZeros)
+            }
         }
         if let track = currentTrack {
             navigationItem.title = track.title
