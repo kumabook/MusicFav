@@ -21,12 +21,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var coverViewController:      DraggableCoverViewController?
     var miniPlayerViewController: MiniPlayerViewController?
     var player:                   Player<PlayerObserver>?
-    var playerView:               PlayerView?
     var readingPlaylist:          Playlist?
     var playingPlaylist:          Playlist? {
         get {
             return miniPlayerViewController?.currentPlaylist
         }
+    }
+    var playerViewController:     PlayerViewController? {
+        get { return coverViewController?.coverViewController as? PlayerViewController }
     }
     let sampleFeeds = [
         "feed/http://spincoaster.com/feed",
@@ -56,11 +58,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    func applicationWillResignActive(application: UIApplication) {}
+    func applicationWillResignActive(application: UIApplication) {
+        playerViewController?.disablePlayerView()
+    }
 
-    func applicationDidEnterBackground(application: UIApplication) {}
+    func applicationDidEnterBackground(application: UIApplication) {
+    }
 
-    func applicationWillEnterForeground(application: UIApplication) {}
+    func applicationWillEnterForeground(application: UIApplication) {
+        playerViewController?.enablePlayerView()
+    }
 
     func applicationDidBecomeActive(application: UIApplication) {}
 

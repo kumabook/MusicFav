@@ -28,7 +28,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         override func didPlayToEndTime() { vc.updateViews() }
         override func statusChanged()    { vc.updateViews() }
         override func trackChanged()     { vc.updateViews() }
-        override func started()          { vc.updateViews() }
+        override func started()          { vc.enablePlayerView() }
         override func ended()            { vc.updateViews() }
     }
 
@@ -131,13 +131,14 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         }
         updateViews()
         player?.addObserver(modalPlayerObserver)
+        enablePlayerView()
     }
 
-    override func viewWillDisappear(animated: Bool) {
-        playerView.player = AVPlayer()
+    func disablePlayerView() {
+        playerView.player = nil
     }
 
-    override func viewWillAppear(animated: Bool) {
+    func enablePlayerView() {
         if let avPlayer = player?.avPlayer {
             playerView.player = avPlayer
         }
@@ -266,9 +267,6 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         }
         if let (current, total) = player?.secondPair {
             if !slider.tracking { updateViewsOfTime(current: current, total: total) }
-        }
-        if let avPlayer = player?.avPlayer {
-            playerView.player = avPlayer
         }
     }
 

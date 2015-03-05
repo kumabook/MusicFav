@@ -11,7 +11,7 @@ import AVFoundation
 
 class PlayerView: UIButton {
     var videoEnabled = false
-    var player: AVPlayer {
+    var player: AVPlayer? {
         get {
             let layer: AVPlayerLayer = self.layer as AVPlayerLayer
             return layer.player
