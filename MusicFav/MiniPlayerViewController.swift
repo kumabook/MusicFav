@@ -10,6 +10,7 @@ import UIKit
 import AVFoundation
 import JASidePanels
 import MediaPlayer
+import SDWebImage
 
 class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
     class MiniPlayerObserver: PlayerObserver {
@@ -96,23 +97,26 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
             } else {
                 miniPlayerView.durationLabel.text = "00:00"
             }
-            self.miniPlayerView.playerView.sd_setBackgroundImageWithURL(track.thumbnailUrl,
-                forState: UIControlState.allZeros,
-               completed: { (image, error, cacheType, url) -> Void in
+            let imageManager = SDWebImageManager()
+            imageManager.downloadImageWithURL(
+                track.thumbnailUrl,
+                options: SDWebImageOptions.HighPriority,
+               progress: {receivedSize, expectedSize in },
+              completed: { (image, error, cacheType, finished, url) -> Void in
                 let playingInfoCenter: AnyClass? = NSClassFromString("MPNowPlayingInfoCenter")
                 if let center: AnyClass = playingInfoCenter {
-                    let albumArt                                          = MPMediaItemArtwork(image:image)
-                    var info:[String:AnyObject]                           = [:]
-                    info[MPMediaItemPropertyTitle]                        = track.title
-                    info[MPMediaItemPropertyArtwork]                      = albumArt
-                    MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = info
+                    let infoCenter = MPNowPlayingInfoCenter.defaultCenter()
+                    let albumArt                     = MPMediaItemArtwork(image:image)
+                    var info:[String:AnyObject]      = [:]
+                    info[MPMediaItemPropertyTitle]   = track.title
+                    info[MPMediaItemPropertyArtwork] = albumArt
+                    infoCenter.nowPlayingInfo        = info
                 }
             })
         } else {
             MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = nil
             miniPlayerView.titleLabel.text    = "no track"
             miniPlayerView.durationLabel.text = "00:00"
-            miniPlayerView.playerView.setBackgroundImage(nil, forState: UIControlState.allZeros)
         }
         miniPlayerView.state = player!.currentState
     }
@@ -147,13 +151,5 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
     
     func miniPlayerViewNextButtonTouched() {
         player?.next()
-    }
-    
-    func miniPlayerViewThumbImgTouched() {
-        if let track = player?.currentTrack {
-            let pvc = PlayerViewController()
-            pvc.playerView = miniPlayerView.playerView
-            presentViewController(UINavigationController(rootViewController: pvc), animated: true, completion: nil)
-        }
     }
 }

@@ -10,7 +10,6 @@
                 <outlet property="durationLabel" destination="zGd-Na-EBN" id="il5-ld-0Kl"/>
                 <outlet property="nextButton" destination="rli-jO-BsB" id="djk-zj-vVA"/>
                 <outlet property="playButton" destination="kPN-nM-sik" id="fPX-F4-Z1T"/>
-                <outlet property="playerView" destination="Suf-cD-WhC" id="rcn-tf-QvP"/>
                 <outlet property="previousButton" destination="rq6-Xf-LdK" id="uy3-Cd-kOl"/>
                 <outlet property="titleLabel" destination="qYt-Ht-l6h" id="Tag-j9-XFd"/>
             </connections>
@@ -61,12 +60,6 @@
                     <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Suf-cD-WhC" customClass="PlayerView" customModule="MusicFav" customModuleProvider="target">
-                    <rect key="frame" x="0.0" y="0.0" width="75" height="60"/>
-                    <constraints>
-                        <constraint firstAttribute="width" constant="75" id="Ot5-cv-mX4"/>
-                    </constraints>
-                </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
@@ -76,10 +69,7 @@
                 <constraint firstAttribute="centerY" secondItem="rq6-Xf-LdK" secondAttribute="centerY" id="Ge1-3L-Bhj"/>
                 <constraint firstAttribute="trailing" secondItem="qYt-Ht-l6h" secondAttribute="trailing" constant="6" id="NAv-dq-g67"/>
                 <constraint firstAttribute="centerX" secondItem="kPN-nM-sik" secondAttribute="centerX" constant="-2.5" id="OM3-lQ-Jd5"/>
-                <constraint firstAttribute="bottom" secondItem="Suf-cD-WhC" secondAttribute="bottom" id="OWM-pR-N6l"/>
                 <constraint firstItem="qYt-Ht-l6h" firstAttribute="centerX" secondItem="zGd-Na-EBN" secondAttribute="centerX" constant="-10.5" id="Z5r-UO-CF5"/>
-                <constraint firstItem="Suf-cD-WhC" firstAttribute="top" secondItem="g2Z-Oq-YId" secondAttribute="top" id="h0W-vS-fd8"/>
-                <constraint firstItem="Suf-cD-WhC" firstAttribute="leading" secondItem="g2Z-Oq-YId" secondAttribute="leading" id="j75-hZ-yhF"/>
                 <constraint firstAttribute="centerY" secondItem="rli-jO-BsB" secondAttribute="centerY" id="nio-An-cNV"/>
                 <constraint firstAttribute="bottom" secondItem="zGd-Na-EBN" secondAttribute="bottom" constant="5" id="o3V-Cy-8dx"/>
                 <constraint firstItem="kPN-nM-sik" firstAttribute="leading" secondItem="rq6-Xf-LdK" secondAttribute="trailing" constant="38" id="puQ-Ns-dSW"/>
