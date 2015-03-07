@@ -12,12 +12,9 @@ import Snap
 import SDWebImage
 
 class PlayerViewController: UIViewController, DraggableCoverViewControllerDelegate {
-    let thumbnailWidth:  CGFloat = 75.0
-    let thumbnailHeight: CGFloat = 60.0
-    enum Mode {
-        case FullScreen
-        case Mini
-    }
+    let minThumbnailWidth:  CGFloat = 75.0
+    let minThumbnailHeight: CGFloat = 60.0
+
     class ModalPlayerObserver: PlayerObserver {
         let vc: PlayerViewController
         init(playerViewController: PlayerViewController) {
@@ -32,12 +29,12 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         override func ended()            { vc.updateViews() }
     }
 
-    let paddingSide        = 15.0
-    let paddingBottom      = 15.0
-    let paddingBottomTime  = 5.0
-    let controlPanelHeight = 130.0
-    let buttonSize         = 40.0
-    let buttonPadding      = 30.0
+    let paddingSide:        CGFloat = 15.0
+    let paddingBottom:      CGFloat = 15.0
+    let paddingBottomTime:  CGFloat = 5.0
+    let controlPanelHeight: CGFloat = 130.0
+    let buttonSize:         CGFloat = 40.0
+    let buttonPadding:      CGFloat = 30.0
 
     var controlPanel:        UIView!
     var slider:              UISlider!
@@ -55,10 +52,8 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
     var currentTrack:        Track?    { get { return player?.currentTrack }}
     var modalPlayerObserver: ModalPlayerObserver!
     var thumbnailView:       UIView { get { return playerView }}
-    var containerView:       UIView { get { return self.view }}
 
-    var parent:              DraggableCoverViewController?
-    var mode:                Mode = .Mini
+    var draggableCoverViewController: DraggableCoverViewController?
 
     override init() {
         super.init()
@@ -79,7 +74,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
                                                            style: UIBarButtonItemStyle.Done,
                                                           target: self,
                                                           action: "close")
-        view.backgroundColor   = UIColor.whiteColor()
+        view.backgroundColor   = UIColor.blackColor()
         controlPanel           = UIView()
         currentLabel           = UILabel()
         totalLabel             = UILabel()
@@ -89,32 +84,30 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         previousButton         = UIButton()
         playerView             = PlayerView()
 
-        playerView.contentMode = UIViewContentMode.ScaleAspectFit
+        playerView.imageView?.contentMode = UIViewContentMode.ScaleAspectFit
+        playerView.setImage(UIImage(named: "default_thumb"), forState: UIControlState.allZeros)
         slider.addTarget(self, action: "previewSeek", forControlEvents: UIControlEvents.ValueChanged)
         slider.addTarget(self, action: "stopSeek", forControlEvents: UIControlEvents.TouchUpInside)
         slider.addTarget(self, action: "cancelSeek", forControlEvents: UIControlEvents.TouchUpOutside)
         nextButton.setBackgroundImage(    UIImage(named: "next"),     forState: UIControlState.allZeros)
         playButton.setBackgroundImage(    UIImage(named: "play"),     forState: UIControlState.allZeros)
         previousButton.setBackgroundImage(UIImage(named: "previous"), forState: UIControlState.allZeros)
-        nextButton.addTarget(    self, action: "next",     forControlEvents: UIControlEvents.TouchUpInside)
-        playButton.addTarget(    self, action: "toggle",   forControlEvents: UIControlEvents.TouchUpInside)
-        previousButton.addTarget(self, action: "previous", forControlEvents: UIControlEvents.TouchUpInside)
-        playerView.addTarget(    self, action: "fullScreenOrToggle",   forControlEvents: UIControlEvents.TouchUpInside)
+        nextButton.addTarget(    self, action: "next",         forControlEvents: UIControlEvents.TouchUpInside)
+        playButton.addTarget(    self, action: "toggle",       forControlEvents: UIControlEvents.TouchUpInside)
+        previousButton.addTarget(self, action: "previous",     forControlEvents: UIControlEvents.TouchUpInside)
+        playerView.addTarget(    self, action: "toggleScreen", forControlEvents: UIControlEvents.TouchUpInside)
         view.addSubview(playerView)
         view.addSubview(controlPanel)
         controlPanel.backgroundColor = ColorHelper.themeColorLight
+        controlPanel.clipsToBounds = true
         controlPanel.addSubview(currentLabel)
         controlPanel.addSubview(totalLabel)
         controlPanel.addSubview(slider)
         controlPanel.addSubview(nextButton)
         controlPanel.addSubview(playButton)
         controlPanel.addSubview(previousButton)
-        controlPanel.snp_makeConstraints { make in
-            make.left.equalTo(self.view.snp_left)
-            make.right.equalTo(self.view.snp_right)
-            make.bottom.equalTo(self.view.snp_bottom)
-            make.height.equalTo(self.controlPanelHeight)
-        }
+        resizeViews(0.0)
+
         currentLabel.snp_makeConstraints { make in
             make.left.equalTo(self.controlPanel.snp_left).with.offset(self.paddingSide)
             make.top.equalTo(self.controlPanel.snp_top).with.offset(self.paddingBottomTime)
@@ -177,54 +170,34 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         player?.previous()
     }
 
-    func setDraggableCoverView(parent: DraggableCoverViewController) {
-        self.parent = parent
-    }
-
-    func minimizeCoverView(parent: DraggableCoverViewController) {
-        view.clipsToBounds = true
-        view.frame = CGRect(x: 0,
-                            y: 0,
-                        width: thumbnailWidth,
-                       height: thumbnailHeight)
-        playerView.snp_removeConstraints()
-        playerView.snp_makeConstraints { (make) -> () in
-            make.left.equalTo(self.view.snp_left)
-            make.right.equalTo(self.view.snp_right)
-            make.top.equalTo(self.view.snp_top)
-            make.bottom.equalTo(self.view.snp_bottom)
-            make.width.equalTo(self.view.snp_width)
-        }
+    func didMinimizedCoverView() {
+        resizeViews(0.0)
         updateViews()
-        view.layoutIfNeeded()
     }
 
-    func maximizeCoverView(parent: DraggableCoverViewController) {
-        let f = parent.view.frame
-        view.frame = CGRect(x: 0, y: 0, width: f.width, height: f.height)
-        playerView.snp_removeConstraints()
-        playerView.snp_makeConstraints { (make) -> () in
-            make.left.equalTo(self.view.snp_left)
-            make.right.equalTo(self.view.snp_right)
-            make.top.equalTo(self.view.snp_top)
-            make.bottom.equalTo(self.view.snp_bottom).offset(-self.thumbnailHeight)
-            make.width.equalTo(self.view.snp_width)
-        }
+    func didMaximizedCoverView() {
+        resizeViews(1.0)
         updateViews()
-        view.layoutIfNeeded()
     }
 
-    func fullScreenOrToggle() {
-        switch mode {
-        case .FullScreen:
-            mode = .Mini
-            parent?.minimizeCoverView()
-            updateViews()
-        case .Mini:
-            mode = .FullScreen
-            parent?.maximizeCoverView()
-            updateViews()
+    func didResizeCoverView(rate: CGFloat) {
+        resizeViews(rate)
+    }
+
+    func resizeViews(rate: CGFloat) {
+        let  f = view.frame
+        var ch = controlPanelHeight * rate
+        var  h = f.height - ch
+        if let pf = draggableCoverViewController?.view.frame {
+            playerView.frame     = CGRect(x: 0, y: 0, width:  f.width, height: h)
+            controlPanel.frame   = CGRect(x: 0, y: h, width: pf.width, height: ch)
+            view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: rate)
+            controlPanel.alpha   = rate
         }
+    }
+
+    func toggleScreen() {
+        draggableCoverViewController?.toggleScreen()
     }
 
     func previewSeek() {
@@ -252,24 +225,6 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
     }
 
     func updateViews() {
-        switch mode {
-        case .FullScreen:
-            controlPanel.hidden   = false
-            currentLabel.hidden   = false
-            totalLabel.hidden     = false
-            slider.hidden         = false
-            nextButton.hidden     = false
-            previousButton.hidden = false
-            view.bringSubviewToFront(controlPanel)
-        case .Mini:
-            controlPanel.hidden   = true
-            currentLabel.hidden   = true
-            totalLabel.hidden     = true
-            slider.hidden         = true
-            nextButton.hidden     = true
-            previousButton.hidden = true
-            view.bringSubviewToFront(playerView)
-        }
         if let state = player?.currentState {
             switch (state) {
             case .Play:
@@ -281,9 +236,9 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         if let track = currentTrack {
             navigationItem.title = track.title
             if let avPlayer = player?.avPlayer {
-                playerView.sd_setBackgroundImageWithURL(nil, forState: UIControlState.allZeros)
+                playerView.sd_setImageWithURL(nil, forState: UIControlState.allZeros)
             } else {
-                playerView.sd_setBackgroundImageWithURL(track.thumbnailUrl, forState: UIControlState.allZeros)
+                playerView.sd_setImageWithURL(track.thumbnailUrl, forState: UIControlState.allZeros)
             }
         } else {
             totalLabel.text   = "00:00"
