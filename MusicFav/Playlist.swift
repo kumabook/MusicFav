@@ -10,9 +10,10 @@ import UIKit
 import SwiftyJSON
 
 class Playlist {
-    let id:   String
-    var title: String
-    var tracks: [Track]
+    let id:           String
+    var title:        String
+    var tracks:       [Track]
+    var thumbnailUrl: NSURL? { return tracks.first?.thumbnailUrl }
 
     private class func dateFormatter() -> NSDateFormatter {
         let dateFormatter = NSDateFormatter()
