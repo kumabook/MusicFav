@@ -140,29 +140,34 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(self.tableCellReuseIdentifier, forIndexPath: indexPath) as PlaylistTableViewCell
+        var playlist: Playlist?
         switch (Section(rawValue: indexPath.section)!) {
         case .Playing:
-            if let playlist = appDelegate.playingPlaylist {
-                cell.titleLabel.text       = "Now playing(\(playlist.title))"
-                cell.trackNumLabel.text    = "\(playlist.tracks.count) tracks"
+            playlist = appDelegate.playingPlaylist
+            if let p = appDelegate.playingPlaylist {
+                cell.titleLabel.text = "Now playing(\(p.title))"
             } else {
-                cell.titleLabel.text       = "Not playing"
-                cell.trackNumLabel.text    = ""
+                cell.titleLabel.text = "Not playing"
             }
         case .Reading:
-            if let playlist = appDelegate.readingPlaylist {
-                cell.titleLabel.text       = "Now reading(\(playlist.title))"
-                cell.trackNumLabel.text    = "\(playlist.tracks.count) tracks"
+            playlist = appDelegate.readingPlaylist
+            if let p = appDelegate.readingPlaylist {
+                cell.titleLabel.text = "Now reading(\(p.title))"
             } else {
-                cell.titleLabel.text       = "Not reading"
-                cell.trackNumLabel.text    = ""
+                cell.titleLabel.text = "Not reading"
             }
         case .Favorites:
-            let playlist = playlists[indexPath.item]
-            cell.titleLabel.text    = playlist.title
-            cell.trackNumLabel.text = "\(playlist.tracks.count) tracks"
+            playlist = playlists[indexPath.item]
+            cell.titleLabel.text = playlists[indexPath.item].title
         }
-        cell.thumbImageView.image = UIImage(named: "default_thumb")
+        if let p = playlist {
+            cell.thumbImageView.sd_setImageWithURL(p.thumbnailUrl)
+            cell.trackNumLabel.text = "\(p.tracks.count) tracks"
+        } else {
+            cell.thumbImageView.image = UIImage(named: "default_thumb")
+            cell.trackNumLabel.text    = ""
+        }
+
         return cell
     }
 
