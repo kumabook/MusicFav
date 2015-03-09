@@ -228,9 +228,9 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         if let state = player?.currentState {
             switch (state) {
             case .Play:
-                playButton.setBackgroundImage(UIImage(named: "play"), forState: UIControlState.allZeros)
-            case .Pause:
                 playButton.setBackgroundImage(UIImage(named: "pause"), forState: UIControlState.allZeros)
+            case .Pause:
+                playButton.setBackgroundImage(UIImage(named: "play"), forState: UIControlState.allZeros)
             }
         }
         if let track = currentTrack {

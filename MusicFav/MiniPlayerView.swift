@@ -38,16 +38,16 @@ class MiniPlayerView: UIView {
         self.previousButton.addTarget(self, action: "previousButtonTapped", forControlEvents: UIControlEvents.TouchUpInside)
         self.nextButton.addTarget(    self, action: "nextButtonTapped",     forControlEvents: UIControlEvents.TouchUpInside)
 
-        playButton.setImage(UIImage(named: "pause"), forState: UIControlState.Normal)
+        playButton.setImage(UIImage(named: "play"), forState: UIControlState.Normal)
         self._state = .Pause
     }
 
     func updatePlayButton() {
         switch (state) {
         case .Pause:
-            playButton.setImage(UIImage(named: "pause"), forState: UIControlState.Normal)
+            playButton.setImage(UIImage(named: "play"), forState: UIControlState.Normal)
         case .Play:
-            playButton.setImage(UIImage(named: "play"),  forState: UIControlState.Normal)
+            playButton.setImage(UIImage(named: "pause"),  forState: UIControlState.Normal)
         }
     }
     
