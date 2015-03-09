@@ -7,11 +7,12 @@
 //
 
 import UIKit
+import iAd
 import AVFoundation
 import Snap
 import SDWebImage
 
-class PlayerViewController: UIViewController, DraggableCoverViewControllerDelegate {
+class PlayerViewController: UIViewController, DraggableCoverViewControllerDelegate, ADBannerViewDelegate {
     let minThumbnailWidth:  CGFloat = 75.0
     let minThumbnailHeight: CGFloat = 60.0
 
@@ -44,6 +45,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
     var currentLabel:        UILabel!
     var totalLabel:          UILabel!
     var playerView:          PlayerView!
+    var adView:              ADBannerView?
 
     var app:                 UIApplication { get { return UIApplication.sharedApplication() }}
     var appDelegate:         AppDelegate   { get { return app.delegate as AppDelegate }}
@@ -171,13 +173,13 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
     }
 
     func didMinimizedCoverView() {
-        resizeViews(0.0)
         updateViews()
+        removeAdView()
     }
 
     func didMaximizedCoverView() {
-        resizeViews(1.0)
         updateViews()
+        addAdView()
     }
 
     func didResizeCoverView(rate: CGFloat) {
@@ -270,5 +272,30 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
 
     func close() {
         navigationController?.dismissViewControllerAnimated(true, completion: nil)
+    }
+
+    func addAdView() {
+        adView = ADBannerView()
+        adView?.delegate = self
+        adView?.alpha = 0.0
+        view.addSubview(adView!)
+        adView?.snp_makeConstraints { make in
+            make.left.equalTo(self.view.snp_left)
+            make.right.equalTo(self.view.snp_right)
+            make.top.equalTo(self.view.snp_top)
+        }
+    }
+
+    func removeAdView() {
+        adView?.delegate = nil
+        adView?.removeFromSuperview()
+    }
+
+    func bannerViewDidLoadAd(banner: ADBannerView!) {
+        adView?.alpha = 1.0
+    }
+
+    func bannerView(banner: ADBannerView!, didFailToReceiveAdWithError error: NSError!) {
+        removeAdView()
     }
 }

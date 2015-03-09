@@ -94,7 +94,10 @@ class DraggableCoverViewController: UIViewController {
         UIView.animateWithDuration(d, animations: {
             self.coverViewController.view.frame = CGRect(x: 0, y: y, width:  w, height: h)
             self.coverViewController.didResizeCoverView(0)
-        }, completion: { finished in self.state = .Minimized })
+        }, completion: { finished in
+            self.state = .Minimized
+            self.coverViewController.didMinimizedCoverView()
+        })
     }
 
     func maximizeCoverView(animated: Bool) {
@@ -105,7 +108,10 @@ class DraggableCoverViewController: UIViewController {
         UIView.animateWithDuration(d, animations: {
             self.coverViewController.view.frame = CGRect(x: 0, y:  0, width: w, height:  h)
             self.coverViewController.didResizeCoverView(1)
-        }, completion: { finished in self.state = .Maximized })
+        }, completion: { finished in
+            self.state = .Maximized
+            self.coverViewController.didMaximizedCoverView()
+        })
     }
 
     func toggleScreen() {
@@ -147,7 +153,6 @@ class DraggableCoverViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         minimizeCoverView(false)
-        coverViewController.didMinimizedCoverView()
     }
 
     override func didReceiveMemoryWarning() {
