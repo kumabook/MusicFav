@@ -184,7 +184,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             cell.trackNumLabel.text = "\(p.tracks.count) tracks"
         } else {
             cell.thumbImageView.image = UIImage(named: "default_thumb")
-            cell.trackNumLabel.text    = ""
+            cell.trackNumLabel.text   = ""
         }
 
         return cell
@@ -230,7 +230,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             showReadingPlaylist()
         case .Favorites:
             let playlist = playlists[indexPath.item]
-            let ttc = TrackTableViewController()
+            let ttc      = TrackTableViewController()
             ttc.playlist = playlist
             navigationController?.popViewControllerAnimated(true)
             navigationController?.pushViewController(ttc, animated: true)
