@@ -60,8 +60,8 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             let ptc = appDelegate.miniPlayerViewController!.playlistTableViewController
             let ttc = TrackTableViewController()
             ttc.playlist = playlist
-            ptc.navigationController?.popToRootViewControllerAnimated(false)
-            ptc.navigationController?.pushViewController(ttc, animated: false)
+            ptc.navigationController?.popToRootViewControllerAnimated(true)
+            ptc.navigationController?.pushViewController(ttc, animated: true)
         }
     }
 
