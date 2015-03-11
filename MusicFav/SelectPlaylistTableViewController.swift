@@ -14,12 +14,14 @@ class SelectPlaylistTableViewController: UITableViewController {
     var playlists: [Playlist] = []
     var callback: ((Playlist?) -> Void)?
 
+    var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as AppDelegate }}
+
     override func viewDidLoad() {
         super.viewDidLoad()
         clearsSelectionOnViewWillAppear = true
         let nib = UINib(nibName: "SelectPlaylistTableViewCell", bundle: nil)
         tableView?.registerNib(nib, forCellReuseIdentifier:self.tableCellReuseIdentifier)
-        fetchPlaylists()
+        observePlaylists()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -31,6 +33,12 @@ class SelectPlaylistTableViewController: UITableViewController {
                                           style: UIBarButtonItemStyle.Plain,
                                          target: self,
                                          action: "close")
+        let newPlaylistButton = UIBarButtonItem(image: UIImage(named: "add_stream"),
+                                                style: UIBarButtonItemStyle.Plain,
+                                               target: self,
+                                               action: "newPlaylist")
+        navigationItem.rightBarButtonItems = [newPlaylistButton]
+
         let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         navigationItem.leftBarButtonItems = [closeButton]
     }
@@ -39,9 +47,38 @@ class SelectPlaylistTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
     }
 
-    func fetchPlaylists() {
-        playlists = Playlist.findAll()
+    func observePlaylists() {
+        playlists = Playlist.shared.current
         tableView.reloadData()
+        Playlist.shared.signal.observe { event in
+            let section = 0
+            switch event.action {
+            case .Create:
+                let indexPath = NSIndexPath(forItem: self.playlists.count, inSection: section)
+                self.playlists.append(event.value)
+                self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            case .Update:
+                if let index = find(self.playlists, event.value) {
+                    let indexPath = NSIndexPath(forItem: index, inSection: section)
+                    self.playlists[index] = event.value
+                    self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                }
+            case .Remove:
+                if let index = find(self.playlists, event.value) {
+                    let playlist = self.playlists.removeAtIndex(index)
+                    let indexPath = NSIndexPath(forItem: index, inSection: section)
+                    self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                }
+            }
+        }
+    }
+
+    func newPlaylist() {
+        appDelegate.miniPlayerViewController?.playlistTableViewController.newPlaylist()
+    }
+
+    func editPlaylist(index: Int) {
+        appDelegate.miniPlayerViewController?.playlistTableViewController.showTitleEditAlertViewAtIndex(index)
     }
 
     func close() {
@@ -81,5 +118,23 @@ class SelectPlaylistTableViewController: UITableViewController {
                 callback(self.playlists[indexPath.item])
             }
         })
+    }
+
+    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
+        let edit = UITableViewRowAction(style: .Default, title: "Edit title") {
+            (action, indexPath) in
+            self.editPlaylist(indexPath.item)
+        }
+        edit.backgroundColor = ColorHelper.greenColor
+        let remove = UITableViewRowAction(style: .Default, title: "Remove") {
+            (action, indexPath) in
+            self.playlists[indexPath.item].remove()
+        }
+        remove.backgroundColor = ColorHelper.redColor
+        return [edit, remove]
+    }
+
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
     }
 }
