@@ -8,12 +8,35 @@
 
 import UIKit
 import SwiftyJSON
+import ReactiveCocoa
+import LlamaKit
 
-class Playlist {
+class Playlist: Equatable {
     let id:           String
     var title:        String
     var tracks:       [Track]
     var thumbnailUrl: NSURL? { return tracks.first?.thumbnailUrl }
+
+    struct ClassProperty {
+        static let pipe    = HotSignal<Event>.pipe()
+        static var current = Playlist.findAll()
+    }
+    enum Action {
+        case Create
+        case Remove
+        case Update
+    }
+    typealias Event = (action: Action, value: Playlist)
+
+    class var shared: (signal: HotSignal<Event>, sink: SinkOf<Event>, current: [Playlist]) {
+        get { return (signal: ClassProperty.pipe.0,
+                        sink: ClassProperty.pipe.1,
+                     current: ClassProperty.current) }
+    }
+
+    class func notifyChange(event: Event) {
+        shared.sink.put(event)
+    }
 
     private class func dateFormatter() -> NSDateFormatter {
         let dateFormatter = NSDateFormatter()
@@ -50,22 +73,31 @@ class Playlist {
         return store
     }
 
+    func create() {
+        PlaylistStore.save(self)
+        Playlist.notifyChange((Action.Create, self))
+    }
+
     func save() {
         PlaylistStore.save(self)
+        Playlist.notifyChange((Action.Update, self))
     }
 
     func remove() {
         PlaylistStore.remove(self)
+        Playlist.notifyChange((Action.Remove, self))
     }
 
     func removeTrackAtIndex(index: UInt) {
         PlaylistStore.removeTrackAtIndex(index, playlist: self)
         tracks.removeAtIndex(Int(index))
+        Playlist.notifyChange((Action.Update, self))
     }
 
     func appendTracks(tracks: [Track]) {
         PlaylistStore.appendTracks(tracks, playlist: self)
         self.tracks.extend(tracks)
+        Playlist.notifyChange((Action.Update, self))
     }
 
     class func findAll() -> [Playlist] {
@@ -75,4 +107,8 @@ class Playlist {
     class func removeAll() {
         PlaylistStore.removeAll()
     }
+}
+
+func ==(lhs: Playlist, rhs: Playlist) -> Bool {
+    return lhs.id == rhs.id
 }
