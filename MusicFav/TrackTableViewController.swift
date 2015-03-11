@@ -81,18 +81,18 @@ class TrackTableViewController: UITableViewController {
     
     func favPlaylist() {
         if let currentPlaylist = playlist {
-            currentPlaylist.save()
-            appDelegate.miniPlayerViewController?.playlistTableViewController.fetchPlaylists()
+            showSelectPlaylistViewController(currentPlaylist.tracks)
         }
     }
 
-    func showSelectPlaylistViewController(track: Track) {
+    func showSelectPlaylistViewController(tracks: [Track]) {
         let ptc = SelectPlaylistTableViewController()
         ptc.callback = {(playlist: Playlist?) in
             if let p = playlist {
-                p.appendTrack(track)
+                p.appendTracks(tracks)
             }
             ptc.callback = nil
+            self.appDelegate.miniPlayerViewController?.playlistTableViewController.fetchPlaylists()
         }
         let nvc = UINavigationController(rootViewController: ptc)
         self.navigationController?.presentViewController(nvc, animated: true, completion: nil)
@@ -175,7 +175,7 @@ class TrackTableViewController: UITableViewController {
         let copy = UITableViewRowAction(style: .Default, title: "Copy") {
             (action, indexPath) in
             let track = self.playlist!.tracks[indexPath.item]
-            self.showSelectPlaylistViewController(track)
+            self.showSelectPlaylistViewController([track])
         }
         copy.backgroundColor = ColorHelper.greenColor
         if isReadingPlaylist {

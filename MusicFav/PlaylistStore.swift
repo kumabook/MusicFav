@@ -45,12 +45,15 @@ class PlaylistStore: RLMObject {
         }
     }
 
-    class func appendTrack(track: Track, playlist: Playlist) {
-        var trackStore = TrackStore.findBy(url: track.url)
-        if trackStore == nil { trackStore = track.toStoreObject() }
+    class func appendTracks(tracks: [Track], playlist: Playlist) {
+        let trackStores: [TrackStore] = tracks.map({ track in
+            if let trackStore = TrackStore.findBy(url: track.url) { return trackStore }
+            else                                                  { return track.toStoreObject() }
+        })
+
         if let store = findBy(id: playlist.id) {
             realm.transactionWithBlock() {
-                store.tracks.addObject(trackStore)
+                store.tracks.addObjects(trackStores)
             }
         }
     }
