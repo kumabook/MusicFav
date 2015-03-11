@@ -60,10 +60,12 @@ class Playlist {
 
     func removeTrackAtIndex(index: UInt) {
         PlaylistStore.removeTrackAtIndex(index, playlist: self)
+        tracks.removeAtIndex(Int(index))
     }
 
     func appendTracks(tracks: [Track]) {
         PlaylistStore.appendTracks(tracks, playlist: self)
+        self.tracks.extend(tracks)
     }
 
     class func findAll() -> [Playlist] {
