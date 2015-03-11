@@ -150,7 +150,8 @@ class TrackTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier(self.tableCellReuseIdentifier, forIndexPath: indexPath) as TrackTableViewCell
         if let p = playlist {
             let track = p.tracks[indexPath.item]
-            cell.trackNameLabel.text = track.title
+            if let title = track.title { cell.trackNameLabel.text = title }
+            else                       { cell.trackNameLabel.text = "Loading..." }
             let minutes = Int(floor(track.duration / 60))
             let seconds = Int(round(track.duration - Double(minutes) * 60))
             cell.durationLabel.text = String(format: "%.2d:%.2d", minutes, seconds)

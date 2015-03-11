@@ -26,7 +26,7 @@ class Track {
 
     init(json: JSON) {
         provider  = Provider(rawValue: json["provider"].stringValue)!
-        title     = json["serviceId"].stringValue
+        title     = nil
         url       = json["url"].stringValue
         serviceId = json["serviceId"].stringValue
         duration  = 0 as NSTimeInterval
