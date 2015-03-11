@@ -15,7 +15,7 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Nx2-sw-dTn">
-                        <rect key="frame" x="97" y="3" width="70" height="71"/>
+                        <rect key="frame" x="58" y="3" width="109" height="71"/>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c10-vl-81A">
                         <rect key="frame" x="175" y="1" width="120" height="45"/>
@@ -43,7 +43,7 @@
                     <constraint firstItem="Nx2-sw-dTn" firstAttribute="top" secondItem="c10-vl-81A" secondAttribute="top" constant="2" id="To0-7W-FEr"/>
                     <constraint firstItem="Nx2-sw-dTn" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-7" id="Y0G-Cf-8bP"/>
                     <constraint firstItem="c10-vl-81A" firstAttribute="top" secondItem="Nx2-sw-dTn" secondAttribute="top" id="bZf-0O-HZ1"/>
-                    <constraint firstItem="Nx2-sw-dTn" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="89" id="vbf-Uh-mt0"/>
+                    <constraint firstItem="Nx2-sw-dTn" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="50" id="vbf-Uh-mt0"/>
                     <constraint firstAttribute="trailingMargin" secondItem="c10-vl-81A" secondAttribute="trailing" constant="17" id="wGe-rK-cIG"/>
                 </constraints>
                 <variation key="default">

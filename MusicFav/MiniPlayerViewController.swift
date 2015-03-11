@@ -52,33 +52,31 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
         mainViewController.allowRightSwipe      = false
         miniPlayerObserver                      = MiniPlayerObserver(miniPlayerViewController: self)
     }
-    
+
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
-    
+
     required init(coder aDecoder: NSCoder) {
         super.init(coder:aDecoder)
     }
-    
-    override func loadView() {
-        super.loadView()
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        addChildViewController(mainViewController)
+        mainViewController.didMoveToParentViewController(self)
         miniPlayerView.delegate = self
         mainViewContainer.addSubview(mainViewController.view)
         mainViewController.view.frame = mainViewContainer.bounds
         view.bringSubviewToFront(miniPlayerView)
-    }
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
         updateViews()
         player?.addObserver(miniPlayerObserver)
     }
     
-    override func viewWillLayoutSubviews() {
-        super.viewWillLayoutSubviews()
+    override func shouldAutomaticallyForwardAppearanceMethods() -> Bool {
+        return false
     }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
