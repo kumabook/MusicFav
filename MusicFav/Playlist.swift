@@ -28,9 +28,9 @@ class Playlist {
     }
 
     init(json: JSON) {
-        id     = json["url"].string!
-        title  = json["title"].string!
-        tracks = json["tracks"].array!.map({ Track(json: $0) })
+        id     = json["url"].stringValue
+        title  = json["title"].stringValue
+        tracks = json["tracks"].arrayValue.map({ Track(json: $0) })
     }
 
     init(store: PlaylistStore) {

@@ -25,10 +25,10 @@ class Track {
     var duration:     NSTimeInterval
 
     init(json: JSON) {
-        provider  = Provider(rawValue: json["provider"].string!)!
-        title     = json["serviceId"].string!
-        url       = json["url"].string!
-        serviceId = json["serviceId"].string!
+        provider  = Provider(rawValue: json["provider"].stringValue)!
+        title     = json["serviceId"].stringValue
+        url       = json["url"].stringValue
+        serviceId = json["serviceId"].stringValue
         duration  = 0 as NSTimeInterval
     }
     
@@ -83,11 +83,11 @@ class SoundCloudAudio {
     let streamUrl:          String?
     let duration:           Int
     init(json: JSON) {
-        title               = json["title"].string!
-        descriptionProperty = json["description"].string!
-        artworkUrl          = json["artwork_url"].string?
-        streamUrl           = json["stream_url"].string! + "?client_id=" + SoundCloudAPIClientConfig.client_id
-        duration            = json["duration"].int!
+        title               = json["title"].stringValue
+        descriptionProperty = json["description"].stringValue
+        artworkUrl          = json["artwork_url"].string
+        streamUrl           = json["stream_url"].stringValue + "?client_id=" + SoundCloudAPIClientConfig.client_id
+        duration            = json["duration"].intValue
     }
 }
 
