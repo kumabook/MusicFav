@@ -36,7 +36,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         clearsSelectionOnViewWillAppear = true
         let nib = UINib(nibName: "PlaylistTableViewCell", bundle: nil)
         tableView?.registerNib(nib, forCellReuseIdentifier:self.tableCellReuseIdentifier)
-        fetchPlaylists()
+        observePlaylists()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -79,10 +79,30 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         super.didReceiveMemoryWarning()
     }
 
-    func fetchPlaylists() {
-        playlists = Playlist.findAll()
-        println(playlists)
+    func observePlaylists() {
+        playlists = Playlist.shared.current
         tableView.reloadData()
+        Playlist.shared.signal.observe { event in
+            let section = Section.Favorites.rawValue
+            switch event.action {
+            case .Create:
+                let indexPath = NSIndexPath(forItem: self.playlists.count, inSection: section)
+                self.playlists.append(event.value)
+                self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            case .Update:
+                if let index = find(self.playlists, event.value) {
+                    let indexPath = NSIndexPath(forItem: index, inSection: section)
+                    self.playlists[index] = event.value
+                    self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                }
+            case .Remove:
+                if let index = find(self.playlists, event.value) {
+                    let playlist = self.playlists.removeAtIndex(index)
+                    let indexPath = NSIndexPath(forItem: index, inSection: section)
+                    self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                }
+            }
+        }
     }
 
     func showTitleEditAlertViewAtIndex(index: Int) {
@@ -107,11 +127,10 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         let newTitle = alertView.textFieldAtIndex(0)!.text
         if index >= 0 {
             playlists[index].title = newTitle
-            PlaylistStore.save(playlists[index])
+            playlists[index].save()
         } else if index == NEW_PLAYLIST_INDEX {
             let playlist = Playlist(title: newTitle)
-            playlists.append(playlist)
-            PlaylistStore.save(playlist)
+            playlist.create()
         }
         tableView.reloadData()
     }
@@ -186,9 +205,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             (action, indexPath) in
             switch (Section(rawValue: indexPath.section)!) {
             case .Favorites:
-                let playlist = self.playlists.removeAtIndex(indexPath.item)
-                PlaylistStore.remove(playlist)
-                tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                self.playlists[indexPath.item].remove()
             default:
                 tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
             }

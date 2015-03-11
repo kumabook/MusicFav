@@ -92,7 +92,6 @@ class TrackTableViewController: UITableViewController {
                 p.appendTracks(tracks)
             }
             ptc.callback = nil
-            self.appDelegate.miniPlayerViewController?.playlistTableViewController.fetchPlaylists()
         }
         let nvc = UINavigationController(rootViewController: ptc)
         self.navigationController?.presentViewController(nvc, animated: true, completion: nil)
@@ -168,7 +167,7 @@ class TrackTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
         let remove = UITableViewRowAction(style: .Default, title: "Remove") {
             (action, indexPath) in
-            let track = self.playlist!.tracks.removeAtIndex(indexPath.item)
+            self.playlist?.removeTrackAtIndex(UInt(indexPath.item))
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
         remove.backgroundColor = ColorHelper.redColor
