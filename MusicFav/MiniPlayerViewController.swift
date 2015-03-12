@@ -72,10 +72,6 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
         updateViews()
         player?.addObserver(miniPlayerObserver)
     }
-    
-    override func shouldAutomaticallyForwardAppearanceMethods() -> Bool {
-        return false
-    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
