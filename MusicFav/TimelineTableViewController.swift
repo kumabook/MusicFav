@@ -14,14 +14,14 @@ import FeedlyKit
 
 class TimelineTableViewController: UITableViewController {
     var currentIndex = 0
-    
+
     enum State {
         case Normal
         case Fetching
         case Complete
         case Error
     }
-    
+
     let client = FeedlyAPIClient.sharedInstance
     var entries:[Entry] = []
     let timelineTableCellReuseIdentifier = "TimelineTableViewCell"
@@ -43,7 +43,7 @@ class TimelineTableViewController: UITableViewController {
     required init(coder aDecoder: NSCoder) {
         super.init(coder:aDecoder)
     }
-    
+
     override func loadView() {
         super.loadView()
     }
@@ -58,7 +58,7 @@ class TimelineTableViewController: UITableViewController {
             style: UIBarButtonItemStyle.Plain,
             target: self,
             action: "showPlaylist")
-        
+
         indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         indicator.bounds = CGRect(x: 0,
                                   y: 0,
@@ -66,14 +66,14 @@ class TimelineTableViewController: UITableViewController {
                              height: indicator.bounds.height * 3)
         indicator.hidesWhenStopped = true
         indicator.stopAnimating()
-        
+
         reloadButton = UIButton()
         reloadButton.setImage(UIImage(named: "network_error"), forState: UIControlState.Normal)
         reloadButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
         reloadButton.addTarget(self, action:"fetchEntries", forControlEvents:UIControlEvents.TouchUpInside)
         reloadButton.setTitle("Sorry, network error occured.", forState:UIControlState.Normal)
         reloadButton.frame = CGRectMake(0, 0, tableView.frame.size.width, 44);
-        
+
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "loadStream", name: "loggedOut", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "loadStream", name: "loggedIn", object: nil)
 
@@ -82,12 +82,12 @@ class TimelineTableViewController: UITableViewController {
         self.updateLastUpdated(nil)
         loadStream()
     }
-    
+
     override func viewWillDisappear(animated: Bool) {
         NSNotificationCenter.defaultCenter().removeObserver(self, name: "logout", object: nil)
         super.viewWillDisappear(animated)
     }
-    
+
     func loadStream() {
         let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         appDelegate.miniPlayerViewController?.mainViewController.showCenterPanelAnimated(true)
@@ -102,30 +102,30 @@ class TimelineTableViewController: UITableViewController {
         if let title = stream?.title { self.navigationItem.title = title }
         else                         { self.navigationItem.title = "Sample feeds" }
     }
-    
+
     func showPlaylist() {
         let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         appDelegate.miniPlayerViewController?.mainViewController.showRightPanelAnimated(true)
     }
-    
+
     func showIndicator() {
         self.tableView.tableFooterView = indicator
         indicator?.startAnimating()
     }
-    
+
     func hideIndicator() {
         indicator?.stopAnimating()
         self.tableView.tableFooterView = nil
     }
-    
+
     func showReloadButton() {
         self.tableView.tableFooterView = reloadButton
     }
-    
+
     func hideReloadButton() {
         self.tableView.tableFooterView = nil
     }
-    
+
     func updateLastUpdated(updated: Int64?) {
         if let timestamp = updated {
             self.lastUpdated = timestamp + 1
@@ -133,7 +133,7 @@ class TimelineTableViewController: UITableViewController {
             lastUpdated = Int64(NSDate().timeIntervalSince1970 * 1000)
         }
     }
-    
+
     func fetchLatestEntries() {
         if entries.count == 0 {
             return
@@ -174,7 +174,6 @@ class TimelineTableViewController: UITableViewController {
                     self.tableView.reloadData()
                     self.refreshControl?.endRefreshing()
             })
-    
     }
 
     func fetchEntries() {
@@ -268,7 +267,7 @@ class TimelineTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
+
     // MARK: - Table view data source
 
     override func scrollViewDidScroll(scrollView: UIScrollView) {
@@ -276,7 +275,6 @@ class TimelineTableViewController: UITableViewController {
             fetchEntries()
         }
     }
-    
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
