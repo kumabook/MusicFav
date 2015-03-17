@@ -27,20 +27,20 @@ class TimelineTableViewController: UITableViewController {
     let timelineTableCellReuseIdentifier = "TimelineTableViewCell"
     var stream:             Stream?
     var streamContinuation: String?
-    var state       = State.Normal
-    var isFetching  = false
-    var isStreamEnd =  false
-    var indicator:    UIActivityIndicatorView!
-    var reloadButton: UIButton!
-    var lastUpdated: Int64 = 0
-    var unreadOnly = true
+    var state:              State
+    var indicator:          UIActivityIndicatorView!
+    var reloadButton:       UIButton!
+    var lastUpdated:        Int64 = 0
+    var unreadOnly:         Bool = true
 
     init(stream: Stream?) {
         self.stream = stream
+        self.state  = .Normal
         super.init(nibName: "TimelineTableViewController", bundle: NSBundle.mainBundle())
     }
 
     required init(coder aDecoder: NSCoder) {
+        self.state  = .Normal
         super.init(coder:aDecoder)
     }
 
@@ -225,7 +225,6 @@ class TimelineTableViewController: UITableViewController {
                             self.showReloadButton()
                         }
                     }
-                    self.isFetching = false
                 },
                 completed: {
                     self.hideIndicator()
