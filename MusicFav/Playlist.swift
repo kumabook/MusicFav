@@ -35,6 +35,19 @@ class Playlist: Equatable {
     }
 
     class func notifyChange(event: Event) {
+        switch event.action {
+        case .Create:
+            ClassProperty.current.append(event.value)
+        case .Update:
+            if let index = find(ClassProperty.current, event.value) {
+                ClassProperty.current[index] = event.value
+            }
+        case .Remove:
+            if let index = find(ClassProperty.current, event.value) {
+                let playlist = ClassProperty.current.removeAtIndex(index)
+            }
+        }
+
         shared.sink.put(event)
     }
 
