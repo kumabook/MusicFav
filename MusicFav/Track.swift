@@ -18,18 +18,18 @@ enum Provider: String {
 class Track {
     let provider:     Provider
     let url:          String
-    let serviceId:    String
+    let identifier:   String
     var title:        String?
     var streamUrl:    NSURL?
     var thumbnailUrl: NSURL?
     var duration:     NSTimeInterval
 
     init(json: JSON) {
-        provider  = Provider(rawValue: json["provider"].stringValue)!
-        title     = nil
-        url       = json["url"].stringValue
-        serviceId = json["serviceId"].stringValue
-        duration  = 0 as NSTimeInterval
+        provider   = Provider(rawValue: json["provider"].stringValue)!
+        title      = nil
+        url        = json["url"].stringValue
+        identifier = json["serviceId"].stringValue
+        duration   = 0 as NSTimeInterval
     }
     
     func updateProperties(soundCloudAudio: SoundCloudAudio) {
@@ -51,7 +51,7 @@ class Track {
         var store          = TrackStore()
         store.url          = url
         store.providerRaw  = provider.rawValue
-        store.serviceId    = serviceId
+        store.identifier   = identifier
         store.title        = title
         if let s           = streamUrl    { store.streamUrl    = s.absoluteString }
         if let t           = thumbnailUrl { store.thumbnailUrl = t.absoluteString }
@@ -61,11 +61,11 @@ class Track {
     }
 
     init(store: TrackStore) {
-        provider  = Provider(rawValue: store.providerRaw)!
-        title     = store.title
-        url       = store.url
-        serviceId = store.serviceId
-        duration  = NSTimeInterval(store.duration)
+        provider   = Provider(rawValue: store.providerRaw)!
+        title      = store.title
+        url        = store.url
+        identifier = store.identifier
+        duration   = NSTimeInterval(store.duration)
 
         if let s = store.streamUrl    { streamUrl    = NSURL(string: s) }
         if let t = store.thumbnailUrl { thumbnailUrl = NSURL(string: t) }

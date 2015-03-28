@@ -39,6 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var rightVisibleWidth: CGFloat? { get { return miniPlayerViewController?.mainViewController.rightVisibleWidth } }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        TrackStore.migration()
         player                      = Player()
         appearanceManager           = AppearanceManager()
         appearanceManager?.apply()

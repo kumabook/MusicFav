@@ -104,7 +104,7 @@ class TrackTableViewController: UITableViewController {
         for (index, track) in enumerate(playlist!.tracks) {
             switch track.provider {
             case .Youtube:
-                XCDYouTubeClient.defaultClient().getVideoWithIdentifier(track.serviceId, completionHandler: { (video, error) -> Void in
+                XCDYouTubeClient.defaultClient().getVideoWithIdentifier(track.identifier, completionHandler: { (video, error) -> Void in
                     if let e = error {
                         println(e)
                         return
@@ -113,7 +113,7 @@ class TrackTableViewController: UITableViewController {
                     self.tableView?.reloadData()
                 })
             case .SoundCloud:
-                SoundCloudAPIClient.sharedInstance.fetchTrack(track.serviceId)
+                SoundCloudAPIClient.sharedInstance.fetchTrack(track.identifier)
                     .deliverOn(MainScheduler())
                     .start(
                         next: {audio in

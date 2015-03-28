@@ -14,7 +14,7 @@ import FeedlyKit
 class TrackStore: RLMObject {
     dynamic var url:          String = ""
     dynamic var providerRaw:  String = ""
-    dynamic var serviceId:    String = ""
+    dynamic var identifier:   String = ""
     dynamic var title:        String?
     dynamic var streamUrl:    String?
     dynamic var thumbnailUrl: String?
@@ -35,6 +35,17 @@ class TrackStore: RLMObject {
             return nil
         } else {
             return results[0] as? TrackStore
+        }
+    }
+
+    class func migration() -> Void {
+        RLMRealm.setSchemaVersion(1, forRealmAtPath: RLMRealm.defaultRealmPath()) { (migration, oldVersion) -> Void in
+            if (oldVersion == 0) {
+                migration.enumerateObjects(TrackStore.className()) { oldObject, newObject in
+                    let serviceId = oldObject["serviceId"] as String
+                    newObject["identifier"] = serviceId
+                }
+            }
         }
     }
 }
