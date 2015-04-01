@@ -23,7 +23,9 @@ class TimelineTableViewController: UITableViewController {
     }
 
     let feedlyClient    = FeedlyAPIClient.sharedInstance
+    let musicfavClient  = MusicFavAPIClient.sharedInstance
     var entries:[Entry] = []
+    var playlistsOfEntry:[Entry:Playlist] = [:]
     let timelineTableCellReuseIdentifier = "TimelineTableViewCell"
     var stream:             Stream?
     var streamContinuation: String?
@@ -154,6 +156,7 @@ class TimelineTableViewController: UITableViewController {
                     let entries = paginatedCollection.items
                     for e in entries {
                         self.entries.insert(e, atIndex: 0)
+                        self.loadPlaylistOfEntry(e)
                     }
                     self.updateLastUpdated(paginatedCollection.updated)
                 },
@@ -201,6 +204,7 @@ class TimelineTableViewController: UITableViewController {
                 next: {paginatedCollection in
                     let entries = paginatedCollection.items
                     self.entries.extend(entries)
+                    for e in entries { self.loadPlaylistOfEntry(e) }
                     self.streamContinuation = paginatedCollection.continuation
                     if paginatedCollection.continuation == nil {
                         self.state = State.Complete
@@ -230,6 +234,19 @@ class TimelineTableViewController: UITableViewController {
                     self.hideIndicator()
                     self.tableView.reloadData()
             })
+    }
+
+    func loadPlaylistOfEntry(entry: Entry) {
+        if let url = entry.url {
+            self.musicfavClient.playlistify(url).deliverOn(MainScheduler())
+                .start(
+                    next: { playlist in
+                        self.playlistsOfEntry[entry] = playlist
+                    }, error: { error in
+                    }, completed: {
+                        self.tableView.reloadData()
+                })
+        }
     }
 
     func markAsRead(indexPath: NSIndexPath) {
@@ -299,6 +316,11 @@ class TimelineTableViewController: UITableViewController {
         } else {
             cell.thumbImgView.image = UIImage(named: "default_thumb")
         }
+        if let playlist = playlistsOfEntry[entry] {
+            cell.trackNumLabel.text = "\(playlist.tracks.count) tracks"
+        } else {
+            cell.trackNumLabel.text = "Extracting tracks"
+        }
 
         return cell
     }
@@ -309,12 +331,10 @@ class TimelineTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let entry = entries[indexPath.item]
-        if let alternate = entry.alternate {
-            if alternate.count > 0 {
-                let vc = EntryWebViewController()
-                vc.currentURL = NSURL(string: alternate[0].href)!
-                navigationController?.pushViewController(vc, animated: true)
-            }
+        if let url = entry.url {
+            let vc = EntryWebViewController()
+            vc.currentURL = url
+            navigationController?.pushViewController(vc, animated: true)
         }
     }
 }

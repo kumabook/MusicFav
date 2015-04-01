@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6254" systemVersion="14C81f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="6751" systemVersion="14D72i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6247"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
@@ -26,10 +26,18 @@
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="N tracks" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rhU-7b-3eO">
+                        <rect key="frame" x="320" y="70" width="65" height="21"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
+                    <constraint firstAttribute="trailingMargin" secondItem="rhU-7b-3eO" secondAttribute="trailing" constant="7" id="Ql7-8Y-8Yp"/>
                     <constraint firstAttribute="bottomMargin" secondItem="CdM-l4-K5v" secondAttribute="bottom" constant="-9" id="Uxd-MK-W30"/>
                     <constraint firstItem="gbd-54-e0T" firstAttribute="leading" secondItem="CdM-l4-K5v" secondAttribute="trailing" constant="21" id="YyV-p0-ZsW"/>
+                    <constraint firstItem="rhU-7b-3eO" firstAttribute="bottom" secondItem="H2p-sc-9uM" secondAttribute="bottomMargin" id="Yzg-Sx-JNJ"/>
                     <constraint firstItem="gbd-54-e0T" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="ZoQ-sA-UdP"/>
                     <constraint firstItem="CdM-l4-K5v" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="dw6-Hu-7Ow"/>
                     <constraint firstAttribute="trailingMargin" secondItem="gbd-54-e0T" secondAttribute="trailing" constant="7" id="lxQ-TU-ZXm"/>
@@ -39,6 +47,7 @@
             <connections>
                 <outlet property="thumbImgView" destination="CdM-l4-K5v" id="BIE-Go-1AC"/>
                 <outlet property="titleLabel" destination="gbd-54-e0T" id="IwI-Eu-wbZ"/>
+                <outlet property="trackNumLabel" destination="rhU-7b-3eO" id="RX4-dq-ZnL"/>
             </connections>
             <point key="canvasLocation" x="277" y="259"/>
         </tableViewCell>

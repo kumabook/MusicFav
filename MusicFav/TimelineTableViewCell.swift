@@ -71,6 +71,7 @@ class TimelineTableViewCell: MCSwipeTableViewCell {
 
     @IBOutlet weak var thumbImgView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
+    @IBOutlet weak var trackNumLabel: UILabel!
     var rawImageView: UIImageView = UIImageView()
 
     override func awakeFromNib() {
