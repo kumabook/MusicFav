@@ -61,16 +61,16 @@
 	})(exports.Provider || (exports.Provider = {}));
 	var Provider = exports.Provider;
 	var Track = (function () {
-	    function Track(provider, url, serviceId) {
+	    function Track(provider, url, identifier) {
 	        this.provider = provider;
 	        this.url = url;
-	        this.serviceId = serviceId;
+	        this.identifier = identifier;
 	    }
 	    Track.prototype.toJSON = function () {
 	        return {
 	            provider: Provider[this.provider],
 	            url: this.url,
-	            serviceId: this.serviceId
+	            identifier: this.identifier
 	        };
 	    };
 	    return Track;
