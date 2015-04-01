@@ -18,7 +18,7 @@ struct SoundCloudAPIClientConfig {
 }
 
 
-class SoundCloudAPIClient: UIView {
+class SoundCloudAPIClient {
     class var sharedInstance : SoundCloudAPIClient {
         struct Static {
             static let instance : SoundCloudAPIClient = SoundCloudAPIClient()
