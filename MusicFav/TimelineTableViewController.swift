@@ -22,7 +22,7 @@ class TimelineTableViewController: UITableViewController {
         case Error
     }
 
-    let client = FeedlyAPIClient.sharedInstance
+    let feedlyClient    = FeedlyAPIClient.sharedInstance
     var entries:[Entry] = []
     let timelineTableCellReuseIdentifier = "TimelineTableViewCell"
     var stream:             Stream?
@@ -92,7 +92,7 @@ class TimelineTableViewController: UITableViewController {
         let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         appDelegate.miniPlayerViewController?.mainViewController.showCenterPanelAnimated(true)
         if stream == nil {
-            if let userId = client.profile?.id {
+            if let userId = feedlyClient.profile?.id {
                 stream = FeedlyKit.Category.All(userId)
             }
         }
@@ -141,7 +141,7 @@ class TimelineTableViewController: UITableViewController {
 
         var signal: ColdSignal<PaginatedEntryCollection>
         if let id = stream?.id {
-            signal = client.fetchEntries(streamId:id, newerThan: lastUpdated, unreadOnly: unreadOnly)
+            signal = feedlyClient.fetchEntries(streamId:id, newerThan: lastUpdated, unreadOnly: unreadOnly)
         } else {
             self.refreshControl?.beginRefreshing()
             self.refreshControl?.endRefreshing()
@@ -162,7 +162,7 @@ class TimelineTableViewController: UITableViewController {
                     if let dic = error.userInfo as NSDictionary? {
                         if let response:NSHTTPURLResponse = dic[key] as? NSHTTPURLResponse {
                             if response.statusCode == 401 {
-                                self.client.clearAllAccount()
+                                self.feedlyClient.clearAllAccount()
                                 //TODO: Alert Dialog with login link
                             } else {
                             }
@@ -184,12 +184,12 @@ class TimelineTableViewController: UITableViewController {
         showIndicator()
         var signal: ColdSignal<PaginatedEntryCollection>
         if let id = stream?.id {
-            signal = client.fetchEntries(streamId:id, continuation: streamContinuation, unreadOnly: unreadOnly)
+            signal = feedlyClient.fetchEntries(streamId:id, continuation: streamContinuation, unreadOnly: unreadOnly)
         } else {
             let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
             let sampleFeeds  = appDelegate.sampleFeeds
             if currentIndex < sampleFeeds.count {
-                signal = client.fetchEntries(streamId: sampleFeeds[currentIndex], continuation: nil, unreadOnly: unreadOnly)
+                signal = feedlyClient.fetchEntries(streamId: sampleFeeds[currentIndex], continuation: nil, unreadOnly: unreadOnly)
                 currentIndex += 1
             } else {
                 self.hideIndicator()
@@ -214,7 +214,7 @@ class TimelineTableViewController: UITableViewController {
                     if let dic = error.userInfo as NSDictionary? {
                         if let response:NSHTTPURLResponse = dic[key] as? NSHTTPURLResponse {
                             if response.statusCode == 401 {
-                                self.client.clearAllAccount()
+                                self.feedlyClient.clearAllAccount()
                                 //TODO: Alert Dialog with login link
                             } else {
                                 self.state = State.Error
@@ -234,8 +234,8 @@ class TimelineTableViewController: UITableViewController {
 
     func markAsRead(indexPath: NSIndexPath) {
         let entry = entries[indexPath.item]
-        if self.client.isLoggedIn {
-            FeedlyAPIClient.sharedInstance.client.markEntriesAsRead([entry.id], completionHandler: { (req, res, error) -> Void in
+        if feedlyClient.isLoggedIn {
+            feedlyClient.client.markEntriesAsRead([entry.id], completionHandler: { (req, res, error) -> Void in
                 if let e = error { println("Failed to mark as read") }
                 else             { println("Succeeded in marking as read") }
             })
@@ -246,13 +246,12 @@ class TimelineTableViewController: UITableViewController {
 
     func markAsSaved(indexPath: NSIndexPath) {
         let entry = entries[indexPath.item]
-        if self.client.isLoggedIn {
-            let client = FeedlyAPIClient.sharedInstance.client
-            client.markEntriesAsSaved([entry.id], completionHandler: { (req, res, error) -> Void in
+        if feedlyClient.isLoggedIn {
+            feedlyClient.client.markEntriesAsSaved([entry.id], completionHandler: { (req, res, error) -> Void in
                 if let e = error { println("Failed to mark as saved") }
                 else             { println("Succeeded in marking as saved") }
             })
-            client.markEntriesAsRead([entry.id], completionHandler: { (req, res, error) -> Void in
+            feedlyClient.client.markEntriesAsRead([entry.id], completionHandler: { (req, res, error) -> Void in
                 if let e = error { println("Failed to mark as read") }
                 else             { println("Succeeded in marking as read") }
             })
