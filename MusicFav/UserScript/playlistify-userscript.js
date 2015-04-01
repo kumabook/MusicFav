@@ -54,7 +54,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	(function (Provider) {
-	    Provider[Provider["Youtube"] = 0] = "Youtube";
+	    Provider[Provider["YouTube"] = 0] = "YouTube";
 	    Provider[Provider["SoundCloud"] = 1] = "SoundCloud";
 	    Provider[Provider["Vimeo"] = 2] = "Vimeo";
 	    Provider[Provider["Raw"] = 3] = "Raw";
@@ -79,18 +79,10 @@
 	var Playlist = (function () {
 	    function Playlist(document) {
 	        this.title = document.title;
-	        this.url = document.location.href;
 	        this.tracks = [];
 	    }
 	    Playlist.prototype.addTrack = function (track) {
 	        this.tracks.push(track);
-	    };
-	    Playlist.prototype.toJSON = function () {
-	        return {
-	            title: this.title,
-	            url: this.url,
-	            tracks: this.tracks
-	        };
 	    };
 	    return Playlist;
 	})();
@@ -109,7 +101,7 @@
 	        return document.title;
 	    };
 	    Scraper.prototype.extractPlaylist = function (document) {
-	        var playlist = new models.Playlist(document);
+	        var playlists = new models.Playlist(document);
 	        var iframes = document.getElementsByTagName('iframe');
 	        var found;
 	        for (var i = 0; i < iframes.length; i++) {
@@ -117,18 +109,16 @@
 	            if (src.match(/www.youtube.com\/embed/)) {
 	                found = src.match(/www.youtube.com\/embed\/(.+)/);
 	                var id = found[1].split('?')[0];
-	                var t = new models.Track(0 /* Youtube */, src, id);
-	                playlist.addTrack(t);
+	                var t = new models.Track(0 /* YouTube */, src, id);
+	                playlists.addTrack(t);
 	            }
-	            else if (src.match(/api.soundcloud.com\/tracks\//)) {
-	                var _src = decodeURIComponent(src);
-	                found = _src.match(/api.soundcloud.com\/tracks\/(.+)/);
-	                var id = found[1].split('&')[0];
-	                var t = new models.Track(1 /* SoundCloud */, src, id);
-	                playlist.addTrack(t);
+	            else if (src.match(/w.soundcloud.com\/player\//)) {
+	                found = decodeURI(src).match(/api.soundcloud.com%2Ftracks%2F(.+?)/);
+	                var t = new models.Track(1 /* SoundCloud */, src, found[1]);
+	                playlists.addTrack(t);
 	            }
 	        }
-	        return playlist;
+	        return playlists;
 	    };
 	    return Scraper;
 	})();
