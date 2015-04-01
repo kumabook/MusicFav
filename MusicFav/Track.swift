@@ -11,7 +11,7 @@ import XCDYouTubeKit
 import UIKit
 
 enum Provider: String {
-    case Youtube    = "Youtube"
+    case Youtube    = "YouTube"
     case SoundCloud = "SoundCloud"
 }
 
