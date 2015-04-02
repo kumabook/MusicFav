@@ -13,6 +13,7 @@ import SwiftyJSON
 import FeedlyKit
 
 class TimelineTableViewController: UITableViewController {
+    let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
     var currentIndex = 0
 
     enum State {
@@ -319,7 +320,7 @@ class TimelineTableViewController: UITableViewController {
         if let playlist = playlistsOfEntry[entry] {
             cell.trackNumLabel.text = "\(playlist.tracks.count) tracks"
         } else {
-            cell.trackNumLabel.text = "Extracting tracks"
+            cell.trackNumLabel.text = "? tracks"
         }
 
         return cell
@@ -334,6 +335,10 @@ class TimelineTableViewController: UITableViewController {
         if let url = entry.url {
             let vc = EntryWebViewController()
             vc.currentURL = url
+            vc.playlist   = playlistsOfEntry[entry]
+            appDelegate.readingPlaylist = vc.playlist
+            appDelegate.miniPlayerViewController?.playlistTableViewController.updateNavbar()
+            appDelegate.miniPlayerViewController?.playlistTableViewController.tableView.reloadData()
             navigationController?.pushViewController(vc, animated: true)
         }
     }
