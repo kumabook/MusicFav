@@ -7,6 +7,8 @@
 //
 
 import SwiftyJSON
+import ReactiveCocoa
+import LlamaKit
 import XCDYouTubeKit
 import UIKit
 
@@ -31,7 +33,18 @@ class Track {
         identifier = json["identifier"].stringValue
         duration   = 0 as NSTimeInterval
     }
-    
+
+    init(store: TrackStore) {
+        provider   = Provider(rawValue: store.providerRaw)!
+        title      = store.title
+        url        = store.url
+        identifier = store.identifier
+        duration   = NSTimeInterval(store.duration)
+
+        if let s = store.streamUrl    { streamUrl    = NSURL(string: s) }
+        if let t = store.thumbnailUrl { thumbnailUrl = NSURL(string: t) }
+    }
+
     func updateProperties(soundCloudAudio: SoundCloudAudio) {
         title        = soundCloudAudio.title
         duration     = NSTimeInterval(soundCloudAudio.duration / 1000)
@@ -60,15 +73,29 @@ class Track {
         return store
     }
 
-    init(store: TrackStore) {
-        provider   = Provider(rawValue: store.providerRaw)!
-        title      = store.title
-        url        = store.url
-        identifier = store.identifier
-        duration   = NSTimeInterval(store.duration)
-
-        if let s = store.streamUrl    { streamUrl    = NSURL(string: s) }
-        if let t = store.thumbnailUrl { thumbnailUrl = NSURL(string: t) }
+    func fetchTrackDetail() -> ColdSignal<Track>{
+        switch provider {
+        case .Youtube:
+            return ColdSignal { (sink, disposable) in
+                XCDYouTubeClient.defaultClient().getVideoWithIdentifier(self.identifier, completionHandler: { (video, error) -> Void in
+                    if let e = error {
+                         sink.put(.Error(error))
+                        return
+                    }
+                    self.updatePropertiesWithYouTubeVideo(video)
+                    sink.put(.Next(Box(self)))
+                    sink.put(.Completed)
+                })
+                return
+            }
+        case .SoundCloud:
+            return SoundCloudAPIClient.sharedInstance.fetchTrack(identifier)
+                .deliverOn(MainScheduler())
+                .map({
+                    self.updateProperties($0)
+                    return self
+                })
+        }
     }
 
     class func findBy(#url: String) {

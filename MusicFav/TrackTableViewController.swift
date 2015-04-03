@@ -101,31 +101,16 @@ class TrackTableViewController: UITableViewController {
         if playlist == nil {
             return
         }
+
         for (index, track) in enumerate(playlist!.tracks) {
-            switch track.provider {
-            case .Youtube:
-                XCDYouTubeClient.defaultClient().getVideoWithIdentifier(track.identifier, completionHandler: { (video, error) -> Void in
-                    if let e = error {
-                        println(e)
-                        return
-                    }
-                    track.updatePropertiesWithYouTubeVideo(video)
-                    self.tableView?.reloadData()
-                })
-            case .SoundCloud:
-                SoundCloudAPIClient.sharedInstance.fetchTrack(track.identifier)
-                    .deliverOn(MainScheduler())
-                    .start(
-                        next: {audio in
-                            track.updateProperties(audio)
-                        },
-                        error: {error in
-                            println("--failure")
-                        },
-                        completed: {
-                            self.tableView!.reloadData()
-                    })
-            }
+            track.fetchTrackDetail().start(
+                next: { track in
+                    self.tableView?.reloadRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)],
+                                                           withRowAnimation: UITableViewRowAnimation.None)
+                    Playlist.notifyChange((action: Playlist.Action.Update, value: self.playlist!))
+                }, error: { error in
+                }, completed: {
+            })
         }
     }
 
