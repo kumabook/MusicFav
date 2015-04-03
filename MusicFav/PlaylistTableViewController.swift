@@ -170,14 +170,14 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         switch (Section(rawValue: indexPath.section)!) {
         case .Playing:
             playlist = appDelegate.playingPlaylist
-            if let p = appDelegate.playingPlaylist {
+            if let p = playlist {
                 cell.titleLabel.text = "Now playing(\(p.title))"
             } else {
                 cell.titleLabel.text = "Not playing"
             }
         case .Reading:
             playlist = appDelegate.readingPlaylist
-            if let p = appDelegate.readingPlaylist {
+            if let p = playlist {
                 cell.titleLabel.text = "Now reading(\(p.title))"
             } else {
                 cell.titleLabel.text = "Not reading"
