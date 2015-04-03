@@ -50,6 +50,7 @@ class Track {
         duration     = NSTimeInterval(soundCloudAudio.duration / 1000)
         streamUrl    = NSURL(string: soundCloudAudio.streamUrl!)
         thumbnailUrl = NSURL(string: soundCloudAudio.artworkUrl!)
+        TrackStore.save(self)
     }
     
     func updatePropertiesWithYouTubeVideo(video: XCDYouTubeVideo) {
@@ -58,6 +59,7 @@ class Track {
         duration       = video.duration
         streamUrl      = streamURLs[XCDYouTubeVideoQuality.Medium360.rawValue]
         thumbnailUrl   = video.mediumThumbnailURL
+        TrackStore.save(self)
     }
 
     func toStoreObject() -> TrackStore {
@@ -66,8 +68,8 @@ class Track {
         store.providerRaw  = provider.rawValue
         store.identifier   = identifier
         store.title        = title
-        if let s           = streamUrl    { store.streamUrl    = s.absoluteString }
-        if let t           = thumbnailUrl { store.thumbnailUrl = t.absoluteString }
+        store.streamUrl    = streamUrl?.absoluteString
+        store.thumbnailUrl = thumbnailUrl?.absoluteString
         store.duration     = Int(duration)
 
         return store

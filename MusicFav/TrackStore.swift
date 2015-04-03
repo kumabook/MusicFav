@@ -38,6 +38,21 @@ class TrackStore: RLMObject {
         }
     }
 
+    class func save(track: Track) {
+        if let store = findBy(url: track.url) {
+            realm.transactionWithBlock() {
+                store.title        = track.title
+                store.streamUrl    = track.streamUrl?.absoluteString
+                store.thumbnailUrl = track.thumbnailUrl?.absoluteString
+            }
+        } else {
+            let store = track.toStoreObject()
+            realm.transactionWithBlock() {
+                self.realm.addObject(store)
+            }
+        }
+    }
+
     class func migration() -> Void {
         RLMRealm.setSchemaVersion(1, forRealmAtPath: RLMRealm.defaultRealmPath()) { (migration, oldVersion) -> Void in
             if (oldVersion == 0) {
