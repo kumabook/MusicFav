@@ -122,7 +122,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         let mainViewController = appDelegate.miniPlayerViewController?.mainViewController
         switch section {
         case .GlobalResource(let stream):
-            mainViewController?.centerPanel = UINavigationController(rootViewController: TimelineTableViewController(stream: stream))
+            mainViewController?.centerPanel = UINavigationController(rootViewController: EntryStreamViewController(stream: stream))
         case .Pocket:  return
         case .Twitter: return
         case .FeedlyCategory(let category): return
@@ -132,7 +132,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
 
     func showStream(#stream: Stream?) {
         let mainViewController          = appDelegate.miniPlayerViewController?.mainViewController
-        mainViewController?.centerPanel = UINavigationController(rootViewController: TimelineTableViewController(stream: stream))
+        mainViewController?.centerPanel = UINavigationController(rootViewController: EntryStreamViewController(stream: stream))
         mainViewController?.showCenterPanelAnimated(true)
     }
 

@@ -1,5 +1,5 @@
 //
-//  TimelineTableViewController.swift
+//  EntryStreamViewController.swift
 //  MusicFav
 //
 //  Created by Hiroki Kumamoto on 12/21/14.
@@ -12,7 +12,7 @@ import LlamaKit
 import SwiftyJSON
 import FeedlyKit
 
-class TimelineTableViewController: UITableViewController {
+class EntryStreamViewController: UITableViewController {
     let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
     var currentIndex = 0
 
@@ -39,7 +39,7 @@ class TimelineTableViewController: UITableViewController {
     init(stream: Stream?) {
         self.stream = stream
         self.state  = .Normal
-        super.init(nibName: "TimelineTableViewController", bundle: NSBundle.mainBundle())
+        super.init()
     }
 
     required init(coder aDecoder: NSCoder) {
