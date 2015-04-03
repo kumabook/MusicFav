@@ -90,6 +90,13 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
                 self.playlists.append(event.value)
                 self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             case .Update:
+                if event.value == self.appDelegate.playingPlaylist {
+                    let indexPath = NSIndexPath(forItem: 0, inSection: Section.Playing.rawValue)
+                    self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                } else if event.value == self.appDelegate.readingPlaylist {
+                    let indexPath = NSIndexPath(forItem: 0, inSection: Section.Reading.rawValue)
+                    self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                }
                 if let index = find(self.playlists, event.value) {
                     let indexPath = NSIndexPath(forItem: index, inSection: section)
                     self.playlists[index] = event.value
