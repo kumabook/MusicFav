@@ -24,32 +24,27 @@ class EntryStreamViewController: UITableViewController {
         case Error
     }
 
-    let feedlyClient    = FeedlyAPIClient.sharedInstance
-    let musicfavClient  = MusicFavAPIClient.sharedInstance
-    var entries:[Entry] = []
-    var playlistsOfEntry:[Entry:Playlist] = [:]
+    var stream:       Stream!
+    let streamLoader: StreamLoader!
+
     let entryStreamTableCellReuseIdentifier = "EntryStreamTableViewCell"
-    var stream:             Stream?
-    var streamContinuation: String?
-    var state:              State
     var indicator:          UIActivityIndicatorView!
     var reloadButton:       UIButton!
-    var lastUpdated:        Int64 = 0
     var unreadOnly:         Bool = true
 
-    init(stream: Stream?) {
+    var feedlyClient: FeedlyAPIClient { return streamLoader.feedlyClient }
+
+    init(stream: Stream) {
         self.stream = stream
-        self.state  = .Normal
+        self.streamLoader = StreamLoader(stream: stream, unreadOnly: unreadOnly)
         super.init(nibName: nil, bundle: nil)
     }
 
     override init(style: UITableViewStyle) {
-        self.state  = .Normal
         super.init(style: style)
     }
 
     required init(coder aDecoder: NSCoder) {
-        self.state  = .Normal
         super.init(coder:aDecoder)
     }
 
@@ -83,13 +78,9 @@ class EntryStreamViewController: UITableViewController {
         reloadButton.setTitle("Sorry, network error occured.", forState:UIControlState.Normal)
         reloadButton.frame = CGRectMake(0, 0, tableView.frame.size.width, 44);
 
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "loadStream", name: "loggedOut", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "loadStream", name: "loggedIn", object: nil)
-
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action:"fetchLatestEntries", forControlEvents:UIControlEvents.ValueChanged)
-        self.updateLastUpdated(nil)
-        loadStream()
+        observeStreamLoader()
     }
 
     override func viewWillDisappear(animated: Bool) {
@@ -97,24 +88,43 @@ class EntryStreamViewController: UITableViewController {
         super.viewWillDisappear(animated)
     }
 
-    func loadStream() {
+    func observeStreamLoader() {
+        streamLoader.hotSignal.observe({ event in
+            switch event {
+            case .StartLoadingLatest:
+                self.refreshControl?.beginRefreshing()
+            case .CompleteLoadingLatest:
+                self.tableView.reloadData()
+                self.refreshControl?.endRefreshing()
+            case .StartLoadingNext:
+                self.showIndicator()
+            case .CompleteLoadingNext:
+                self.hideIndicator()
+                self.tableView.reloadData()
+            case .FailToLoadNext:
+                self.showReloadButton()
+            case .CompleteLoadingPlaylist(let playlist, let entry):
+                if let i = find(self.streamLoader.entries, entry) {
+                    let index = NSIndexPath(forItem: i, inSection: 0)
+                    self.tableView.reloadRowsAtIndexPaths([index], withRowAnimation: UITableViewRowAnimation.None)
+                }
+            }
+        })
+
+        navigationItem.title = stream.streamTitle
+        tableView?.reloadData()
+        streamLoader.fetchEntries()
         let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         appDelegate.miniPlayerViewController?.mainViewController.showCenterPanelAnimated(true)
-        if stream == nil {
-            if let userId = feedlyClient.profile?.id {
-                stream = FeedlyKit.Category.All(userId)
-            }
-        }
-        entries = []
-        tableView?.reloadData()
-        fetchEntries()
-        if let title = stream?.title { self.navigationItem.title = title }
-        else                         { self.navigationItem.title = "Sample feeds" }
     }
 
     func showPlaylist() {
         let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         appDelegate.miniPlayerViewController?.mainViewController.showRightPanelAnimated(true)
+    }
+
+    func fetchLatestEntries() {
+        streamLoader.fetchLatestEntries()
     }
 
     func showIndicator() {
@@ -135,141 +145,20 @@ class EntryStreamViewController: UITableViewController {
         self.tableView.tableFooterView = nil
     }
 
-    func updateLastUpdated(updated: Int64?) {
-        if let timestamp = updated {
-            self.lastUpdated = timestamp + 1
-        } else {
-            lastUpdated = Int64(NSDate().timeIntervalSince1970 * 1000)
-        }
-    }
-
-    func fetchLatestEntries() {
-        if entries.count == 0 {
-            return
-        }
-
-        var signal: ColdSignal<PaginatedEntryCollection>
-        if let id = stream?.id {
-            signal = feedlyClient.fetchEntries(streamId:id, newerThan: lastUpdated, unreadOnly: unreadOnly)
-        } else {
-            self.refreshControl?.beginRefreshing()
-            self.refreshControl?.endRefreshing()
-            return
-        }
-        self.refreshControl?.beginRefreshing()
-        signal.deliverOn(MainScheduler())
-            .start(
-                next: { paginatedCollection in
-                    let entries = paginatedCollection.items
-                    for e in entries {
-                        self.entries.insert(e, atIndex: 0)
-                        self.loadPlaylistOfEntry(e)
-                    }
-                    self.updateLastUpdated(paginatedCollection.updated)
-                },
-                error: {error in
-                    let key = "com.alamofire.serialization.response.error.response"
-                    if let dic = error.userInfo as NSDictionary? {
-                        if let response:NSHTTPURLResponse = dic[key] as? NSHTTPURLResponse {
-                            if response.statusCode == 401 {
-                                self.feedlyClient.clearAllAccount()
-                                //TODO: Alert Dialog with login link
-                            } else {
-                            }
-                        } else {
-                        }
-                    }
-                },
-                completed: {
-                    self.tableView.reloadData()
-                    self.refreshControl?.endRefreshing()
-            })
-    }
-
-    func fetchEntries() {
-        if state == State.Fetching || state == State.Complete {
-            return
-        }
-        state = State.Fetching
-        showIndicator()
-        var signal: ColdSignal<PaginatedEntryCollection>
-        if let id = stream?.id {
-            signal = feedlyClient.fetchEntries(streamId:id, continuation: streamContinuation, unreadOnly: unreadOnly)
-        } else {
-            let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-            let sampleFeeds  = appDelegate.sampleFeeds
-            if currentIndex < sampleFeeds.count {
-                signal = feedlyClient.fetchEntries(streamId: sampleFeeds[currentIndex], continuation: nil, unreadOnly: unreadOnly)
-                currentIndex += 1
-            } else {
-                self.hideIndicator()
-                return
-            }
-        }
-        signal.deliverOn(MainScheduler())
-              .start(
-                next: {paginatedCollection in
-                    let entries = paginatedCollection.items
-                    self.entries.extend(entries)
-                    for e in entries { self.loadPlaylistOfEntry(e) }
-                    self.streamContinuation = paginatedCollection.continuation
-                    if paginatedCollection.continuation == nil {
-                        self.state = State.Complete
-                    } else {
-                        self.state = State.Normal
-                    }
-                    self.updateLastUpdated(paginatedCollection.updated)
-                },
-                error: {error in
-                    let key = "com.alamofire.serialization.response.error.response"
-                    if let dic = error.userInfo as NSDictionary? {
-                        if let response:NSHTTPURLResponse = dic[key] as? NSHTTPURLResponse {
-                            if response.statusCode == 401 {
-                                self.feedlyClient.clearAllAccount()
-                                //TODO: Alert Dialog with login link
-                            } else {
-                                self.state = State.Error
-                                self.showReloadButton()
-                            }
-                        } else {
-                            self.state = State.Error
-                            self.showReloadButton()
-                        }
-                    }
-                },
-                completed: {
-                    self.hideIndicator()
-                    self.tableView.reloadData()
-            })
-    }
-
-    func loadPlaylistOfEntry(entry: Entry) {
-        if let url = entry.url {
-            self.musicfavClient.playlistify(url).deliverOn(MainScheduler())
-                .start(
-                    next: { playlist in
-                        self.playlistsOfEntry[entry] = playlist
-                    }, error: { error in
-                    }, completed: {
-                        self.tableView.reloadData()
-                })
-        }
-    }
-
     func markAsRead(indexPath: NSIndexPath) {
-        let entry = entries[indexPath.item]
+        let entry = streamLoader.entries[indexPath.item]
         if feedlyClient.isLoggedIn {
             feedlyClient.client.markEntriesAsRead([entry.id], completionHandler: { (req, res, error) -> Void in
                 if let e = error { println("Failed to mark as read") }
                 else             { println("Succeeded in marking as read") }
             })
         }
-        self.entries.removeAtIndex(indexPath.row)
-        self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        streamLoader.entries.removeAtIndex(indexPath.row)
+        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
     }
 
     func markAsSaved(indexPath: NSIndexPath) {
-        let entry = entries[indexPath.item]
+        let entry = streamLoader.entries[indexPath.item]
         if feedlyClient.isLoggedIn {
             feedlyClient.client.markEntriesAsSaved([entry.id], completionHandler: { (req, res, error) -> Void in
                 if let e = error { println("Failed to mark as saved") }
@@ -279,10 +168,9 @@ class EntryStreamViewController: UITableViewController {
                 if let e = error { println("Failed to mark as read") }
                 else             { println("Succeeded in marking as read") }
             })
-
         }
-        self.entries.removeAtIndex(indexPath.row)
-        self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        streamLoader.entries.removeAtIndex(indexPath.row)
+        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
     }
 
     override func didReceiveMemoryWarning() {
@@ -294,7 +182,7 @@ class EntryStreamViewController: UITableViewController {
 
     override func scrollViewDidScroll(scrollView: UIScrollView) {
         if tableView.contentOffset.y >= tableView.contentSize.height - tableView.bounds.size.height {
-            fetchEntries()
+            streamLoader.fetchEntries()
         }
     }
 
@@ -303,11 +191,11 @@ class EntryStreamViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return entries.count
+        return streamLoader.entries.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let entry = entries[indexPath.row]
+        let entry = streamLoader.entries[indexPath.row]
         let cell = tableView.dequeueReusableCellWithIdentifier(entryStreamTableCellReuseIdentifier, forIndexPath:indexPath) as EntryStreamTableViewCell
         cell.prepareSwipeViews(
             onMarkAsSaved: { (cell) -> Void in
@@ -323,7 +211,7 @@ class EntryStreamViewController: UITableViewController {
         } else {
             cell.thumbImgView.image = UIImage(named: "default_thumb")
         }
-        if let playlist = playlistsOfEntry[entry] {
+        if let playlist = streamLoader.playlistsOfEntry[entry] {
             cell.trackNumLabel.text = "\(playlist.tracks.count) tracks"
         } else {
             cell.trackNumLabel.text = "? tracks"
@@ -337,11 +225,11 @@ class EntryStreamViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let entry = entries[indexPath.item]
+        let entry = streamLoader.entries[indexPath.item]
         if let url = entry.url {
             let vc = EntryWebViewController()
             vc.currentURL = url
-            vc.playlist   = playlistsOfEntry[entry]
+            vc.playlist   = streamLoader.playlistsOfEntry[entry]
             appDelegate.readingPlaylist = vc.playlist
             appDelegate.miniPlayerViewController?.playlistTableViewController.updateNavbar()
             appDelegate.miniPlayerViewController?.playlistTableViewController.tableView.reloadData()

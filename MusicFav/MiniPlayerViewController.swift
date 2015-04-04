@@ -42,12 +42,13 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
     override init() {
         super.init(nibName: "MiniPlayerViewController", bundle: NSBundle.mainBundle())
         mainViewController                      = JASidePanelController()
-        entryStreamViewController               = EntryStreamViewController(stream: nil)
+        entryStreamViewController               = EntryStreamViewController(stream: StreamLoader.defaultStream())
         playlistTableViewController             = PlaylistTableViewController()
         menuViewController                      = MenuTableViewController()
         mainViewController.leftPanel            = UINavigationController(rootViewController:menuViewController)
         mainViewController.rightPanel           = UINavigationController(rootViewController:playlistTableViewController)
-        mainViewController.centerPanel          = UINavigationController(rootViewController: entryStreamViewController)
+        mainViewController.centerPanel          = UINavigationController(rootViewController:entryStreamViewController)
+
         mainViewController.view.backgroundColor = UIColor.whiteColor()
         mainViewController.allowRightSwipe      = false
         miniPlayerObserver                      = MiniPlayerObserver(miniPlayerViewController: self)

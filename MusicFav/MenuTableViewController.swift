@@ -23,7 +23,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         var title: String {
             switch self {
             case .GlobalResource(let stream):
-                return stream.title
+                return stream.streamTitle
             case .Pocket:  return "Pocket"
             case .Twitter: return "Twitter"
             case .FeedlyCategory(let category):
@@ -122,7 +122,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         let mainViewController = appDelegate.miniPlayerViewController?.mainViewController
         switch section {
         case .GlobalResource(let stream):
-            mainViewController?.centerPanel = UINavigationController(rootViewController: StreamPageMenuController(stream: stream))
+            mainViewController?.centerPanel = UINavigationController(rootViewController: EntryStreamViewController(stream: stream))
         case .Pocket:  return
         case .Twitter: return
         case .FeedlyCategory(let category): return
@@ -132,7 +132,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
 
     func showStream(#stream: Stream?) {
         let mainViewController          = appDelegate.miniPlayerViewController?.mainViewController
-        mainViewController?.centerPanel = UINavigationController(rootViewController: StreamPageMenuController(stream: stream))
+        mainViewController?.centerPanel = UINavigationController(rootViewController: EntryStreamViewController(stream: stream!))
         mainViewController?.showCenterPanelAnimated(true)
     }
 
@@ -234,7 +234,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
                 cell.textLabel?.text = "\(section.title)"
             }
         } else if let stream = item as? Stream {
-            cell.textLabel?.text = "     " + stream.title
+            cell.textLabel?.text = "     " + stream.streamTitle
         }
         return cell
     }
@@ -276,7 +276,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
                 if let subscription = item as? Subscription {
                     var index: Int?
                     for i in 0..<streams.count {
-                        if streams[i].id == subscription.id { index = i }
+                        if streams[i].streamId == subscription.id { index = i }
                     }
                     if let i = index {
                         unsubscribeTo(subscription, index: i, category: category)

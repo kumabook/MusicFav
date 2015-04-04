@@ -13,6 +13,7 @@
 		6716642A1A738E36005FE005 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671664291A738E36005FE005 /* Alamofire.framework */; };
 		6716642C1A738E3E005FE005 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 671664291A738E36005FE005 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6716642E1A738E3E005FE005 /* FeedlyKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 671664271A738E2A005FE005 /* FeedlyKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		671CA1E81ACFBEEC00EDF162 /* StreamLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 671CA1E71ACFBEEC00EDF162 /* StreamLoader.swift */; };
 		6724E1C51A9C9E9900D8E0FA /* ColorHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6724E1C41A9C9E9900D8E0FA /* ColorHelper.swift */; };
 		6724E1C91A9CA19800D8E0FA /* AppearanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6724E1C81A9CA19800D8E0FA /* AppearanceManager.swift */; };
 		67254C791A493A570064E5DF /* EntryStreamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67254C771A493A570064E5DF /* EntryStreamTableViewCell.swift */; };
@@ -107,6 +108,7 @@
 		671664251A738DC5005FE005 /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		671664271A738E2A005FE005 /* FeedlyKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FeedlyKit.framework; path = Carthage/Build/iOS/FeedlyKit.framework; sourceTree = "<group>"; };
 		671664291A738E36005FE005 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
+		671CA1E71ACFBEEC00EDF162 /* StreamLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamLoader.swift; sourceTree = "<group>"; };
 		6724E1C41A9C9E9900D8E0FA /* ColorHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorHelper.swift; sourceTree = "<group>"; };
 		6724E1C81A9CA19800D8E0FA /* AppearanceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearanceManager.swift; sourceTree = "<group>"; };
 		67254C771A493A570064E5DF /* EntryStreamTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntryStreamTableViewCell.swift; sourceTree = "<group>"; };
@@ -297,6 +299,7 @@
 				67FAC5561A738F6C00A32818 /* Track.swift */,
 				671664251A738DC5005FE005 /* Playlist.swift */,
 				67773A711ACC194B00E7BC8E /* Entry.swift */,
+				671CA1E71ACFBEEC00EDF162 /* StreamLoader.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -639,6 +642,7 @@
 				67277CE01A46F4BC002FD3E0 /* MenuTableViewController.swift in Sources */,
 				67DA46561A86103B0048B29C /* PlaylistStore.swift in Sources */,
 				67D935981AA369C40061C1A0 /* PlayerViewController.swift in Sources */,
+				671CA1E81ACFBEEC00EDF162 /* StreamLoader.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
