@@ -20,6 +20,15 @@ class SampleFeed: Stream {
         self.title = title
         super.init()
     }
+    class func Spincoaster() -> SampleFeed {
+        return SampleFeed(id: "feed/http://spincoaster.com/feed", title: "Spincoaster (sample)")
+    }
+    class func NaverMatome() -> SampleFeed {
+        return SampleFeed(id: "feed/http://matome.naver.jp/feed/topic/1Hinb", title: "Naver matome (sample)")
+    }
+    class func samples() -> [SampleFeed] {
+        return [Spincoaster(), NaverMatome()]
+    }
 }
 
 class StreamLoader {
@@ -27,9 +36,7 @@ class StreamLoader {
         if let profile = FeedlyAPIClient.sharedInstance._profile {
             return FeedlyKit.Category.All(profile.id)
         } else {
-            let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-            let sampleFeeds  = appDelegate.sampleFeeds
-            return SampleFeed(id: sampleFeeds[0], title: "Sample feeds")
+            return SampleFeed.Spincoaster()
         }
     }
     enum State {

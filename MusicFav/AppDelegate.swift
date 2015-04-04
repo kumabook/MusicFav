@@ -30,11 +30,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var playerViewController:     PlayerViewController? {
         get { return coverViewController?.coverViewController as? PlayerViewController }
     }
-    let sampleFeeds = [
-        "feed/http://spincoaster.com/feed",
-        "feed/http://matome.naver.jp/feed/topic/1Hinb"
-    ]
-
     var leftVisibleWidth:  CGFloat? { get { return miniPlayerViewController?.mainViewController.leftVisibleWidth } }
     var rightVisibleWidth: CGFloat? { get { return miniPlayerViewController?.mainViewController.rightVisibleWidth } }
 
