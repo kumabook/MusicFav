@@ -90,6 +90,14 @@ class TrackTableViewController: UITableViewController {
         ptc.callback = {(playlist: Playlist?) in
             if let p = playlist {
                 p.appendTracks(tracks)
+                if p == self.playlist {
+                    var indexes: [NSIndexPath] = []
+                    let offset = p.tracks.count-1
+                    for i in offset..<tracks.count + offset {
+                        indexes.append(NSIndexPath(forItem: i, inSection: 0))
+                    }
+                    self.tableView.insertRowsAtIndexPaths(indexes, withRowAnimation: UITableViewRowAnimation.Fade)
+                }
             }
             ptc.callback = nil
         }
