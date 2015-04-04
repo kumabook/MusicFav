@@ -24,6 +24,7 @@ PODS:
   - MBProgressHUD (0.9)
   - MCSwipeTableViewCell (2.1.2)
   - NXOAuth2Client (1.2.8)
+  - PageMenu (1.2.3)
   - RATreeView (0.9.2)
   - SDWebImage (3.7.1):
     - SDWebImage/Core (= 3.7.1)
@@ -37,6 +38,7 @@ DEPENDENCIES:
   - MBProgressHUD (>= 0.8)
   - MCSwipeTableViewCell (>= 2.1.0)
   - NXOAuth2Client (>= 1.2.2)
+  - PageMenu
   - RATreeView (from `https://github.com/kumabook/RATreeView.git`, branch `pull_to_refresh`)
   - SDWebImage (>= 3.6)
   - Snap (>= 0.0.6)
@@ -53,14 +55,15 @@ CHECKOUT OPTIONS:
     :git: https://github.com/kumabook/RATreeView.git
 
 SPEC CHECKSUMS:
-  AFNetworking: 8bee59492a6ff15d69130efa4d0dc67e0094a52a
-  JASidePanels: ca943907d88a0738c80755204c6098969d43e4e9
-  MBProgressHUD: 2038dbcf3dce73215abed6001657043d53aa79a8
-  MCSwipeTableViewCell: 8e78ff197ab06ba7bfd5c938a00149de8a33afa9
-  NXOAuth2Client: fa81be68c9ce628202028ae037c9c92cfbb37865
+  AFNetworking: 10e85a00bb0f475124e4ff2677bf15693b2c1523
+  JASidePanels: c8f5b130e18d51ee3de988d1c1fad2f88e0b0d21
+  MBProgressHUD: d8e7ea388dc1549a42e0d219067cf5f2c898fb66
+  MCSwipeTableViewCell: 0fc22bd3635b9b5f4ce08675218b0a7278b6440f
+  NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
+  PageMenu: a7358b1c38cc2167a2b072a78f4683764c4d03ba
   RATreeView: a97a08e63ed11d67788c2b8a399bd1ebbed89de1
-  SDWebImage: 116e88633b5b416ea0ca4b334a4ac59cf72dd38d
-  Snap: 8930faf14165047799c47a46ee4bab0b1f85b54b
-  XCDYouTubeKit: fd5bb231519645b2fa4f0b3e5f9b847228c3f953
+  SDWebImage: ed3095af2ff88b436426037444979b917f6c5575
+  Snap: c691705e45df9cae55cebedde52013683588db52
+  XCDYouTubeKit: 5f9bda3a51f2d8af80404b3377bc4696f650d856
 
-COCOAPODS: 0.36.0.rc.1
+COCOAPODS: 0.36.3
