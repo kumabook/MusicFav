@@ -20,6 +20,7 @@ class EntryStreamTableViewCell: MCSwipeTableViewCell {
     var markAsReadColor: UIColor {
         get { return ColorHelper.redColor }
     }
+/*
     var markAsSavedImageView: UIView {
         get {
             let view              = UIView()
@@ -44,6 +45,7 @@ class EntryStreamTableViewCell: MCSwipeTableViewCell {
             return view
         }
     }
+*/
     var markAsReadImageView: UIView {
         get {
             let view              = UIView()
@@ -58,7 +60,7 @@ class EntryStreamTableViewCell: MCSwipeTableViewCell {
             view.addSubview(imageView)
 
             label.snp_makeConstraints { make in
-                make.left.equalTo(imageView.snp_right).with.offset(self.padding)
+                make.right.equalTo(imageView.snp_left).with.offset(-self.padding)
                 make.centerY.equalTo(view.snp_centerY)
             }
             imageView.snp_makeConstraints { make in
@@ -89,24 +91,27 @@ class EntryStreamTableViewCell: MCSwipeTableViewCell {
         contentView.backgroundColor = UIColor.whiteColor()
         selectionStyle = .Gray
         defaultColor   = swipeCellBackgroundColor
+/*
         setSwipeGestureWithView(markAsSavedImageView,
             color: markAsSavedColor,
             mode: .Switch,
             state: .State1) { (cell, state, mode) in }
+
         setSwipeGestureWithView(markAsSavedImageView,
             color: markAsSavedColor,
             mode: MCSwipeTableViewCellMode.Exit,
             state: MCSwipeTableViewCellState.State2) { (cell, state, mode) in
                 onMarkAsSaved(cell)
         }
+*/
         setSwipeGestureWithView(markAsReadImageView,
             color: markAsReadColor,
             mode: .Switch,
-            state: .State3) { (cell, state, mode) in }
+            state: .State1) { (cell, state, mode) in }
         setSwipeGestureWithView(markAsReadImageView,
             color: markAsReadColor,
             mode: MCSwipeTableViewCellMode.Exit,
-            state: MCSwipeTableViewCellState.State4) { (cell, state, mode) in
+            state: MCSwipeTableViewCellState.State2) { (cell, state, mode) in
                 onMarkAsRead(cell)
         }
     }

@@ -27,7 +27,7 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
         override func ended()            { vc.updateViews() }
     }
     var mainViewController:          JASidePanelController!
-    var entryStreamViewController:   EntryStreamViewController!
+    var streamPageMenuController:    StreamPageMenuController!
     var playlistTableViewController: PlaylistTableViewController!
     var menuViewController:          MenuTableViewController!
     var currentPlaylist:             Playlist? { get { return player?.currentPlaylist }}
@@ -42,12 +42,12 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
     override init() {
         super.init(nibName: "MiniPlayerViewController", bundle: NSBundle.mainBundle())
         mainViewController                      = JASidePanelController()
-        entryStreamViewController               = EntryStreamViewController(stream: StreamLoader.defaultStream())
+        streamPageMenuController                = StreamPageMenuController(stream:  StreamLoader.defaultStream())
         playlistTableViewController             = PlaylistTableViewController()
         menuViewController                      = MenuTableViewController()
         mainViewController.leftPanel            = UINavigationController(rootViewController:menuViewController)
         mainViewController.rightPanel           = UINavigationController(rootViewController:playlistTableViewController)
-        mainViewController.centerPanel          = UINavigationController(rootViewController:entryStreamViewController)
+        mainViewController.centerPanel          = UINavigationController(rootViewController:streamPageMenuController)
 
         mainViewController.view.backgroundColor = UIColor.whiteColor()
         mainViewController.allowRightSwipe      = false

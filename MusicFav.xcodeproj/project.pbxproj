@@ -68,6 +68,8 @@
 		67F7D4911A625A4F00A5AE68 /* ReactiveCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4881A625A4F00A5AE68 /* ReactiveCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		67F7D4921A625A4F00A5AE68 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */; };
 		67F7D4931A625A4F00A5AE68 /* SwiftyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		67F9A2911AD03C0D0078EC3C /* PlaylistStreamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F9A28F1AD03C0D0078EC3C /* PlaylistStreamViewController.swift */; };
+		67F9A2921AD03C0D0078EC3C /* StreamPageMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F9A2901AD03C0D0078EC3C /* StreamPageMenuController.swift */; };
 		67FAC5571A738F6C00A32818 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FAC5561A738F6C00A32818 /* Track.swift */; };
 		76DBFB24E45726C28C7E6397 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C231C8D483ACF959FE482B6 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
@@ -166,6 +168,8 @@
 		67F7D4871A625A4F00A5AE68 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
 		67F7D4881A625A4F00A5AE68 /* ReactiveCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveCocoa.framework; path = Carthage/Build/iOS/ReactiveCocoa.framework; sourceTree = "<group>"; };
 		67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/iOS/SwiftyJSON.framework; sourceTree = "<group>"; };
+		67F9A28F1AD03C0D0078EC3C /* PlaylistStreamViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistStreamViewController.swift; sourceTree = "<group>"; };
+		67F9A2901AD03C0D0078EC3C /* StreamPageMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamPageMenuController.swift; sourceTree = "<group>"; };
 		67FAC5561A738F6C00A32818 /* Track.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Track.swift; sourceTree = "<group>"; };
 		AE64EB6BF4DC7B67771E836D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -336,6 +340,8 @@
 		6728FA331A604C1400F693B3 /* Center */ = {
 			isa = PBXGroup;
 			children = (
+				67F9A28F1AD03C0D0078EC3C /* PlaylistStreamViewController.swift */,
+				67F9A2901AD03C0D0078EC3C /* StreamPageMenuController.swift */,
 				67254C7B1A4968F50064E5DF /* EntryWebViewController.swift */,
 				67277CE11A46F844002FD3E0 /* EntryStreamViewController.swift */,
 			);
@@ -624,6 +630,7 @@
 				6747CEB41AA3204900A6A16B /* Player.swift in Sources */,
 				67DB2A121A5588A6006BB490 /* MiniPlayerViewDelegate.swift in Sources */,
 				67277CDB1A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift in Sources */,
+				67F9A2921AD03C0D0078EC3C /* StreamPageMenuController.swift in Sources */,
 				67DA465F1A8656A90048B29C /* PlaylistTableViewCell.swift in Sources */,
 				6701D4AD1A95048C006BFEC6 /* HUDExtension.swift in Sources */,
 				67277CAE1A434304002FD3E0 /* AppDelegate.swift in Sources */,
@@ -638,6 +645,7 @@
 				6724E1C51A9C9E9900D8E0FA /* ColorHelper.swift in Sources */,
 				67DA46621A87B3AB0048B29C /* SelectPlaylistTableViewController.swift in Sources */,
 				67773A701ACB81AA00E7BC8E /* MusicFavAPIClient.swift in Sources */,
+				67F9A2911AD03C0D0078EC3C /* PlaylistStreamViewController.swift in Sources */,
 				67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */,
 				67277CE01A46F4BC002FD3E0 /* MenuTableViewController.swift in Sources */,
 				67DA46561A86103B0048B29C /* PlaylistStore.swift in Sources */,

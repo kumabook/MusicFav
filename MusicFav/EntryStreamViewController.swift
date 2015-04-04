@@ -15,14 +15,6 @@ import FeedlyKit
 class EntryStreamViewController: UITableViewController {
     let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
     let cellHeight: CGFloat = 100
-    var currentIndex = 0
-
-    enum State {
-        case Normal
-        case Fetching
-        case Complete
-        case Error
-    }
 
     var stream:       Stream!
     let streamLoader: StreamLoader!
@@ -58,10 +50,6 @@ class EntryStreamViewController: UITableViewController {
         tableView.registerNib(nib, forCellReuseIdentifier: entryStreamTableCellReuseIdentifier)
 
         clearsSelectionOnViewWillAppear = true
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "playlist"),
-            style: UIBarButtonItemStyle.Plain,
-            target: self,
-            action: "showPlaylist")
 
         indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         indicator.bounds = CGRect(x: 0,
