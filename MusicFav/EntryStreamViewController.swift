@@ -108,6 +108,9 @@ class EntryStreamViewController: UITableViewController {
                     let index = NSIndexPath(forItem: i, inSection: 0)
                     self.tableView.reloadRowsAtIndexPaths([index], withRowAnimation: UITableViewRowAnimation.None)
                 }
+            case .RemoveAt(let index):
+                let indexPath = NSIndexPath(forItem: index, inSection: 0)
+                self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             }
         })
 
@@ -146,31 +149,11 @@ class EntryStreamViewController: UITableViewController {
     }
 
     func markAsRead(indexPath: NSIndexPath) {
-        let entry = streamLoader.entries[indexPath.item]
-        if feedlyClient.isLoggedIn {
-            feedlyClient.client.markEntriesAsRead([entry.id], completionHandler: { (req, res, error) -> Void in
-                if let e = error { println("Failed to mark as read") }
-                else             { println("Succeeded in marking as read") }
-            })
-        }
-        streamLoader.entries.removeAtIndex(indexPath.row)
-        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        streamLoader.markAsRead(indexPath.item)
     }
 
     func markAsSaved(indexPath: NSIndexPath) {
-        let entry = streamLoader.entries[indexPath.item]
-        if feedlyClient.isLoggedIn {
-            feedlyClient.client.markEntriesAsSaved([entry.id], completionHandler: { (req, res, error) -> Void in
-                if let e = error { println("Failed to mark as saved") }
-                else             { println("Succeeded in marking as saved") }
-            })
-            feedlyClient.client.markEntriesAsRead([entry.id], completionHandler: { (req, res, error) -> Void in
-                if let e = error { println("Failed to mark as read") }
-                else             { println("Succeeded in marking as read") }
-            })
-        }
-        streamLoader.entries.removeAtIndex(indexPath.row)
-        tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        streamLoader.markAsSaved(indexPath.item)
     }
 
     override func didReceiveMemoryWarning() {

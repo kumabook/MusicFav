@@ -46,6 +46,7 @@ class StreamLoader {
         case CompleteLoadingNext
         case FailToLoadNext
         case CompleteLoadingPlaylist(Playlist, Entry)
+        case RemoveAt(Int)
     }
 
     let unreadOnly: Bool
@@ -174,5 +175,33 @@ class StreamLoader {
                     }, completed: {
                 })
         }
+    }
+
+    func markAsRead(index: Int) {
+        let entry = entries[index]
+        if feedlyClient.isLoggedIn {
+            feedlyClient.client.markEntriesAsRead([entry.id], completionHandler: { (req, res, error) -> Void in
+                if let e = error { println("Failed to mark as read") }
+                else             { println("Succeeded in marking as read") }
+            })
+        }
+        entries.removeAtIndex(index)
+        sink.put(.RemoveAt(index))
+    }
+
+    func markAsSaved(index: Int) {
+        let entry = entries[index]
+        if feedlyClient.isLoggedIn {
+            feedlyClient.client.markEntriesAsSaved([entry.id], completionHandler: { (req, res, error) -> Void in
+                if let e = error { println("Failed to mark as saved") }
+                else             { println("Succeeded in marking as saved") }
+            })
+            feedlyClient.client.markEntriesAsRead([entry.id], completionHandler: { (req, res, error) -> Void in
+                if let e = error { println("Failed to mark as read") }
+                else             { println("Succeeded in marking as read") }
+            })
+        }
+        entries.removeAtIndex(index)
+        sink.put(.RemoveAt(index))
     }
 }
