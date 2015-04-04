@@ -14,6 +14,7 @@ import FeedlyKit
 
 class EntryStreamViewController: UITableViewController {
     let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+    let cellHeight: CGFloat = 100
     var currentIndex = 0
 
     enum State {
@@ -27,7 +28,7 @@ class EntryStreamViewController: UITableViewController {
     let musicfavClient  = MusicFavAPIClient.sharedInstance
     var entries:[Entry] = []
     var playlistsOfEntry:[Entry:Playlist] = [:]
-    let timelineTableCellReuseIdentifier = "TimelineTableViewCell"
+    let entryStreamTableCellReuseIdentifier = "EntryStreamTableViewCell"
     var stream:             Stream?
     var streamContinuation: String?
     var state:              State
@@ -39,7 +40,12 @@ class EntryStreamViewController: UITableViewController {
     init(stream: Stream?) {
         self.stream = stream
         self.state  = .Normal
-        super.init()
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    override init(style: UITableViewStyle) {
+        self.state  = .Normal
+        super.init(style: style)
     }
 
     required init(coder aDecoder: NSCoder) {
@@ -53,8 +59,8 @@ class EntryStreamViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let nib = UINib(nibName: "TimelineTableViewCell", bundle: nil)
-        tableView.registerNib(nib, forCellReuseIdentifier: timelineTableCellReuseIdentifier)
+        let nib = UINib(nibName: "EntryStreamTableViewCell", bundle: nil)
+        tableView.registerNib(nib, forCellReuseIdentifier: entryStreamTableCellReuseIdentifier)
 
         clearsSelectionOnViewWillAppear = true
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "playlist"),
@@ -302,7 +308,7 @@ class EntryStreamViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let entry = entries[indexPath.row]
-        let cell = tableView.dequeueReusableCellWithIdentifier(timelineTableCellReuseIdentifier, forIndexPath:indexPath) as TimelineTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(entryStreamTableCellReuseIdentifier, forIndexPath:indexPath) as EntryStreamTableViewCell
         cell.prepareSwipeViews(
             onMarkAsSaved: { (cell) -> Void in
                 self.markAsSaved(self.tableView.indexPathForCell(cell)!)
@@ -341,5 +347,9 @@ class EntryStreamViewController: UITableViewController {
             appDelegate.miniPlayerViewController?.playlistTableViewController.tableView.reloadData()
             navigationController?.pushViewController(vc, animated: true)
         }
+    }
+
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return self.cellHeight
     }
 }

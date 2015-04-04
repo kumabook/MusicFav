@@ -1,5 +1,5 @@
 //
-//  TimelineTableViewCell.swift
+//  StreamEntryTableViewCell.swift
 //  MusicFav
 //
 //  Created by Hiroki Kumamoto on 12/23/14.
@@ -10,7 +10,7 @@ import UIKit
 import MCSwipeTableViewCell
 import Snap
 
-class TimelineTableViewCell: MCSwipeTableViewCell {
+class EntryStreamTableViewCell: MCSwipeTableViewCell {
     let padding:       CGFloat   = 5.0
     let labelFontSize: CGFloat   = 20.0
     var swipeCellBackgroundColor = UIColor(red: 227/255, green: 227/255, blue: 227/255, alpha: 1.0)

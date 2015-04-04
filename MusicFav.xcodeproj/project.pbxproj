@@ -15,8 +15,8 @@
 		6716642E1A738E3E005FE005 /* FeedlyKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 671664271A738E2A005FE005 /* FeedlyKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6724E1C51A9C9E9900D8E0FA /* ColorHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6724E1C41A9C9E9900D8E0FA /* ColorHelper.swift */; };
 		6724E1C91A9CA19800D8E0FA /* AppearanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6724E1C81A9CA19800D8E0FA /* AppearanceManager.swift */; };
-		67254C791A493A570064E5DF /* TimelineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67254C771A493A570064E5DF /* TimelineTableViewCell.swift */; };
-		67254C7A1A493A570064E5DF /* TimelineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67254C781A493A570064E5DF /* TimelineTableViewCell.xib */; };
+		67254C791A493A570064E5DF /* EntryStreamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67254C771A493A570064E5DF /* EntryStreamTableViewCell.swift */; };
+		67254C7A1A493A570064E5DF /* EntryStreamTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67254C781A493A570064E5DF /* EntryStreamTableViewCell.xib */; };
 		67254C7C1A4968F50064E5DF /* EntryWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67254C7B1A4968F50064E5DF /* EntryWebViewController.swift */; };
 		67277CAE1A434304002FD3E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67277CAD1A434304002FD3E0 /* AppDelegate.swift */; };
 		67277CB11A434304002FD3E0 /* MusicFav.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 67277CAF1A434304002FD3E0 /* MusicFav.xcdatamodeld */; };
@@ -109,8 +109,8 @@
 		671664291A738E36005FE005 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		6724E1C41A9C9E9900D8E0FA /* ColorHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorHelper.swift; sourceTree = "<group>"; };
 		6724E1C81A9CA19800D8E0FA /* AppearanceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearanceManager.swift; sourceTree = "<group>"; };
-		67254C771A493A570064E5DF /* TimelineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineTableViewCell.swift; sourceTree = "<group>"; };
-		67254C781A493A570064E5DF /* TimelineTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TimelineTableViewCell.xib; sourceTree = "<group>"; };
+		67254C771A493A570064E5DF /* EntryStreamTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntryStreamTableViewCell.swift; sourceTree = "<group>"; };
+		67254C781A493A570064E5DF /* EntryStreamTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EntryStreamTableViewCell.xib; sourceTree = "<group>"; };
 		67254C7B1A4968F50064E5DF /* EntryWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntryWebViewController.swift; sourceTree = "<group>"; };
 		67277CA81A434304002FD3E0 /* MusicFav.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicFav.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		67277CAC1A434304002FD3E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -314,8 +314,8 @@
 		67277CD71A450CBF002FD3E0 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				67254C771A493A570064E5DF /* TimelineTableViewCell.swift */,
-				67254C781A493A570064E5DF /* TimelineTableViewCell.xib */,
+				67254C771A493A570064E5DF /* EntryStreamTableViewCell.swift */,
+				67254C781A493A570064E5DF /* EntryStreamTableViewCell.xib */,
 				67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */,
 				67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */,
 				67CE59691A51206D00C86681 /* MiniPlayerView.swift */,
@@ -514,7 +514,7 @@
 				67CE596C1A51208000C86681 /* MiniPlayerView.xib in Resources */,
 				67F7CF151A635BD0008FB7AD /* Main.storyboard in Resources */,
 				67277CB81A434304002FD3E0 /* Images.xcassets in Resources */,
-				67254C7A1A493A570064E5DF /* TimelineTableViewCell.xib in Resources */,
+				67254C7A1A493A570064E5DF /* EntryStreamTableViewCell.xib in Resources */,
 				67277CDC1A46DE0E002FD3E0 /* FeedlyOAuthViewController.xib in Resources */,
 				67554F0A1A4F127400F7AE72 /* TrackTableViewCell.xib in Resources */,
 				6727EDFF1A5AC1DE003C6A47 /* MiniPlayerViewController.xib in Resources */,
@@ -617,7 +617,7 @@
 				6727EDFE1A5AC1DE003C6A47 /* MiniPlayerViewController.swift in Sources */,
 				67CE596A1A51206D00C86681 /* MiniPlayerView.swift in Sources */,
 				6728FA391A60580A00F693B3 /* PreferenceViewController.swift in Sources */,
-				67254C791A493A570064E5DF /* TimelineTableViewCell.swift in Sources */,
+				67254C791A493A570064E5DF /* EntryStreamTableViewCell.swift in Sources */,
 				6747CEB41AA3204900A6A16B /* Player.swift in Sources */,
 				67DB2A121A5588A6006BB490 /* MiniPlayerViewDelegate.swift in Sources */,
 				67277CDB1A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift in Sources */,
