@@ -111,11 +111,17 @@ enum PlayerState {
     func ended()                   { for o in observers { o.ended() }}
     func errorOccured()            { for o in observers { o.errorOccured() }}
 
-    var avPlayer:         AVPlayer?   { get { return queuePlayer }}
-    var playerItemsCount: Int?        { get { return queuePlayer?.items().count }}
-    var currentPlaylist:  Playlist?   { get { return playlist }}
-    var currentTrack:     Track?      { get { return playlist?.tracks[currentIndex] }}
-    var currentState:     PlayerState { get { return state }}
+    var avPlayer:         AVPlayer?   { return queuePlayer }
+    var playerItemsCount: Int?        { return queuePlayer?.items().count }
+    var currentPlaylist:  Playlist?   { return playlist }
+    var currentState:     PlayerState { return state }
+    var currentTrack:     Track? {
+        if currentIndex < playlist?.tracks.count {
+            return playlist?.tracks[currentIndex]
+        } else {
+            return nil
+        }
+    }
     var secondPair:       (Float64, Float64)? {
         get {
             if let count = playerItemsCount {
