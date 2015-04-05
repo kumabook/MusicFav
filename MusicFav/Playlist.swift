@@ -11,11 +11,13 @@ import SwiftyJSON
 import ReactiveCocoa
 import LlamaKit
 
-class Playlist: Equatable {
+class Playlist: Equatable, Hashable {
     let id:           String
     var title:        String
     var tracks:       [Track]
     var thumbnailUrl: NSURL? { return tracks.first?.thumbnailUrl }
+    var signal:       HotSignal<Int>
+    var sink:         SinkOf<Int>
 
     struct ClassProperty {
         static let pipe    = HotSignal<Event>.pipe()
@@ -69,12 +71,18 @@ class Playlist: Equatable {
         self.id     = "created-\(Playlist.dateFormatter().stringFromDate(NSDate()))"
         self.title  = title
         self.tracks = []
+        let pipe    = HotSignal<Int>.pipe()
+        self.signal = pipe.0
+        self.sink   = pipe.1
     }
 
     init(json: JSON) {
         id     = json["url"].stringValue
         title  = json["title"].stringValue
         tracks = json["tracks"].arrayValue.map({ Track(json: $0) })
+        let pipe    = HotSignal<Int>.pipe()
+        self.signal = pipe.0
+        self.sink   = pipe.1
     }
 
     init(store: PlaylistStore) {
@@ -84,6 +92,13 @@ class Playlist: Equatable {
         for trackStore in store.tracks {
             tracks.append(Track(store:trackStore as TrackStore))
         }
+        let pipe    = HotSignal<Int>.pipe()
+        self.signal = pipe.0
+        self.sink   = pipe.1
+    }
+
+    var hashValue: Int {
+        return id.hashValue
     }
 
     func toStoreObject() -> PlaylistStore {
