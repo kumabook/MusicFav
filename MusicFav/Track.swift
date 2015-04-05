@@ -79,13 +79,18 @@ class Track {
         return store
     }
 
-    func fetchTrackDetail() -> ColdSignal<Track>{
+    func fetchTrackDetail(errorOnFailure: Bool) -> ColdSignal<Track>{
         switch provider {
         case .Youtube:
             return ColdSignal { (sink, disposable) in
                 XCDYouTubeClient.defaultClient().getVideoWithIdentifier(self.identifier, completionHandler: { (video, error) -> Void in
                     if let e = error {
-                        sink.put(.Error(error))
+                        if errorOnFailure {
+                            sink.put(.Error(error))
+                        } else {
+                            sink.put(.Next(Box(self)))
+                            sink.put(.Completed)
+                        }
                         return
                     }
                     self.updatePropertiesWithYouTubeVideo(video)

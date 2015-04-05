@@ -111,7 +111,7 @@ class TrackTableViewController: UITableViewController {
         }
 
         for (index, track) in enumerate(playlist!.tracks) {
-            track.fetchTrackDetail().start(
+            track.fetchTrackDetail(false).start(
                 next: { track in
                     self.tableView?.reloadRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)],
                                                            withRowAnimation: UITableViewRowAnimation.None)
