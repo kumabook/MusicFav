@@ -102,7 +102,6 @@ class EntryStreamViewController: UITableViewController {
             }
         })
 
-        navigationItem.title = stream.streamTitle
         tableView?.reloadData()
         streamLoader.fetchEntries()
         let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
