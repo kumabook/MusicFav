@@ -57,6 +57,7 @@ class StreamPageMenuController: UIViewController {
                                                             self.view.frame.height),
                                         options: parameters)
         self.view.addSubview(pageMenu.view)
+        addChildViewController(pageMenu)
     }
 
     override func didReceiveMemoryWarning() {

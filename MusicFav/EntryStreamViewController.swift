@@ -197,14 +197,16 @@ class EntryStreamViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let entry = streamLoader.entries[indexPath.item]
-        if let url = entry.url {
-            let vc = EntryWebViewController()
-            vc.currentURL = url
-            vc.playlist   = streamLoader.playlistsOfEntry[entry]
-            appDelegate.readingPlaylist = vc.playlist
-            appDelegate.miniPlayerViewController?.playlistTableViewController.updateNavbar()
-            appDelegate.miniPlayerViewController?.playlistTableViewController.tableView.reloadData()
-            navigationController?.pushViewController(vc, animated: true)
+        if let nav = parentViewController?.parentViewController?.navigationController {
+            if let url = entry.url {
+                let vc = EntryWebViewController()
+                vc.currentURL = url
+                vc.playlist   = streamLoader.playlistsOfEntry[entry]
+                appDelegate.readingPlaylist = vc.playlist
+                appDelegate.miniPlayerViewController?.playlistTableViewController.updateNavbar()
+                appDelegate.miniPlayerViewController?.playlistTableViewController.tableView.reloadData()
+                nav.pushViewController(vc, animated: true)
+            }
         }
     }
 
