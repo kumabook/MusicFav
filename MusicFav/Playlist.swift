@@ -21,12 +21,11 @@ class Playlist: Equatable {
         static let pipe    = HotSignal<Event>.pipe()
         static var current = Playlist.findAll()
     }
-    enum Action {
-        case Create
-        case Remove
-        case Update
+    enum Event {
+        case Created(Playlist)
+        case Removed(Playlist)
+        case Updated(Playlist)
     }
-    typealias Event = (action: Action, value: Playlist)
 
     class var shared: (signal: HotSignal<Event>, sink: SinkOf<Event>, current: [Playlist]) {
         get { return (signal: ClassProperty.pipe.0,
@@ -35,16 +34,16 @@ class Playlist: Equatable {
     }
 
     class func notifyChange(event: Event) {
-        switch event.action {
-        case .Create:
-            ClassProperty.current.append(event.value)
-        case .Update:
-            if let index = find(ClassProperty.current, event.value) {
-                ClassProperty.current[index] = event.value
+        switch event {
+        case .Created(let playlist):
+            ClassProperty.current.append(playlist)
+        case .Updated(let playlist):
+            if let index = find(ClassProperty.current, playlist) {
+                ClassProperty.current[index] = playlist
             }
-        case .Remove:
-            if let index = find(ClassProperty.current, event.value) {
-                let playlist = ClassProperty.current.removeAtIndex(index)
+        case .Removed(let playlist):
+            if let index = find(ClassProperty.current, playlist) {
+                ClassProperty.current.removeAtIndex(index)
             }
         }
 
@@ -88,29 +87,29 @@ class Playlist: Equatable {
 
     func create() {
         PlaylistStore.save(self)
-        Playlist.notifyChange((Action.Create, self))
+        Playlist.notifyChange(.Created(self))
     }
 
     func save() {
         PlaylistStore.save(self)
-        Playlist.notifyChange((Action.Update, self))
+        Playlist.notifyChange(.Updated(self))
     }
 
     func remove() {
         PlaylistStore.remove(self)
-        Playlist.notifyChange((Action.Remove, self))
+        Playlist.notifyChange(.Removed(self))
     }
 
     func removeTrackAtIndex(index: UInt) {
         PlaylistStore.removeTrackAtIndex(index, playlist: self)
         tracks.removeAtIndex(Int(index))
-        Playlist.notifyChange((Action.Update, self))
+        Playlist.notifyChange(.Updated(self))
     }
 
     func appendTracks(tracks: [Track]) {
         PlaylistStore.appendTracks(tracks, playlist: self)
         self.tracks.extend(tracks)
-        Playlist.notifyChange((Action.Update, self))
+        Playlist.notifyChange(.Updated(self))
     }
 
     class func findAll() -> [Playlist] {

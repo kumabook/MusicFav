@@ -115,7 +115,7 @@ class TrackTableViewController: UITableViewController {
                 next: { track in
                     self.tableView?.reloadRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)],
                                                            withRowAnimation: UITableViewRowAnimation.None)
-                    Playlist.notifyChange((action: Playlist.Action.Update, value: self.playlist!))
+                    Playlist.notifyChange(.Updated(self.playlist!))
                 }, error: { error in
                 }, completed: {
             })

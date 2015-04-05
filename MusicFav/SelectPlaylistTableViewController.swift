@@ -52,20 +52,20 @@ class SelectPlaylistTableViewController: UITableViewController {
         tableView.reloadData()
         Playlist.shared.signal.observe { event in
             let section = 0
-            switch event.action {
-            case .Create:
+            switch event {
+            case .Created(let playlist):
                 let indexPath = NSIndexPath(forItem: self.playlists.count, inSection: section)
-                self.playlists.append(event.value)
+                self.playlists.append(playlist)
                 self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-            case .Update:
-                if let index = find(self.playlists, event.value) {
+            case .Updated(let playlist):
+                if let index = find(self.playlists, playlist) {
                     let indexPath = NSIndexPath(forItem: index, inSection: section)
-                    self.playlists[index] = event.value
+                    self.playlists[index] = playlist
                     self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                 }
-            case .Remove:
-                if let index = find(self.playlists, event.value) {
-                    let playlist = self.playlists.removeAtIndex(index)
+            case .Removed(let playlist):
+                if let index = find(self.playlists, playlist) {
+                    self.playlists.removeAtIndex(index)
                     let indexPath = NSIndexPath(forItem: index, inSection: section)
                     self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                 }

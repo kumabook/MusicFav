@@ -84,26 +84,26 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         tableView.reloadData()
         Playlist.shared.signal.observe { event in
             let section = Section.Favorites.rawValue
-            switch event.action {
-            case .Create:
+            switch event {
+            case .Created(let playlist):
                 let indexPath = NSIndexPath(forItem: self.playlists.count, inSection: section)
-                self.playlists.append(event.value)
+                self.playlists.append(playlist)
                 self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-            case .Update:
-                if event.value == self.appDelegate.playingPlaylist {
+            case .Updated(let playlist):
+                if playlist == self.appDelegate.playingPlaylist {
                     let indexPath = NSIndexPath(forItem: 0, inSection: Section.Playing.rawValue)
                     self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                } else if event.value == self.appDelegate.readingPlaylist {
+                } else if playlist == self.appDelegate.readingPlaylist {
                     let indexPath = NSIndexPath(forItem: 0, inSection: Section.Reading.rawValue)
                     self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                 }
-                if let index = find(self.playlists, event.value) {
+                if let index = find(self.playlists, playlist) {
                     let indexPath = NSIndexPath(forItem: index, inSection: section)
-                    self.playlists[index] = event.value
+                    self.playlists[index] = playlist
                     self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                 }
-            case .Remove:
-                if let index = find(self.playlists, event.value) {
+            case .Removed(let playlist):
+                if let index = find(self.playlists, playlist) {
                     let playlist = self.playlists.removeAtIndex(index)
                     let indexPath = NSIndexPath(forItem: index, inSection: section)
                     self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
