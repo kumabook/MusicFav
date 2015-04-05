@@ -65,6 +65,7 @@ class StreamLoader {
     var state:              State
     var entries:            [Entry]
     var playlistsOfEntry:   [Entry:Playlist]
+    var loaderOfPlaylist:   [Playlist:(PlaylistLoader, Disposable)]
     var streamContinuation: String?
     var hotSignal:          HotSignal<Event>
     var sink:               SinkOf<Event>
@@ -76,9 +77,23 @@ class StreamLoader {
         lastUpdated      = 0
         entries          = []
         playlistsOfEntry = [:]
+        loaderOfPlaylist = [:]
         let pipe = HotSignal<Event>.pipe()
         hotSignal        = pipe.0
         sink             = pipe.1
+    }
+
+    deinit {
+        dispose()
+    }
+
+    func dispose() {
+        for loader in loaderOfPlaylist {
+            let disposable = loader.1.1
+            if !disposable.disposed {
+                loader.1.1.dispose()
+            }
+        }
     }
 
     func updateLastUpdated(updated: Int64?) {
@@ -178,6 +193,15 @@ class StreamLoader {
                     next: { playlist in
                         self.playlistsOfEntry[entry] = playlist
                         self.sink.put(.CompleteLoadingPlaylist(playlist, entry))
+                        if let loader = self.loaderOfPlaylist[playlist] {
+                            loader.1.dispose()
+                        }
+                        let loader = PlaylistLoader(playlist: playlist)
+                        let disposable = loader.fetchTracks().start(next: { track in
+                            }, error: { error in
+                            }, completed: {
+                        })
+                        self.loaderOfPlaylist[playlist] = (loader, disposable)
                     }, error: { error in
                     }, completed: {
                 })

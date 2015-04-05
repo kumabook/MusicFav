@@ -11,10 +11,14 @@ import PageMenu
 import FeedlyKit
 
 class StreamPageMenuController: UIViewController {
-    var pageMenu : CAPSPageMenu!
-    var stream: Stream!
+    var pageMenu:     CAPSPageMenu!
+    var stream:       Stream!
+    var streamLoader: StreamLoader!
+    var unreadOnly:   Bool = true
+
     init(stream: Stream) {
-        self.stream = stream
+        self.stream       = stream
+        self.streamLoader = StreamLoader(stream: stream, unreadOnly: unreadOnly)
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -33,8 +37,8 @@ class StreamPageMenuController: UIViewController {
             action: "showPlaylist")
         navigationItem.title = stream.streamTitle
 
-        var entryStream      = EntryStreamViewController(stream: stream)
-        var playlistStream   = PlaylistStreamViewController()
+        var entryStream      = EntryStreamViewController(streamLoader: streamLoader)
+        var playlistStream   = PlaylistStreamViewController(streamLoader: streamLoader)
         entryStream.title    = "Entry View"
         playlistStream.title = "Playlist View"
         var controllerArray : [UIViewController] = [entryStream, playlistStream]

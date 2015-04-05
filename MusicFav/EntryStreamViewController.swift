@@ -15,20 +15,16 @@ import FeedlyKit
 class EntryStreamViewController: UITableViewController {
     let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
     let cellHeight: CGFloat = 100
-
-    var stream:       Stream!
-    let streamLoader: StreamLoader!
-
     let entryStreamTableCellReuseIdentifier = "EntryStreamTableViewCell"
-    var indicator:          UIActivityIndicatorView!
-    var reloadButton:       UIButton!
-    var unreadOnly:         Bool = true
+
+    let streamLoader: StreamLoader!
+    var indicator:    UIActivityIndicatorView!
+    var reloadButton: UIButton!
 
     var feedlyClient: FeedlyAPIClient { return streamLoader.feedlyClient }
 
-    init(stream: Stream) {
-        self.stream = stream
-        self.streamLoader = StreamLoader(stream: stream, unreadOnly: unreadOnly)
+    init(streamLoader: StreamLoader) {
+        self.streamLoader = streamLoader
         super.init(nibName: nil, bundle: nil)
     }
 

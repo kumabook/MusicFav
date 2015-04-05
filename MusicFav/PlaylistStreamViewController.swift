@@ -7,17 +7,125 @@
 //
 
 import UIKit
+import ReactiveCocoa
+import LlamaKit
+import SwiftyJSON
+import FeedlyKit
 
-class PlaylistStreamViewController: UITableViewController {
+class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableViewCellDelegate {
+    let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+    let cellHeight: CGFloat = 100
+    let playlistStreamTableCellReuseIdentifier = "PlaylistStreamTableViewCell"
+
+    var indicator:    UIActivityIndicatorView!
+    var reloadButton: UIButton!
+    var streamLoader: StreamLoader!
+
+    init(streamLoader: StreamLoader) {
+        self.streamLoader = streamLoader
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    override init(style: UITableViewStyle) {
+        super.init(style: style)
+    }
+
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder:aDecoder)
+    }
+
+    override func loadView() {
+        super.loadView()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        let nib = UINib(nibName: "PlaylistStreamTableViewCell", bundle: nil)
+        tableView.registerNib(nib, forCellReuseIdentifier: playlistStreamTableCellReuseIdentifier)
+        clearsSelectionOnViewWillAppear = true
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        indicator.bounds = CGRect(x: 0,
+            y: 0,
+            width: indicator.bounds.width,
+            height: indicator.bounds.height * 3)
+        indicator.hidesWhenStopped = true
+        indicator.stopAnimating()
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        reloadButton = UIButton()
+        reloadButton.setImage(UIImage(named: "network_error"), forState: UIControlState.Normal)
+        reloadButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+        reloadButton.addTarget(self, action:"fetchEntries", forControlEvents:UIControlEvents.TouchUpInside)
+        reloadButton.setTitle("Sorry, network error occured.", forState:UIControlState.Normal)
+        reloadButton.frame = CGRectMake(0, 0, tableView.frame.size.width, 44);
+
+        refreshControl = UIRefreshControl()
+        refreshControl?.addTarget(self, action:"fetchLatestEntries", forControlEvents:UIControlEvents.ValueChanged)
+        observeStreamLoader()
+    }
+
+    override func viewWillDisappear(animated: Bool) {
+        NSNotificationCenter.defaultCenter().removeObserver(self, name: "logout", object: nil)
+        super.viewWillDisappear(animated)
+    }
+
+    func observeStreamLoader() {
+        streamLoader.hotSignal.observe({ event in
+            switch event {
+            case .StartLoadingLatest:
+                self.refreshControl?.beginRefreshing()
+            case .CompleteLoadingLatest:
+                self.tableView.reloadData()
+                self.refreshControl?.endRefreshing()
+            case .StartLoadingNext:
+                self.showIndicator()
+            case .CompleteLoadingNext:
+                self.hideIndicator()
+                self.tableView.reloadData()
+            case .FailToLoadNext:
+                self.showReloadButton()
+            case .CompleteLoadingPlaylist(let playlist, let entry):
+                if let i = find(self.streamLoader.entries, entry) {
+                    let index = NSIndexPath(forItem: i, inSection: 0)
+                    self.tableView.reloadRowsAtIndexPaths([index], withRowAnimation: UITableViewRowAnimation.None)
+                }
+            case .RemoveAt(let index):
+                let indexPath = NSIndexPath(forItem: index, inSection: 0)
+                self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            }
+        })
+
+        tableView?.reloadData()
+        streamLoader.fetchEntries()
+        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+        appDelegate.miniPlayerViewController?.mainViewController.showCenterPanelAnimated(true)
+    }
+
+    func showPlaylist() {
+        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+        appDelegate.miniPlayerViewController?.mainViewController.showRightPanelAnimated(true)
+    }
+
+    func fetchLatestEntries() {
+        streamLoader.fetchLatestEntries()
+    }
+
+    func showIndicator() {
+        self.tableView.tableFooterView = indicator
+        indicator?.startAnimating()
+    }
+
+    func hideIndicator() {
+        indicator?.stopAnimating()
+        self.tableView.tableFooterView = nil
+    }
+
+    func showReloadButton() {
+        self.tableView.tableFooterView = reloadButton
+    }
+
+    func hideReloadButton() {
+        self.tableView.tableFooterView = nil
     }
 
     override func didReceiveMemoryWarning() {
@@ -25,73 +133,51 @@ class PlaylistStreamViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
 
+    // MARK: - PlaylistStreamTableViewDelegate
+
+    func trackSelectedAt(index: Int, track: Track, playlist: Playlist) {
+        appDelegate.miniPlayerViewController?.play(index, playlist: playlist)
+    }
+
     // MARK: - Table view data source
 
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        if tableView.contentOffset.y >= tableView.contentSize.height - tableView.bounds.size.height {
+            streamLoader.fetchEntries()
+        }
+    }
+
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        // #warning Potentially incomplete method implementation.
-        // Return the number of sections.
-        return 0
+        return 1
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete method implementation.
-        // Return the number of rows in the section.
-        return 0
+        return streamLoader.entries.count
     }
 
-    /*
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as UITableViewCell
-
-        // Configure the cell...
-
+        let entry = streamLoader.entries[indexPath.row]
+        let cell = tableView.dequeueReusableCellWithIdentifier(playlistStreamTableCellReuseIdentifier, forIndexPath:indexPath) as PlaylistStreamTableViewCell
+        cell.titleLabel.text = entry.title
+        if let playlist = streamLoader.playlistsOfEntry[entry] {
+            cell.delegate           = self
+            cell.trackNumLabel.text = "\(playlist.tracks.count) tracks"
+            cell.loadThumbnails(playlist)
+            cell.observePlaylist(playlist)
+        } else {
+            cell.trackNumLabel.text = "? tracks"
+        }
         return cell
     }
-    */
 
-    /*
-    // Override to support conditional editing of the table view.
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the specified item to be editable.
-        return true
+        return false
     }
-    */
 
-    /*
-    // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
-            // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     }
-    */
 
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
-
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return self.cellHeight
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the item to be re-orderable.
-        return true
-    }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using [segue destinationViewController].
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
