@@ -8,16 +8,15 @@
 
 import Foundation
 import Realm
-
 import FeedlyKit
 
 class TrackStore: RLMObject {
     dynamic var url:          String = ""
     dynamic var providerRaw:  String = ""
     dynamic var identifier:   String = ""
-    dynamic var title:        String?
-    dynamic var streamUrl:    String?
-    dynamic var thumbnailUrl: String?
+    dynamic var title:        String = ""
+    dynamic var streamUrl:    String = ""
+    dynamic var thumbnailUrl: String = ""
     dynamic var duration:     Int = 0
 
     class var realm: RLMRealm {
@@ -41,9 +40,9 @@ class TrackStore: RLMObject {
     class func save(track: Track) {
         if let store = findBy(url: track.url) {
             realm.transactionWithBlock() {
-                store.title        = track.title
-                store.streamUrl    = track.streamUrl?.absoluteString
-                store.thumbnailUrl = track.thumbnailUrl?.absoluteString
+                if let title        = track.title                        { store.title        = title }
+                if let streamUrl    = track.streamUrl?.absoluteString    { store.streamUrl    = streamUrl }
+                if let thumbnailUrl = track.thumbnailUrl?.absoluteString { store.thumbnailUrl = thumbnailUrl }
             }
         } else {
             let store = track.toStoreObject()
@@ -54,11 +53,22 @@ class TrackStore: RLMObject {
     }
 
     class func migration() -> Void {
-        RLMRealm.setSchemaVersion(1, forRealmAtPath: RLMRealm.defaultRealmPath()) { (migration, oldVersion) -> Void in
-            if (oldVersion == 0) {
+        RLMRealm.setSchemaVersion(2, forRealmAtPath: RLMRealm.defaultRealmPath()) { (migration, oldVersion) -> Void in
+            if (oldVersion < 1) {
                 migration.enumerateObjects(TrackStore.className()) { oldObject, newObject in
                     let serviceId = oldObject["serviceId"] as String
                     newObject["identifier"] = serviceId
+                }
+            }
+            if (oldVersion < 2) {
+                migration.enumerateObjects(TrackStore.className()) { oldObject, newObject in
+                    let properties = ["title", "streamUrl", "thumbnailUrl"]
+                    for prop in properties {
+                        let val = oldObject[prop] as String?
+                        if let v = val {
+                            newObject[prop] = v
+                        }
+                    }
                 }
             }
         }

@@ -27,29 +27,33 @@ class Track {
     var duration:     NSTimeInterval
 
     init(json: JSON) {
-        provider   = Provider(rawValue: json["provider"].stringValue)!
-        title      = nil
-        url        = json["url"].stringValue
-        identifier = json["identifier"].stringValue
-        duration   = 0 as NSTimeInterval
+        provider    = Provider(rawValue: json["provider"].stringValue)!
+        title       = nil
+        url         = json["url"].stringValue
+        identifier  = json["identifier"].stringValue
+        duration    = 0 as NSTimeInterval
     }
 
     init(store: TrackStore) {
-        provider   = Provider(rawValue: store.providerRaw)!
-        title      = store.title
-        url        = store.url
-        identifier = store.identifier
-        duration   = NSTimeInterval(store.duration)
+        provider    = Provider(rawValue: store.providerRaw)!
+        title       = store.title
+        url         = store.url
+        identifier  = store.identifier
+        duration    = NSTimeInterval(store.duration)
 
-        if let s = store.streamUrl    { streamUrl    = NSURL(string: s) }
-        if let t = store.thumbnailUrl { thumbnailUrl = NSURL(string: t) }
+        if let url = NSURL(string: store.streamUrl)    { streamUrl    = url }
+        if let url = NSURL(string: store.thumbnailUrl) { thumbnailUrl = url }
     }
 
     func updateProperties(soundCloudAudio: SoundCloudAudio) {
         title        = soundCloudAudio.title
         duration     = NSTimeInterval(soundCloudAudio.duration / 1000)
-        streamUrl    = NSURL(string: soundCloudAudio.streamUrl!)
-        thumbnailUrl = NSURL(string: soundCloudAudio.artworkUrl!)
+        if let sUrl = soundCloudAudio.streamUrl {
+            streamUrl = NSURL(string: sUrl)
+        }
+        if let aUrl = soundCloudAudio.artworkUrl {
+            thumbnailUrl = NSURL(string: aUrl)
+        }
         TrackStore.save(self)
     }
     
@@ -63,14 +67,14 @@ class Track {
     }
 
     func toStoreObject() -> TrackStore {
-        var store          = TrackStore()
-        store.url          = url
-        store.providerRaw  = provider.rawValue
-        store.identifier   = identifier
-        store.title        = title
-        store.streamUrl    = streamUrl?.absoluteString
-        store.thumbnailUrl = thumbnailUrl?.absoluteString
-        store.duration     = Int(duration)
+        var store            = TrackStore()
+        store.url            = url
+        store.providerRaw    = provider.rawValue
+        store.identifier     = identifier
+        if let _title        = title                        { store.title        = _title }
+        if let _streamUrl    = streamUrl?.absoluteString    { store.streamUrl    = _streamUrl }
+        if let _thumbnailUrl = thumbnailUrl?.absoluteString { store.thumbnailUrl = _thumbnailUrl }
+        store.duration       = Int(duration)
 
         return store
     }
@@ -81,7 +85,7 @@ class Track {
             return ColdSignal { (sink, disposable) in
                 XCDYouTubeClient.defaultClient().getVideoWithIdentifier(self.identifier, completionHandler: { (video, error) -> Void in
                     if let e = error {
-                         sink.put(.Error(error))
+                        sink.put(.Error(error))
                         return
                     }
                     self.updatePropertiesWithYouTubeVideo(video)
