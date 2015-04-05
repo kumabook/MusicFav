@@ -41,15 +41,15 @@ class StreamPageMenuController: UIViewController {
         var parameters: [String: AnyObject] = ["menuItemSeparatorWidth": 0.8,
                                           "useMenuLikeSegmentedControl": true,
                                     "menuItemSeparatorPercentageHeight": 0.8,
-                                                           "menuHeight": 30,
-                                            "scrollMenuBackgroundColor": ColorHelper.themeColorLight,
-                                              "selectionIndicatorColor": ColorHelper.greenColor,
-                                           "selectedMenuItemLabelColor": UIColor.whiteColor(),
-                                         "unselectedMenuItemLabelColor": ColorHelper.lightGray,
-                                               "menuItemSeparatorColor": UIColor.whiteColor()
-//                                              "bottomMenuHairlineColor": UIColor.blueColor()
+                                                           "menuHeight": 24,
+                                            "scrollMenuBackgroundColor": UIColor.whiteColor(),
+                                              "selectionIndicatorColor": ColorHelper.themeColor,
+                                           "selectedMenuItemLabelColor": ColorHelper.themeColor,
+                                         "unselectedMenuItemLabelColor": UIColor.grayColor(),
+                                               "menuItemSeparatorColor": ColorHelper.lightGray,
+                                              "bottomMenuHairlineColor": ColorHelper.lightGray,
+                                                         "menuItemFont": UIFont.boldSystemFontOfSize(14)
                                         ]
-        
         pageMenu = CAPSPageMenu(viewControllers: controllerArray,
                                           frame: CGRectMake(self.view.frame.origin.x,
                                                             self.view.frame.origin.y,
