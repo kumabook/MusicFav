@@ -58,18 +58,29 @@ class SelectPlaylistTableViewController: UITableViewController {
                 self.playlists.append(playlist)
                 self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             case .Updated(let playlist):
-                if let index = find(self.playlists, playlist) {
-                    let indexPath = NSIndexPath(forItem: index, inSection: section)
-                    self.playlists[index] = playlist
-                    self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                }
+                self.updatePlaylist(playlist)
             case .Removed(let playlist):
                 if let index = find(self.playlists, playlist) {
                     self.playlists.removeAtIndex(index)
                     let indexPath = NSIndexPath(forItem: index, inSection: section)
                     self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                 }
+            case .TracksAdded(let playlist, let tracks):
+                self.updatePlaylist(playlist)
+            case .TrackRemoved(let playlist, let Track, let index):
+                self.updatePlaylist(playlist)
+            case .TrackUpdated(let playlist, let track):
+                self.updatePlaylist(playlist)
             }
+        }
+    }
+
+    func updatePlaylist(playlist: Playlist) {
+        let section = 0
+        if let index = find(self.playlists, playlist) {
+            let indexPath = NSIndexPath(forItem: index, inSection: section)
+            self.playlists[index] = playlist
+            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
     }
 

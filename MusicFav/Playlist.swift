@@ -25,6 +25,9 @@ class Playlist: Equatable {
         case Created(Playlist)
         case Removed(Playlist)
         case Updated(Playlist)
+        case TracksAdded( Playlist, [Track])
+        case TrackRemoved(Playlist, Track, Int)
+        case TrackUpdated(Playlist, Track)
     }
 
     class var shared: (signal: HotSignal<Event>, sink: SinkOf<Event>, current: [Playlist]) {
@@ -37,14 +40,20 @@ class Playlist: Equatable {
         switch event {
         case .Created(let playlist):
             ClassProperty.current.append(playlist)
-        case .Updated(let playlist):
-            if let index = find(ClassProperty.current, playlist) {
-                ClassProperty.current[index] = playlist
-            }
         case .Removed(let playlist):
             if let index = find(ClassProperty.current, playlist) {
                 ClassProperty.current.removeAtIndex(index)
             }
+        case .Updated(let playlist):
+            if let index = find(ClassProperty.current, playlist) {
+                ClassProperty.current[index] = playlist
+            }
+        case .TracksAdded(let playlist, let tracks):
+            break
+        case .TrackRemoved(let playlist, let track, let index):
+            break
+        case .TrackUpdated(let playlist, let tracks):
+            break
         }
 
         shared.sink.put(event)
@@ -102,14 +111,14 @@ class Playlist: Equatable {
 
     func removeTrackAtIndex(index: UInt) {
         PlaylistStore.removeTrackAtIndex(index, playlist: self)
-        tracks.removeAtIndex(Int(index))
-        Playlist.notifyChange(.Updated(self))
+        let track = tracks.removeAtIndex(Int(index))
+        Playlist.notifyChange(.TrackRemoved(self, track, Int(index)))
     }
 
     func appendTracks(tracks: [Track]) {
         PlaylistStore.appendTracks(tracks, playlist: self)
         self.tracks.extend(tracks)
-        Playlist.notifyChange(.Updated(self))
+        Playlist.notifyChange(.TracksAdded(self, tracks))
     }
 
     class func findAll() -> [Playlist] {

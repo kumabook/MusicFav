@@ -90,25 +90,36 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
                 self.playlists.append(playlist)
                 self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             case .Updated(let playlist):
-                if playlist == self.appDelegate.playingPlaylist {
-                    let indexPath = NSIndexPath(forItem: 0, inSection: Section.Playing.rawValue)
-                    self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                } else if playlist == self.appDelegate.readingPlaylist {
-                    let indexPath = NSIndexPath(forItem: 0, inSection: Section.Reading.rawValue)
-                    self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                }
-                if let index = find(self.playlists, playlist) {
-                    let indexPath = NSIndexPath(forItem: index, inSection: section)
-                    self.playlists[index] = playlist
-                    self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                }
+                self.updatePlaylist(playlist)
             case .Removed(let playlist):
                 if let index = find(self.playlists, playlist) {
                     let playlist = self.playlists.removeAtIndex(index)
                     let indexPath = NSIndexPath(forItem: index, inSection: section)
                     self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                 }
+            case .TracksAdded(let playlist, let tracks):
+                self.updatePlaylist(playlist)
+            case .TrackRemoved(let playlist, let Track, let index):
+                self.updatePlaylist(playlist)
+            case .TrackUpdated(let playlist, let track):
+                self.updatePlaylist(playlist)
             }
+        }
+    }
+
+    func updatePlaylist(playlist: Playlist) {
+        let section = Section.Favorites.rawValue
+        if playlist == self.appDelegate.playingPlaylist {
+            let indexPath = NSIndexPath(forItem: 0, inSection: Section.Playing.rawValue)
+            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        } else if playlist == self.appDelegate.readingPlaylist {
+            let indexPath = NSIndexPath(forItem: 0, inSection: Section.Reading.rawValue)
+            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        }
+        if let index = find(self.playlists, playlist) {
+            let indexPath = NSIndexPath(forItem: index, inSection: section)
+            self.playlists[index] = playlist
+            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
     }
 
