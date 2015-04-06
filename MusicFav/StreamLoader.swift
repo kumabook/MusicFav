@@ -157,12 +157,13 @@ class StreamLoader {
                     self.entries.extend(entries)
                     for e in entries { self.loadPlaylistOfEntry(e) }
                     self.streamContinuation = paginatedCollection.continuation
-                    if paginatedCollection.continuation == nil {
+                    self.updateLastUpdated(paginatedCollection.updated)
+                    self.sink.put(.CompleteLoadingNext)           // First reload tableView,
+                    if paginatedCollection.continuation == nil {  // then wait for next load
                         self.state = .Complete
                     } else {
                         self.state = .Normal
                     }
-                    self.updateLastUpdated(paginatedCollection.updated)
                 },
                 error: {error in
                     let key = "com.alamofire.serialization.response.error.response"
@@ -182,7 +183,6 @@ class StreamLoader {
                     }
                 },
                 completed: {
-                    self.sink.put(.CompleteLoadingNext)
             })
     }
 
