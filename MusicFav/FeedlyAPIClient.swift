@@ -19,13 +19,15 @@ struct FeedlyAPIClientConfig {
     static let authPath     = "/v3/auth/auth"
     static let tokenPath    = "/v3/auth/token"
     static let accountType  = "Feedly"
-    static let clientId     = "sandbox"
-    static let clientSecret = "8LDQOW8KPYFPCQV2UL6J"
     static let redirectUrl  = "http://localhost"
     static let scopeUrl     = "https://cloud.feedly.com/subscriptions"
     static let authUrl      = String(format: "%@/%@", baseUrl, authPath)
     static let tokenUrl     = String(format: "%@/%@", baseUrl, tokenPath)
     static let perPage      = 15
+
+    static var clientId     = "sandbox"
+    static var clientSecret = "8LDQOW8KPYFPCQV2UL6J"
+    static var target       = CloudAPIClient.Target.Sandbox
 }
 
 class FeedlyAPIClient {
@@ -43,6 +45,32 @@ class FeedlyAPIClient {
         return Static.instance
     }
 
+    init() {
+        loadConfig()
+    }
+
+    func loadConfig() {
+        let bundle = NSBundle.mainBundle()
+        if let path = bundle.pathForResource("feedly", ofType: "json") {
+            let data     = NSData(contentsOfFile: path)
+            let jsonObject: AnyObject? = NSJSONSerialization.JSONObjectWithData(data!,
+                options: NSJSONReadingOptions.MutableContainers,
+                error: nil)
+            if let obj: AnyObject = jsonObject {
+                let json = JSON(obj)
+                if json["target"].stringValue == "production" {
+                    FeedlyAPIClientConfig.target = .Production
+                }
+                if let clientId = json["client_id"].string {
+                    FeedlyAPIClientConfig.clientId = clientId
+                }
+                if let clientSecret = json["client_secret"].string {
+                    FeedlyAPIClientConfig.clientSecret = clientSecret
+                }
+            }
+        }
+    }
+
     private var _account: NXOAuth2Account?
     private let userDefaults = NSUserDefaults.standardUserDefaults()
     var isLoggedIn: Bool {
@@ -56,6 +84,7 @@ class FeedlyAPIClient {
             return _client
         }
     }
+
     var account: NXOAuth2Account? {
         get {
             if let a = _account {

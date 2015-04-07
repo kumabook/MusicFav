@@ -40,6 +40,7 @@
 		675AB3341AD3903B0003824C /* XCDYouTubeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 675AB3331AD3903B0003824C /* XCDYouTubeKit.framework */; };
 		675AB3351AD390790003824C /* XCDYouTubeKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 675AB3331AD3903B0003824C /* XCDYouTubeKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		675AB3371AD39F540003824C /* XCDYouTubeClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675AB3361AD39F540003824C /* XCDYouTubeClient.swift */; };
+		675AB33B1AD3D80A0003824C /* feedly.json in Resources */ = {isa = PBXBuildFile; fileRef = 675AB33A1AD3D80A0003824C /* feedly.json */; };
 		676629B71A85AA3100F3FD33 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 676629B61A85AA3100F3FD33 /* Realm.framework */; };
 		676629B81A85AA3B00F3FD33 /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 676629B61A85AA3100F3FD33 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		67773A701ACB81AA00E7BC8E /* MusicFavAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67773A6F1ACB81AA00E7BC8E /* MusicFavAPIClient.swift */; };
@@ -147,6 +148,7 @@
 		67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrackTableViewCell.xib; sourceTree = "<group>"; };
 		675AB3331AD3903B0003824C /* XCDYouTubeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCDYouTubeKit.framework; path = Carthage/Build/iOS/XCDYouTubeKit.framework; sourceTree = "<group>"; };
 		675AB3361AD39F540003824C /* XCDYouTubeClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCDYouTubeClient.swift; sourceTree = "<group>"; };
+		675AB33A1AD3D80A0003824C /* feedly.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = feedly.json; sourceTree = "<group>"; };
 		676629B61A85AA3100F3FD33 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
 		67773A6F1ACB81AA00E7BC8E /* MusicFavAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicFavAPIClient.swift; sourceTree = "<group>"; };
 		67773A711ACC194B00E7BC8E /* Entry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
@@ -278,6 +280,7 @@
 			isa = PBXGroup;
 			children = (
 				67277CAC1A434304002FD3E0 /* Info.plist */,
+				675AB33A1AD3D80A0003824C /* feedly.json */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -536,6 +539,7 @@
 			files = (
 				67CB43F01A4ECD470010465E /* playlistify-userscript.js in Resources */,
 				6728FA3A1A60580A00F693B3 /* PreferenceViewController.xib in Resources */,
+				675AB33B1AD3D80A0003824C /* feedly.json in Resources */,
 				67277CBB1A434304002FD3E0 /* LaunchScreen.xib in Resources */,
 				67DA46661A87B49C0048B29C /* SelectPlaylistTableViewCell.xib in Resources */,
 				67CE596C1A51208000C86681 /* MiniPlayerView.xib in Resources */,
