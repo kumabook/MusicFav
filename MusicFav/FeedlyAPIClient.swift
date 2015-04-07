@@ -49,10 +49,11 @@ class FeedlyAPIClient {
         return account != nil
     }
 
+    var _client: CloudAPIClient = CloudAPIClient()
     var client: CloudAPIClient {
         get {
             CloudAPIClient.Config.accessToken = account?.accessToken.accessToken
-            return CloudAPIClient()
+            return _client
         }
     }
     var account: NXOAuth2Account? {
