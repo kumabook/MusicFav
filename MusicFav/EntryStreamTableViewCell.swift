@@ -106,11 +106,11 @@ class EntryStreamTableViewCell: MCSwipeTableViewCell {
 */
         setSwipeGestureWithView(markAsReadImageView,
             color: markAsReadColor,
-            mode: .Switch,
+             mode: .Switch,
             state: .State1) { (cell, state, mode) in }
         setSwipeGestureWithView(markAsReadImageView,
             color: markAsReadColor,
-            mode: MCSwipeTableViewCellMode.Exit,
+             mode: MCSwipeTableViewCellMode.Exit,
             state: MCSwipeTableViewCellState.State2) { (cell, state, mode) in
                 onMarkAsRead(cell)
         }
