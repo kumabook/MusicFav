@@ -110,7 +110,7 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
             })
         } else {
             MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = nil
-            miniPlayerView.titleLabel.text    = "no track"
+            miniPlayerView.titleLabel.text    = ""
             miniPlayerView.durationLabel.text = "00:00"
         }
         miniPlayerView.state = player!.currentState
