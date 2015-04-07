@@ -89,8 +89,10 @@ class EntryStreamViewController: UITableViewController {
                 self.showReloadButton()
             case .CompleteLoadingPlaylist(let playlist, let entry):
                 if let i = find(self.streamLoader.entries, entry) {
-                    let index = NSIndexPath(forItem: i, inSection: 0)
-                    self.tableView.reloadRowsAtIndexPaths([index], withRowAnimation: UITableViewRowAnimation.None)
+                    if i < self.tableView.numberOfRowsInSection(0) {
+                        let index = NSIndexPath(forItem: i, inSection: 0)
+                        self.tableView.reloadRowsAtIndexPaths([index], withRowAnimation: UITableViewRowAnimation.None)
+                    }
                 }
             case .RemoveAt(let index):
                 let indexPath = NSIndexPath(forItem: index, inSection: 0)
