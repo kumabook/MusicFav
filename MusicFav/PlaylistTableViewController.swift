@@ -150,13 +150,13 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
 
     func showTitleEditAlertViewAtIndex(index: Int) {
         var title: String!
-        if index >= 0 { title = "Edit playlist title" }
-        else          { title = "New playlist" }
+        if index >= 0 { title = "Edit playlist title".localize() }
+        else          { title = "New playlist".localize() }
         let alertView = UIAlertView(title: title,
                                   message: "",
                                  delegate: self,
-                        cancelButtonTitle: "Cancel",
-                        otherButtonTitles: "OK")
+                        cancelButtonTitle: "Cancel".localize(),
+                        otherButtonTitles: "OK".localize())
         alertView.alertViewStyle = UIAlertViewStyle.PlainTextInput
         alertView.tag = index
         if index >= 0 { alertView.textFieldAtIndex(0)?.text = playlists[index].title }
@@ -207,16 +207,16 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         case .Playing:
             playlist = appDelegate.playingPlaylist
             if let p = playlist {
-                cell.titleLabel.text = "Now playing(\(p.title))"
+                cell.titleLabel.text = "Now playing".localize() + "(\(p.title))"
             } else {
-                cell.titleLabel.text = "Not playing"
+                cell.titleLabel.text = "Not playing".localize()
             }
         case .Reading:
             playlist = appDelegate.readingPlaylist
             if let p = playlist {
-                cell.titleLabel.text = "Now reading(\(p.title))"
+                cell.titleLabel.text = "Now reading".localize() + "(\(p.title))"
             } else {
-                cell.titleLabel.text = "Not reading"
+                cell.titleLabel.text = "Not reading".localize()
             }
         case .Favorites:
             playlist = playlists[indexPath.item]
@@ -234,7 +234,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     }
 
     override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
-        let edit = UITableViewRowAction(style: .Default, title: "Edit title") {
+        let edit = UITableViewRowAction(style: .Default, title: "Edit title".localize()) {
             (action, indexPath) in
             switch (Section(rawValue: indexPath.section)!) {
             case .Favorites:
@@ -244,7 +244,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             }
         }
         edit.backgroundColor = ColorHelper.greenColor
-        let remove = UITableViewRowAction(style: .Default, title: "Remove") {
+        let remove = UITableViewRowAction(style: .Default, title: "Remove".localize()) {
             (action, indexPath) in
             switch (Section(rawValue: indexPath.section)!) {
             case .Favorites:

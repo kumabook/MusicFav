@@ -38,15 +38,15 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title:"close",
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title:"close".localize(),
                                                            style: UIBarButtonItemStyle.Plain,
                                                           target: self,
                                                           action: "close")
         let searchBar                  = UISearchBar(frame:CGRectMake(0, 0, view.bounds.size.width, SEARCH_BAR_HEIGHT))
-        searchBar.placeholder          = "URL or keyword"
+        searchBar.placeholder          = "URL or Keyword".localize()
         searchBar.delegate             = self
         self.tableView.tableHeaderView = searchBar
-        self.navigationItem.title      = "Import to MusicFav"        
+        self.navigationItem.title      = "Import Feed".localize()
     }
 
     override func didReceiveMemoryWarning() {
@@ -116,7 +116,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
         switch Section(rawValue: indexPath.section)! {
         case .SearchResult:
             let feed = feeds[indexPath.item]
-            cell.textLabel?.text = "\(feed.title) \(feed.subscribers) subscribers"
+            cell.textLabel?.text = "\(feed.title) \(feed.subscribers) " + "subscribers".localize()
         default:
             break
         }

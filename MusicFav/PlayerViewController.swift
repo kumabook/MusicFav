@@ -72,7 +72,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Close",
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Close".localize(),
                                                            style: UIBarButtonItemStyle.Done,
                                                           target: self,
                                                           action: "close")

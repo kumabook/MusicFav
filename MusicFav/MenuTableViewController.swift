@@ -182,7 +182,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     func fetchTrialFeeds() -> ColdSignal<([Section], [FeedlyKit.Category: [Stream]])> {
         return apiClient.fetchFeedsByIds(SampleFeed.samples().map({ $0.id })).map({feeds in
             let samplesCategory = FeedlyKit.Category(id: "feed/musicfav-samples",
-                                                  label: "Sample Feeds")
+                                                  label: "Sample Feeds".localize())
             let section = Section.FeedlyCategory(samplesCategory)
             let streamListDic = [samplesCategory:feeds] as [FeedlyKit.Category: [Stream]]
             return ([section], streamListDic)

@@ -21,7 +21,7 @@ class CategoryTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
-        navigationItem.title = "Select Category"
+        navigationItem.title = "Select Category".localize()
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "add_stream"),
                                                             style: UIBarButtonItemStyle.Plain,
                                                            target: self,
@@ -52,10 +52,10 @@ class CategoryTableViewController: UITableViewController {
     }
 
     func newCategory() {
-        let ac = UIAlertController(title: "New Category", message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-        ac.addAction(UIAlertAction(title: "Cancel", style: UIAlertActionStyle.Cancel, handler: { (action) -> Void in
+        let ac = UIAlertController(title: "New Category".localize(), message: nil, preferredStyle: UIAlertControllerStyle.Alert)
+        ac.addAction(UIAlertAction(title: "Cancel".localize(), style: UIAlertActionStyle.Cancel, handler: { (action) -> Void in
         }))
-        ac.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (action) -> Void in
+        ac.addAction(UIAlertAction(title: "OK".localize(), style: UIAlertActionStyle.Default, handler: { (action) -> Void in
             if let textField = ac.textFields?.first as? UITextField {
                 self.createCategory(textField.text)
             }

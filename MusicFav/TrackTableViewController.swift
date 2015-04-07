@@ -157,7 +157,7 @@ class TrackTableViewController: UITableViewController {
         if let p = playlist {
             let track = p.tracks[indexPath.item]
             if let title = track.title { cell.trackNameLabel.text = title }
-            else                       { cell.trackNameLabel.text = "Loading..." }
+            else                       { cell.trackNameLabel.text = "Loading...".localize() }
             let minutes = Int(floor(track.duration / 60))
             let seconds = Int(round(track.duration - Double(minutes) * 60))
             cell.durationLabel.text = String(format: "%.2d:%.2d", minutes, seconds)
@@ -172,13 +172,13 @@ class TrackTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
-        let remove = UITableViewRowAction(style: .Default, title: "Remove") {
+        let remove = UITableViewRowAction(style: .Default, title: "Remove".localize()) {
             (action, indexPath) in
             self.playlist?.removeTrackAtIndex(UInt(indexPath.item))
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
         remove.backgroundColor = ColorHelper.redColor
-        let copy = UITableViewRowAction(style: .Default, title: "Copy") {
+        let copy = UITableViewRowAction(style: .Default, title: "Copy".localize()) {
             (action, indexPath) in
             let track = self.playlist!.tracks[indexPath.item]
             self.showSelectPlaylistViewController([track])

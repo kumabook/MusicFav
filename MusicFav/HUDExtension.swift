@@ -14,7 +14,7 @@ extension MBProgressHUD {
         let HUD = MBProgressHUD(view: view)
         HUD.customView = UIImageView(image:UIImage(named:"checkmark"))
         HUD.mode = MBProgressHUDMode.CustomView
-        HUD.labelText = "Completed";
+        HUD.labelText = "Completed".localize()
         return HUD
     }
 

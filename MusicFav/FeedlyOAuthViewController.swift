@@ -16,7 +16,7 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
     @IBOutlet weak var loginWebView: UIWebView!
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"close",
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"close".localize(),
             style: UIBarButtonItemStyle.Plain,
             target: self,
             action: "close")

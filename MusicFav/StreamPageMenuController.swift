@@ -39,8 +39,9 @@ class StreamPageMenuController: UIViewController {
 
         var entryStream      = EntryStreamViewController(streamLoader: streamLoader)
         var playlistStream   = PlaylistStreamViewController(streamLoader: streamLoader)
-        entryStream.title    = "Entry View"
-        playlistStream.title = "Playlist View"
+
+        entryStream.title    = "Article".localize()
+        playlistStream.title = "Playlist".localize()
         var controllerArray : [UIViewController] = [entryStream, playlistStream]
         var parameters: [String: AnyObject] = ["menuItemSeparatorWidth": 0.8,
                                           "useMenuLikeSegmentedControl": true,

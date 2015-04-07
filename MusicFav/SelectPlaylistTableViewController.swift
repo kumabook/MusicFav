@@ -29,7 +29,7 @@ class SelectPlaylistTableViewController: UITableViewController {
     }
 
     func updateNavbar() {
-        let closeButton = UIBarButtonItem(title: "Cancel",
+        let closeButton = UIBarButtonItem(title: "Cancel".localize(),
                                           style: UIBarButtonItemStyle.Plain,
                                          target: self,
                                          action: "close")
@@ -132,12 +132,12 @@ class SelectPlaylistTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
-        let edit = UITableViewRowAction(style: .Default, title: "Edit title") {
+        let edit = UITableViewRowAction(style: .Default, title: "Edit title".localize()) {
             (action, indexPath) in
             self.editPlaylist(indexPath.item)
         }
         edit.backgroundColor = ColorHelper.greenColor
-        let remove = UITableViewRowAction(style: .Default, title: "Remove") {
+        let remove = UITableViewRowAction(style: .Default, title: "Remove".localize()) {
             (action, indexPath) in
             self.playlists[indexPath.item].remove()
         }

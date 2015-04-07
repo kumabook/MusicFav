@@ -26,7 +26,7 @@ class EntryStreamTableViewCell: MCSwipeTableViewCell {
             let view              = UIView()
             let label             = UILabel()
             let imageView         = UIImageView(image: UIImage(named: "pin"))
-            label.text            = "Mark as Save"
+            label.text            = "Mark as Save".localize()
             label.textColor       = UIColor.whiteColor()
             label.font            = UIFont.boldSystemFontOfSize(self.labelFontSize)
             imageView.contentMode = UIViewContentMode.Center
@@ -51,7 +51,7 @@ class EntryStreamTableViewCell: MCSwipeTableViewCell {
             let view              = UIView()
             let label             = UILabel()
             let imageView         = UIImageView(image: UIImage(named: "checkmark"))
-            label.text            = "Mark as Read"
+            label.text            = "Mark as Read".localize()
             label.textColor       = UIColor.whiteColor()
             label.font            = UIFont.boldSystemFontOfSize(self.labelFontSize)
             imageView.contentMode = UIViewContentMode.Center

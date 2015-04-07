@@ -22,9 +22,9 @@ class PreferenceViewController: UITableViewController {
             switch self {
             case .LoginOrLogout:
                 if FeedlyAPIClient.sharedInstance.isLoggedIn {
-                    return "Logout"
+                    return "Logout".localize()
                 } else {
-                    return "Login"
+                    return "Login".localize()
                 }
             }
         }
@@ -32,7 +32,7 @@ class PreferenceViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"close",
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "close".localize(),
                                                                 style: UIBarButtonItemStyle.Plain,
                                                                target: self,
                                                                action: "close")
@@ -68,7 +68,9 @@ class PreferenceViewController: UITableViewController {
     }
     
     func showLogoutDialog() {
-        let ac = UIAlertController(title: "Logout", message: "Are you sure you want to log out?", preferredStyle: UIAlertControllerStyle.Alert)
+        let ac = UIAlertController(title: "Logout".localize(),
+                                 message: "Are you sure you want to log out?".localize(),
+                          preferredStyle: UIAlertControllerStyle.Alert)
         let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) in
             self.logout()
         }
