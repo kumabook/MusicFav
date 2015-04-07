@@ -56,7 +56,7 @@ class DraggableCoverViewController: UIViewController {
         view.addSubview(coverViewController.view)
         floorViewController.view.frame = view.frame
         coverViewController.view.clipsToBounds   = true
-        coverViewController.view.backgroundColor = ColorHelper.transparent
+        coverViewController.view.backgroundColor = UIColor.transparent
         let panGestureRecognizer = UIPanGestureRecognizer(target:self, action:"dragged:")
         coverViewController.view.addGestureRecognizer(panGestureRecognizer)
     }

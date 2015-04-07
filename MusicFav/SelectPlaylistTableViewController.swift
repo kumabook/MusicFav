@@ -136,12 +136,12 @@ class SelectPlaylistTableViewController: UITableViewController {
             (action, indexPath) in
             self.editPlaylist(indexPath.item)
         }
-        edit.backgroundColor = ColorHelper.greenColor
+        edit.backgroundColor = UIColor.green
         let remove = UITableViewRowAction(style: .Default, title: "Remove".localize()) {
             (action, indexPath) in
             self.playlists[indexPath.item].remove()
         }
-        remove.backgroundColor = ColorHelper.redColor
+        remove.backgroundColor = UIColor.red
         return [edit, remove]
     }
 

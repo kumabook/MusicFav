@@ -14,7 +14,7 @@
 		6716642C1A738E3E005FE005 /* Alamofire.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 671664291A738E36005FE005 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6716642E1A738E3E005FE005 /* FeedlyKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 671664271A738E2A005FE005 /* FeedlyKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		671CA1E81ACFBEEC00EDF162 /* StreamLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 671CA1E71ACFBEEC00EDF162 /* StreamLoader.swift */; };
-		6724E1C51A9C9E9900D8E0FA /* ColorHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6724E1C41A9C9E9900D8E0FA /* ColorHelper.swift */; };
+		6724E1C51A9C9E9900D8E0FA /* UIColorExtenstion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6724E1C41A9C9E9900D8E0FA /* UIColorExtenstion.swift */; };
 		6724E1C91A9CA19800D8E0FA /* AppearanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6724E1C81A9CA19800D8E0FA /* AppearanceManager.swift */; };
 		67254C791A493A570064E5DF /* EntryStreamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67254C771A493A570064E5DF /* EntryStreamTableViewCell.swift */; };
 		67254C7A1A493A570064E5DF /* EntryStreamTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67254C781A493A570064E5DF /* EntryStreamTableViewCell.xib */; };
@@ -121,7 +121,7 @@
 		671664271A738E2A005FE005 /* FeedlyKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FeedlyKit.framework; path = Carthage/Build/iOS/FeedlyKit.framework; sourceTree = "<group>"; };
 		671664291A738E36005FE005 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 		671CA1E71ACFBEEC00EDF162 /* StreamLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamLoader.swift; sourceTree = "<group>"; };
-		6724E1C41A9C9E9900D8E0FA /* ColorHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColorHelper.swift; sourceTree = "<group>"; };
+		6724E1C41A9C9E9900D8E0FA /* UIColorExtenstion.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExtenstion.swift; sourceTree = "<group>"; };
 		6724E1C81A9CA19800D8E0FA /* AppearanceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearanceManager.swift; sourceTree = "<group>"; };
 		67254C771A493A570064E5DF /* EntryStreamTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntryStreamTableViewCell.swift; sourceTree = "<group>"; };
 		67254C781A493A570064E5DF /* EntryStreamTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EntryStreamTableViewCell.xib; sourceTree = "<group>"; };
@@ -222,7 +222,7 @@
 			isa = PBXGroup;
 			children = (
 				6701D4AC1A95048C006BFEC6 /* HUDExtension.swift */,
-				6724E1C41A9C9E9900D8E0FA /* ColorHelper.swift */,
+				6724E1C41A9C9E9900D8E0FA /* UIColorExtenstion.swift */,
 				6724E1C81A9CA19800D8E0FA /* AppearanceManager.swift */,
 				67D9359C1AA37E8F0061C1A0 /* TimeHelper.swift */,
 				675AB3401AD3E3DA0003824C /* StringExtension.swift */,
@@ -675,7 +675,7 @@
 				67DA465B1A8651CA0048B29C /* PlaylistTableViewController.swift in Sources */,
 				6724E1C91A9CA19800D8E0FA /* AppearanceManager.swift in Sources */,
 				67254C7C1A4968F50064E5DF /* EntryWebViewController.swift in Sources */,
-				6724E1C51A9C9E9900D8E0FA /* ColorHelper.swift in Sources */,
+				6724E1C51A9C9E9900D8E0FA /* UIColorExtenstion.swift in Sources */,
 				67DA46621A87B3AB0048B29C /* SelectPlaylistTableViewController.swift in Sources */,
 				67773A701ACB81AA00E7BC8E /* MusicFavAPIClient.swift in Sources */,
 				67F9A2981AD13D130078EC3C /* PlaylistLoader.swift in Sources */,

@@ -15,10 +15,10 @@ class EntryStreamTableViewCell: MCSwipeTableViewCell {
     let labelFontSize: CGFloat   = 20.0
     var swipeCellBackgroundColor = UIColor(red: 227/255, green: 227/255, blue: 227/255, alpha: 1.0)
     var markAsSavedColor: UIColor {
-        get { return ColorHelper.greenColor }
+        get { return UIColor.green }
     }
     var markAsReadColor: UIColor {
-        get { return ColorHelper.redColor }
+        get { return UIColor.red }
     }
 /*
     var markAsSavedImageView: UIView {

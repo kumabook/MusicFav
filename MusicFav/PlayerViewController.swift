@@ -100,7 +100,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         playerView.addTarget(    self, action: "toggleScreen", forControlEvents: UIControlEvents.TouchUpInside)
         view.addSubview(playerView)
         view.addSubview(controlPanel)
-        controlPanel.backgroundColor = ColorHelper.themeColorLight
+        controlPanel.backgroundColor = UIColor.themeLight
         controlPanel.clipsToBounds = true
         controlPanel.addSubview(currentLabel)
         controlPanel.addSubview(totalLabel)

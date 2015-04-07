@@ -243,7 +243,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
                 tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
             }
         }
-        edit.backgroundColor = ColorHelper.greenColor
+        edit.backgroundColor = UIColor.green
         let remove = UITableViewRowAction(style: .Default, title: "Remove".localize()) {
             (action, indexPath) in
             switch (Section(rawValue: indexPath.section)!) {
@@ -253,7 +253,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
                 tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
             }
         }
-        remove.backgroundColor = ColorHelper.redColor
+        remove.backgroundColor = UIColor.red
         return [edit, remove]
     }
 
