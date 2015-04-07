@@ -19,7 +19,8 @@ class TrackTableViewController: UITableViewController {
     let tableCellReuseIdentifier = "trackTableViewCell"
     let cellHeight: CGFloat      = 80
     
-    var playlist: Playlist? = nil
+    var playlist: Playlist! = nil
+    var playlistLoader: PlaylistLoader!
     var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as AppDelegate }}
     var isReadingPlaylist: Bool {
         get {
@@ -36,6 +37,20 @@ class TrackTableViewController: UITableViewController {
             }
             return false
         }
+    }
+
+    init(playlist: Playlist) {
+        self.playlist  = playlist
+        playlistLoader = PlaylistLoader(playlist: playlist)
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    override init(style: UITableViewStyle) {
+        super.init(style: style)
+    }
+
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
     }
     
     override func viewDidLoad() {
@@ -110,16 +125,15 @@ class TrackTableViewController: UITableViewController {
             return
         }
 
-        for (index, track) in enumerate(playlist!.tracks) {
-            track.fetchTrackDetail(false).start(
-                next: { track in
-                    self.tableView?.reloadRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)],
-                                                           withRowAnimation: UITableViewRowAnimation.None)
-                    Playlist.notifyChange(.Updated(self.playlist!))
-                }, error: { error in
-                }, completed: {
-            })
-        }
+        let loader = PlaylistLoader(playlist: playlist!)
+        loader.fetchTracks().start(
+            next: { (index, track) in
+                self.tableView?.reloadRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)],
+                                                        withRowAnimation: UITableViewRowAnimation.None)
+                Playlist.notifyChange(.Updated(self.playlist!))
+            }, error: { error in
+            }, completed: {
+        })
     }
 
     // MARK: UITableViewDataSource

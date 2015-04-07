@@ -13,7 +13,7 @@ import LlamaKit
 
 class PlaylistLoader {
     let playlist: Playlist
-    var signal:   ColdSignal<Track>?
+    var signal:   ColdSignal<(Int, Track)>?
     init(playlist: Playlist) {
         self.playlist = playlist
     }
@@ -25,7 +25,7 @@ class PlaylistLoader {
     func dispose() {
     }
 
-    func fetchTracks() -> ColdSignal<Track> {
+    func fetchTracks() -> ColdSignal<(Int, Track)> {
         var pairs: [(Int, Track)] = []
         for i in 0..<playlist.tracks.count {
             let pair = (i, playlist.tracks[i])
@@ -33,17 +33,17 @@ class PlaylistLoader {
         }
         signal = pairs.map {
             self.fetchTrack($0.0, track: $0.1)
-            }.reduce(ColdSignal<Track>.empty(), combine: { (signal, nextSignal) in
+            }.reduce(ColdSignal<(Int, Track)>.empty(), combine: { (signal, nextSignal) in
                 signal.concat(nextSignal)
             })
         return signal!
     }
 
-    func fetchTrack(index: Int, track: Track) -> ColdSignal<Track> {
-        return track.fetchTrackDetail(false).map { t -> Track in
-            Playlist.notifyChange(.TrackUpdated(self.playlist, t))
+    func fetchTrack(index: Int, track: Track) -> ColdSignal<(Int, Track)> {
+        return track.fetchTrackDetail(false).map { _track -> (Int, Track) in
+            Playlist.notifyChange(.TrackUpdated(self.playlist, _track))
             self.playlist.sink.put(index)
-            return t
+            return (index, _track)
         }
     }
 

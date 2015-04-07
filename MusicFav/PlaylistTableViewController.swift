@@ -58,8 +58,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     func showPlayingPlaylist() {
         if let playlist = appDelegate.playingPlaylist {
             let ptc = appDelegate.miniPlayerViewController!.playlistTableViewController
-            let ttc = TrackTableViewController()
-            ttc.playlist = playlist
+            let ttc = TrackTableViewController(playlist: playlist)
             ptc.navigationController?.popToRootViewControllerAnimated(true)
             ptc.navigationController?.pushViewController(ttc, animated: true)
         }
@@ -68,8 +67,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     func showReadingPlaylist() {
         if let playlist = appDelegate.readingPlaylist {
             let ptc = appDelegate.miniPlayerViewController!.playlistTableViewController
-            let ttc = TrackTableViewController()
-            ttc.playlist = playlist
+            let ttc = TrackTableViewController(playlist: playlist)
             ptc.navigationController?.popToRootViewControllerAnimated(true)
             ptc.navigationController?.pushViewController(ttc, animated: true)
         }
@@ -247,9 +245,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         case .Reading:
             showReadingPlaylist()
         case .Favorites:
-            let playlist = playlists[indexPath.item]
-            let ttc      = TrackTableViewController()
-            ttc.playlist = playlist
+            let ttc = TrackTableViewController(playlist: playlists[indexPath.item])
             navigationController?.popViewControllerAnimated(true)
             navigationController?.pushViewController(ttc, animated: true)
         }
