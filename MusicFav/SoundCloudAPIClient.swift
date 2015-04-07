@@ -32,15 +32,11 @@ class SoundCloudAPIClient {
                 SoundCloudAPIClientConfig.baseUrl, track_id, SoundCloudAPIClientConfig.client_id)
             manager.GET(url, parameters: nil,
                 success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
-                    println(operation.response)
-                    println(response)
                     let json = JSON(response)
                     sink.put(.Next(Box(SoundCloudAudio(json: json))))
                     sink.put(.Completed)
                 },
                 failure: { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
-                    println(error)
-                    println(operation.response)
                     sink.put(.Error(error))
             })
             disposable.addDisposable {
