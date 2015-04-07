@@ -26,9 +26,24 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             }
         }
     }
-    let tableCellReuseIdentifier = "playlistTableViewCell"
-    let cellHeight: CGFloat      = 80
-    var playlists: [Playlist]    = []
+    class PlaylistTableViewPlayerObserver: PlayerObserver {
+        let vc: PlaylistTableViewController
+        init(playlistTableViewController: PlaylistTableViewController) {
+            vc = playlistTableViewController
+            super.init()
+        }
+        override func timeUpdated()      {}
+        override func didPlayToEndTime() {}
+        override func statusChanged()    {}
+        override func trackChanged()     { vc.updatePlaylist(vc.appDelegate.playingPlaylist!) }
+        override func started()          {
+        }
+        override func ended()            {}
+    }
+    let tableCellReuseIdentifier      = "playlistTableViewCell"
+    let cellHeight:     CGFloat       = 80
+    var playlists:      [Playlist]    = []
+    var playerObserver: PlaylistTableViewPlayerObserver?
     var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as AppDelegate } }
 
     override func viewDidLoad() {
@@ -36,11 +51,18 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         clearsSelectionOnViewWillAppear = true
         let nib = UINib(nibName: "PlaylistTableViewCell", bundle: nil)
         tableView?.registerNib(nib, forCellReuseIdentifier:self.tableCellReuseIdentifier)
-        observePlaylists()
     }
 
     override func viewWillAppear(animated: Bool) {
+        observePlaylists()
+        observePlayer()
         updateNavbar()
+    }
+
+    override func viewWillDisappear(animated: Bool) {
+        if let observer = playerObserver {
+            appDelegate.player?.removeObserver(observer)
+        }
     }
 
     func updateNavbar() {
@@ -75,6 +97,11 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+
+    func observePlayer() {
+        playerObserver = PlaylistTableViewPlayerObserver(playlistTableViewController: self)
+        appDelegate.player?.addObserver(playerObserver!)
     }
 
     func observePlaylists() {
