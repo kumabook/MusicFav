@@ -43,9 +43,9 @@ class StreamPageMenuController: UIViewController {
         entryStream.title    = "Article".localize()
         playlistStream.title = "Playlist".localize()
         var controllerArray : [UIViewController] = [entryStream, playlistStream]
-        var parameters: [String: AnyObject] = ["menuItemSeparatorWidth": 0.8,
+        var parameters: [String: AnyObject] = ["menuItemSeparatorWidth": 0.0,
                                           "useMenuLikeSegmentedControl": true,
-                                    "menuItemSeparatorPercentageHeight": 0.8,
+                                    "menuItemSeparatorPercentageHeight": 0.0,
                                                            "menuHeight": 24,
                                             "scrollMenuBackgroundColor": UIColor.whiteColor(),
                                               "selectionIndicatorColor": UIColor.theme,
