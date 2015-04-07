@@ -82,25 +82,14 @@ class Track {
     func fetchTrackDetail(errorOnFailure: Bool) -> ColdSignal<Track>{
         switch provider {
         case .Youtube:
-            return ColdSignal { (sink, disposable) in
-                XCDYouTubeClient.defaultClient().getVideoWithIdentifier(self.identifier, completionHandler: { (video, error) -> Void in
-                    if let e = error {
-                        if errorOnFailure {
-                            sink.put(.Error(error))
-                        } else {
-                            sink.put(.Next(Box(self)))
-                            sink.put(.Completed)
-                        }
-                        return
-                    }
-                    self.updatePropertiesWithYouTubeVideo(video)
-                    sink.put(.Next(Box(self)))
-                    sink.put(.Completed)
+            return XCDYouTubeClient.defaultClient().fetchVideo(identifier, errorOnFailure: errorOnFailure)
+                .deliverOn(MainScheduler())
+                .map({
+                    self.updatePropertiesWithYouTubeVideo($0)
+                    return self
                 })
-                return
-            }
         case .SoundCloud:
-            return SoundCloudAPIClient.sharedInstance.fetchTrack(identifier)
+            return SoundCloudAPIClient.sharedInstance.fetchTrack(identifier, errorOnFailure: errorOnFailure)
                 .deliverOn(MainScheduler())
                 .map({
                     self.updateProperties($0)
