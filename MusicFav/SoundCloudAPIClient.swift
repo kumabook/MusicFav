@@ -25,7 +25,7 @@ class SoundCloudAPIClient {
         }
         return Static.instance
     }
-    func fetchTrack(track_id: String) -> ColdSignal<SoundCloudAudio> {
+    func fetchTrack(track_id: String, errorOnFailure: Bool) -> ColdSignal<SoundCloudAudio> {
         return ColdSignal { (sink, disposable) in
             let manager = AFHTTPRequestOperationManager()
             let url = NSString(format: "%@/tracks/%@.json?client_id=%@",
@@ -37,7 +37,11 @@ class SoundCloudAPIClient {
                     sink.put(.Completed)
                 },
                 failure: { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
-                    sink.put(.Error(error))
+                    if errorOnFailure {
+                        sink.put(.Error(error))
+                    } else {
+                        sink.put(.Completed)
+                    }
             })
             disposable.addDisposable {
                 manager.operationQueue.cancelAllOperations()
