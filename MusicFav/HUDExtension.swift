@@ -13,7 +13,7 @@ extension MBProgressHUD {
     class func createCompletedHUD(view: UIView) -> MBProgressHUD {
         let HUD = MBProgressHUD(view: view)
         HUD.customView = UIImageView(image:UIImage(named:"checkmark"))
-        HUD.mode = MBProgressHUDModeCustomView;
+        HUD.mode = MBProgressHUDMode.CustomView
         HUD.labelText = "Completed";
         return HUD
     }
