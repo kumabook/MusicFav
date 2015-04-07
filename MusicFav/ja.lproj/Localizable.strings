@@ -1,0 +1,36 @@
+/*
+  Localizable.strings
+  MusicFav
+
+  Created by Hiroki Kumamoto on 4/7/15.
+  Copyright (c) 2015 Hiroki Kumamoto. All rights reserved.
+*/
+
+"OK"           = "OK";
+"Cancel"       = "キャンセル";
+"close"        = "閉じる";
+"Login"        = "ログイン";
+"Logout"       = "ログアウト";
+"Article"      = "記事";
+"Playlist"     = "プレイリスト";
+"Remove"       = "削除";
+"Copy"         = "コピー";
+"Completed"    = "完了";
+"Loading..."   = "読み込み中...";
+"Now playing"  = "再生中";
+"Now reading"  = "表示中の記事";
+"Not playing"  = "再生中のプレイリスト";
+"Not reading"  = "表示中の記事なし";
+"Edit title"   = "タイトルを編集";
+"Sample Feeds" = "サンプルフィード";
+"Mark as Read" = "あとで読む";
+"Mark as Save" = "保存";
+"New Category" = "新しいカテゴリ";
+"subscribers"  = "人が購読";
+
+"Import Feed"                       = "フィードをインポート";
+"Select Category"                   = "カテゴリを選択";
+"URL or Keyword"                    = "URL または キーワード";
+"Edit playlist title"               = "プレイリストを編集";
+"New playlist"                      = "プレイリストを新規作成";
+"Are you sure you want to log out?" = "ログアウトしてよろしいですか？";

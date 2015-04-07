@@ -42,7 +42,7 @@
 		675AB3371AD39F540003824C /* XCDYouTubeClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675AB3361AD39F540003824C /* XCDYouTubeClient.swift */; };
 		675AB33B1AD3D80A0003824C /* feedly.json in Resources */ = {isa = PBXBuildFile; fileRef = 675AB33A1AD3D80A0003824C /* feedly.json */; };
 		675AB3411AD3E3DA0003824C /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675AB3401AD3E3DA0003824C /* StringExtension.swift */; };
-		675AB34A1AD3E84E0003824C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 675AB34C1AD3E84E0003824C /* Localizable.strings */; };
+		675AB3521AD4334D0003824C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 675AB3501AD4334D0003824C /* Localizable.strings */; };
 		676629B71A85AA3100F3FD33 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 676629B61A85AA3100F3FD33 /* Realm.framework */; };
 		676629B81A85AA3B00F3FD33 /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 676629B61A85AA3100F3FD33 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		67773A701ACB81AA00E7BC8E /* MusicFavAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67773A6F1ACB81AA00E7BC8E /* MusicFavAPIClient.swift */; };
@@ -152,8 +152,7 @@
 		675AB3361AD39F540003824C /* XCDYouTubeClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCDYouTubeClient.swift; sourceTree = "<group>"; };
 		675AB33A1AD3D80A0003824C /* feedly.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = feedly.json; sourceTree = "<group>"; };
 		675AB3401AD3E3DA0003824C /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
-		675AB3451AD3E7C40003824C /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
-		675AB34E1AD3E85B0003824C /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
+		675AB3511AD4334D0003824C /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		676629B61A85AA3100F3FD33 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
 		67773A6F1ACB81AA00E7BC8E /* MusicFavAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicFavAPIClient.swift; sourceTree = "<group>"; };
 		67773A711ACC194B00E7BC8E /* Entry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
@@ -285,7 +284,7 @@
 		67277CAB1A434304002FD3E0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				675AB34C1AD3E84E0003824C /* Localizable.strings */,
+				675AB3501AD4334D0003824C /* Localizable.strings */,
 				67277CAC1A434304002FD3E0 /* Info.plist */,
 				675AB33A1AD3D80A0003824C /* feedly.json */,
 			);
@@ -558,7 +557,7 @@
 				67277CDC1A46DE0E002FD3E0 /* FeedlyOAuthViewController.xib in Resources */,
 				67554F0A1A4F127400F7AE72 /* TrackTableViewCell.xib in Resources */,
 				6727EDFF1A5AC1DE003C6A47 /* MiniPlayerViewController.xib in Resources */,
-				675AB34A1AD3E84E0003824C /* Localizable.strings in Resources */,
+				675AB3521AD4334D0003824C /* Localizable.strings in Resources */,
 				67CB43F21A4ED6D50010465E /* main.js in Resources */,
 				67DA46601A8656A90048B29C /* PlaylistTableViewCell.xib in Resources */,
 			);
@@ -713,18 +712,16 @@
 			isa = PBXVariantGroup;
 			children = (
 				67277CBA1A434304002FD3E0 /* Base */,
-				675AB3451AD3E7C40003824C /* ja */,
 			);
 			name = LaunchScreen.xib;
 			sourceTree = "<group>";
 		};
-		675AB34C1AD3E84E0003824C /* Localizable.strings */ = {
+		675AB3501AD4334D0003824C /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
-				675AB34E1AD3E85B0003824C /* ja */,
+				675AB3511AD4334D0003824C /* ja */,
 			);
 			name = Localizable.strings;
-			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
