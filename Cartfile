@@ -4,3 +4,4 @@ github "kumabook/FeedlyKit"          >= 0.0.8
 github "Quick/Quick"                 == 0.2.0
 github "Quick/Nimble"                == 0.3.0
 github "realm/realm-cocoa"
+github "kumabook/XCDYouTubeKit"      == 2.1.2
