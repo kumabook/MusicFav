@@ -184,6 +184,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
     func didMaximizedCoverView() {
         updateViews()
         addAdView()
+        showAdView()
     }
 
     func didResizeCoverView(rate: CGFloat) {
@@ -200,6 +201,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
             view.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: rate)
             controlPanel.alpha   = rate
         }
+        hideAdView()
     }
 
     func toggleScreen() {
@@ -296,6 +298,9 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
             adBannerView = nil
         }
     }
+
+    func showAdView() { if let adView = adBannerView { adView.hidden = false } }
+    func hideAdView() { if let adView = adBannerView { adView.hidden = true } }
 
     func bannerViewDidLoadAd(banner: ADBannerView!) {
         adBannerView?.alpha = 1.0
