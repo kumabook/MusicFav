@@ -345,8 +345,6 @@
 		67277CD71A450CBF002FD3E0 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				67254C771A493A570064E5DF /* EntryStreamTableViewCell.swift */,
-				67254C781A493A570064E5DF /* EntryStreamTableViewCell.xib */,
 				67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */,
 				67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */,
 				67CE59691A51206D00C86681 /* MiniPlayerView.swift */,
@@ -357,6 +355,8 @@
 				67DA46631A87B49C0048B29C /* SelectPlaylistTableViewCell.swift */,
 				67DA46641A87B49C0048B29C /* SelectPlaylistTableViewCell.xib */,
 				67D9359E1AA38CDD0061C1A0 /* PlayerView.swift */,
+				67254C771A493A570064E5DF /* EntryStreamTableViewCell.swift */,
+				67254C781A493A570064E5DF /* EntryStreamTableViewCell.xib */,
 				67F9A2931AD0558C0078EC3C /* PlaylistStreamTableViewCell.swift */,
 				67F9A2941AD0558C0078EC3C /* PlaylistStreamTableViewCell.xib */,
 			);
