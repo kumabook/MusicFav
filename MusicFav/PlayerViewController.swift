@@ -95,9 +95,9 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         slider.addTarget(self, action: "previewSeek", forControlEvents: UIControlEvents.ValueChanged)
         slider.addTarget(self, action: "stopSeek", forControlEvents: UIControlEvents.TouchUpInside)
         slider.addTarget(self, action: "cancelSeek", forControlEvents: UIControlEvents.TouchUpOutside)
-        nextButton.setBackgroundImage(    UIImage(named: "next"),     forState: UIControlState.allZeros)
-        playButton.setBackgroundImage(    UIImage(named: "play"),     forState: UIControlState.allZeros)
-        previousButton.setBackgroundImage(UIImage(named: "previous"), forState: UIControlState.allZeros)
+        nextButton.setImage(    UIImage(named: "next"),     forState: UIControlState.allZeros)
+        playButton.setImage(    UIImage(named: "play"),     forState: UIControlState.allZeros)
+        previousButton.setImage(UIImage(named: "previous"), forState: UIControlState.allZeros)
         nextButton.addTarget(    self, action: "next",         forControlEvents: UIControlEvents.TouchUpInside)
         playButton.addTarget(    self, action: "toggle",       forControlEvents: UIControlEvents.TouchUpInside)
         previousButton.addTarget(self, action: "previous",     forControlEvents: UIControlEvents.TouchUpInside)
@@ -236,9 +236,9 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         if let state = player?.currentState {
             switch (state) {
             case .Play:
-                playButton.setBackgroundImage(UIImage(named: "pause"), forState: UIControlState.allZeros)
+                playButton.setImage(UIImage(named: "pause"), forState: UIControlState.allZeros)
             case .Pause:
-                playButton.setBackgroundImage(UIImage(named: "play"), forState: UIControlState.allZeros)
+                playButton.setImage(UIImage(named: "play"), forState: UIControlState.allZeros)
             }
         }
         if let track = currentTrack {
