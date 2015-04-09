@@ -81,10 +81,14 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         currentLabel           = UILabel()
         totalLabel             = UILabel()
         slider                 = UISlider()
-        nextButton             = UIButton()
-        playButton             = UIButton()
-        previousButton         = UIButton()
+        nextButton             = UIButton.buttonWithType(UIButtonType.System) as UIButton
+        playButton             = UIButton.buttonWithType(UIButtonType.System) as UIButton
+        previousButton         = UIButton.buttonWithType(UIButtonType.System) as UIButton
         playerView             = PlayerView()
+
+        nextButton.tintColor     = UIColor.whiteColor()
+        playButton.tintColor     = UIColor.whiteColor()
+        previousButton.tintColor = UIColor.whiteColor()
 
         playerView.imageView?.contentMode = UIViewContentMode.ScaleAspectFit
         playerView.setImage(UIImage(named: "default_thumb"), forState: UIControlState.allZeros)
@@ -100,7 +104,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         playerView.addTarget(    self, action: "toggleScreen", forControlEvents: UIControlEvents.TouchUpInside)
         view.addSubview(playerView)
         view.addSubview(controlPanel)
-        controlPanel.backgroundColor = UIColor.themeLight
+        controlPanel.backgroundColor = UIColor.darkGrayColor()
         controlPanel.clipsToBounds = true
         controlPanel.addSubview(currentLabel)
         controlPanel.addSubview(totalLabel)
