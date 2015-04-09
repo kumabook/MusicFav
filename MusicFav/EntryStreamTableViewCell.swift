@@ -14,11 +14,22 @@ class EntryStreamTableViewCell: MCSwipeTableViewCell {
     let padding:       CGFloat   = 5.0
     let labelFontSize: CGFloat   = 20.0
     var swipeCellBackgroundColor = UIColor(red: 227/255, green: 227/255, blue: 227/255, alpha: 1.0)
+
+    @IBOutlet weak var thumbImgView:     UIImageView!
+    @IBOutlet weak var titleLabel:       UILabel!
+    @IBOutlet weak var originTitleLabel: UILabel!
+    @IBOutlet weak var dateLabel:        UILabel!
+
+    var rawImageView: UIImageView = UIImageView()
+
     var markAsSavedColor: UIColor {
         get { return UIColor.green }
     }
     var markAsReadColor: UIColor {
         get { return UIColor.red }
+    }
+    override func awakeFromNib() {
+        super.awakeFromNib()
     }
 /*
     var markAsSavedImageView: UIView {
@@ -70,16 +81,6 @@ class EntryStreamTableViewCell: MCSwipeTableViewCell {
             return view
         }
     }
-
-    @IBOutlet weak var thumbImgView: UIImageView!
-    @IBOutlet weak var titleLabel: UILabel!
-    @IBOutlet weak var trackNumLabel: UILabel!
-    var rawImageView: UIImageView = UIImageView()
-
-    override func awakeFromNib() {
-        super.awakeFromNib()
-    }
-
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }

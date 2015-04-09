@@ -14,7 +14,7 @@ import FeedlyKit
 
 class EntryStreamViewController: UITableViewController {
     let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-    let cellHeight: CGFloat = 100
+    let cellHeight: CGFloat = 120
     let entryStreamTableCellReuseIdentifier = "EntryStreamTableViewCell"
 
     let streamLoader: StreamLoader!
@@ -174,15 +174,15 @@ class EntryStreamViewController: UITableViewController {
                 return
         })
         cell.titleLabel?.text = entry.title
+        if let originTitle = entry.origin?.title {
+            cell.originTitleLabel?.text  = originTitle
+        }
+        cell.dateLabel?.text  = entry.passedTime
+
         if let visual = entry.visual {
             cell.thumbImgView.sd_setImageWithURL(NSURL(string:visual.url), placeholderImage: UIImage(named: "default_thumb"))
         } else {
             cell.thumbImgView.image = UIImage(named: "default_thumb")
-        }
-        if let playlist = streamLoader.playlistsOfEntry[entry] {
-            cell.trackNumLabel.text = "\(playlist.tracks.count) tracks"
-        } else {
-            cell.trackNumLabel.text = "? tracks"
         }
 
         return cell
