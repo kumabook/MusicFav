@@ -14,7 +14,7 @@ import FeedlyKit
 
 class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableViewCellDelegate {
     let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-    let cellHeight: CGFloat = 100
+    let cellHeight: CGFloat = 120
     let playlistStreamTableCellReuseIdentifier = "PlaylistStreamTableViewCell"
 
     var indicator:    UIActivityIndicatorView!
