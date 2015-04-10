@@ -9,18 +9,32 @@
 import UIKit
 import WebKit
 import SwiftyJSON
+import FeedlyKit
+import MBProgressHUD
 
 class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler {
     var playlistButton:       UIBarButtonItem?
     var favEntryButton:       UIBarButtonItem?
     var historyForwardButton: UIBarButtonItem?
     var historyBackButton:    UIBarButtonItem?
+    var HUD:                  MBProgressHUD!
 
     var currentURL: NSURL?
     var webView:    WKWebView?
+    var entry:      Entry
     var url:        NSURL = NSURL()
     var playlist:   Playlist?
-    
+
+    init(entry: Entry, playlist: Playlist?) {
+        self.entry    = entry
+        self.playlist = playlist
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.webView = createWebView()
@@ -66,9 +80,11 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
                                                    favEntryButton!,
                                                    historyForwardButton!,
                                                    historyBackButton!]
+        HUD = MBProgressHUD.createCompletedHUD(self.view)
+        navigationController?.view.addSubview(HUD)
 
-        if let url = currentURL {
-            self.loadURL(currentURL!)
+        if let url = entry.url {
+            self.loadURL(url)
         }
         updateViews()
     }
@@ -139,7 +155,26 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
     }
     
     func favEntry() {
-        //TODO
+        let feedlyClient = FeedlyAPIClient.sharedInstance
+        if feedlyClient.isLoggedIn {
+            MBProgressHUD.showHUDAddedTo(view, animated: true)
+            feedlyClient.client.markEntriesAsSaved([entry.id], completionHandler: { (req, res, error) -> Void in
+                MBProgressHUD.hideHUDForView(self.view, animated:false)
+                if let e = error {
+                    let ac = FeedlyAPIClient.alertController(error: e, handler: { (action) in })
+                    self.presentViewController(ac, animated: true, completion: nil)
+                } else {
+                    self.HUD.show(true , duration: 1.0, after: { () -> Void in
+                        self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
+                        return
+                    })
+                }
+            })
+        } else {
+            let title   = "Notice".localize()
+            let message = "You can mark article as saved after login. Please login from left top setting menu.".localize()
+            UIAlertController.show(self, title: title, message: message, handler: { (action) in })
+        }
     }
     
     // MARK: - WKNavigationDelegate

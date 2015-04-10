@@ -27,6 +27,7 @@
 "Mark as Save" = "保存";
 "New Category" = "新しいカテゴリ";
 "subscribers"  = "人が購読";
+"Notice"      = "お知らせ";
 
 "Network error"                     = "通信エラー";
 "Import Feed"                       = "フィードをインポート";
@@ -36,3 +37,6 @@
 "New playlist"                      = "プレイリストを新規作成";
 "Are you sure you want to log out?" = "ログアウトしてよろしいですか？";
 "Sorry, network error occured."     = "通信状況が良くありません。";
+
+
+"You can mark article as saved after login. Please login from left top setting menu." = "ログインすると、記事の保存ができます。右上のメニューからログインしてください。";
