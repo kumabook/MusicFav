@@ -89,6 +89,15 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         previousButton         = UIButton.buttonWithType(UIButtonType.System) as UIButton
         playerView             = PlayerView()
 
+        titleLabel.textColor     = UIColor.whiteColor()
+        titleLabel.font          = UIFont.boldSystemFontOfSize(16)
+        titleLabel.textColor     = UIColor.whiteColor()
+        titleLabel.textAlignment = NSTextAlignment.Center
+        currentLabel.textColor   = UIColor.whiteColor()
+        currentLabel.font        = UIFont.boldSystemFontOfSize(15)
+        totalLabel.textColor     = UIColor.whiteColor()
+        totalLabel.font          = UIFont.boldSystemFontOfSize(15)
+
         nextButton.tintColor     = UIColor.whiteColor()
         playButton.tintColor     = UIColor.whiteColor()
         previousButton.tintColor = UIColor.whiteColor()
