@@ -13,7 +13,6 @@ extension Entry {
     var url: NSURL? {
         if let alternate = self.alternate {
             if alternate.count > 0 {
-                let vc = EntryWebViewController()
                 return NSURL(string: alternate[0].href)!
             }
         }
