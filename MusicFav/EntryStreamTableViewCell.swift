@@ -9,6 +9,7 @@
 import UIKit
 import MCSwipeTableViewCell
 import Snap
+import FeedlyKit
 
 class EntryStreamTableViewCell: MCSwipeTableViewCell {
     let padding:       CGFloat   = 5.0
@@ -22,98 +23,99 @@ class EntryStreamTableViewCell: MCSwipeTableViewCell {
 
     var rawImageView: UIImageView = UIImageView()
 
-    var markAsSavedColor: UIColor {
-        get { return UIColor.green }
-    }
     var markAsReadColor: UIColor {
         get { return UIColor.red }
+    }
+    var markAsUnreadColor: UIColor {
+        get { return UIColor.green }
+    }
+    var markAsUnsavedColor: UIColor {
+        get { return UIColor.blue }
     }
     override func awakeFromNib() {
         super.awakeFromNib()
     }
-/*
-    var markAsSavedImageView: UIView {
-        get {
-            let view              = UIView()
-            let label             = UILabel()
-            let imageView         = UIImageView(image: UIImage(named: "pin"))
-            label.text            = "Mark as Save".localize()
-            label.textColor       = UIColor.whiteColor()
-            label.font            = UIFont.boldSystemFontOfSize(self.labelFontSize)
-            imageView.contentMode = UIViewContentMode.Center
-            
-            view.addSubview(label)
-            view.addSubview(imageView)
-            
-            label.snp_makeConstraints { make in
-                make.right.equalTo(imageView.snp_left).with.offset(-self.padding)
-                make.centerY.equalTo(view.snp_centerY)
-            }
-            imageView.snp_makeConstraints { make in
-                make.centerX.equalTo(view.snp_centerX)
-                make.centerY.equalTo(view.snp_centerY)
-            }
-            return view
+
+    func imageView(#markAs: StreamLoader.RemoveMark) -> UIView {
+        let view              = UIView()
+        let label             = UILabel()
+        let imageView         = UIImageView(image: UIImage(named: "checkmark"))
+        label.text            = cellText(markAs)
+        label.textColor       = UIColor.whiteColor()
+        label.font            = UIFont.boldSystemFontOfSize(self.labelFontSize)
+        imageView.contentMode = UIViewContentMode.Center
+
+        view.addSubview(label)
+        view.addSubview(imageView)
+
+        label.snp_makeConstraints { make in
+            make.right.equalTo(imageView.snp_left).with.offset(-self.padding)
+            make.centerY.equalTo(view.snp_centerY)
+        }
+        imageView.snp_makeConstraints { make in
+            make.centerX.equalTo(view.snp_centerX)
+            make.centerY.equalTo(view.snp_centerY)
+        }
+        return view
+    }
+
+    func cellText(markAs: StreamLoader.RemoveMark) -> String {
+        switch markAs {
+        case .Read:   return "Mark as Read".localize()
+        case .Unread: return "Mark as Unread".localize()
+        case .Unsave: return "Mark as Unsaved".localize()
         }
     }
-*/
-    var markAsReadImageView: UIView {
-        get {
-            let view              = UIView()
-            let label             = UILabel()
-            let imageView         = UIImageView(image: UIImage(named: "checkmark"))
-            label.text            = "Mark as Read".localize()
-            label.textColor       = UIColor.whiteColor()
-            label.font            = UIFont.boldSystemFontOfSize(self.labelFontSize)
-            imageView.contentMode = UIViewContentMode.Center
 
-            view.addSubview(label)
-            view.addSubview(imageView)
+    var markAsReadImageView:    UIView { return imageView(markAs: .Read) }
+    var markAsUnreadImageView:  UIView { return imageView(markAs: .Unread) }
+    var markAsUnsavedImageView: UIView { return imageView(markAs: .Unsave) }
 
-            label.snp_makeConstraints { make in
-                make.right.equalTo(imageView.snp_left).with.offset(-self.padding)
-                make.centerY.equalTo(view.snp_centerY)
-            }
-            imageView.snp_makeConstraints { make in
-                make.centerX.equalTo(view.snp_centerX)
-                make.centerY.equalTo(view.snp_centerY)
-            }
-            return view
-        }
-    }
     override func setSelected(selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
 
-    func prepareSwipeViews(#onMarkAsSaved: (MCSwipeTableViewCell) -> Void, onMarkAsRead: (MCSwipeTableViewCell) -> Void) {
+    func prepareSwipeViews(markAs: StreamLoader.RemoveMark, onSwipe: (MCSwipeTableViewCell) -> Void) {
         if respondsToSelector("setSeparatorInset:") {
             separatorInset = UIEdgeInsetsZero
         }
         contentView.backgroundColor = UIColor.whiteColor()
         selectionStyle = .Gray
         defaultColor   = swipeCellBackgroundColor
-/*
-        setSwipeGestureWithView(markAsSavedImageView,
-            color: markAsSavedColor,
-            mode: .Switch,
-            state: .State1) { (cell, state, mode) in }
-
-        setSwipeGestureWithView(markAsSavedImageView,
-            color: markAsSavedColor,
-            mode: MCSwipeTableViewCellMode.Exit,
-            state: MCSwipeTableViewCellState.State2) { (cell, state, mode) in
-                onMarkAsSaved(cell)
-        }
-*/
-        setSwipeGestureWithView(markAsReadImageView,
-            color: markAsReadColor,
-             mode: .Switch,
-            state: .State1) { (cell, state, mode) in }
-        setSwipeGestureWithView(markAsReadImageView,
-            color: markAsReadColor,
-             mode: MCSwipeTableViewCellMode.Exit,
-            state: MCSwipeTableViewCellState.State2) { (cell, state, mode) in
-                onMarkAsRead(cell)
+        switch markAs {
+        case .Read:
+            setSwipeGestureWithView(markAsReadImageView,
+                color: markAsReadColor,
+                mode: .Switch,
+                state: .State1) { (cell, state, mode) in }
+            setSwipeGestureWithView(markAsReadImageView,
+                color: markAsReadColor,
+                mode: MCSwipeTableViewCellMode.Exit,
+                state: MCSwipeTableViewCellState.State2) { (cell, state, mode) in
+                    onSwipe(cell)
+            }
+        case .Unread:
+            setSwipeGestureWithView(markAsUnreadImageView,
+                color: markAsUnreadColor,
+                mode: .Switch,
+                state: .State1) { (cell, state, mode) in }
+            setSwipeGestureWithView(markAsUnreadImageView,
+                color: markAsUnreadColor,
+                mode: MCSwipeTableViewCellMode.Exit,
+                state: MCSwipeTableViewCellState.State2) { (cell, state, mode) in
+                    onSwipe(cell)
+            }
+        case .Unsave:
+            setSwipeGestureWithView(markAsUnsavedImageView,
+                color: markAsUnsavedColor,
+                mode: .Switch,
+                state: .State1) { (cell, state, mode) in }
+            setSwipeGestureWithView(markAsUnsavedImageView,
+                color: markAsUnsavedColor,
+                mode: MCSwipeTableViewCellMode.Exit,
+                state: MCSwipeTableViewCellState.State2) { (cell, state, mode) in
+                    onSwipe(cell)
+            }
         }
     }
 }

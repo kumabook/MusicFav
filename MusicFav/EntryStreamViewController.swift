@@ -141,8 +141,12 @@ class EntryStreamViewController: UITableViewController {
         streamLoader.markAsRead(indexPath.item)
     }
 
-    func markAsSaved(indexPath: NSIndexPath) {
-        streamLoader.markAsSaved(indexPath.item)
+    func markAsUnread(indexPath: NSIndexPath) {
+        streamLoader.markAsUnread(indexPath.item)
+    }
+
+    func markAsUnsaved(indexPath: NSIndexPath) {
+        streamLoader.markAsUnsaved(indexPath.item)
     }
 
     override func didReceiveMemoryWarning() {
@@ -169,13 +173,16 @@ class EntryStreamViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let entry = streamLoader.entries[indexPath.row]
         let cell = tableView.dequeueReusableCellWithIdentifier(entryStreamTableCellReuseIdentifier, forIndexPath:indexPath) as EntryStreamTableViewCell
-        cell.prepareSwipeViews(
-            onMarkAsSaved: { (cell) -> Void in
-                self.markAsSaved(self.tableView.indexPathForCell(cell)!)
-                return
-            }, onMarkAsRead: { (cell) -> Void in
+        let markAs = streamLoader.removeMark
+        cell.prepareSwipeViews(markAs, onSwipe: { (cell) -> Void in
+            switch markAs {
+            case .Read:
                 self.markAsRead(self.tableView.indexPathForCell(cell)!)
-                return
+            case .Unread:
+                self.markAsUnread(self.tableView.indexPathForCell(cell)!)
+            case .Unsave:
+                self.markAsUnsaved(self.tableView.indexPathForCell(cell)!)
+            }
         })
         cell.titleLabel?.text = entry.title
         if let originTitle = entry.origin?.title {

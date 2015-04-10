@@ -12,13 +12,12 @@ import FeedlyKit
 
 class StreamPageMenuController: UIViewController {
     var pageMenu:     CAPSPageMenu!
-    var stream:       Stream!
-    var streamLoader: StreamLoader!
-    var unreadOnly:   Bool = true
+    let stream:       Stream!
+    let streamLoader: StreamLoader!
 
     init(stream: Stream) {
         self.stream       = stream
-        self.streamLoader = StreamLoader(stream: stream, unreadOnly: unreadOnly)
+        self.streamLoader = StreamLoader(stream: stream)
         super.init(nibName: nil, bundle: nil)
     }
     

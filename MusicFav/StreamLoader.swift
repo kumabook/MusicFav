@@ -39,6 +39,13 @@ class StreamLoader {
             return SampleFeed.Spincoaster()
         }
     }
+
+    enum RemoveMark {
+        case Read
+        case Unread
+        case Unsave
+    }
+
     enum State {
         case Normal
         case Fetching
@@ -56,7 +63,6 @@ class StreamLoader {
         case RemoveAt(Int)
     }
 
-    let unreadOnly: Bool
     let feedlyClient     = FeedlyAPIClient.sharedInstance
     let musicfavClient   = MusicFavAPIClient.sharedInstance
 
@@ -70,9 +76,8 @@ class StreamLoader {
     var hotSignal:          HotSignal<Event>
     var sink:               SinkOf<Event>
 
-    init(stream: Stream, unreadOnly: Bool) {
+    init(stream: Stream) {
         self.stream      = stream
-        self.unreadOnly  = unreadOnly
         state            = .Normal
         lastUpdated      = 0
         entries          = []
@@ -208,6 +213,22 @@ class StreamLoader {
         }
     }
 
+    var unreadOnly: Bool {
+        if let userId = FeedlyAPIClient.sharedInstance.profile?.id {
+            if stream == Tag.Saved(userId) { return false }
+            if stream == Tag.Read(userId) {  return false }
+        }
+        return true
+    }
+
+    var removeMark: RemoveMark {
+        if let userId = FeedlyAPIClient.sharedInstance.profile?.id {
+            if stream == Tag.Saved(userId) { return .Unsave }
+            if stream == Tag.Read(userId)  { return .Unread }
+        }
+        return .Read
+    }
+
     func markAsRead(index: Int) {
         let entry = entries[index]
         if feedlyClient.isLoggedIn {
@@ -220,12 +241,24 @@ class StreamLoader {
         sink.put(.RemoveAt(index))
     }
 
-    func markAsSaved(index: Int) {
+    func markAsUnread(index: Int) {
         let entry = entries[index]
         if feedlyClient.isLoggedIn {
-            feedlyClient.client.markEntriesAsSaved([entry.id], completionHandler: { (req, res, error) -> Void in
-                if let e = error { println("Failed to mark as saved") }
-                else             { println("Succeeded in marking as saved") }
+            feedlyClient.client.keepEntriesAsUnread([entry.id], completionHandler: { (req, res, error) -> Void in
+                if let e = error { println("Failed to mark as unread") }
+                else             { println("Succeeded in marking as unread") }
+            })
+        }
+        entries.removeAtIndex(index)
+        sink.put(.RemoveAt(index))
+    }
+
+    func markAsUnsaved(index: Int) {
+        let entry = entries[index]
+        if feedlyClient.isLoggedIn {
+            feedlyClient.client.markEntriesAsUnsaved([entry.id], completionHandler: { (req, res, error) -> Void in
+                if let e = error { println("Failed to mark as unsaved") }
+                else             { println("Succeeded in marking as unsaved") }
             })
             feedlyClient.client.markEntriesAsRead([entry.id], completionHandler: { (req, res, error) -> Void in
                 if let e = error { println("Failed to mark as read") }
