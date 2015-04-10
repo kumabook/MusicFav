@@ -32,8 +32,10 @@ struct FeedlyAPIClientConfig {
 
 class FeedlyAPIClient {
     class func alertController(#error:NSError, handler: (UIAlertAction!) -> Void) -> UIAlertController {
-        let ac = UIAlertController(title: "Network error", message: "Network error occured", preferredStyle: UIAlertControllerStyle.Alert)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: handler)
+        let ac = UIAlertController(title: "Network error".localize(),
+                                 message: "Sorry, network error occured.".localize(),
+                          preferredStyle: UIAlertControllerStyle.Alert)
+        let okAction = UIAlertAction(title: "OK".localize(), style: UIAlertActionStyle.Default, handler: handler)
         ac.addAction(okAction)
         return ac
     }

@@ -28,9 +28,11 @@
 "New Category" = "新しいカテゴリ";
 "subscribers"  = "人が購読";
 
+"Network error"                     = "通信エラー";
 "Import Feed"                       = "フィードをインポート";
 "Select Category"                   = "カテゴリを選択";
 "URL or Keyword"                    = "URL または キーワード";
 "Edit playlist title"               = "プレイリストを編集";
 "New playlist"                      = "プレイリストを新規作成";
 "Are you sure you want to log out?" = "ログアウトしてよろしいですか？";
+"Sorry, network error occured."     = "通信状況が良くありません。";

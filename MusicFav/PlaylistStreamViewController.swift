@@ -56,7 +56,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
         reloadButton.setImage(UIImage(named: "network_error"), forState: UIControlState.Normal)
         reloadButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
         reloadButton.addTarget(self, action:"fetchEntries", forControlEvents:UIControlEvents.TouchUpInside)
-        reloadButton.setTitle("Sorry, network error occured.", forState:UIControlState.Normal)
+        reloadButton.setTitle("Sorry, network error occured.".localize(), forState:UIControlState.Normal)
         reloadButton.frame = CGRectMake(0, 0, tableView.frame.size.width, 44);
 
         refreshControl = UIRefreshControl()
