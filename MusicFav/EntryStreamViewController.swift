@@ -111,6 +111,10 @@ class EntryStreamViewController: UITableViewController {
         appDelegate.miniPlayerViewController?.mainViewController.showRightPanelAnimated(true)
     }
 
+    func fetchEntries() {
+        streamLoader.fetchEntries()
+    }
+
     func fetchLatestEntries() {
         streamLoader.fetchLatestEntries()
     }
