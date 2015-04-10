@@ -69,7 +69,7 @@ class PreferenceViewController: UITableViewController {
     
     func showLogoutDialog() {
         let ac = UIAlertController(title: "Logout".localize(),
-                                 message: "Are you sure you want to log out?".localize(),
+                                 message: "Are you sure you want to logout?".localize(),
                           preferredStyle: UIAlertControllerStyle.Alert)
         let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) in
             self.logout()

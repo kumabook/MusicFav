@@ -35,7 +35,7 @@
 "URL or Keyword"                    = "URL または キーワード";
 "Edit playlist title"               = "プレイリストを編集";
 "New playlist"                      = "プレイリストを新規作成";
-"Are you sure you want to log out?" = "ログアウトしてよろしいですか？";
+"Are you sure you want to logout?" = "ログアウトしてよろしいですか？";
 "Sorry, network error occured."     = "通信状況が良くありません。";
 
 
