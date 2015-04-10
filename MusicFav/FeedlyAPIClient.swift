@@ -102,7 +102,7 @@ class FeedlyAPIClient {
             return nil
         }
     }
-    var _profile: Profile?
+    private var _profile: Profile?
     var profile: Profile? {
         get {
             if let p = _profile {

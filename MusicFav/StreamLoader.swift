@@ -33,7 +33,7 @@ class SampleFeed: Stream {
 
 class StreamLoader {
     class func defaultStream() -> Stream {
-        if let profile = FeedlyAPIClient.sharedInstance._profile {
+        if let profile = FeedlyAPIClient.sharedInstance.profile {
             return FeedlyKit.Category.All(profile.id)
         } else {
             return SampleFeed.Spincoaster()
