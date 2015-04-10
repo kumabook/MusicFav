@@ -11,6 +11,7 @@ import iAd
 import AVFoundation
 import Snap
 import SDWebImage
+import MarqueeLabel
 
 class PlayerViewController: UIViewController, DraggableCoverViewControllerDelegate, ADBannerViewDelegate {
     let minThumbnailWidth:  CGFloat = 75.0
@@ -30,7 +31,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         override func ended()            { vc.updateViews() }
     }
 
-    let paddingSide:        CGFloat = 15.0
+    let paddingSide:        CGFloat = 10.0
     let paddingBottom:      CGFloat = 15.0
     let paddingBottomTime:  CGFloat = 5.0
     let controlPanelHeight: CGFloat = 130.0
@@ -42,6 +43,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
     var previousButton:      UIButton!
     var playButton:          UIButton!
     var nextButton:          UIButton!
+    var titleLabel:          MarqueeLabel!
     var currentLabel:        UILabel!
     var totalLabel:          UILabel!
     var playerView:          PlayerView!
@@ -78,6 +80,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
                                                           action: "close")
         view.backgroundColor   = UIColor.blackColor()
         controlPanel           = UIView()
+        titleLabel             = MarqueeLabel(frame: CGRect(), duration: 8.0, andFadeLength: 10.0)
         currentLabel           = UILabel()
         totalLabel             = UILabel()
         slider                 = UISlider()
@@ -106,6 +109,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         view.addSubview(controlPanel)
         controlPanel.backgroundColor = UIColor.darkGrayColor()
         controlPanel.clipsToBounds = true
+        controlPanel.addSubview(titleLabel)
         controlPanel.addSubview(currentLabel)
         controlPanel.addSubview(totalLabel)
         controlPanel.addSubview(slider)
@@ -115,11 +119,11 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         resizeViews(0.0)
 
         currentLabel.snp_makeConstraints { make in
-            make.left.equalTo(self.controlPanel.snp_left).with.offset(self.paddingSide)
+            make.left.equalTo(self.controlPanel.snp_left).with.offset(self.paddingSide).priorityHigh()
             make.top.equalTo(self.controlPanel.snp_top).with.offset(self.paddingBottomTime)
         }
         totalLabel.snp_makeConstraints { make in
-            make.right.equalTo(self.controlPanel.snp_right).with.offset(-self.paddingSide)
+            make.right.equalTo(self.controlPanel.snp_right).with.offset(-self.paddingSide).priorityHigh()
             make.top.equalTo(self.controlPanel.snp_top).with.offset(self.paddingBottomTime)
         }
         slider.snp_makeConstraints { make in
@@ -144,6 +148,13 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
             make.centerY.equalTo(self.playButton.snp_centerY)
             make.width.equalTo(self.buttonSize)
             make.height.equalTo(self.buttonSize)
+        }
+        titleLabel.snp_makeConstraints { make in
+            make.left.greaterThanOrEqualTo(self.controlPanel.snp_left).offset(self.paddingSide*6)
+            make.right.greaterThanOrEqualTo(self.controlPanel.snp_right).offset(-self.paddingSide*6)
+            make.centerX.equalTo(self.controlPanel.snp_centerX)
+            make.top.equalTo(self.controlPanel.snp_top).with.offset(self.paddingBottomTime)
+            make.bottom.equalTo(self.slider.snp_top).with.offset(self.paddingBottomTime)
         }
         updateViews()
         player?.addObserver(modalPlayerObserver)
@@ -242,7 +253,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
             }
         }
         if let track = currentTrack {
-            navigationItem.title = track.title
+            titleLabel.text = track.title
             playerView.sd_setImageWithURL(track.thumbnailUrl, forState: UIControlState.allZeros)
         } else {
             totalLabel.text   = "00:00"
