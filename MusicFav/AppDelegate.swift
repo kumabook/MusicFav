@@ -88,5 +88,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
         }
     }
+
+    func didLogin()  { reload() }
+    func didLogout() { reload() }
+
+    func reload() {
+        let vc = miniPlayerViewController?.menuViewController
+        vc?.showStream(stream: StreamLoader.defaultStream())
+        vc?.refresh()
+    }
 }
 

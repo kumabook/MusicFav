@@ -12,6 +12,8 @@ import LlamaKit
 import NXOAuth2Client
 
 class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
+    var appDelegate:  AppDelegate     { get { return UIApplication.sharedApplication().delegate as AppDelegate } }
+    var feedlyClient: FeedlyAPIClient { get { return FeedlyAPIClient.sharedInstance } }
 
     @IBOutlet weak var loginWebView: UIWebView!
     override func viewDidLoad() {
@@ -48,53 +50,43 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
             object: NXOAuth2AccountStore.sharedStore(),
             queue: nil) { (notification) -> Void in
                 if notification.userInfo != nil {
-                    println("hasLoggined")
                     let account = notification.userInfo![NXOAuth2AccountStoreNewAccountUserInfoKey] as NXOAuth2Account
                     self.onLoggedIn(account)
                 } else {
-                    print("not")
+                    self.showAlert()
                 }
         }
         dc.addObserverForName(NXOAuth2AccountStoreDidFailToRequestAccessNotification,
             object: NXOAuth2AccountStore.sharedStore(),
             queue: nil) { (notification) -> Void in
-                println("Fail")
+                self.showAlert()
         }
+    }
+
+    func showAlert() {
+        UIAlertController.show(self, title: "Notice".localize(), message: "Login failed.", handler: { (action) -> Void in
+            self.feedlyClient.clearAllAccount()
+        })
     }
     
     func onLoggedIn(account: NXOAuth2Account) {
-        let client = FeedlyAPIClient.sharedInstance
-        client.fetchProfile()
+        feedlyClient.fetchProfile()
             .deliverOn(MainScheduler())
             .start(
                 next: {profile in
-                    println(profile.id)
-                    client.profile = profile
+                    self.feedlyClient.profile = profile
                 },
                 error: {error in
                     self.dismissViewControllerAnimated(true, completion: nil)
                 },
                 completed: {
                     self.dismissViewControllerAnimated(true, completion: nil)
+                    self.appDelegate.didLogin()
             })
-    }
-    
-    func getFeedlyAccount() -> NXOAuth2Account? {
-        let store = NXOAuth2AccountStore.sharedStore() as NXOAuth2AccountStore
-        for account in store.accounts as [NXOAuth2Account] {
-            println("account \(account)")
-            println("account \(account.identifier)")
-            if account.accountType == "Feedly" {
-                //                return account
-            }
-            store.removeAccount(account)
-        }
-        return nil
     }
     
     func requestOAuth2Access() {
         NXOAuth2AccountStore.sharedStore().requestAccessToAccountWithType(FeedlyAPIClientConfig.accountType, withPreparedAuthorizationURLHandler: { (preparedURL) -> Void in
-            println(preparedURL)
             self.loginWebView.loadRequest(NSURLRequest(URL: preparedURL))
         })
     }

@@ -9,7 +9,7 @@
 import UIKit
 
 class PreferenceViewController: UITableViewController {
-    
+    var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as AppDelegate } }
     enum Section: Int {
         case Genenral = 0
         static let count = 1
@@ -57,8 +57,9 @@ class PreferenceViewController: UITableViewController {
         let client = FeedlyAPIClient.sharedInstance
         client.clearAllAccount()
         client.profile = nil
-        let notification = NSNotification(name: "loggedOut", object: nil)
-        NSNotificationCenter.defaultCenter().postNotification(notification)
+        self.dismissViewControllerAnimated(true) {
+            self.appDelegate.didLogout()
+        }
     }
     
     func showLoginViewController() {
