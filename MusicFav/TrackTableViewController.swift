@@ -22,18 +22,18 @@ class TrackTableViewController: UITableViewController {
     var playlist: Playlist! = nil
     var playlistLoader: PlaylistLoader!
     var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as AppDelegate }}
-    var isReadingPlaylist: Bool {
+    var isSelectedPlaylist: Bool {
         get {
-            if playlist != nil && appDelegate.readingPlaylist != nil {
-                return playlist!.id == appDelegate.readingPlaylist!.id
+            if playlist != nil && appDelegate.selectedPlaylist != nil {
+                return playlist!.id == appDelegate.selectedPlaylist!.id
             }
             return false
         }
     }
     var isPlayingPlaying: Bool {
         get {
-            if playlist != nil && appDelegate.readingPlaylist != nil {
-                return playlist!.id == appDelegate.readingPlaylist!.id
+            if playlist != nil && appDelegate.selectedPlaylist != nil {
+                return playlist!.id == appDelegate.selectedPlaylist!.id
             }
             return false
         }
@@ -73,7 +73,7 @@ class TrackTableViewController: UITableViewController {
                                                        action: "favPlaylist")
 
         navigationItem.rightBarButtonItems  = [showFavListButton]
-        if isReadingPlaylist {
+        if isSelectedPlaylist {
             navigationItem.rightBarButtonItems?.append(favPlaylistButton)
         }
     }
@@ -90,8 +90,8 @@ class TrackTableViewController: UITableViewController {
         appDelegate.miniPlayerViewController?.playlistTableViewController.showPlayingPlaylist()
     }
 
-    func showReadingPlaylist() {
-        appDelegate.miniPlayerViewController?.playlistTableViewController.showReadingPlaylist()
+    func showSelectedPlaylist() {
+        appDelegate.miniPlayerViewController?.playlistTableViewController.showSelectedPlaylist()
     }
     
     func favPlaylist() {
@@ -185,7 +185,7 @@ class TrackTableViewController: UITableViewController {
             self.showSelectPlaylistViewController([track])
         }
         copy.backgroundColor = UIColor.green
-        if isReadingPlaylist {
+        if isSelectedPlaylist {
             return [copy]
         } else {
             return [copy, remove]

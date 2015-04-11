@@ -106,7 +106,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
     func showPlaylist(playlist: Playlist?) {
         let vc    = appDelegate.miniPlayerViewController?
         if let _playlist = playlist {
-            appDelegate.readingPlaylist = _playlist
+            appDelegate.selectedPlaylist = _playlist
             appDelegate.miniPlayerViewController?.playlistTableViewController.updateNavbar()
             appDelegate.miniPlayerViewController?.playlistTableViewController.tableView.reloadData()
             vc?.mainViewController.showRightPanelAnimated(true, completion: {

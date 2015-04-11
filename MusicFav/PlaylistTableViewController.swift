@@ -12,7 +12,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     let NEW_PLAYLIST_INDEX = -1
     enum Section: Int {
         case Playing     = 0
-        case Reading     = 1
+        case Selected    = 1
         case Favorites   = 2
         static let count = 3
         var title: String? {
@@ -87,8 +87,8 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         if let playlist = appDelegate.playingPlaylist { showPlaylist(playlist) }
     }
 
-    func showReadingPlaylist() {
-        if let playlist = appDelegate.readingPlaylist { showPlaylist(playlist) }
+    func showSelectedPlaylist() {
+        if let playlist = appDelegate.selectedPlaylist { showPlaylist(playlist) }
     }
 
     override func didReceiveMemoryWarning() {
@@ -133,8 +133,8 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         if playlist == self.appDelegate.playingPlaylist {
             let indexPath = NSIndexPath(forItem: 0, inSection: Section.Playing.rawValue)
             self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if playlist == self.appDelegate.readingPlaylist {
-            let indexPath = NSIndexPath(forItem: 0, inSection: Section.Reading.rawValue)
+        } else if playlist == self.appDelegate.selectedPlaylist {
+            let indexPath = NSIndexPath(forItem: 0, inSection: Section.Selected.rawValue)
             self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
         if let index = find(self.playlists, playlist) {
@@ -187,7 +187,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch (Section(rawValue: section)!) {
         case .Playing:   return 1
-        case .Reading:   return 1
+        case .Selected:  return 1
         case .Favorites: return playlists.count
         }
     }
@@ -207,12 +207,12 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             } else {
                 cell.titleLabel.text = "Not playing".localize()
             }
-        case .Reading:
-            playlist = appDelegate.readingPlaylist
+        case .Selected:
+            playlist = appDelegate.selectedPlaylist
             if let p = playlist {
-                cell.titleLabel.text = "Now reading".localize() + "(\(p.title))"
+                cell.titleLabel.text = "Selected".localize() + "(\(p.title))"
             } else {
-                cell.titleLabel.text = "Not reading".localize()
+                cell.titleLabel.text = "Not selected".localize()
             }
         case .Favorites:
             playlist = playlists[indexPath.item]
@@ -265,8 +265,8 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         switch (Section(rawValue: indexPath.section)!) {
         case .Playing:
             showPlayingPlaylist()
-        case .Reading:
-            showReadingPlaylist()
+        case .Selected:
+            showSelectedPlaylist()
         case .Favorites:
             showPlaylist(playlists[indexPath.item])
         }

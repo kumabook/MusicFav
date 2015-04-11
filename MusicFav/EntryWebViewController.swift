@@ -111,7 +111,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
                 if playlist.tracks.count > 0 {
                     self.playlist = playlist
                     let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-                    appDelegate.readingPlaylist = self.playlist!
+                    appDelegate.selectedPlaylist = self.playlist!
                     appDelegate.miniPlayerViewController?.playlistTableViewController.updateNavbar()
                     appDelegate.miniPlayerViewController?.playlistTableViewController.tableView.reloadData()
                 }

@@ -207,7 +207,7 @@ class EntryStreamViewController: UITableViewController {
         let entry = streamLoader.entries[indexPath.item]
         if let nav = parentViewController?.parentViewController?.navigationController {
             let vc = EntryWebViewController(entry: entry, playlist: streamLoader.playlistsOfEntry[entry])
-            appDelegate.readingPlaylist = vc.playlist
+            appDelegate.selectedPlaylist = vc.playlist
             appDelegate.miniPlayerViewController?.playlistTableViewController.updateNavbar()
             appDelegate.miniPlayerViewController?.playlistTableViewController.tableView.reloadData()
             nav.pushViewController(vc, animated: true)

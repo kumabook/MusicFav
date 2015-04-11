@@ -18,9 +18,9 @@
 "Completed"    = "完了";
 "Loading..."   = "読み込み中...";
 "Now playing"  = "再生中";
-"Now reading"  = "表示中の記事";
+"Selected"     = "選択中";
 "Not playing"  = "再生中のプレイリスト";
-"Not reading"  = "表示中の記事なし";
+"Not selected" = "選択中のプレイリスト";
 "Edit title"   = "タイトルを編集";
 "Sample Feeds" = "サンプルフィード";
 "Mark as Read" = "あとで読む";

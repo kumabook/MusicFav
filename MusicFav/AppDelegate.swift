@@ -21,7 +21,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var coverViewController:      DraggableCoverViewController?
     var miniPlayerViewController: MiniPlayerViewController?
     var player:                   Player<PlayerObserver>?
-    var readingPlaylist:          Playlist?
+    var selectedPlaylist:         Playlist?
     var playingPlaylist:          Playlist? {
         get {
             return miniPlayerViewController?.currentPlaylist
