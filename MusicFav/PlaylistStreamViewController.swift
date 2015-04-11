@@ -103,9 +103,17 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
         appDelegate.miniPlayerViewController?.mainViewController.showCenterPanelAnimated(true)
     }
 
-    func showPlaylist() {
-        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-        appDelegate.miniPlayerViewController?.mainViewController.showRightPanelAnimated(true)
+    func showPlaylist(playlist: Playlist?) {
+        let vc    = appDelegate.miniPlayerViewController?
+        if let _playlist = playlist {
+            appDelegate.readingPlaylist = _playlist
+            appDelegate.miniPlayerViewController?.playlistTableViewController.updateNavbar()
+            appDelegate.miniPlayerViewController?.playlistTableViewController.tableView.reloadData()
+            vc?.mainViewController.showRightPanelAnimated(true, completion: {
+                vc?.playlistTableViewController.showPlaylist(_playlist)
+                return
+            })
+        }
     }
 
     func fetchLatestEntries() {
@@ -139,6 +147,12 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
 
     func trackSelectedAt(index: Int, track: Track, playlist: Playlist) {
         appDelegate.miniPlayerViewController?.play(index, playlist: playlist)
+    }
+
+    func trackScrollViewMarginTapped(playlist: Playlist?) {
+        if let _playlist = playlist {
+            showPlaylist(playlist)
+        }
     }
 
     // MARK: - Table view data source
@@ -177,6 +191,10 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let entry = streamLoader.entries[indexPath.row]
+        if let playlist = streamLoader.playlistsOfEntry[entry] {
+            showPlaylist(playlist)
+        }
     }
 
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {

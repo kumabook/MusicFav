@@ -14,6 +14,7 @@ import LlamaKit
 
 protocol PlaylistStreamTableViewCellDelegate {
     func trackSelectedAt(index: Int, track: Track, playlist: Playlist)
+    func trackScrollViewMarginTapped(playlist: Playlist?)
 }
 
 class PlaylistStreamTableViewCell: UITableViewCell {
@@ -56,6 +57,7 @@ class PlaylistStreamTableViewCell: UITableViewCell {
     }
 
     func loadThumbnails(playlist: Playlist) {
+        let tw = thumbnailWidth
         for imageView in imageViews {
             imageView.sd_cancelCurrentImageLoad()
             imageView.removeFromSuperview()
@@ -63,10 +65,7 @@ class PlaylistStreamTableViewCell: UITableViewCell {
         self.playlist = playlist
         imageViews = []
         for (i, track) in enumerate(playlist.tracks) {
-            let rect = CGRect(x: thumbnailWidth * CGFloat(i),
-                              y: 0.0,
-                          width: thumbnailWidth,
-                         height: thumbnailWidth)
+            let rect = CGRect(x: tw * CGFloat(i), y: 0.0, width: tw, height: tw)
             let imageView = UIImageView(frame: rect)
             imageView.userInteractionEnabled = true
             imageView.addGestureRecognizer(UITapGestureRecognizer(target:self, action:"thumbImageTapped:"))
@@ -74,10 +73,14 @@ class PlaylistStreamTableViewCell: UITableViewCell {
             trackThumbScrollView.addSubview(imageView)
             loadThumbnail(imageView, track: track)
         }
+        let count        = CGFloat(playlist.tracks.count)
         let widthPerPage = trackThumbScrollView.frame.width
-        let pageNum      = Int(thumbnailWidth * CGFloat(playlist.tracks.count) / widthPerPage) + 1
-        trackThumbScrollView.contentSize = CGSize(width: widthPerPage * CGFloat(pageNum),
-                                                 height: thumbnailWidth)
+        let pageNum      = Int(thumbnailWidth * count / widthPerPage) + 1
+        let contentWidth = widthPerPage * CGFloat(pageNum)
+        let marginView   = UIView(frame: CGRect(x: count * tw, y: 0.0, width: contentWidth - count * tw, height: tw))
+        marginView.addGestureRecognizer(UITapGestureRecognizer(target:self, action:"trackScrollViewMarginTapped:"))
+        trackThumbScrollView.addSubview(marginView)
+        trackThumbScrollView.contentSize = CGSize(width: contentWidth, height: thumbnailWidth)
     }
 
     func thumbImageTapped(sender: UITapGestureRecognizer) {
@@ -90,6 +93,10 @@ class PlaylistStreamTableViewCell: UITableViewCell {
                 }
             }
         }
+    }
+
+    func trackScrollViewMarginTapped(sender: UITapGestureRecognizer) {
+        delegate?.trackScrollViewMarginTapped(self.playlist)
     }
 
     func observePlaylist(playlist: Playlist) {

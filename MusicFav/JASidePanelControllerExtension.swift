@@ -26,4 +26,9 @@ extension JASidePanelController {
             self.rightGapPercentage   = 0.8
         }
     }
+    func showRightPanelAnimated(animated: Bool, completion: () -> Void) {
+        showRightPanelAnimated(true)
+        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.3 * Double(NSEC_PER_SEC)))
+        dispatch_after(delayTime, dispatch_get_main_queue(), completion)
+    }
 }

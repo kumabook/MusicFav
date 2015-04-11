@@ -77,22 +77,18 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         showTitleEditAlertViewAtIndex(NEW_PLAYLIST_INDEX)
     }
 
+    func showPlaylist(playlist: Playlist) {
+        let ttc = TrackTableViewController(playlist: playlist)
+        navigationController?.popToRootViewControllerAnimated(true)
+        navigationController?.pushViewController(ttc, animated: true)
+    }
+
     func showPlayingPlaylist() {
-        if let playlist = appDelegate.playingPlaylist {
-            let ptc = appDelegate.miniPlayerViewController!.playlistTableViewController
-            let ttc = TrackTableViewController(playlist: playlist)
-            ptc.navigationController?.popToRootViewControllerAnimated(true)
-            ptc.navigationController?.pushViewController(ttc, animated: true)
-        }
+        if let playlist = appDelegate.playingPlaylist { showPlaylist(playlist) }
     }
 
     func showReadingPlaylist() {
-        if let playlist = appDelegate.readingPlaylist {
-            let ptc = appDelegate.miniPlayerViewController!.playlistTableViewController
-            let ttc = TrackTableViewController(playlist: playlist)
-            ptc.navigationController?.popToRootViewControllerAnimated(true)
-            ptc.navigationController?.pushViewController(ttc, animated: true)
-        }
+        if let playlist = appDelegate.readingPlaylist { showPlaylist(playlist) }
     }
 
     override func didReceiveMemoryWarning() {
@@ -272,9 +268,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         case .Reading:
             showReadingPlaylist()
         case .Favorites:
-            let ttc = TrackTableViewController(playlist: playlists[indexPath.item])
-            navigationController?.popViewControllerAnimated(true)
-            navigationController?.pushViewController(ttc, animated: true)
+            showPlaylist(playlists[indexPath.item])
         }
     }
 }
