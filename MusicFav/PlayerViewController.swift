@@ -267,7 +267,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         } else {
             totalLabel.text   = "00:00"
             currentLabel.text = "00:00"
-            playerView.sd_setImageWithURL(nil, forState: UIControlState.allZeros)
+            playerView.setImage(UIImage(named: "icon"), forState: UIControlState.allZeros)
         }
         if let (current, total) = player?.secondPair {
             if !slider.tracking { updateViewsOfTime(current: current, total: total) }
