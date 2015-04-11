@@ -58,10 +58,9 @@ class Track {
     }
     
     func updatePropertiesWithYouTubeVideo(video: XCDYouTubeVideo) {
-        let streamURLs = video.streamURLs as [UInt: NSURL]
         title          = video.title
         duration       = video.duration
-        streamUrl      = streamURLs[XCDYouTubeVideoQuality.Medium360.rawValue]
+        streamUrl      = video.streamURLs[XCDYouTubeVideoQuality.Medium360.rawValue] as? NSURL
         thumbnailUrl   = video.mediumThumbnailURL
         TrackStore.save(self)
     }
