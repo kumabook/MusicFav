@@ -18,7 +18,7 @@ protocol PlaylistStreamTableViewCellDelegate {
 }
 
 class PlaylistStreamTableViewCell: UITableViewCell {
-    let thumbnailWidth: CGFloat = 60.0
+    let thumbnailWidth: CGFloat = 54.0
 
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var trackThumbScrollView: UIScrollView!

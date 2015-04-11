@@ -14,32 +14,32 @@
                 <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="N tracks" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wrx-V4-QBe">
-                        <rect key="frame" x="244" y="35" width="65" height="21"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="N tracks" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="wrx-V4-QBe">
+                        <rect key="frame" x="255" y="34" width="54" height="17"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                        <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Playlist name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HO0-0Q-dUx">
-                        <rect key="frame" x="8" y="10" width="259" height="22"/>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Playlist name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="HO0-0Q-dUx">
+                        <rect key="frame" x="8" y="12" width="304" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" pagingEnabled="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Mdg-M9-NaI">
-                        <rect key="frame" x="8" y="60" width="304" height="60"/>
+                        <rect key="frame" x="8" y="57" width="304" height="54"/>
                     </scrollView>
                 </subviews>
                 <constraints>
-                    <constraint firstItem="Mdg-M9-NaI" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="52" id="1Ay-Hf-wf0"/>
-                    <constraint firstAttribute="trailingMargin" secondItem="HO0-0Q-dUx" secondAttribute="trailing" constant="45" id="4MD-ss-pqE"/>
-                    <constraint firstAttribute="bottomMargin" secondItem="Mdg-M9-NaI" secondAttribute="bottom" constant="-9" id="57J-IW-vJc"/>
-                    <constraint firstItem="HO0-0Q-dUx" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="2" id="6DK-Kd-ez4"/>
+                    <constraint firstItem="Mdg-M9-NaI" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="49" id="1Ay-Hf-wf0"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="HO0-0Q-dUx" secondAttribute="trailing" id="4MD-ss-pqE"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="Mdg-M9-NaI" secondAttribute="bottom" id="57J-IW-vJc"/>
+                    <constraint firstItem="HO0-0Q-dUx" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="4" id="6DK-Kd-ez4"/>
                     <constraint firstItem="Mdg-M9-NaI" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="FSn-iz-uhW"/>
                     <constraint firstItem="wrx-V4-QBe" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" constant="-3" id="Jx9-MO-9Ad"/>
                     <constraint firstAttribute="trailingMargin" secondItem="Mdg-M9-NaI" secondAttribute="trailing" id="Lpc-hk-GZY"/>
                     <constraint firstItem="HO0-0Q-dUx" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="Lyp-hn-ISc"/>
-                    <constraint firstItem="wrx-V4-QBe" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="27" id="Ouu-45-4e4"/>
+                    <constraint firstItem="wrx-V4-QBe" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="26" id="Ouu-45-4e4"/>
                     <constraint firstItem="Mdg-M9-NaI" firstAttribute="leading" secondItem="HO0-0Q-dUx" secondAttribute="leading" id="PQs-o1-bGc"/>
                     <constraint firstAttribute="centerX" secondItem="Mdg-M9-NaI" secondAttribute="centerX" id="f1b-ld-gPL"/>
                     <constraint firstAttribute="trailingMargin" secondItem="Mdg-M9-NaI" secondAttribute="trailing" constant="-10" id="frz-0K-Nni"/>
