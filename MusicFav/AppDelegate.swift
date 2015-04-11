@@ -33,8 +33,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var leftVisibleWidth:  CGFloat? { get { return miniPlayerViewController?.mainViewController.leftVisibleWidth } }
     var rightVisibleWidth: CGFloat? { get { return miniPlayerViewController?.mainViewController.rightVisibleWidth } }
 
+    var isFirstLaunch: Bool { return NSUserDefaults.standardUserDefaults().boolForKey("firstLaunch") }
+    func markAsLaunched()   { NSUserDefaults.standardUserDefaults().setBool(false, forKey: "firstLaunch") }
+
+    func registerNSUserDefaults() {
+        let defaults = NSUserDefaults.standardUserDefaults()
+        defaults.registerDefaults(["firstLaunch": true])
+    }
+
+
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         TrackStore.migration()
+        registerNSUserDefaults()
+        if isFirstLaunch {
+            Playlist.createDefaultPlaylist()
+            markAsLaunched()
+        }
         player                      = Player()
         appearanceManager           = AppearanceManager()
         appearanceManager?.apply()

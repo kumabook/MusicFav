@@ -143,6 +143,10 @@ class Playlist: Equatable, Hashable {
     class func removeAll() {
         PlaylistStore.removeAll()
     }
+
+    class func createDefaultPlaylist() {
+        Playlist(title: "Favorite").save()
+    }
 }
 
 func ==(lhs: Playlist, rhs: Playlist) -> Bool {
