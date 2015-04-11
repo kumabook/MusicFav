@@ -147,6 +147,9 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
 
     func trackSelectedAt(index: Int, track: Track, playlist: Playlist) {
         appDelegate.miniPlayerViewController?.play(index, playlist: playlist)
+        if track.streamUrl != nil {
+            appDelegate.miniPlayerViewController?.play(index, playlist: playlist)
+        }
     }
 
     func trackScrollViewMarginTapped(playlist: Playlist?) {
