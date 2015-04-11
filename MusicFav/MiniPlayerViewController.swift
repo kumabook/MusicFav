@@ -49,8 +49,7 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
         mainViewController.rightPanel           = UINavigationController(rootViewController:playlistTableViewController)
         mainViewController.centerPanel          = UINavigationController(rootViewController:streamPageMenuController)
 
-        mainViewController.view.backgroundColor = UIColor.whiteColor()
-        mainViewController.allowRightSwipe      = false
+        mainViewController.prepare()
         miniPlayerObserver                      = MiniPlayerObserver(miniPlayerViewController: self)
     }
 

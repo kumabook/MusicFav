@@ -35,6 +35,7 @@
 		6728FA3A1A60580A00F693B3 /* PreferenceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6728FA381A60580A00F693B3 /* PreferenceViewController.xib */; };
 		6728FA3E1A60B9FD00F693B3 /* TrackTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6728FA3D1A60B9FD00F693B3 /* TrackTableViewController.swift */; };
 		6731BC9E1AD82321004F488D /* UIAlertControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6731BC9D1AD82321004F488D /* UIAlertControllerExtension.swift */; };
+		6731BCA01AD8F069004F488D /* JASidePanelControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6731BC9F1AD8F069004F488D /* JASidePanelControllerExtension.swift */; };
 		6747CEB41AA3204900A6A16B /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6747CEB31AA3204900A6A16B /* Player.swift */; };
 		67554F091A4F127400F7AE72 /* TrackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */; };
 		67554F0A1A4F127400F7AE72 /* TrackTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */; };
@@ -147,6 +148,7 @@
 		6728FA381A60580A00F693B3 /* PreferenceViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferenceViewController.xib; sourceTree = "<group>"; };
 		6728FA3D1A60B9FD00F693B3 /* TrackTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewController.swift; sourceTree = "<group>"; };
 		6731BC9D1AD82321004F488D /* UIAlertControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExtension.swift; sourceTree = "<group>"; };
+		6731BC9F1AD8F069004F488D /* JASidePanelControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JASidePanelControllerExtension.swift; sourceTree = "<group>"; };
 		6747CEB31AA3204900A6A16B /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewCell.swift; sourceTree = "<group>"; };
 		67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrackTableViewCell.xib; sourceTree = "<group>"; };
@@ -229,6 +231,7 @@
 				67D9359C1AA37E8F0061C1A0 /* TimeHelper.swift */,
 				675AB3401AD3E3DA0003824C /* StringExtension.swift */,
 				6731BC9D1AD82321004F488D /* UIAlertControllerExtension.swift */,
+				6731BC9F1AD8F069004F488D /* JASidePanelControllerExtension.swift */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -667,6 +670,7 @@
 				67277CDB1A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift in Sources */,
 				67F9A2921AD03C0D0078EC3C /* StreamPageMenuController.swift in Sources */,
 				67DA465F1A8656A90048B29C /* PlaylistTableViewCell.swift in Sources */,
+				6731BCA01AD8F069004F488D /* JASidePanelControllerExtension.swift in Sources */,
 				675AB3371AD39F540003824C /* XCDYouTubeClient.swift in Sources */,
 				6701D4AD1A95048C006BFEC6 /* HUDExtension.swift in Sources */,
 				67277CAE1A434304002FD3E0 /* AppDelegate.swift in Sources */,
