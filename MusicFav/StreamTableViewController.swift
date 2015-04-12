@@ -17,24 +17,20 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
         case SearchResult = 0
         static let count  = 1
         var title: String? {
-            get {
-                switch self {
-                case .SearchResult:
-                    return nil
-                default:
-                    return nil
-                }
+            switch self {
+            case .SearchResult:
+                return nil
+            default:
+                return nil
             }
         }
     }
+
     let client = FeedlyAPIClient.sharedInstance
     var searchDisposable: Disposable?
-    var isLoggedIn: Bool {
-        get {
-            return client.account != nil
-        }
-    }
+    var isLoggedIn: Bool { return client.account != nil }
     var feeds: [Feed] = []
+
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
