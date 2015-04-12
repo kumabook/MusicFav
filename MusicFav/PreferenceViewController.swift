@@ -76,10 +76,10 @@ class PreferenceViewController: UITableViewController {
         let ac = UIAlertController(title: "Logout".localize(),
                                  message: "Are you sure you want to logout?".localize(),
                           preferredStyle: UIAlertControllerStyle.Alert)
-        let okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { (action) in
+        let okAction = UIAlertAction(title: "OK".localize(), style: UIAlertActionStyle.Default) { (action) in
             self.logout()
         }
-        let cancelAction = UIAlertAction(title: "Canel", style: UIAlertActionStyle.Cancel) { (action) in
+        let cancelAction = UIAlertAction(title: "Cancel".localize(), style: UIAlertActionStyle.Cancel) { (action) in
         }
         ac.addAction(okAction)
         ac.addAction(cancelAction)
