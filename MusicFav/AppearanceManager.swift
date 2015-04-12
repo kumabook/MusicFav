@@ -10,7 +10,7 @@ import UIKit
 
 class AppearanceManager {
     func apply() {
-//        UINavigationBar.appearance().barTintColor = ColorHelper.themeColor
         UIBarButtonItem.appearance().tintColor = UIColor.theme
+        UINavigationBar.appearance().tintColor = UIColor.theme
     }
 }
