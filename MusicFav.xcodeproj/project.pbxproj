@@ -48,6 +48,7 @@
 		675AB3521AD4334D0003824C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 675AB3501AD4334D0003824C /* Localizable.strings */; };
 		676629B71A85AA3100F3FD33 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 676629B61A85AA3100F3FD33 /* Realm.framework */; };
 		676629B81A85AA3B00F3FD33 /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 676629B61A85AA3100F3FD33 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6767AE541ADAC70500A92497 /* IASKAppSettingsViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6767AE531ADAC70500A92497 /* IASKAppSettingsViewControllerExtension.swift */; };
 		67773A701ACB81AA00E7BC8E /* MusicFavAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67773A6F1ACB81AA00E7BC8E /* MusicFavAPIClient.swift */; };
 		67773A721ACC194B00E7BC8E /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67773A711ACC194B00E7BC8E /* Entry.swift */; };
 		67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */; };
@@ -160,6 +161,7 @@
 		675AB3401AD3E3DA0003824C /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		675AB3511AD4334D0003824C /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		676629B61A85AA3100F3FD33 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
+		6767AE531ADAC70500A92497 /* IASKAppSettingsViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IASKAppSettingsViewControllerExtension.swift; sourceTree = "<group>"; };
 		67773A6F1ACB81AA00E7BC8E /* MusicFavAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicFavAPIClient.swift; sourceTree = "<group>"; };
 		67773A711ACC194B00E7BC8E /* Entry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
 		677933A8B0BDDEAED4C720D5 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
@@ -234,6 +236,7 @@
 				675AB3401AD3E3DA0003824C /* StringExtension.swift */,
 				6731BC9D1AD82321004F488D /* UIAlertControllerExtension.swift */,
 				6731BC9F1AD8F069004F488D /* JASidePanelControllerExtension.swift */,
+				6767AE531ADAC70500A92497 /* IASKAppSettingsViewControllerExtension.swift */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -694,6 +697,7 @@
 				675AB3371AD39F540003824C /* XCDYouTubeClient.swift in Sources */,
 				6701D4AD1A95048C006BFEC6 /* HUDExtension.swift in Sources */,
 				67277CAE1A434304002FD3E0 /* AppDelegate.swift in Sources */,
+				6767AE541ADAC70500A92497 /* IASKAppSettingsViewControllerExtension.swift in Sources */,
 				67D9359D1AA37E8F0061C1A0 /* TimeHelper.swift in Sources */,
 				67D9359F1AA38CDD0061C1A0 /* PlayerView.swift in Sources */,
 				67CE596E1A52CC0900C86681 /* SoundCloudAPIClient.swift in Sources */,

@@ -20,6 +20,7 @@ PODS:
   - AFNetworking/UIKit (2.5.2):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
+  - InAppSettingsKit (2.5)
   - JASidePanels (1.3.2)
   - MarqueeLabel (2.2.1)
   - MBProgressHUD (0.9.1)
@@ -34,6 +35,7 @@ PODS:
 
 DEPENDENCIES:
   - AFNetworking (>= 2.0)
+  - InAppSettingsKit (~> 2.1)
   - JASidePanels (>= 1.3)
   - MarqueeLabel
   - MBProgressHUD (>= 0.8)
@@ -56,6 +58,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AFNetworking: fefbce9660acb17f48ae0011292d4da0f457bf36
+  InAppSettingsKit: d872c25e20fcc7d9d33554e5be63070a07a443a7
   JASidePanels: c8f5b130e18d51ee3de988d1c1fad2f88e0b0d21
   MarqueeLabel: c024bab67a1558e8e127132be3b6d66a702405fe
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import InAppSettingsKit
 
 class PreferenceViewController: UITableViewController {
     var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as AppDelegate } }
@@ -17,7 +18,8 @@ class PreferenceViewController: UITableViewController {
     
     enum GeneralRow: Int {
         case LoginOrLogout  = 0
-        static let count = 1
+        case Settings       = 1
+        static let count = 2
         var title: String {
             switch self {
             case .LoginOrLogout:
@@ -26,6 +28,8 @@ class PreferenceViewController: UITableViewController {
                 } else {
                     return "Login".localize()
                 }
+            case .Settings:
+                return "Settings".localize()
             }
         }
     }
@@ -121,6 +125,10 @@ class PreferenceViewController: UITableViewController {
                 } else {
                     showLoginViewController()
                 }
+            case .Settings:
+                let vc = IASKAppSettingsViewController()
+                navigationController?.pushViewController(vc, animated: true)
+                vc.navigationItem.rightBarButtonItems = []
             }
         }
     }
