@@ -471,7 +471,7 @@
 				67277CA61A434304002FD3E0 /* Resources */,
 				E2928A6EB267485F295D2A93 /* Copy Pods Resources */,
 				67277CFF1A471959002FD3E0 /* Embed Frameworks */,
-				67C4A36B1A62948400E6BB67 /* ShellScript */,
+				67C4A36B1A62948400E6BB67 /* Carthage copy-frameworks */,
 				AB552B6E71CD4410AB4381B5 /* Embed Pods Frameworks */,
 			);
 			buildRules = (
@@ -579,7 +579,7 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		67C4A36B1A62948400E6BB67 /* ShellScript */ = {
+		67C4A36B1A62948400E6BB67 /* Carthage copy-frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -592,6 +592,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/FeedlyKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Realm.framework",
 			);
+			name = "Carthage copy-frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
