@@ -58,8 +58,8 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     var streamListLoader: StreamListLoader
     var observer:         Disposable?
 
-    var apiClient:   FeedlyAPIClient  { get { return FeedlyAPIClient.sharedInstance }}
-    var appDelegate: AppDelegate      { get { return UIApplication.sharedApplication().delegate as AppDelegate }}
+    var apiClient:   FeedlyAPIClient   { return FeedlyAPIClient.sharedInstance }
+    var appDelegate: AppDelegate       { return UIApplication.sharedApplication().delegate as AppDelegate }
 
     var refreshControl: UIRefreshControl?
 
