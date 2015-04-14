@@ -68,8 +68,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         if let userId = apiClient.profile?.id {
             return [.GlobalResource(FeedlyKit.Category.All(userId)),
                     .GlobalResource(FeedlyKit.Tag.Saved(userId)),
-                    .GlobalResource(FeedlyKit.Tag.Read(userId)),
-                    .GlobalResource(FeedlyKit.Category.Uncategorized(userId))]
+                    .GlobalResource(FeedlyKit.Tag.Read(userId))]
         }
         else {
             return []
@@ -169,7 +168,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
             case .StartLoading:
                 self.refreshControl?.beginRefreshing()
             case .CompleteLoading:
-                let categories = self.streamListLoader.streamListOfCategory.keys
+                let categories = self.streamListLoader.categories
                 self.sections  = self.defaultSections()
                 self.sections.extend(categories.map({ Section.FeedlyCategory($0) }))
                 self.refreshControl?.endRefreshing()

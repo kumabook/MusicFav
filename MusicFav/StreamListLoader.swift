@@ -34,6 +34,12 @@ class StreamListLoader {
     var signal:               HotSignal<Event>
     private var sink:         SinkOf<Event>
     var streamListOfCategory: [FeedlyKit.Category: [Stream]]
+    var uncategorized:        FeedlyKit.Category?
+    var categories: [FeedlyKit.Category] {
+        return streamListOfCategory.keys.array.sorted({ (first, second) -> Bool in
+            return first == self.uncategorized || first.label > second.label
+        })
+    }
 
     init() {
         state                = .Normal
@@ -41,11 +47,19 @@ class StreamListLoader {
         let pipe = HotSignal<Event>.pipe()
         signal               = pipe.0
         sink                 = pipe.1
+        if let userId = apiClient.profile?.id {
+            uncategorized = FeedlyKit.Category.Uncategorized(userId)
+            streamListOfCategory[uncategorized!] = []
+        }
     }
 
     private func addSubscription(subscription: Subscription) {
-        for category in subscription.categories {
-            streamListOfCategory[category]!.append(subscription)
+        if subscription.categories.count == 0 {
+            streamListOfCategory[uncategorized!]!.append(subscription)
+        } else {
+            for category in subscription.categories {
+                streamListOfCategory[category]!.append(subscription)
+            }
         }
     }
 
