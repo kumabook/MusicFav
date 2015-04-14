@@ -23,8 +23,10 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
             switch self {
             case .SearchResult:
                 return nil
-            default:
-                return nil
+            case .Recommend:
+                return "MusicFav Recommend"
+            case .Hypem:
+                return "Music Blogs (from Hypemachine)"
             }
         }
     }
