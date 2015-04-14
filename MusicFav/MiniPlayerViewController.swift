@@ -51,6 +51,7 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
 
         mainViewController.prepare()
         miniPlayerObserver                      = MiniPlayerObserver(miniPlayerViewController: self)
+        addChildViewController(mainViewController)
     }
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
