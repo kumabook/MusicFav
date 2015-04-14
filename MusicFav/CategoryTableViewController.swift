@@ -14,18 +14,25 @@ import MBProgressHUD
 
 class CategoryTableViewController: UITableViewController {
     let client = FeedlyAPIClient.sharedInstance
-    var categories: [FeedlyKit.Category] = []
-    var HUD: MBProgressHUD!
-    let subscribable: Subscribable!
 
-    init(subscribable: Subscribable) {
-        self.subscribable = subscribable
+    var HUD:              MBProgressHUD!
+    let subscribable:     Subscribable!
+    let streamListLoader: StreamListLoader!
+    var observer:         Disposable?
+
+    var categories: [FeedlyKit.Category] { return streamListLoader.streamListOfCategory.keys.array }
+
+    init(subscribable: Subscribable, streamListLoader: StreamListLoader) {
+        self.subscribable     = subscribable
+        self.streamListLoader = streamListLoader
         super.init(nibName: nil, bundle: nil)
     }
 
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+
+    deinit {}
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,27 +44,45 @@ class CategoryTableViewController: UITableViewController {
                                                            action: "newCategory")
         HUD = MBProgressHUD.createCompletedHUD(self.view)
         navigationController?.view.addSubview(HUD)
-        fetch()
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        observeStreamList()
+    }
+
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        observer?.dispose()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
 
-    func fetch() {
-        client.fetchCategories()
-            .deliverOn(MainScheduler())
-            .start(
-                next: {categories in
-                    self.categories = categories
-                },
-                error: {error in
-                    let ac = FeedlyAPIClient.alertController(error: error, handler: { (action) in
-                    })
-                },
-                completed: {
-                    self.tableView.reloadData()
-            })
+    func observeStreamList() {
+        observer?.dispose()
+        observer = streamListLoader.signal.observe({ event in
+            switch event {
+            case .StartLoading: break
+            case .CompleteLoading:
+                self.tableView.reloadData()
+            case .FailToLoad(let e):
+                let ac = FeedlyAPIClient.alertController(error: e, handler: { (action) in })
+            case .StartUpdating:
+                MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
+            case .FailToUpdate(let e):
+                let ac = FeedlyAPIClient.alertController(error: e, handler: { (action) in })
+                self.presentViewController(ac, animated: true, completion: nil)
+            case .CreateAt(let subscription):
+                MBProgressHUD.hideHUDForView(self.navigationController!.view, animated:false)
+                self.HUD.show(true , duration: 1.0, after: { () -> Void in
+                    self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
+                    return
+                })
+            case .RemoveAt(let index, let subscription, let category): break
+            }
+        })
     }
 
     func newCategory() {
@@ -66,19 +91,14 @@ class CategoryTableViewController: UITableViewController {
         }))
         ac.addAction(UIAlertAction(title: "OK".localize(), style: UIAlertActionStyle.Default, handler: { (action) -> Void in
             if let textField = ac.textFields?.first as? UITextField {
-                self.createCategory(textField.text)
+                if let category = self.streamListLoader.createCategory(textField.text) {
+                    self.subscribeTo(category)
+                }
             }
         }))
         ac.addTextFieldWithConfigurationHandler({(text:UITextField!) -> Void in
         })
         presentViewController(ac, animated: true, completion: nil)
-    }
-
-    func createCategory(label: String) {
-        if let profile = FeedlyAPIClient.sharedInstance.profile {
-            let category = FeedlyKit.Category(label: label, profile: profile)
-            subscribeTo(category)
-        }
     }
 
     func subscribeTo(category: FeedlyKit.Category) {
@@ -91,22 +111,8 @@ class CategoryTableViewController: UITableViewController {
                                      title: blog.siteName,
                                 categories: [category])
         }
-        if let s = subscription { subscribeTo(s) }
-    }
-
-    func subscribeTo(subscription: Subscription) {
-        MBProgressHUD.showHUDAddedTo(navigationController!.view, animated: true)
-        FeedlyAPIClient.sharedInstance.client.subscribeTo(subscription) { (req, res, error) -> Void in
-            MBProgressHUD.hideHUDForView(self.navigationController!.view, animated:false)
-            if let e = error {
-                let ac = FeedlyAPIClient.alertController(error: e, handler: { (action) in })
-                self.presentViewController(ac, animated: true, completion: nil)
-            } else {
-                self.HUD.show(true , duration: 1.0, after: { () -> Void in
-                    self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
-                    return
-                })
-            }
+        if let s = subscription {
+            streamListLoader.subscribeTo(s)
         }
     }
 

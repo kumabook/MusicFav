@@ -37,11 +37,29 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
     let client = FeedlyAPIClient.sharedInstance
     var searchDisposable: Disposable?
     var isLoggedIn: Bool { return client.account != nil }
-    var feeds:          [Feed] = []
-    var recommendFeeds: [Feed] = []
-    var blogLoader             = BlogLoader()
+    var feeds:            [Feed]
+    var recommendFeeds:   [Feed]
+    let blogLoader:       BlogLoader
+    let streamListLoader: StreamListLoader!
+    var observer:         Disposable?
 
     let streamTableViewCellReuseIdentifier = "StreamTableViewCell"
+
+    init(streamListLoader: StreamListLoader) {
+        self.streamListLoader = streamListLoader
+        blogLoader            = BlogLoader()
+        feeds                 = []
+        recommendFeeds        = []
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init(coder aDecoder: NSCoder) {
+        streamListLoader = StreamListLoader()
+        blogLoader       = BlogLoader()
+        feeds            = []
+        recommendFeeds   = []
+        super.init(nibName: nil, bundle: nil)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,9 +78,9 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
         navigationItem.title      = "Import Feed".localize()
         indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         indicator.bounds = CGRect(x: 0,
-            y: 0,
-            width: indicator.bounds.width,
-            height: indicator.bounds.height * 3)
+                                  y: 0,
+                              width: indicator.bounds.width,
+                             height: indicator.bounds.height * 3)
         indicator.hidesWhenStopped = true
         indicator.stopAnimating()
 
@@ -73,6 +91,16 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        observeBlogs()
+    }
+
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        observer?.dispose()
     }
 
     func showIndicator() {
@@ -125,7 +153,8 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
     }
 
     func observeBlogs() {
-        blogLoader.hotSignal.observe({ event in
+        observer?.dispose()
+        observer = blogLoader.hotSignal.observe({ event in
             switch event {
             case .StartLoading:
                 self.showIndicator()
@@ -188,7 +217,6 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
         }
     }
 
-
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(streamTableViewCellReuseIdentifier, forIndexPath: indexPath) as StreamTableViewCell
         switch Section(rawValue: indexPath.section)! {
@@ -216,7 +244,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
         }
         if isLoggedIn {
             if let s = subscribable {
-                let ctc = CategoryTableViewController(subscribable: s)
+                let ctc = CategoryTableViewController(subscribable: s, streamListLoader: streamListLoader)
                 navigationController?.pushViewController(ctc, animated: true)
             }
         }
