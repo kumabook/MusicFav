@@ -15,8 +15,17 @@ import MBProgressHUD
 class CategoryTableViewController: UITableViewController {
     let client = FeedlyAPIClient.sharedInstance
     var categories: [FeedlyKit.Category] = []
-    var feed: Feed?
     var HUD: MBProgressHUD!
+    let subscribable: Subscribable!
+
+    init(subscribable: Subscribable) {
+        self.subscribable = subscribable
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -68,14 +77,27 @@ class CategoryTableViewController: UITableViewController {
     func createCategory(label: String) {
         if let profile = FeedlyAPIClient.sharedInstance.profile {
             let category = FeedlyKit.Category(label: label, profile: profile)
-            if let f = feed { subscribeTo(f, category: category) }
+            subscribeTo(category)
         }
     }
 
-    func subscribeTo(feed: Feed, category: FeedlyKit.Category) {
-        MBProgressHUD.showHUDAddedTo(view, animated: true)
-        FeedlyAPIClient.sharedInstance.client.subscribeTo(feed, categories: [category]) { (req, res, error) -> Void in
-            MBProgressHUD.hideHUDForView(self.view, animated:false)
+    func subscribeTo(category: FeedlyKit.Category) {
+        var subscription: Subscription?
+        switch subscribable as Subscribable {
+        case Subscribable.ToFeed(let feed):
+            subscription = Subscription(feed: feed, categories: [category])
+        case .ToBlog(let blog):
+            subscription = Subscription(id: blog.feedId,
+                                     title: blog.siteName,
+                                categories: [category])
+        }
+        if let s = subscription { subscribeTo(s) }
+    }
+
+    func subscribeTo(subscription: Subscription) {
+        MBProgressHUD.showHUDAddedTo(navigationController!.view, animated: true)
+        FeedlyAPIClient.sharedInstance.client.subscribeTo(subscription) { (req, res, error) -> Void in
+            MBProgressHUD.hideHUDForView(self.navigationController!.view, animated:false)
             if let e = error {
                 let ac = FeedlyAPIClient.alertController(error: e, handler: { (action) in })
                 self.presentViewController(ac, animated: true, completion: nil)
@@ -105,6 +127,6 @@ class CategoryTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let f = feed { subscribeTo(f, category: categories[indexPath.item]) }
+        subscribeTo(categories[indexPath.item])
     }
 }
