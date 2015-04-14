@@ -114,7 +114,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
     }
 
     func needSearch() -> Bool{
-        return searchBar.text.lengthOfBytesUsingEncoding(NSStringEncoding.allZeros) > 0
+        return searchBar.text != ""
     }
 
     func searchFeeds(text: String) {
