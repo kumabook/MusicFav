@@ -190,11 +190,6 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
 
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        if let searchResultsTableView = searchDisplayController?.searchResultsTableView {
-            if tableView == searchResultsTableView {
-                println("search results")
-            }
-        }
         let cell = tableView.dequeueReusableCellWithIdentifier(streamTableViewCellReuseIdentifier, forIndexPath: indexPath) as StreamTableViewCell
         switch Section(rawValue: indexPath.section)! {
         case .SearchResult:
