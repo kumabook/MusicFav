@@ -7,14 +7,14 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
-        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="StreamTableViewCell">
+        <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="KGk-i7-Jjw" customClass="StreamTableViewCell" customModule="MusicFav" customModuleProvider="target">
             <rect key="frame" x="0.0" y="0.0" width="320" height="100"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
                 <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="L0g-x2-fpA">
+                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="L0g-x2-fpA">
                         <rect key="frame" x="8" y="8" width="92" height="83"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="92" id="VJF-br-ryk"/>
@@ -27,13 +27,13 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 tracks" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Dyg-Ad-6be">
-                        <rect key="frame" x="244" y="55" width="68" height="20"/>
+                        <rect key="frame" x="108" y="55" width="204" height="20"/>
                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
                     </label>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="10 followers" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Lqf-1G-0aL">
-                        <rect key="frame" x="224" y="75" width="88" height="20"/>
+                        <rect key="frame" x="108" y="75" width="204" height="20"/>
                         <fontDescription key="fontDescription" type="system" pointSize="16"/>
                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                         <nil key="highlightedColor"/>
@@ -43,6 +43,8 @@
                     <constraint firstItem="48F-qK-chC" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="3" id="1BZ-EB-jlL"/>
                     <constraint firstItem="48F-qK-chC" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="Bc6-Dc-Xe1"/>
                     <constraint firstAttribute="bottomMargin" secondItem="L0g-x2-fpA" secondAttribute="bottom" id="FWv-wL-qHp"/>
+                    <constraint firstItem="Lqf-1G-0aL" firstAttribute="leading" secondItem="L0g-x2-fpA" secondAttribute="trailing" constant="8" id="JrE-cy-bM4"/>
+                    <constraint firstItem="Dyg-Ad-6be" firstAttribute="leading" secondItem="L0g-x2-fpA" secondAttribute="trailing" constant="8" id="M72-RH-JGP"/>
                     <constraint firstAttribute="bottomMargin" secondItem="Dyg-Ad-6be" secondAttribute="bottom" constant="16" id="NIB-Wl-dyB"/>
                     <constraint firstItem="Dyg-Ad-6be" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="Xdh-tL-Szw"/>
                     <constraint firstItem="L0g-x2-fpA" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="cUx-6L-IgU"/>
@@ -58,7 +60,7 @@
                 <outlet property="thumbImageView" destination="L0g-x2-fpA" id="7qA-yw-ieZ"/>
                 <outlet property="titleLabel" destination="48F-qK-chC" id="NAr-XY-TRp"/>
             </connections>
-            <point key="canvasLocation" x="317" y="270"/>
+            <point key="canvasLocation" x="317" y="267"/>
         </tableViewCell>
     </objects>
 </document>

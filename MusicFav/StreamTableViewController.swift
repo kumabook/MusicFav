@@ -36,9 +36,9 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
     let client = FeedlyAPIClient.sharedInstance
     var searchDisposable: Disposable?
     var isLoggedIn: Bool { return client.account != nil }
-    var feeds:       [Feed]       = []
-    var sampleFeeds: [SampleFeed] = SampleFeed.samples()
-    var blogLoader                = BlogLoader()
+    var feeds:          [Feed] = []
+    var recommendFeeds: [Feed] = []
+    var blogLoader             = BlogLoader()
 
     let streamTableViewCellReuseIdentifier = "StreamTableViewCell"
 
@@ -65,6 +65,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
         indicator.hidesWhenStopped = true
         indicator.stopAnimating()
 
+        fetchRecommendFeeds()
         observeBlogs()
         fetchBlogs()
     }
@@ -106,6 +107,16 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
                 completed: {
                     self.tableView.reloadData()
             })
+    }
+
+    func fetchRecommendFeeds() {
+        FeedlyAPIClient.sharedInstance.fetchFeedsByIds(RecommendFeed.ids).start(
+            next: { feeds in
+                self.recommendFeeds = feeds
+            }, error: { error in
+            }, completed: {
+                self.tableView.reloadData()
+        })
     }
 
     func observeBlogs() {
@@ -172,46 +183,44 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
                 println("search results")
             }
         }
+        let cell = tableView.dequeueReusableCellWithIdentifier(streamTableViewCellReuseIdentifier, forIndexPath: indexPath) as StreamTableViewCell
         switch Section(rawValue: indexPath.section)! {
         case .SearchResult:
-            let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as UITableViewCell
-            let feed = feeds[indexPath.item]
-            cell.textLabel?.text = "\(feed.title) \(feed.subscribers) " + "subscribers".localize()
+            cell.updateView(feed: feeds[indexPath.item])
             return cell
         case .Recommend:
-            let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as UITableViewCell
-            let feed = sampleFeeds[indexPath.item]
-            cell.textLabel?.text = feed.title
+            cell.updateView(feed: recommendFeeds[indexPath.item])
             return cell
         case .Hypem:
-            let cell = tableView.dequeueReusableCellWithIdentifier(streamTableViewCellReuseIdentifier, forIndexPath: indexPath) as StreamTableViewCell
-            cell.updateView(blogLoader.blogs[indexPath.item])
+            cell.updateView(blog: blogLoader.blogs[indexPath.item])
             return cell
         }
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        var subscribable: Subscribable?
         switch Section(rawValue: indexPath.section)! {
         case .SearchResult:
-            let feed = feeds[indexPath.item]
-            if isLoggedIn {
-                let ctc = CategoryTableViewController()
-                ctc.feed = feed
+            subscribable = Subscribable.ToFeed(feeds[indexPath.item])
+        case .Recommend:
+            subscribable = Subscribable.ToFeed(recommendFeeds[indexPath.item])
+        case .Hypem:
+            subscribable = Subscribable.ToBlog(blogLoader.blogs[indexPath.item])
+        }
+        if isLoggedIn {
+            if let s = subscribable {
+                let ctc = CategoryTableViewController(subscribable: s)
                 navigationController?.pushViewController(ctc, animated: true)
             }
-        case .Recommend:
-            break
-        case .Hypem:
-            break
         }
     }
 
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         switch Section(rawValue: indexPath.section)! {
         case .SearchResult:
-            return super.tableView(tableView, heightForRowAtIndexPath: indexPath)
+            return self.cellHeight
         case .Recommend:
-            return super.tableView(tableView, heightForRowAtIndexPath: indexPath)
+            return self.cellHeight
         case .Hypem:
             return self.cellHeight
         }

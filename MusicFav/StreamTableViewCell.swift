@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FeedlyKit
 
 class StreamTableViewCell: UITableViewCell {
 
@@ -26,16 +27,27 @@ class StreamTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
-    func updateView(blog: Blog) {
+    func updateView(#blog: Blog) {
         if let imageUrl = blog.blogImageSmall {
             thumbImageView.sd_setImageWithURL(NSURL(string: imageUrl))
         }
         titleLabel.text         = blog.siteName
-        if let totalTracks = blog.totalTracks {
+        if let totalTracks = blog.siteInfo?.totalTracks {
             subtitle1Label.text = "\(totalTracks) tracks"
         }
-        if let followers = blog.followers {
+        if let followers = blog.siteInfo?.followers {
             subtitle2Label.text = "\(followers) followers"
         }
+    }
+
+    func updateView(#feed: Feed) {
+        thumbImageView.image = UIImage(named: "default_thumb")
+        titleLabel.text        = feed.title
+        if let desc = feed.description {
+            subtitle1Label.text = desc
+        } else {
+            subtitle1Label.text = ""
+        }
+        subtitle2Label.text   = "\(feed.subscribers) subscribers"
     }
 }
