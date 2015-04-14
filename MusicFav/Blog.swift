@@ -11,30 +11,22 @@ import ReactiveCocoa
 import LlamaKit
 import FeedlyKit
 
-class Blog {
+class SiteInfo {
     let siteId:         Int64
     let siteName:       String
     let siteUrl:        String
-    let syndUrl:        String
-    let email:          String
     let blogImage:      String?
     let blogImageSmall: String?
     let firstPosted:    Int64?
-    let followers:      Int?
     let lastPosted:     Int64?
-    let totalTracks:    Int?
-    let city:           String?
-    let country:        String?
-    let locStr:         String?
-    let regionName:     String?
+    let followers:      Int?
     let isFavorite:     Bool?
-
+    let regionName:     String?
+    let totalTracks:    Int?
     init(json: JSON) {
         self.siteId         = json["siteid"].int64Value
         self.siteName       = json["sitename"].stringValue
         self.siteUrl        = json["siteurl"].stringValue
-        self.syndUrl        = json["syndurl"].stringValue
-        self.email          = json["email"].stringValue
         self.blogImage      = json["blog_image"].string
         self.blogImageSmall = json["blog_image_small"].string
         self.firstPosted    = json["first_posted"].int64Value
@@ -44,8 +36,45 @@ class Blog {
         self.regionName     = json["region_name"].string
         self.isFavorite     = json["is_favorite"].bool
     }
+}
 
-    func fetchDetail() -> ColdSignal<Blog> {
-        return HypemAPIClient.sharedInstance.getSiteInfo(siteId)
+class Blog {
+    let siteId:         Int64
+    let siteName:       String
+    let siteUrl:        String
+    let blogImage:      String?
+    let blogImageSmall: String?
+    var syndUrl:        String
+    let city:           String?
+    let country:        String?
+    var region:         String?
+    let locStr:         String?
+    let email:          String
+
+    var siteInfo:       SiteInfo?
+
+    init(json: JSON) {
+        self.siteId         = json["siteid"].int64Value
+        self.siteName       = json["sitename"].stringValue
+        self.siteUrl        = json["siteurl"].stringValue
+        self.syndUrl        = json["syndurl"].stringValue
+        self.blogImage      = json["blog_image"].string
+        self.blogImageSmall = json["blog_image_small"].string
+        self.city           = json["city"].string
+        self.country        = json["country"].string
+        self.region         = json["region"].string
+        self.locStr         = json["loc_str"].string
+        self.email          = json["email"].stringValue
+    }
+
+    var feedId: String {
+        return "feed/\(syndUrl)"
+    }
+
+    func fetchSiteInfo() -> ColdSignal<Blog> {
+        return HypemAPIClient.sharedInstance.getSiteInfo(siteId).map({
+            self.siteInfo = $0
+            return self
+        })
     }
 }

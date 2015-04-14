@@ -23,14 +23,14 @@ class HypemAPIClient {
         return Static.instance
     }
 
-    func getSiteInfo(siteId: Int64) -> ColdSignal<Blog> {
+    func getSiteInfo(siteId: Int64) -> ColdSignal<SiteInfo> {
         return ColdSignal { (sink, disposable) in
             let manager = AFHTTPRequestOperationManager()
             let url = String(format: "%@/get_site_info?siteid=%d", self.baseUrl + self.apiRoot, siteId)
             manager.GET(url, parameters: nil,
                 success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
                     let json = JSON(response)
-                    sink.put(.Next(Box(Blog(json: json))))
+                    sink.put(.Next(Box(SiteInfo(json: json))))
                     sink.put(.Completed)
                 },
                 failure: { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in

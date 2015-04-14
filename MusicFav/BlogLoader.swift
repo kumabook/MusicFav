@@ -86,16 +86,15 @@ class BlogLoader {
     private func fetchDetails(#start: Int, length: Int) -> ColdSignal<[Blog]> {
         var signal = ColdSignal<Blog>.empty()
         for i in start..<start+length {
-            signal = signal.concat(fetchDetail(i))
+            signal = signal.concat(fetchSiteInfo(i))
         }
         return signal.reduce(initial: [], {var list = $0; list.append($1); return list})
     }
 
-    private func fetchDetail(index: Int) -> ColdSignal<Blog> {
+    private func fetchSiteInfo(index: Int) -> ColdSignal<Blog> {
         return ColdSignal<Blog> { (coldSink, disposable) in
-            self._blogs[index].fetchDetail().start(
+            self._blogs[index].fetchSiteInfo().start(
                 next: { blog in
-                    self._blogs[index] = blog
                     self.blogs.append(blog)
                     coldSink.put(.Next(Box(blog)))
                     coldSink.put(.Completed)
