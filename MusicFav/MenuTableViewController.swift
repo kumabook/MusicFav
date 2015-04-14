@@ -60,6 +60,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
 
     var apiClient:   FeedlyAPIClient   { return FeedlyAPIClient.sharedInstance }
     var appDelegate: AppDelegate       { return UIApplication.sharedApplication().delegate as AppDelegate }
+    var root:        UIViewController? { return view.window?.rootViewController }
 
     var refreshControl: UIRefreshControl?
 
@@ -135,12 +136,12 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
 
     func showPreference() {
         let prefvc = PreferenceViewController()
-        presentViewController(UINavigationController(rootViewController:prefvc), animated: true, completion: nil)
+        root?.presentViewController(UINavigationController(rootViewController:prefvc), animated: true, completion: nil)
     }
 
     func addStream() {
         let stvc = StreamTableViewController(streamListLoader: streamListLoader)
-        presentViewController(UINavigationController(rootViewController:stvc), animated: true, completion: nil)
+        root?.presentViewController(UINavigationController(rootViewController:stvc), animated: true, completion: nil)
     }
 
     func showStream(#section: Section) {
