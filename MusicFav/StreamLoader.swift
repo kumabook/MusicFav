@@ -10,6 +10,11 @@ import FeedlyKit
 import ReactiveCocoa
 import LlamaKit
 
+struct RecommndFeed {
+    static let ids = ["feed/http://spincoaster.com/feed",
+                      "feed/http://matome.naver.jp/feed/topic/1Hinb"]
+}
+
 class SampleFeed: Stream {
     let id:    String
     let title: String
