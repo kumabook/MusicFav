@@ -32,6 +32,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
     }
 
     var indicator: UIActivityIndicatorView!
+    var searchBar: UISearchBar!
 
     let client = FeedlyAPIClient.sharedInstance
     var searchDisposable: Disposable?
@@ -52,11 +53,11 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
                                                            style: UIBarButtonItemStyle.Plain,
                                                           target: self,
                                                           action: "close")
-        let searchBar                  = UISearchBar(frame:CGRectMake(0, 0, view.bounds.size.width, SEARCH_BAR_HEIGHT))
-        searchBar.placeholder          = "URL or Keyword".localize()
-        searchBar.delegate             = self
-        self.tableView.tableHeaderView = searchBar
-        self.navigationItem.title      = "Import Feed".localize()
+        searchBar                 = UISearchBar(frame:CGRectMake(0, 0, view.bounds.size.width, SEARCH_BAR_HEIGHT))
+        searchBar.placeholder     = "URL or Keyword".localize()
+        searchBar.delegate        = self
+        tableView.tableHeaderView = searchBar
+        navigationItem.title      = "Import Feed".localize()
         indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         indicator.bounds = CGRect(x: 0,
             y: 0,
@@ -84,13 +85,17 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
         self.tableView.tableFooterView = nil
     }
 
+    func needSearch() -> Bool{
+        return searchBar.text.lengthOfBytesUsingEncoding(NSStringEncoding.allZeros) > 0
+    }
+
     func searchFeeds(text: String) {
         if searchDisposable != nil && !searchDisposable!.disposed {
             searchDisposable!.dispose()
         }
         feeds = []
         tableView.reloadData()
-        if text.lengthOfBytesUsingEncoding(NSStringEncoding.allZeros) == 0 {
+        if !needSearch() {
             return
         }
         let query = SearchQueryOfFeed(query: text)
@@ -134,7 +139,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
     }
 
     func fetchBlogs() {
-        blogLoader.fetchBlogs()
+        if !needSearch() { blogLoader.fetchBlogs() }
     }
 
     // MARK: - UISearchBar delegate
@@ -162,7 +167,12 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
     }
 
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return Section(rawValue: section)?.title
+        if needSearch() {
+            if Section.SearchResult.rawValue == section { return "Search results".localize() }
+            else                                        { return nil           }
+        } else {
+            return Section(rawValue: section)?.title
+        }
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -170,8 +180,10 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
         case .SearchResult:
             return feeds.count
         case .Recommend:
-            return sampleFeeds.count
+            if needSearch() { return 0 }
+            return recommendFeeds.count
         case .Hypem:
+            if needSearch() { return 0 }
             return blogLoader.blogs.count
         }
     }
