@@ -10,38 +10,12 @@ import FeedlyKit
 import ReactiveCocoa
 import LlamaKit
 
-struct RecommndFeed {
-    static let ids = ["feed/http://spincoaster.com/feed",
-                      "feed/http://matome.naver.jp/feed/topic/1Hinb"]
-}
-
-class SampleFeed: Stream {
-    let id:    String
-    let title: String
-    override var streamId:    String { return id }
-    override var streamTitle: String { return title }
-    init(id: String, title: String) {
-        self.id    = id
-        self.title = title
-        super.init()
-    }
-    class func Spincoaster() -> SampleFeed {
-        return SampleFeed(id: "feed/http://spincoaster.com/feed", title: "Spincoaster (sample)")
-    }
-    class func NaverMatome() -> SampleFeed {
-        return SampleFeed(id: "feed/http://matome.naver.jp/feed/topic/1Hinb", title: "Naver matome (sample)")
-    }
-    class func samples() -> [SampleFeed] {
-        return [Spincoaster(), NaverMatome()]
-    }
-}
-
 class StreamLoader {
     class func defaultStream() -> Stream {
         if let profile = FeedlyAPIClient.sharedInstance.profile {
             return FeedlyKit.Category.All(profile.id)
         } else {
-            return SampleFeed.Spincoaster()
+            return StreamListLoader.sampleSubscriptions()[0]
         }
     }
 
