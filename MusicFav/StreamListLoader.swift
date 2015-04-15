@@ -77,6 +77,8 @@ class StreamListLoader {
         }
     }
 
+    deinit {}
+
     private func addSubscription(subscription: Subscription) {
         var categories = subscription.categories.count > 0 ? subscription.categories : [uncategorized]
         for category in categories {

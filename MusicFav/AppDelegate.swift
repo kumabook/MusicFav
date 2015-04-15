@@ -107,7 +107,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func didLogout() { reload() }
 
     func reload() {
-        let vc = miniPlayerViewController?.menuViewController
+        let vc               = miniPlayerViewController?.menuViewController
+        vc?.streamListLoader = StreamListLoader()
         vc?.showStream(stream: StreamListLoader.defaultStream())
         vc?.refresh()
     }
