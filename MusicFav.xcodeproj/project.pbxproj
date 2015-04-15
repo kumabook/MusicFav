@@ -57,6 +57,7 @@
 		6767AE601ADC123A00A92497 /* Subscribable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6767AE5F1ADC123A00A92497 /* Subscribable.swift */; };
 		6767AE621ADC20D300A92497 /* RecommendFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6767AE611ADC20D300A92497 /* RecommendFeed.swift */; };
 		6767AE641ADD630000A92497 /* StreamListLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6767AE631ADD630000A92497 /* StreamListLoader.swift */; };
+		676E38161ADEADC000D38CBC /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 676E38151ADEADC000D38CBC /* Category.swift */; };
 		67773A701ACB81AA00E7BC8E /* MusicFavAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67773A6F1ACB81AA00E7BC8E /* MusicFavAPIClient.swift */; };
 		67773A721ACC194B00E7BC8E /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67773A711ACC194B00E7BC8E /* Entry.swift */; };
 		67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */; };
@@ -178,6 +179,7 @@
 		6767AE5F1ADC123A00A92497 /* Subscribable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscribable.swift; sourceTree = "<group>"; };
 		6767AE611ADC20D300A92497 /* RecommendFeed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecommendFeed.swift; sourceTree = "<group>"; };
 		6767AE631ADD630000A92497 /* StreamListLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamListLoader.swift; sourceTree = "<group>"; };
+		676E38151ADEADC000D38CBC /* Category.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		67773A6F1ACB81AA00E7BC8E /* MusicFavAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicFavAPIClient.swift; sourceTree = "<group>"; };
 		67773A711ACC194B00E7BC8E /* Entry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
 		677933A8B0BDDEAED4C720D5 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
@@ -360,6 +362,7 @@
 				67F9A2971AD13D130078EC3C /* PlaylistLoader.swift */,
 				671CA1E71ACFBEEC00EDF162 /* StreamLoader.swift */,
 				6767AE631ADD630000A92497 /* StreamListLoader.swift */,
+				676E38151ADEADC000D38CBC /* Category.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -720,6 +723,7 @@
 				67DB2A121A5588A6006BB490 /* MiniPlayerViewDelegate.swift in Sources */,
 				67277CDB1A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift in Sources */,
 				67F9A2921AD03C0D0078EC3C /* StreamPageMenuController.swift in Sources */,
+				676E38161ADEADC000D38CBC /* Category.swift in Sources */,
 				67DA465F1A8656A90048B29C /* PlaylistTableViewCell.swift in Sources */,
 				6731BCA01AD8F069004F488D /* JASidePanelControllerExtension.swift in Sources */,
 				6767AE601ADC123A00A92497 /* Subscribable.swift in Sources */,
