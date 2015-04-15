@@ -40,6 +40,9 @@ class StreamListLoader {
             return first == self.uncategorized || first.label > second.label
         })
     }
+    var uncategorizedStreams: [Stream] {
+        return streamListOfCategory[uncategorized]!
+    }
 
     class func sampleSubscriptions() -> [Subscription] {
         return [Subscription(id: "feed/http://spincoaster.com/feed",

@@ -17,17 +17,17 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     enum Section {
         case GlobalResource(Stream)
         case FeedlyCategory(FeedlyKit.Category)
+        case UncategorizedSubscription(Subscription)
         case Pocket
         case Twitter
 
         var title: String {
             switch self {
-            case .GlobalResource(let stream):
-                return stream.streamTitle
-            case .Pocket:  return "Pocket"
-            case .Twitter: return "Twitter"
-            case .FeedlyCategory(let category):
-                return category.label
+            case .GlobalResource(let stream):                  return stream.streamTitle
+            case .Pocket:                                      return "Pocket"
+            case .Twitter:                                     return "Twitter"
+            case .FeedlyCategory(let category):                return category.label
+            case .UncategorizedSubscription(let subscription): return subscription.streamTitle
             }
         }
         func child(streamListDic: [FeedlyKit.Category:[Stream]], index: Int) -> AnyObject {
@@ -38,6 +38,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
             case .FeedlyCategory(let category):
                 if let streams = streamListDic[category] { return streams[index] }
                 else                                     { return [] }
+            case .UncategorizedSubscription(let subscription): return []
             }
         }
         func numOfChild(streamListDic: [FeedlyKit.Category:[Stream]]) -> Int {
@@ -48,6 +49,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
             case .FeedlyCategory(let category):
                 if let streams = streamListDic[category] { return streams.count }
                 else                                     { return 0 }
+            case .UncategorizedSubscription(let subscription): return 0
             }
         }
     }
@@ -151,6 +153,8 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         case .Pocket:  return
         case .Twitter: return
         case .FeedlyCategory(let category): return
+        case .UncategorizedSubscription(let subscription):
+            mainViewController?.centerPanel = UINavigationController(rootViewController: StreamPageMenuController(stream: subscription))
         }
         mainViewController?.showCenterPanelAnimated(true)
     }
@@ -168,9 +172,14 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
             case .StartLoading:
                 self.refreshControl?.beginRefreshing()
             case .CompleteLoading:
-                let categories = self.streamListLoader.categories
+                let categories = self.streamListLoader.categories.filter({
+                    $0 != self.streamListLoader.uncategorized
+                })
                 self.sections  = self.defaultSections()
                 self.sections.extend(categories.map({ Section.FeedlyCategory($0) }))
+                self.sections.extend(self.streamListLoader.uncategorizedStreams.map({
+                    Section.UncategorizedSubscription($0 as Subscription)
+                }))
                 self.refreshControl?.endRefreshing()
                 self.treeView?.reloadData()
             case .FailToLoad(let e):
@@ -252,26 +261,40 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     }
 
     func treeView(treeView: RATreeView!, canEditRowForItem item: AnyObject!) -> Bool {
-        if let stream = item as? Stream {
+        if let index = item as? Int {
+            switch sections[index] {
+            case Section.UncategorizedSubscription: return true
+            default:                                return false
+            }
+        } else if let stream = item as? Stream {
             return true
         }
         return false
     }
 
     func treeView(treeView: RATreeView!, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowForItem item: AnyObject!) {
-        let sectionIndex = treeView.parentForItem(item) as Int
-        switch sections[sectionIndex] {
-        case .GlobalResource: break
-        case .Pocket:         break
-        case .Twitter:        break
-        case .FeedlyCategory(let category):
-            if var streams = streamListLoader.streamListOfCategory[category] {
-                var stream = item as Stream
-                if let i = find(streams, stream) {
-                    if let subscription = item as? Subscription {
-                        unsubscribeTo(subscription, index: i, category: category)
+        if let index = item as? Int {
+            switch sections[index] {
+            case Section.UncategorizedSubscription(let subscription):
+                let uncategorized = streamListLoader.uncategorized
+                if let i = find(streamListLoader.uncategorizedStreams, subscription) {
+                    unsubscribeTo(subscription, index: i, category: uncategorized)
+                }
+            default: break
+            }
+        } else if let stream = item as? Stream {
+            let sectionIndex = treeView.parentForItem(item) as Int
+            switch sections[sectionIndex] {
+            case .FeedlyCategory(let category):
+                if var streams = streamListLoader.streamListOfCategory[category] {
+                    var stream = item as Stream
+                    if let i = find(streams, stream) {
+                        if let subscription = item as? Subscription {
+                            unsubscribeTo(subscription, index: i, category: category)
+                        }
                     }
                 }
+            default: break
             }
         }
     }
