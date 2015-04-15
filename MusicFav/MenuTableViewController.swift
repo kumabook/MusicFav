@@ -37,7 +37,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
             case .Twitter:        return []
             case .FeedlyCategory(let category):
                 if let streams = streamListDic[category] { return streams[index] }
-                else                                           { return [] }
+                else                                     { return [] }
             }
         }
         func numOfChild(streamListDic: [FeedlyKit.Category:[Stream]]) -> Int {
@@ -47,7 +47,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
             case .Twitter:        return 0
             case .FeedlyCategory(let category):
                 if let streams = streamListDic[category] { return streams.count }
-                else                                           { return 0 }
+                else                                     { return 0 }
             }
         }
     }
