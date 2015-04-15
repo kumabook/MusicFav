@@ -34,7 +34,7 @@ class StreamListLoader {
     var signal:               HotSignal<Event>
     private var sink:         SinkOf<Event>
     var streamListOfCategory: [FeedlyKit.Category: [Stream]]
-    var uncategorized:        FeedlyKit.Category?
+    var uncategorized:        FeedlyKit.Category
     var categories: [FeedlyKit.Category] {
         return streamListOfCategory.keys.array.sorted({ (first, second) -> Bool in
             return first == self.uncategorized || first.label > second.label
@@ -64,24 +64,28 @@ class StreamListLoader {
         let pipe = HotSignal<Event>.pipe()
         signal               = pipe.0
         sink                 = pipe.1
+        uncategorized        = FeedlyKit.Category.Uncategorized()
         if let userId = apiClient.profile?.id {
             uncategorized = FeedlyKit.Category.Uncategorized(userId)
-            streamListOfCategory[uncategorized!] = []
+        }
+        streamListOfCategory[uncategorized] = []
+        if !apiClient.isLoggedIn {
+            streamListOfCategory[uncategorized]?.extend(StreamListLoader.sampleSubscriptions() as [Stream])
         }
     }
 
     private func addSubscription(subscription: Subscription) {
-        if subscription.categories.count == 0 {
-            streamListOfCategory[uncategorized!]!.append(subscription)
-        } else {
-            for category in subscription.categories {
+        var categories = subscription.categories.count > 0 ? subscription.categories : [uncategorized]
+        for category in categories {
+            if find(streamListOfCategory[category]!, subscription) == nil {
                 streamListOfCategory[category]!.append(subscription)
             }
         }
     }
 
     private func removeSubscription(subscription: Subscription) {
-        for category in subscription.categories {
+        var categories = subscription.categories.count > 0 ? subscription.categories : [uncategorized]
+        for category in categories {
             let index = find(self.streamListOfCategory[category]!, subscription)
             if let i = index {
                 streamListOfCategory[category]!.removeAtIndex(i)
@@ -108,7 +112,7 @@ class StreamListLoader {
         if apiClient.isLoggedIn {
             return self.fetchSubscriptions()
         } else {
-            return self.fetchTrialFeeds()
+            return ColdSignal<[FeedlyKit.Category: [Stream]]>.empty()
         }
     }
 
@@ -128,15 +132,6 @@ class StreamListLoader {
         })
     }
 
-    func fetchTrialFeeds() -> ColdSignal<[FeedlyKit.Category: [Stream]]> {
-        return apiClient.fetchFeedsByIds(SampleFeed.samples().map({ $0.id })).map({feeds in
-            let samplesCategory = FeedlyKit.Category(id: "feed/musicfav-samples",
-                label: "Sample Feeds".localize())
-            self.streamListOfCategory = [samplesCategory:feeds] as [FeedlyKit.Category: [Stream]]
-            return self.streamListOfCategory
-        })
-    }
-
     func createCategory(label: String) -> FeedlyKit.Category? {
         if let profile = FeedlyAPIClient.sharedInstance.profile {
             let category = FeedlyKit.Category(label: label, profile: profile)
@@ -146,15 +141,15 @@ class StreamListLoader {
         return nil
     }
 
-    func subscribeTo(subscribable: Subscribable, category: FeedlyKit.Category) {
+    func subscribeTo(subscribable: Subscribable, categories: [FeedlyKit.Category]) {
         var subscription: Subscription?
         switch subscribable as Subscribable {
         case Subscribable.ToFeed(let feed):
-            subscription = Subscription(feed: feed, categories: [category])
+            subscription = Subscription(feed: feed, categories: categories)
         case .ToBlog(let blog):
             subscription = Subscription(id: blog.feedId,
                 title: blog.siteName,
-                categories: [category])
+                categories: categories)
         }
         if let s = subscription { subscribeTo(s) }
     }
@@ -162,6 +157,12 @@ class StreamListLoader {
     func subscribeTo(subscription: Subscription) {
         state = .Updating
         sink.put(.StartUpdating)
+        if !apiClient.isLoggedIn {
+            self.addSubscription(subscription)
+            self.state = .Normal
+            self.sink.put(.CreateAt(subscription))
+            return
+        }
         FeedlyAPIClient.sharedInstance.client.subscribeTo(subscription) { (req, res, error) -> Void in
             if let e = error {
                 self.state = .Error
@@ -177,11 +178,18 @@ class StreamListLoader {
     func unsubscribeTo(subscription: Subscription, index: Int, category: FeedlyKit.Category) {
         state = .Updating
         self.sink.put(.StartUpdating)
+        if !apiClient.isLoggedIn {
+            self.removeSubscription(subscription)
+            self.state = .Normal
+            self.sink.put(.RemoveAt(index, subscription, category))
+            return
+        }
         apiClient.client.unsubscribeTo(subscription.id, completionHandler: { (req, res, error) -> Void in
             if let e = error {
                 self.state = .Error
                 self.sink.put(.FailToUpdate(e))
             } else {
+                self.removeSubscription(subscription)
                 self.state = .Normal
                 self.sink.put(.RemoveAt(index, subscription, category))
             }

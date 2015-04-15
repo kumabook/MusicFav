@@ -242,10 +242,15 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
         case .Hypem:
             subscribable = Subscribable.ToBlog(blogLoader.blogs[indexPath.item])
         }
-        if isLoggedIn {
-            if let s = subscribable {
+        if let s = subscribable {
+            if isLoggedIn {
                 let ctc = CategoryTableViewController(subscribable: s, streamListLoader: streamListLoader)
                 navigationController?.pushViewController(ctc, animated: true)
+            } else {
+                if let s = subscribable {
+                    streamListLoader.subscribeTo(s, categories: [])
+                    navigationController?.dismissViewControllerAnimated(true, completion: {})
+                }
             }
         }
     }

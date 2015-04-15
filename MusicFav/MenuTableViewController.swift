@@ -266,12 +266,9 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         case .Twitter:        break
         case .FeedlyCategory(let category):
             if var streams = streamListLoader.streamListOfCategory[category] {
-                if let subscription = item as? Subscription {
-                    var index: Int?
-                    for i in 0..<streams.count {
-                        if streams[i].streamId == subscription.id { index = i }
-                    }
-                    if let i = index {
+                var stream = item as Stream
+                if let i = find(streams, stream) {
+                    if let subscription = item as? Subscription {
                         unsubscribeTo(subscription, index: i, category: category)
                     }
                 }
