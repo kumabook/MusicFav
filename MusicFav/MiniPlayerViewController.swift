@@ -93,27 +93,34 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
                 miniPlayerView.durationLabel.text = "00:00"
             }
             let imageManager = SDWebImageManager()
-            imageManager.downloadImageWithURL(
-                track.thumbnailUrl,
-                options: SDWebImageOptions.HighPriority,
-               progress: {receivedSize, expectedSize in },
-              completed: { (image, error, cacheType, finished, url) -> Void in
-                let playingInfoCenter: AnyClass? = NSClassFromString("MPNowPlayingInfoCenter")
-                if let center: AnyClass = playingInfoCenter {
-                    let infoCenter = MPNowPlayingInfoCenter.defaultCenter()
-                    let albumArt                     = MPMediaItemArtwork(image:image)
-                    var info:[String:AnyObject]      = [:]
-                    info[MPMediaItemPropertyTitle]   = track.title
-                    info[MPMediaItemPropertyArtwork] = albumArt
-                    infoCenter.nowPlayingInfo        = info
-                }
-            })
+            if let url = track.thumbnailUrl {
+                imageManager.downloadImageWithURL(url,
+                    options: SDWebImageOptions.HighPriority,
+                   progress: {receivedSize, expectedSize in },
+                  completed: { (image, error, cacheType, finished, url) -> Void in
+                    self.updateMPNowPlaylingInfoCenter(track, image: image)
+                })
+            } else {
+                self.updateMPNowPlaylingInfoCenter(track, image: UIImage(named: "default_thumb")!)
+            }
         } else {
             MPNowPlayingInfoCenter.defaultCenter().nowPlayingInfo = nil
             miniPlayerView.titleLabel.text    = ""
             miniPlayerView.durationLabel.text = "00:00"
         }
         miniPlayerView.state = player!.currentState
+    }
+
+    func updateMPNowPlaylingInfoCenter(track: Track, image: UIImage) {
+        let playingInfoCenter: AnyClass? = NSClassFromString("MPNowPlayingInfoCenter")
+        if let center: AnyClass = playingInfoCenter {
+            let infoCenter = MPNowPlayingInfoCenter.defaultCenter()
+            let albumArt                     = MPMediaItemArtwork(image:image)
+            var info:[String:AnyObject]      = [:]
+            info[MPMediaItemPropertyTitle]   = track.title
+            info[MPMediaItemPropertyArtwork] = albumArt
+            infoCenter.nowPlayingInfo        = info
+        }
     }
 
     func showMenu() {
