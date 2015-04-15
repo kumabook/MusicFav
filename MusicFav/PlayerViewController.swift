@@ -263,7 +263,11 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         }
         if let track = currentTrack {
             titleLabel.text = track.title
-            playerView.sd_setImageWithURL(track.thumbnailUrl, forState: UIControlState.allZeros)
+            if let url = track.thumbnailUrl {
+                playerView.sd_setImageWithURL(url, forState: UIControlState.allZeros)
+            } else {
+                playerView.setImage(UIImage(named: "icon"), forState: UIControlState.allZeros)
+            }
         } else {
             totalLabel.text   = "00:00"
             currentLabel.text = "00:00"
