@@ -67,9 +67,8 @@ class PreferenceViewController: UITableViewController {
     }
     
     func showLoginViewController() {
-        self.dismissViewControllerAnimated(false, nil)
-        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
-        appDelegate.miniPlayerViewController?.showOAuthViewController()
+        let oauthvc = FeedlyOAuthViewController(nibName:"FeedlyOAuthViewController", bundle:NSBundle.mainBundle())
+        navigationController?.pushViewController(oauthvc, animated: true)
     }
     
     func showLogoutDialog() {
