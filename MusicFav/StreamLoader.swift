@@ -11,14 +11,6 @@ import ReactiveCocoa
 import LlamaKit
 
 class StreamLoader {
-    class func defaultStream() -> Stream {
-        if let profile = FeedlyAPIClient.sharedInstance.profile {
-            return FeedlyKit.Category.All(profile.id)
-        } else {
-            return StreamListLoader.sampleSubscriptions()[0]
-        }
-    }
-
     enum RemoveMark {
         case Read
         case Unread

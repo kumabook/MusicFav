@@ -41,6 +41,23 @@ class StreamListLoader {
         })
     }
 
+    class func sampleSubscriptions() -> [Subscription] {
+        return [Subscription(id: "feed/http://spincoaster.com/feed",
+                          title: "Spincoaster (sample)",
+                     categories: []),
+                Subscription(id: "feed/http://matome.naver.jp/feed/topic/1Hinb",
+                          title: "Naver matome (sample)",
+                     categories: [])]
+    }
+
+    class func defaultStream() -> Stream {
+        if let profile = FeedlyAPIClient.sharedInstance.profile {
+            return FeedlyKit.Category.All(profile.id)
+        } else {
+            return StreamListLoader.sampleSubscriptions()[0]
+        }
+    }
+
     init() {
         state                = .Normal
         streamListOfCategory = [:]
