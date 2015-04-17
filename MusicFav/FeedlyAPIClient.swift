@@ -26,7 +26,7 @@ struct FeedlyAPIClientConfig {
     static let perPage      = 15
 
     static var clientId     = "sandbox"
-    static var clientSecret = "8LDQOW8KPYFPCQV2UL6J"
+    static var clientSecret = ""
     static var target       = CloudAPIClient.Target.Sandbox
 }
 
