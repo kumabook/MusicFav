@@ -17,7 +17,7 @@ struct XCDYouTubeClientConfig {
 extension XCDYouTubeClient {
     func fetchVideo(identifier: String, errorOnFailure: Bool) -> ColdSignal<XCDYouTubeVideo> {
         return ColdSignal { (sink, disposable) in
-            self.getVideoWithIdentifier(identifier, completionHandler: { (video, error) -> Void in
+            let operation = self.getVideoWithIdentifier(identifier, completionHandler: { (video, error) -> Void in
                 if let e = error {
                     if errorOnFailure {
                         sink.put(.Error(error))
@@ -29,6 +29,9 @@ extension XCDYouTubeClient {
                 sink.put(.Next(Box(video)))
                 sink.put(.Completed)
             })
+            disposable.addDisposable {
+                operation.cancel()
+            }
             return
         }
     }
