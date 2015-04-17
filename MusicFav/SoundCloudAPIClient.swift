@@ -28,6 +28,7 @@ class SoundCloudAPIClient {
     func fetchTrack(track_id: String, errorOnFailure: Bool) -> ColdSignal<SoundCloudAudio> {
         return ColdSignal { (sink, disposable) in
             let manager = AFHTTPRequestOperationManager()
+            manager.completionQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
             let url = NSString(format: "%@/tracks/%@.json?client_id=%@",
                 SoundCloudAPIClientConfig.baseUrl, track_id, SoundCloudAPIClientConfig.client_id)
             manager.GET(url, parameters: nil,
