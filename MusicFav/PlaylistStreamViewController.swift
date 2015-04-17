@@ -39,10 +39,6 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
         observer?.dispose()
     }
 
-    override func loadView() {
-        super.loadView()
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
         let nib = UINib(nibName: "PlaylistStreamTableViewCell", bundle: nil)
