@@ -98,7 +98,6 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
         })
 
         tableView?.reloadData()
-        streamLoader.fetchEntries()
         let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         appDelegate.miniPlayerViewController?.mainViewController.showCenterPanelAnimated(true)
     }

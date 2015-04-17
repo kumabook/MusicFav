@@ -101,7 +101,6 @@ class EntryStreamViewController: UITableViewController {
         })
 
         tableView?.reloadData()
-        streamLoader.fetchEntries()
         let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
         appDelegate.miniPlayerViewController?.mainViewController.showCenterPanelAnimated(true)
     }
