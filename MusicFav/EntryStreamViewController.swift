@@ -174,14 +174,17 @@ class EntryStreamViewController: UITableViewController {
         let entry = streamLoader.entries[indexPath.row]
         let cell = tableView.dequeueReusableCellWithIdentifier(entryStreamTableCellReuseIdentifier, forIndexPath:indexPath) as EntryStreamTableViewCell
         let markAs = streamLoader.removeMark
+        weak var _self = self
         cell.prepareSwipeViews(markAs, onSwipe: { (cell) -> Void in
+            if _self == nil { return }
+            let __self = _self!
             switch markAs {
             case .Read:
-                self.markAsRead(self.tableView.indexPathForCell(cell)!)
+                __self.markAsRead(__self.tableView.indexPathForCell(cell)!)
             case .Unread:
-                self.markAsUnread(self.tableView.indexPathForCell(cell)!)
+                __self.markAsUnread(__self.tableView.indexPathForCell(cell)!)
             case .Unsave:
-                self.markAsUnsaved(self.tableView.indexPathForCell(cell)!)
+                __self.markAsUnsaved(__self.tableView.indexPathForCell(cell)!)
             }
         })
         cell.titleLabel?.text = entry.title
