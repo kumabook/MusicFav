@@ -40,9 +40,12 @@ class PlaylistLoader {
     }
 
     func fetchTrack(index: Int, track: Track) -> ColdSignal<(Int, Track)> {
+        weak var _self = self
         return track.fetchTrackDetail(false).map { _track -> (Int, Track) in
-            Playlist.notifyChange(.TrackUpdated(self.playlist, _track))
-            self.playlist.sink.put(index)
+            if let __self = _self {
+                Playlist.notifyChange(.TrackUpdated(__self.playlist, _track))
+                __self.playlist.sink.put(index)
+            }
             return (index, _track)
         }
     }

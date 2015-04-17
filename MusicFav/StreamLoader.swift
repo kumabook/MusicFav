@@ -66,10 +66,7 @@ class StreamLoader {
 
     func dispose() {
         for loader in loaderOfPlaylist {
-            let disposable = loader.1.1
-            if !disposable.disposed {
-                loader.1.1.dispose()
-            }
+            loader.1.1.dispose()
         }
         playlistifier?.dispose()
     }
