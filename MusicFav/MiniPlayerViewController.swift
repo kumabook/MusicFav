@@ -42,13 +42,10 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
     override init() {
         super.init(nibName: "MiniPlayerViewController", bundle: NSBundle.mainBundle())
         mainViewController                      = JASidePanelController()
-        streamPageMenuController                = StreamPageMenuController(stream:  StreamListLoader.defaultStream())
         playlistTableViewController             = PlaylistTableViewController()
         menuViewController                      = MenuTableViewController()
         mainViewController.leftPanel            = UINavigationController(rootViewController:menuViewController)
         mainViewController.rightPanel           = UINavigationController(rootViewController:playlistTableViewController)
-        mainViewController.centerPanel          = UINavigationController(rootViewController:streamPageMenuController)
-
         mainViewController.prepare()
         miniPlayerObserver                      = MiniPlayerObserver(miniPlayerViewController: self)
         addChildViewController(mainViewController)

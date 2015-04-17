@@ -65,6 +65,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if feedlyAPIClient.profile == nil {
             feedlyAPIClient.clearAllAccount()
         }
+        reload()
         return true
     }
 
