@@ -26,6 +26,7 @@ class MusicFavAPIClient {
     func playlistify(targetUrl: NSURL) -> ColdSignal<Playlist> {
         return ColdSignal { (sink, disposable) in
             let manager = AFHTTPRequestOperationManager()
+            manager.completionQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
             let url = String(format: "%@/playlistify?url=%@", MusicFavAPIClientConfig.baseUrl, targetUrl)
             manager.GET(url, parameters: nil,
                 success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
