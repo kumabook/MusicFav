@@ -146,22 +146,21 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     }
 
     func showStream(#section: Section) {
-        let mainViewController = appDelegate.miniPlayerViewController?.mainViewController
         switch section {
         case .GlobalResource(let stream):
-            mainViewController?.centerPanel = UINavigationController(rootViewController: StreamPageMenuController(stream: stream))
+            showStream(stream: stream)
         case .Pocket:  return
         case .Twitter: return
         case .FeedlyCategory(let category): return
         case .UncategorizedSubscription(let subscription):
-            mainViewController?.centerPanel = UINavigationController(rootViewController: StreamPageMenuController(stream: subscription))
+            showStream(stream: subscription)
         }
-        mainViewController?.showCenterPanelAnimated(true)
     }
 
     func showStream(#stream: Stream) {
         let mainViewController          = appDelegate.miniPlayerViewController?.mainViewController
-        mainViewController?.centerPanel = UINavigationController(rootViewController: StreamPageMenuController(stream: stream))
+        let vc                          = StreamPageMenuController(stream: stream)
+        mainViewController?.centerPanel = UINavigationController(rootViewController: vc)
         mainViewController?.showCenterPanelAnimated(true)
     }
 
