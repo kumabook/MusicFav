@@ -62,6 +62,7 @@
 		67773A721ACC194B00E7BC8E /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67773A711ACC194B00E7BC8E /* Entry.swift */; };
 		67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */; };
 		67AF8E231A922AB80043DF33 /* FeedlyKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671664271A738E2A005FE005 /* FeedlyKit.framework */; };
+		67B366DC1AE168E200E089B2 /* soundcloud.json in Resources */ = {isa = PBXBuildFile; fileRef = 67B366DB1AE168E200E089B2 /* soundcloud.json */; };
 		67CB43F01A4ECD470010465E /* playlistify-userscript.js in Resources */ = {isa = PBXBuildFile; fileRef = 67CB43EF1A4ECD470010465E /* playlistify-userscript.js */; };
 		67CB43F21A4ED6D50010465E /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 67CB43F11A4ED6D50010465E /* main.js */; };
 		67CE596A1A51206D00C86681 /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67CE59691A51206D00C86681 /* MiniPlayerView.swift */; };
@@ -184,6 +185,7 @@
 		67773A711ACC194B00E7BC8E /* Entry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
 		677933A8B0BDDEAED4C720D5 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTableViewController.swift; sourceTree = "<group>"; };
+		67B366DB1AE168E200E089B2 /* soundcloud.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = soundcloud.json; sourceTree = "<group>"; };
 		67CB43EF1A4ECD470010465E /* playlistify-userscript.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "playlistify-userscript.js"; path = "UserScript/playlistify-userscript.js"; sourceTree = "<group>"; };
 		67CB43F11A4ED6D50010465E /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = main.js; path = UserScript/main.js; sourceTree = "<group>"; };
 		67CE59691A51206D00C86681 /* MiniPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
@@ -315,6 +317,7 @@
 			children = (
 				675AB3501AD4334D0003824C /* Localizable.strings */,
 				67277CAC1A434304002FD3E0 /* Info.plist */,
+				67B366DB1AE168E200E089B2 /* soundcloud.json */,
 				675AB33A1AD3D80A0003824C /* feedly.json */,
 				6709D8AA1ADA4E860003F469 /* Settings.bundle */,
 			);
@@ -590,6 +593,7 @@
 				675AB33B1AD3D80A0003824C /* feedly.json in Resources */,
 				67277CBB1A434304002FD3E0 /* LaunchScreen.xib in Resources */,
 				67DA46661A87B49C0048B29C /* SelectPlaylistTableViewCell.xib in Resources */,
+				67B366DC1AE168E200E089B2 /* soundcloud.json in Resources */,
 				67CE596C1A51208000C86681 /* MiniPlayerView.xib in Resources */,
 				67F9A2961AD0558C0078EC3C /* PlaylistStreamTableViewCell.xib in Resources */,
 				67F7CF151A635BD0008FB7AD /* Main.storyboard in Resources */,

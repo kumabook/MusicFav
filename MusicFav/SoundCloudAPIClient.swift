@@ -14,7 +14,7 @@ import AFNetworking
 
 struct SoundCloudAPIClientConfig {
     static let baseUrl   = "http://api.soundcloud.com"
-    static let client_id = "eb7939fb56bae0a6d3412ff21d3ecaba"
+    static var client_id = ""
 }
 
 
@@ -25,6 +25,26 @@ class SoundCloudAPIClient {
         }
         return Static.instance
     }
+
+    init() {
+        loadConfig()
+    }
+    func loadConfig() {
+        let bundle = NSBundle.mainBundle()
+        if let path = bundle.pathForResource("soundcloud", ofType: "json") {
+            let data     = NSData(contentsOfFile: path)
+            let jsonObject: AnyObject? = NSJSONSerialization.JSONObjectWithData(data!,
+                options: NSJSONReadingOptions.MutableContainers,
+                error: nil)
+            if let obj: AnyObject = jsonObject {
+                let json = JSON(obj)
+                if let clientId = json["client_id"].string {
+                   SoundCloudAPIClientConfig.client_id = clientId
+                }
+            }
+        }
+    }
+
     func fetchTrack(track_id: String, errorOnFailure: Bool) -> ColdSignal<SoundCloudAudio> {
         return ColdSignal { (sink, disposable) in
             let manager = AFHTTPRequestOperationManager()
