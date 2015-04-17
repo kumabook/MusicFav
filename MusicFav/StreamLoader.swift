@@ -43,6 +43,7 @@ class StreamLoader {
     var entries:            [Entry]
     var playlistsOfEntry:   [Entry:Playlist]
     var loaderOfPlaylist:   [Playlist:(PlaylistLoader, Disposable)]
+    var playlistifier:      Disposable?
     var streamContinuation: String?
     var hotSignal:          HotSignal<Event>
     var sink:               SinkOf<Event>
@@ -70,6 +71,7 @@ class StreamLoader {
                 loader.1.1.dispose()
             }
         }
+        playlistifier?.dispose()
     }
 
     func updateLastUpdated(updated: Int64?) {
@@ -93,11 +95,14 @@ class StreamLoader {
         signal.deliverOn(MainScheduler())
             .start(
                 next: { paginatedCollection in
-                    let entries = paginatedCollection.items
-                    for e in entries {
-                        self.entries.insert(e, atIndex: 0)
-                        self.loadPlaylistOfEntry(e)
-                    }
+                    var latestEntries = paginatedCollection.items
+                    self.playlistifier = latestEntries.map({
+                        self.loadPlaylistOfEntry($0)
+                    }).reduce(ColdSignal<Void>.empty(), combine: { (signal, nextSignal) in
+                        signal.concat(nextSignal)
+                    }).start(next: {}, error: {error in}, completed: {})
+                    latestEntries.extend(self.entries)
+                    self.entries = latestEntries
                     self.updateLastUpdated(paginatedCollection.updated)
                 },
                 error: {error in
@@ -131,7 +136,11 @@ class StreamLoader {
                 next: {paginatedCollection in
                     let entries = paginatedCollection.items
                     self.entries.extend(entries)
-                    for e in entries { self.loadPlaylistOfEntry(e) }
+                    self.playlistifier = entries.map({
+                        self.loadPlaylistOfEntry($0)
+                    }).reduce(ColdSignal<Void>.empty(), combine: { (signal, nextSignal) in
+                        signal.concat(nextSignal)
+                    }).start(next: {}, error: {error in}, completed: {})
                     self.streamContinuation = paginatedCollection.continuation
                     self.updateLastUpdated(paginatedCollection.updated)
                     self.sink.put(.CompleteLoadingNext)           // First reload tableView,
@@ -162,26 +171,27 @@ class StreamLoader {
             })
     }
 
-    func loadPlaylistOfEntry(entry: Entry) {
+    func loadPlaylistOfEntry(entry: Entry) -> ColdSignal<Void> {
         if let url = entry.url {
-            self.musicfavClient.playlistify(url).deliverOn(MainScheduler())
-                .start(
-                    next: { playlist in
-                        self.playlistsOfEntry[entry] = playlist
-                        self.sink.put(.CompleteLoadingPlaylist(playlist, entry))
-                        if let loader = self.loaderOfPlaylist[playlist] {
-                            loader.1.dispose()
-                        }
-                        let loader = PlaylistLoader(playlist: playlist)
-                        let disposable = loader.fetchTracks().start(next: { track in
-                            }, error: { error in
-                            }, completed: {
-                        })
-                        self.loaderOfPlaylist[playlist] = (loader, disposable)
+            return musicfavClient.playlistify(url).map({ playlist in
+                self.playlistsOfEntry[entry] = playlist
+                MainScheduler().schedule {
+                    self.sink.put(.CompleteLoadingPlaylist(playlist, entry))
+                }
+                if let _disposable = self.loaderOfPlaylist[playlist] {
+                    _disposable.1.dispose()
+                }
+                let loader = PlaylistLoader(playlist: playlist)
+                let disposable = loader.fetchTracks().start(next: { track in
                     }, error: { error in
+                        println(error)
                     }, completed: {
                 })
+                self.loaderOfPlaylist[playlist] = (loader, disposable)
+                return ()
+            })
         }
+        return ColdSignal<Void>.empty()
     }
 
     var unreadOnly: Bool {
