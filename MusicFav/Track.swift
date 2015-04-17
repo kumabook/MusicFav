@@ -54,7 +54,7 @@ class Track {
         if let aUrl = soundCloudAudio.artworkUrl {
             thumbnailUrl = NSURL(string: aUrl)
         }
-        TrackStore.save(self)
+//        TrackStore.save(self)
     }
     
     func updatePropertiesWithYouTubeVideo(video: XCDYouTubeVideo) {
@@ -62,7 +62,7 @@ class Track {
         duration       = video.duration
         streamUrl      = video.streamURLs[XCDYouTubeVideoQuality.Medium360.rawValue] as? NSURL
         thumbnailUrl   = video.mediumThumbnailURL
-        TrackStore.save(self)
+//        TrackStore.save(self)
     }
 
     func toStoreObject() -> TrackStore {
