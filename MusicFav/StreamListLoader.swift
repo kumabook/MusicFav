@@ -33,6 +33,7 @@ class StreamListLoader {
     var state:                State
     var signal:               HotSignal<Event>
     private var sink:         SinkOf<Event>
+    var disposable:           Disposable?
     var streamListOfCategory: [FeedlyKit.Category: [Stream]]
     var uncategorized:        FeedlyKit.Category
     var categories: [FeedlyKit.Category] {
@@ -77,7 +78,14 @@ class StreamListLoader {
         }
     }
 
-    deinit {}
+    deinit {
+        dispose()
+    }
+
+    func dispose() {
+        disposable?.dispose()
+        disposable = nil
+    }
 
     private func addSubscription(subscription: Subscription) {
         var categories = subscription.categories.count > 0 ? subscription.categories : [uncategorized]
@@ -101,7 +109,8 @@ class StreamListLoader {
     func refresh() {
         state = .Fetching
         sink.put(.StartLoading)
-        fetch().deliverOn(MainScheduler()).start(
+        disposable?.dispose()
+        disposable = fetch().deliverOn(MainScheduler()).start(
             next: { dic in
                 self.sink.put(.StartLoading)
             }, error: { error in

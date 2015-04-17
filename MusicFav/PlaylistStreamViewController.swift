@@ -20,6 +20,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
     var indicator:    UIActivityIndicatorView!
     var reloadButton: UIButton!
     var streamLoader: StreamLoader!
+    var observer:     Disposable?
 
     init(streamLoader: StreamLoader) {
         self.streamLoader = streamLoader
@@ -32,6 +33,10 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
 
     required init(coder aDecoder: NSCoder) {
         super.init(coder:aDecoder)
+    }
+
+    deinit {
+        observer?.dispose()
     }
 
     override func loadView() {
@@ -61,16 +66,21 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
 
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action:"fetchLatestEntries", forControlEvents:UIControlEvents.ValueChanged)
+    }
+
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
         observeStreamLoader()
     }
 
     override func viewWillDisappear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: "logout", object: nil)
         super.viewWillDisappear(animated)
+        observer?.dispose()
     }
 
     func observeStreamLoader() {
-        streamLoader.hotSignal.observe({ event in
+        observer?.dispose()
+        observer = streamLoader.hotSignal.observe({ event in
             switch event {
             case .StartLoadingLatest:
                 self.refreshControl?.beginRefreshing()

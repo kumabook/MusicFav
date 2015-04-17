@@ -18,6 +18,7 @@ class EntryStreamViewController: UITableViewController {
     let entryStreamTableCellReuseIdentifier = "EntryStreamTableViewCell"
 
     let streamLoader: StreamLoader!
+    var observer:     Disposable?
     var indicator:    UIActivityIndicatorView!
     var reloadButton: UIButton!
 
@@ -34,6 +35,10 @@ class EntryStreamViewController: UITableViewController {
 
     required init(coder aDecoder: NSCoder) {
         super.init(coder:aDecoder)
+    }
+
+    deinit {
+        observer?.dispose()
     }
 
     override func loadView() {
@@ -64,16 +69,23 @@ class EntryStreamViewController: UITableViewController {
 
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action:"fetchLatestEntries", forControlEvents:UIControlEvents.ValueChanged)
+
+    }
+
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
         observeStreamLoader()
     }
 
     override func viewWillDisappear(animated: Bool) {
-        NSNotificationCenter.defaultCenter().removeObserver(self, name: "logout", object: nil)
         super.viewWillDisappear(animated)
+        observer?.dispose()
+        observer = nil
     }
 
     func observeStreamLoader() {
-        streamLoader.hotSignal.observe({ event in
+        observer?.dispose()
+        observer = streamLoader.hotSignal.observe({ event in
             switch event {
             case .StartLoadingLatest:
                 self.refreshControl?.beginRefreshing()

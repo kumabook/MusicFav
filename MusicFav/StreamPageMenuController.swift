@@ -25,6 +25,10 @@ class StreamPageMenuController: UIViewController {
         super.init(coder:aDecoder)
     }
 
+    deinit {
+        streamLoader.dispose()
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.toolbar.translucent       = false
