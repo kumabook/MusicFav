@@ -12,7 +12,7 @@ import ReactiveCocoa
 import LlamaKit
 
 
-protocol PlaylistStreamTableViewCellDelegate {
+protocol PlaylistStreamTableViewCellDelegate: class {
     func trackSelectedAt(index: Int, track: Track, playlist: Playlist)
     func trackScrollViewMarginTapped(playlist: Playlist?)
 }
@@ -23,9 +23,10 @@ class PlaylistStreamTableViewCell: UITableViewCell {
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var trackThumbScrollView: UIScrollView!
 
+    weak var delegate: PlaylistStreamTableViewCellDelegate?
+
     var imageViews: [UIImageView] = []
     var playlist:   Playlist?
-    var delegate:   PlaylistStreamTableViewCellDelegate?
     var observer:   Disposable?
 
     @IBOutlet weak var trackNumLabel: UILabel!
@@ -34,10 +35,7 @@ class PlaylistStreamTableViewCell: UITableViewCell {
     }
 
     deinit {
-        if let _observer = observer {
-            _observer.dispose()
-            observer = nil
-        }
+        observer?.dispose()
     }
 
     override func setSelected(selected: Bool, animated: Bool) {
@@ -100,9 +98,7 @@ class PlaylistStreamTableViewCell: UITableViewCell {
     }
 
     func observePlaylist(playlist: Playlist) {
-        if let _observer = observer {
-            _observer.dispose()
-        }
+        observer?.dispose()
         observer = playlist.signal.observe { index in
             MainScheduler().schedule {
                 self.loadThumbnail(self.imageViews[index], track: playlist.tracks[index])
