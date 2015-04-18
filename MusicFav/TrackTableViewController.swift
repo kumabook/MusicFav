@@ -52,6 +52,8 @@ class TrackTableViewController: UITableViewController {
     required init(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+
+    deinit {}
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -124,13 +126,17 @@ class TrackTableViewController: UITableViewController {
         if playlist == nil {
             return
         }
-
-        let loader = PlaylistLoader(playlist: playlist!)
-        loader.fetchTracks().start(
+        weak var _self = self
+        playlistLoader.fetchTracks().start(
             next: { (index, track) in
-                self.tableView?.reloadRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)],
-                                                        withRowAnimation: UITableViewRowAnimation.None)
-                Playlist.notifyChange(.Updated(self.playlist!))
+                MainScheduler().schedule {
+                    if let __self = _self {
+                        __self.tableView?.reloadRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)],
+                            withRowAnimation: UITableViewRowAnimation.None)
+                        Playlist.notifyChange(.Updated(__self.playlist!))
+                    }
+                }
+                return
             }, error: { error in
             }, completed: {
         })
