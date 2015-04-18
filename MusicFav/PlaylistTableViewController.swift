@@ -7,9 +7,12 @@
 //
 
 import UIKit
+import ReactiveCocoa
+import LlamaKit
 
 class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     let NEW_PLAYLIST_INDEX = -1
+    var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as AppDelegate } }
     enum Section: Int {
         case Playing     = 0
         case Selected    = 1
@@ -41,10 +44,19 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         override func ended()            {}
     }
     let tableCellReuseIdentifier      = "playlistTableViewCell"
-    let cellHeight:     CGFloat       = 80
-    var playlists:      [Playlist]    = []
-    var playerObserver: PlaylistTableViewPlayerObserver?
-    var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as AppDelegate } }
+    let cellHeight:        CGFloat       = 80
+    var playlists:         [Playlist]    = []
+    var playerObserver:    PlaylistTableViewPlayerObserver?
+    var playlistsObserver: Disposable?
+
+    deinit {}
+
+    func dispose() {
+        if let observer = playerObserver {
+            appDelegate.player?.removeObserver(observer)
+        }
+        playlistsObserver?.dispose()
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,9 +72,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     }
 
     override func viewWillDisappear(animated: Bool) {
-        if let observer = playerObserver {
-            appDelegate.player?.removeObserver(observer)
-        }
+        dispose()
     }
 
     func updateNavbar() {
@@ -103,7 +113,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     func observePlaylists() {
         playlists = Playlist.shared.current
         tableView.reloadData()
-        Playlist.shared.signal.observe { event in
+        playlistsObserver = Playlist.shared.signal.observe { event in
             let section = Section.Favorites.rawValue
             switch event {
             case .Created(let playlist):
