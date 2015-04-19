@@ -15,4 +15,12 @@ extension String {
                                            value: self,
                                          comment: self)
     }
+
+    static func tutorialString(key: String) -> String {
+        return NSLocalizedString(key, tableName: "Tutorial",
+                                          bundle: NSBundle.mainBundle(),
+                                           value: key,
+                                         comment: key)
+
+    }
 }

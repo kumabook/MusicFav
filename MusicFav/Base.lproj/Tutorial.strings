@@ -1,0 +1,25 @@
+/* 
+  Tutorial.strings
+  MusicFav
+
+  Created by Hiroki Kumamoto on 4/18/15.
+  Copyright (c) 2015 Hiroki Kumamoto. All rights reserved.
+*/
+
+"first_page_title"    = "MusicFav\nA Music RSS Reader";
+"first_page_desc"     = "Follows the music blogs,\n make your favorite playlists.";
+
+"stream_page_title"   = "Subsribe Feed and Read Article";
+"stream_page_desc"    = "・Mark as read with Swipe\n・Save article with Star button";
+
+"playlist_page_title" = "Article & Favorite playlist";
+"playlist_page_desc"  = "・Automatically playlist from an article\n・You can also create a custom playlist.";
+
+"player_page_title"   = "Mini and Full-screen Player";
+"player_page_desc"    = "・Switch mini/full with tap or drag.\n・Support background play and air-play";
+
+"menu_page_title"     = "Sync with Feedly";
+"menu_page_desc"      = "・Subscribe feeds via feedly\n・Add/Remove \n・Search feed url and word";
+
+"last_page_title"     = "Enjoy MusicFav!";
+"last_page_desc"      = "※You can login from setting menu";
