@@ -65,6 +65,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+    func startTutorial() {
+        let vc = TutorialViewController()
+        coverViewController?.presentViewController(vc, animated: true, completion: {})
+    }
+
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         TrackStore.migration()
         setupAudioSession(application)
@@ -75,6 +80,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             markAsLaunched()
             setupMainViewControllers()
             window?.makeKeyAndVisible()
+            startTutorial()
             reload()
         } else {
             setupMainViewControllers()
