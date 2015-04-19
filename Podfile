@@ -8,6 +8,7 @@ pod 'MBProgressHUD',        '>= 0.8'
 pod 'MCSwipeTableViewCell', '>= 2.1.0'
 pod 'Snap',                 '>= 0.0.6'
 pod 'InAppSettingsKit',     '~> 2.1'
+pod 'EAIntroView',          '~> 2.7.0'
 pod 'PageMenu'
 pod 'MarqueeLabel'
 pod 'RATreeView',           :git => "https://github.com/kumabook/RATreeView.git",
