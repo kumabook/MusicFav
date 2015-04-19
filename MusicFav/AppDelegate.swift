@@ -41,31 +41,47 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         defaults.registerDefaults(["firstLaunch": true])
     }
 
-
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        TrackStore.migration()
-        registerNSUserDefaults()
-        if isFirstLaunch {
-            Playlist.createDefaultPlaylist()
-            markAsLaunched()
-        }
+    func setupMainViewControllers() {
         player                      = Player()
         appearanceManager           = AppearanceManager()
         appearanceManager?.apply()
         window                      = UIWindow(frame: UIScreen.mainScreen().bounds)
         miniPlayerViewController    = MiniPlayerViewController()
         coverViewController         = DraggableCoverViewController(coverViewController: PlayerViewController(),
-                                                                   floorViewController: miniPlayerViewController!)
+            floorViewController: miniPlayerViewController!)
         window?.rootViewController  = self.coverViewController
-        window?.makeKeyAndVisible()
+    }
+
+    func setupAudioSession(application: UIApplication) {
         let audioSession = AVAudioSession()
         audioSession.setCategory(AVAudioSessionCategoryPlayback, error: nil)
         application.beginReceivingRemoteControlEvents()
+    }
+
+    func setupAPIClient() {
         let feedlyAPIClient = FeedlyAPIClient.sharedInstance
         if feedlyAPIClient.profile == nil {
             feedlyAPIClient.clearAllAccount()
         }
-        reload()
+    }
+
+    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        TrackStore.migration()
+        setupAudioSession(application)
+        setupAPIClient()
+        registerNSUserDefaults()
+        if isFirstLaunch {
+            Playlist.createDefaultPlaylist()
+            markAsLaunched()
+            setupMainViewControllers()
+            window?.makeKeyAndVisible()
+            reload()
+        } else {
+            setupMainViewControllers()
+            window?.makeKeyAndVisible()
+            reload()
+        }
+
         return true
     }
 
