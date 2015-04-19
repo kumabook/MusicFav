@@ -61,8 +61,12 @@
 		67773A701ACB81AA00E7BC8E /* MusicFavAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67773A6F1ACB81AA00E7BC8E /* MusicFavAPIClient.swift */; };
 		67773A721ACC194B00E7BC8E /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67773A711ACC194B00E7BC8E /* Entry.swift */; };
 		67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */; };
+		6794E7EA1AE241AC0054B3DB /* tutorial.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6794E7E91AE241AC0054B3DB /* tutorial.xcassets */; };
+		6794E7ED1AE256300054B3DB /* Tutorial.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6794E7EF1AE256300054B3DB /* Tutorial.strings */; };
+		6794E7F51AE318720054B3DB /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6794E7F41AE318720054B3DB /* TutorialView.swift */; };
 		67AF8E231A922AB80043DF33 /* FeedlyKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671664271A738E2A005FE005 /* FeedlyKit.framework */; };
 		67B366DC1AE168E200E089B2 /* soundcloud.json in Resources */ = {isa = PBXBuildFile; fileRef = 67B366DB1AE168E200E089B2 /* soundcloud.json */; };
+		67B366DE1AE1CBA800E089B2 /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B366DD1AE1CBA800E089B2 /* TutorialViewController.swift */; };
 		67CB43F01A4ECD470010465E /* playlistify-userscript.js in Resources */ = {isa = PBXBuildFile; fileRef = 67CB43EF1A4ECD470010465E /* playlistify-userscript.js */; };
 		67CB43F21A4ED6D50010465E /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 67CB43F11A4ED6D50010465E /* main.js */; };
 		67CE596A1A51206D00C86681 /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67CE59691A51206D00C86681 /* MiniPlayerView.swift */; };
@@ -185,7 +189,12 @@
 		67773A711ACC194B00E7BC8E /* Entry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
 		677933A8B0BDDEAED4C720D5 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTableViewController.swift; sourceTree = "<group>"; };
+		6794E7E91AE241AC0054B3DB /* tutorial.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = tutorial.xcassets; sourceTree = "<group>"; };
+		6794E7EE1AE256300054B3DB /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Tutorial.strings; sourceTree = "<group>"; };
+		6794E7F11AE2563B0054B3DB /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Tutorial.strings; sourceTree = "<group>"; };
+		6794E7F41AE318720054B3DB /* TutorialView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		67B366DB1AE168E200E089B2 /* soundcloud.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = soundcloud.json; sourceTree = "<group>"; };
+		67B366DD1AE1CBA800E089B2 /* TutorialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialViewController.swift; sourceTree = "<group>"; };
 		67CB43EF1A4ECD470010465E /* playlistify-userscript.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "playlistify-userscript.js"; path = "UserScript/playlistify-userscript.js"; sourceTree = "<group>"; };
 		67CB43F11A4ED6D50010465E /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = main.js; path = UserScript/main.js; sourceTree = "<group>"; };
 		67CE59691A51206D00C86681 /* MiniPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
@@ -304,6 +313,7 @@
 				67277CD61A450CB8002FD3E0 /* Net */,
 				67277CAD1A434304002FD3E0 /* AppDelegate.swift */,
 				67277CB71A434304002FD3E0 /* Images.xcassets */,
+				6794E7E91AE241AC0054B3DB /* tutorial.xcassets */,
 				67277CB91A434304002FD3E0 /* LaunchScreen.xib */,
 				67F7CF141A635BD0008FB7AD /* Main.storyboard */,
 				67277CAF1A434304002FD3E0 /* MusicFav.xcdatamodeld */,
@@ -316,6 +326,7 @@
 			isa = PBXGroup;
 			children = (
 				675AB3501AD4334D0003824C /* Localizable.strings */,
+				6794E7EF1AE256300054B3DB /* Tutorial.strings */,
 				67277CAC1A434304002FD3E0 /* Info.plist */,
 				67B366DB1AE168E200E089B2 /* soundcloud.json */,
 				675AB33A1AD3D80A0003824C /* feedly.json */,
@@ -401,6 +412,7 @@
 				67F9A2941AD0558C0078EC3C /* PlaylistStreamTableViewCell.xib */,
 				6767AE5B1ADBECCC00A92497 /* StreamTableViewCell.swift */,
 				6767AE5C1ADBECCC00A92497 /* StreamTableViewCell.xib */,
+				6794E7F41AE318720054B3DB /* TutorialView.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -447,6 +459,7 @@
 				67277CDA1A46DE0E002FD3E0 /* FeedlyOAuthViewController.xib */,
 				6727EDFC1A5AC1DE003C6A47 /* MiniPlayerViewController.swift */,
 				6727EDFD1A5AC1DE003C6A47 /* MiniPlayerViewController.xib */,
+				67B366DD1AE1CBA800E089B2 /* TutorialViewController.swift */,
 			);
 			name = Global;
 			sourceTree = "<group>";
@@ -591,11 +604,13 @@
 				67CB43F01A4ECD470010465E /* playlistify-userscript.js in Resources */,
 				6728FA3A1A60580A00F693B3 /* PreferenceViewController.xib in Resources */,
 				675AB33B1AD3D80A0003824C /* feedly.json in Resources */,
+				6794E7ED1AE256300054B3DB /* Tutorial.strings in Resources */,
 				67277CBB1A434304002FD3E0 /* LaunchScreen.xib in Resources */,
 				67DA46661A87B49C0048B29C /* SelectPlaylistTableViewCell.xib in Resources */,
 				67B366DC1AE168E200E089B2 /* soundcloud.json in Resources */,
 				67CE596C1A51208000C86681 /* MiniPlayerView.xib in Resources */,
 				67F9A2961AD0558C0078EC3C /* PlaylistStreamTableViewCell.xib in Resources */,
+				6794E7EA1AE241AC0054B3DB /* tutorial.xcassets in Resources */,
 				67F7CF151A635BD0008FB7AD /* Main.storyboard in Resources */,
 				67277CB81A434304002FD3E0 /* Images.xcassets in Resources */,
 				67254C7A1A493A570064E5DF /* EntryStreamTableViewCell.xib in Resources */,
@@ -716,6 +731,7 @@
 				6728FA3E1A60B9FD00F693B3 /* TrackTableViewController.swift in Sources */,
 				67DA46581A8610A70048B29C /* TrackStore.swift in Sources */,
 				675AB3411AD3E3DA0003824C /* StringExtension.swift in Sources */,
+				67B366DE1AE1CBA800E089B2 /* TutorialViewController.swift in Sources */,
 				67FAC5571A738F6C00A32818 /* Track.swift in Sources */,
 				67D935A31AA7C08E0061C1A0 /* DraggableCoverViewController.swift in Sources */,
 				6727EDFE1A5AC1DE003C6A47 /* MiniPlayerViewController.swift in Sources */,
@@ -723,6 +739,7 @@
 				6728FA391A60580A00F693B3 /* PreferenceViewController.swift in Sources */,
 				67254C791A493A570064E5DF /* EntryStreamTableViewCell.swift in Sources */,
 				6767AE621ADC20D300A92497 /* RecommendFeed.swift in Sources */,
+				6794E7F51AE318720054B3DB /* TutorialView.swift in Sources */,
 				6747CEB41AA3204900A6A16B /* Player.swift in Sources */,
 				67DB2A121A5588A6006BB490 /* MiniPlayerViewDelegate.swift in Sources */,
 				67277CDB1A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift in Sources */,
@@ -795,6 +812,15 @@
 				675AB3511AD4334D0003824C /* ja */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		6794E7EF1AE256300054B3DB /* Tutorial.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6794E7EE1AE256300054B3DB /* ja */,
+				6794E7F11AE2563B0054B3DB /* Base */,
+			);
+			name = Tutorial.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
