@@ -11,9 +11,14 @@ import ReactiveCocoa
 import LlamaKit
 import NXOAuth2Client
 
+protocol FeedlyOAuthViewDelegate: class {
+    func onLoggedIn()
+}
+
 class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
     var appDelegate:  AppDelegate     { get { return UIApplication.sharedApplication().delegate as AppDelegate } }
     var feedlyClient: FeedlyAPIClient { get { return FeedlyAPIClient.sharedInstance } }
+    weak var delegate: FeedlyOAuthViewDelegate?
 
     @IBOutlet weak var loginWebView: UIWebView!
     override func viewDidLoad() {
@@ -81,6 +86,7 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
                 },
                 completed: {
                     self.dismissViewControllerAnimated(true, completion: nil)
+                    self.delegate?.onLoggedIn()
                     self.appDelegate.didLogin()
             })
     }
