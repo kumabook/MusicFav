@@ -27,7 +27,8 @@
 "Mark as Save" = "保存";
 "New Category" = "新しいカテゴリ";
 "subscribers"  = "人が購読";
-"Notice"      = "お知らせ";
+"Notice"       = "お知らせ";
+"Tutorial"     = "チュートリアル";
 
 "Network error"                     = "通信エラー";
 "Import Feed"                       = "フィードをインポート";

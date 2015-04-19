@@ -19,7 +19,8 @@ class PreferenceViewController: UITableViewController {
     enum GeneralRow: Int {
         case LoginOrLogout  = 0
         case Settings       = 1
-        static let count = 2
+        case Tutorial       = 2
+        static let count    = 3
         var title: String {
             switch self {
             case .LoginOrLogout:
@@ -30,6 +31,8 @@ class PreferenceViewController: UITableViewController {
                 }
             case .Settings:
                 return "Settings".localize()
+            case .Tutorial:
+                return "Tutorial".localize()
             }
         }
     }
@@ -128,6 +131,9 @@ class PreferenceViewController: UITableViewController {
                 let vc = IASKAppSettingsViewController()
                 navigationController?.pushViewController(vc, animated: true)
                 vc.navigationItem.rightBarButtonItems = []
+            case .Tutorial:
+                let vc = TutorialViewController()
+                navigationController?.pushViewController(vc, animated: true)
             }
         }
     }
