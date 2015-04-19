@@ -82,7 +82,7 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
                     self.feedlyClient.profile = profile
                 },
                 error: {error in
-                    self.dismissViewControllerAnimated(true, completion: nil)
+                    self.showAlert()
                 },
                 completed: {
                     self.dismissViewControllerAnimated(true, completion: nil)
