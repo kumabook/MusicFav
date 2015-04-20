@@ -52,7 +52,7 @@ class TutorialViewController: UIViewController, TutorialViewDelegate, FeedlyOAut
     // MARK: - TutorialViewDelegate
 
     func tutorialLoginButtonTapped() {
-        let oauthvc = FeedlyOAuthViewController(nibName:"FeedlyOAuthViewController", bundle:NSBundle.mainBundle())
+        let oauthvc = FeedlyOAuthViewController()
         oauthvc.delegate = self
         let vc = UINavigationController(rootViewController: oauthvc)
         self.presentViewController(vc, animated: true, completion: {})

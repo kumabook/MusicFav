@@ -26,7 +26,6 @@
 		67277CBB1A434304002FD3E0 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67277CB91A434304002FD3E0 /* LaunchScreen.xib */; };
 		67277CC71A434304002FD3E0 /* MusicFavTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67277CC61A434304002FD3E0 /* MusicFavTests.swift */; };
 		67277CDB1A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67277CD91A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift */; };
-		67277CDC1A46DE0E002FD3E0 /* FeedlyOAuthViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67277CDA1A46DE0E002FD3E0 /* FeedlyOAuthViewController.xib */; };
 		67277CDE1A46DF98002FD3E0 /* FeedlyAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67277CDD1A46DF98002FD3E0 /* FeedlyAPIClient.swift */; };
 		67277CE01A46F4BC002FD3E0 /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67277CDF1A46F4BC002FD3E0 /* MenuTableViewController.swift */; };
 		67277CE31A46F844002FD3E0 /* EntryStreamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67277CE11A46F844002FD3E0 /* EntryStreamViewController.swift */; };
@@ -155,7 +154,6 @@
 		67277CC51A434304002FD3E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		67277CC61A434304002FD3E0 /* MusicFavTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicFavTests.swift; sourceTree = "<group>"; };
 		67277CD91A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedlyOAuthViewController.swift; sourceTree = "<group>"; };
-		67277CDA1A46DE0E002FD3E0 /* FeedlyOAuthViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FeedlyOAuthViewController.xib; sourceTree = "<group>"; };
 		67277CDD1A46DF98002FD3E0 /* FeedlyAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedlyAPIClient.swift; sourceTree = "<group>"; };
 		67277CDF1A46F4BC002FD3E0 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
 		67277CE11A46F844002FD3E0 /* EntryStreamViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntryStreamViewController.swift; sourceTree = "<group>"; };
@@ -456,7 +454,6 @@
 				67D935A21AA7C08E0061C1A0 /* DraggableCoverViewController.swift */,
 				67D935961AA369C40061C1A0 /* PlayerViewController.swift */,
 				67277CD91A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift */,
-				67277CDA1A46DE0E002FD3E0 /* FeedlyOAuthViewController.xib */,
 				6727EDFC1A5AC1DE003C6A47 /* MiniPlayerViewController.swift */,
 				6727EDFD1A5AC1DE003C6A47 /* MiniPlayerViewController.xib */,
 				67B366DD1AE1CBA800E089B2 /* TutorialViewController.swift */,
@@ -615,7 +612,6 @@
 				67277CB81A434304002FD3E0 /* Images.xcassets in Resources */,
 				67254C7A1A493A570064E5DF /* EntryStreamTableViewCell.xib in Resources */,
 				6767AE5E1ADBECCC00A92497 /* StreamTableViewCell.xib in Resources */,
-				67277CDC1A46DE0E002FD3E0 /* FeedlyOAuthViewController.xib in Resources */,
 				67554F0A1A4F127400F7AE72 /* TrackTableViewCell.xib in Resources */,
 				6727EDFF1A5AC1DE003C6A47 /* MiniPlayerViewController.xib in Resources */,
 				675AB3521AD4334D0003824C /* Localizable.strings in Resources */,

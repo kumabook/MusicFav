@@ -70,7 +70,7 @@ class PreferenceViewController: UITableViewController {
     }
     
     func showLoginViewController() {
-        let oauthvc = FeedlyOAuthViewController(nibName:"FeedlyOAuthViewController", bundle:NSBundle.mainBundle())
+        let oauthvc = FeedlyOAuthViewController()
         navigationController?.pushViewController(oauthvc, animated: true)
     }
     

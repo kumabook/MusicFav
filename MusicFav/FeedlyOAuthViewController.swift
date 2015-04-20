@@ -20,22 +20,47 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
     var appDelegate:  AppDelegate    { return UIApplication.sharedApplication().delegate as AppDelegate }
     var feedlyClient: CloudAPIClient { return CloudAPIClient.sharedInstance }
     weak var delegate: FeedlyOAuthViewDelegate?
+    var observers: [NSObjectProtocol]!
 
-    @IBOutlet weak var loginWebView: UIWebView!
+    var loginWebView: UIWebView!
+
+    override init() {
+        super.init(nibName: nil, bundle: nil)
+        observers = []
+    }
+
+    required init(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        observers = []
+    }
+    
+    deinit {}
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"close".localize(),
             style: UIBarButtonItemStyle.Plain,
             target: self,
             action: "close")
-        self.loginWebView!.delegate = self
+        loginWebView = UIWebView(frame: view.frame)
+        view.addSubview(loginWebView)
+        loginWebView.delegate = self
         setupOAuth2AccountStore()
         requestOAuth2Access()
     }
 
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        addObservers()
+    }
+
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        removeObservers()
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
     func close() {
@@ -51,8 +76,11 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
                                       redirectURL: NSURL(string: FeedlyAPI.redirectUrl),
                                     keyChainGroup: "Feedly",
                                    forAccountType: FeedlyAPI.accountType)
+            }
+
+    func addObservers() {
         let dc = NSNotificationCenter.defaultCenter()
-        dc.addObserverForName(NXOAuth2AccountStoreAccountsDidChangeNotification,
+        observers.append(dc.addObserverForName(NXOAuth2AccountStoreAccountsDidChangeNotification,
             object: NXOAuth2AccountStore.sharedStore(),
             queue: nil) { (notification) -> Void in
                 if notification.userInfo != nil {
@@ -61,12 +89,20 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
                 } else {
                     self.showAlert()
                 }
-        }
-        dc.addObserverForName(NXOAuth2AccountStoreDidFailToRequestAccessNotification,
+        })
+        observers.append(dc.addObserverForName(NXOAuth2AccountStoreDidFailToRequestAccessNotification,
             object: NXOAuth2AccountStore.sharedStore(),
             queue: nil) { (notification) -> Void in
                 self.showAlert()
+        })
+    }
+
+    func removeObservers() {
+        let dc = NSNotificationCenter.defaultCenter()
+        for observer in observers {
+            dc.removeObserver(observer)
         }
+        observers = []
     }
 
     func showAlert() {
