@@ -185,7 +185,7 @@ class TrackTableViewController: UITableViewController {
         }
 
         remove.backgroundColor = UIColor.red
-        let copy = UITableViewRowAction(style: .Default, title: "Copy".localize()) {
+        let copy = UITableViewRowAction(style: .Default, title: "Fav　　".localize()) {
             (action, indexPath) in
             let track = self.playlist!.tracks[indexPath.item]
             self.showSelectPlaylistViewController([track])
