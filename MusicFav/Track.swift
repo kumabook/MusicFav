@@ -112,7 +112,7 @@ class SoundCloudAudio {
         title               = json["title"].stringValue
         descriptionProperty = json["description"].stringValue
         artworkUrl          = json["artwork_url"].string
-        streamUrl           = json["stream_url"].stringValue + "?client_id=" + SoundCloudAPIClientConfig.client_id
+        streamUrl           = json["stream_url"].stringValue + "?client_id=" + SoundCloudAPIClient.sharedInstance.clientId
         duration            = json["duration"].intValue
     }
 }

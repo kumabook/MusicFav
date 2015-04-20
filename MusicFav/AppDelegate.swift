@@ -67,6 +67,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let account = FeedlyAPI.account {
             CloudAPIClient.setAccessToken(account)
         }
+        SoundCloudAPIClient.loadConfig()
     }
 
     func startTutorial() {
