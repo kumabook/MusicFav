@@ -34,15 +34,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var leftVisibleWidth:  CGFloat? { get { return miniPlayerViewController?.mainViewController.leftVisibleWidth } }
     var rightVisibleWidth: CGFloat? { get { return miniPlayerViewController?.mainViewController.rightVisibleWidth } }
 
-    var userDefaults:      NSUserDefaults { return NSUserDefaults.standardUserDefaults() }
-    var isFirstLaunch:     Bool           { return self.userDefaults.boolForKey("firstLaunch") }
-    var didFinishTutorial: Bool           { return self.userDefaults.boolForKey("finishTutorial") }
-    func markAsLaunched()   { NSUserDefaults.standardUserDefaults().setBool(false, forKey: "firstLaunch") }
-    func finishTutorial()   { NSUserDefaults.standardUserDefaults().setBool(true,  forKey: "finishTutorial") }
+    var userDefaults:          NSUserDefaults { return NSUserDefaults.standardUserDefaults() }
+    var isFirstLaunch:         Bool           { return self.userDefaults.boolForKey("firstLaunch") }
+    var didFinishTutorial:     Bool           { return self.userDefaults.boolForKey("finishTutorial") }
+    var didFinishSelectStream: Bool           { return self.userDefaults.boolForKey("finishSelectStream") }
+    func markAsLaunched()     { NSUserDefaults.standardUserDefaults().setBool(false, forKey: "firstLaunch") }
+    func finishTutorial()     { NSUserDefaults.standardUserDefaults().setBool(true,  forKey: "finishTutorial") }
+    func finishSelectStream() { NSUserDefaults.standardUserDefaults().setBool(true,  forKey: "finishSelectStream") }
 
     func registerNSUserDefaults() {
         userDefaults.registerDefaults(["firstLaunch":    true])
         userDefaults.registerDefaults(["finishTutorial": false])
+        userDefaults.registerDefaults(["finishSelectStream": false])
     }
 
     func setupMainViewControllers() {
@@ -137,6 +140,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         vc?.streamListLoader = StreamListLoader()
         vc?.showStream(stream: StreamListLoader.defaultStream())
         vc?.refresh()
+    }
+
+    func showStreamSelectViewController() {
+        weak var mini   = miniPlayerViewController?
+        if let streamListLoader = mini?.menuViewController?.streamListLoader {
+            let stvc = StreamTableViewController(streamListLoader: streamListLoader)
+            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.3 * Double(NSEC_PER_SEC)))
+            dispatch_after(delayTime, dispatch_get_main_queue()) {
+                mini?.presentViewController(UINavigationController(rootViewController:stvc), animated: true, completion: nil)
+                return
+            }
+        }
     }
 }
 

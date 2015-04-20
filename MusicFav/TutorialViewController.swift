@@ -36,6 +36,9 @@ class TutorialViewController: UIViewController, TutorialViewDelegate, FeedlyOAut
 
     func close() {
         appDelegate.finishTutorial()
+        if !appDelegate.didFinishSelectStream {
+            appDelegate.showStreamSelectViewController()
+        }
         if let nav = navigationController {
             nav.popViewControllerAnimated(true)
         } else {
