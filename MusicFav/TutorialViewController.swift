@@ -18,6 +18,7 @@ class TutorialViewController: UIViewController, TutorialViewDelegate, FeedlyOAut
         view.backgroundColor = UIColor.theme
         modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         tutorialView = TutorialView.tutorialView(view.frame, delegate: self)
+        tutorialView.skipButton.hidden = true
         view.addSubview(tutorialView)
     }
 
@@ -60,7 +61,9 @@ class TutorialViewController: UIViewController, TutorialViewDelegate, FeedlyOAut
     // MARK: - EAIntroDelegate
 
     func introDidFinish(introView: EAIntroView!) { close() }
-    func intro(introView: EAIntroView!, pageAppeared page: EAIntroPage!, withIndex pageIndex: UInt) {}
+    func intro(introView: EAIntroView!, pageAppeared page: EAIntroPage!, withIndex pageIndex: UInt) {
+        tutorialView.skipButton.hidden = tutorialView.pages.count-1 != Int(pageIndex)
+    }
     func intro(introView: EAIntroView!, pageStartScrolling page: EAIntroPage!, withIndex pageIndex: UInt) {}
     func intro(introView: EAIntroView!, pageEndScrolling page: EAIntroPage!, withIndex pageIndex: UInt) {}
 }
