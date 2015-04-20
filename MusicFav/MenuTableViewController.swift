@@ -117,13 +117,11 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
 
         HUD = MBProgressHUD.createCompletedHUD(self.view)
         navigationController?.view.addSubview(HUD)
-        observeStreamList()
         refresh()
     }
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
-        observeStreamList()
     }
 
     override func viewDidDisappear(animated: Bool) {
@@ -203,6 +201,10 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     }
 
     func refresh() {
+        observer?.dispose()
+        streamListLoader = StreamListLoader()
+        observeStreamList()
+        showStream(stream: StreamListLoader.defaultStream())
         streamListLoader.refresh()
     }
 

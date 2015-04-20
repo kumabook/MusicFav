@@ -134,8 +134,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func reload() {
         let vc               = miniPlayerViewController?.menuViewController
-        vc?.streamListLoader = StreamListLoader()
-        vc?.showStream(stream: StreamListLoader.defaultStream())
         vc?.refresh()
     }
 }
