@@ -34,12 +34,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var leftVisibleWidth:  CGFloat? { get { return miniPlayerViewController?.mainViewController.leftVisibleWidth } }
     var rightVisibleWidth: CGFloat? { get { return miniPlayerViewController?.mainViewController.rightVisibleWidth } }
 
-    var isFirstLaunch: Bool { return NSUserDefaults.standardUserDefaults().boolForKey("firstLaunch") }
+    var userDefaults:      NSUserDefaults { return NSUserDefaults.standardUserDefaults() }
+    var isFirstLaunch:     Bool           { return self.userDefaults.boolForKey("firstLaunch") }
+    var didFinishTutorial: Bool           { return self.userDefaults.boolForKey("finishTutorial") }
     func markAsLaunched()   { NSUserDefaults.standardUserDefaults().setBool(false, forKey: "firstLaunch") }
+    func finishTutorial()   { NSUserDefaults.standardUserDefaults().setBool(true,  forKey: "finishTutorial") }
 
     func registerNSUserDefaults() {
-        let defaults = NSUserDefaults.standardUserDefaults()
-        defaults.registerDefaults(["firstLaunch": true])
+        userDefaults.registerDefaults(["firstLaunch":    true])
+        userDefaults.registerDefaults(["finishTutorial": false])
     }
 
     func setupMainViewControllers() {
@@ -83,16 +86,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if isFirstLaunch {
             Playlist.createDefaultPlaylist()
             markAsLaunched()
-            setupMainViewControllers()
-            window?.makeKeyAndVisible()
-            startTutorial()
-            reload()
-        } else {
-            setupMainViewControllers()
-            window?.makeKeyAndVisible()
-            reload()
         }
-
+        setupMainViewControllers()
+        window?.makeKeyAndVisible()
+        if !didFinishTutorial { startTutorial() }
+        reload()
         return true
     }
 
