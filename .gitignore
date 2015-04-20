@@ -27,3 +27,9 @@ Pods/
 
 # Carthage
 Carthage/Build
+
+# Config
+MusicFav/feedly.json.sandbox
+MusicFav/feedly.json.production
+MusicFav/soundcloud.json.sandbox
+MusicFav/soundcloud.json.production
