@@ -24,12 +24,13 @@
 "Not selected" = "選択中のプレイリスト";
 "Edit title"   = "タイトルを編集";
 "Sample Feeds" = "サンプルフィード";
-"Mark as Read" = "あとで読む";
+"Mark as Read" = "既読";
 "Mark as Save" = "保存";
 "New Category" = "新しいカテゴリ";
 "subscribers"  = "人が購読";
 "Notice"       = "お知らせ";
 "Tutorial"     = "チュートリアル";
+"Settings"     = "設定";
 
 "Network error"                     = "通信エラー";
 "Import Feed"                       = "フィードをインポート";
