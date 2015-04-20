@@ -16,20 +16,16 @@ import NXOAuth2Client
 
 struct FeedlyAPI {
     static var baseUrl      = "https://sandbox.feedly.com"
-    static let perPage      = 15
+    static var perPage      = 15
+    static var clientId     = "sandbox"
+    static var clientSecret = ""
     static let authPath     = "/v3/auth/auth"
     static let tokenPath    = "/v3/auth/token"
     static let accountType  = "Feedly"
     static let redirectUrl  = "http://localhost"
     static let scopeUrl     = "https://cloud.feedly.com/subscriptions"
-    static var authUrl: String {
-        return String(format: "%@/%@", baseUrl, authPath)
-    }
-    static var tokenUrl: String {
-        return String(format: "%@/%@", baseUrl, tokenPath)
-    }
-    static var clientId     = "sandbox"
-    static var clientSecret = ""
+    static var authUrl:  String { return String(format: "%@/%@", baseUrl, authPath)  }
+    static var tokenUrl: String { return String(format: "%@/%@", baseUrl, tokenPath) }
     private static let userDefaults = NSUserDefaults.standardUserDefaults()
     private static var _account: NXOAuth2Account?
     private static var _profile: Profile?
