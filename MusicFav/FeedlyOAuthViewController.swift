@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FeedlyKit
 import ReactiveCocoa
 import LlamaKit
 import NXOAuth2Client
@@ -16,8 +17,8 @@ protocol FeedlyOAuthViewDelegate: class {
 }
 
 class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
-    var appDelegate:  AppDelegate     { get { return UIApplication.sharedApplication().delegate as AppDelegate } }
-    var feedlyClient: FeedlyAPIClient { get { return FeedlyAPIClient.sharedInstance } }
+    var appDelegate:  AppDelegate    { return UIApplication.sharedApplication().delegate as AppDelegate }
+    var feedlyClient: CloudAPIClient { return CloudAPIClient.sharedInstance }
     weak var delegate: FeedlyOAuthViewDelegate?
 
     @IBOutlet weak var loginWebView: UIWebView!
@@ -42,14 +43,14 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
     }
 
     func setupOAuth2AccountStore() {
-        NXOAuth2AccountStore.sharedStore().setClientID(FeedlyAPIClientConfig.clientId,
-            secret: FeedlyAPIClientConfig.clientSecret,
-            scope: NSSet(object:FeedlyAPIClientConfig.scopeUrl),
-            authorizationURL: NSURL(string:FeedlyAPIClientConfig.authUrl),
-            tokenURL: NSURL(string:FeedlyAPIClientConfig.tokenUrl),
-            redirectURL: NSURL(string:FeedlyAPIClientConfig.redirectUrl),
-            keyChainGroup: "Feedly",
-            forAccountType: FeedlyAPIClientConfig.accountType)
+        NXOAuth2AccountStore.sharedStore().setClientID(FeedlyAPI.clientId,
+                                           secret: FeedlyAPI.clientSecret,
+                                            scope: NSSet(object:FeedlyAPI.scopeUrl),
+                                 authorizationURL: NSURL(string:FeedlyAPI.authUrl),
+                                         tokenURL: NSURL(string:FeedlyAPI.tokenUrl),
+                                      redirectURL: NSURL(string:FeedlyAPI.redirectUrl),
+                                    keyChainGroup: "Feedly",
+                                   forAccountType: FeedlyAPI.accountType)
         let dc = NSNotificationCenter.defaultCenter()
         dc.addObserverForName(NXOAuth2AccountStoreAccountsDidChangeNotification,
             object: NXOAuth2AccountStore.sharedStore(),
@@ -70,7 +71,7 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
 
     func showAlert() {
         UIAlertController.show(self, title: "Notice".localize(), message: "Login failed.", handler: { (action) -> Void in
-            self.feedlyClient.clearAllAccount()
+            FeedlyAPI.clearAllAccount()
         })
     }
     
@@ -79,7 +80,7 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
             .deliverOn(MainScheduler())
             .start(
                 next: {profile in
-                    self.feedlyClient.profile = profile
+                    FeedlyAPI.profile = profile
                 },
                 error: {error in
                     self.showAlert()
@@ -92,7 +93,8 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
     }
     
     func requestOAuth2Access() {
-        NXOAuth2AccountStore.sharedStore().requestAccessToAccountWithType(FeedlyAPIClientConfig.accountType, withPreparedAuthorizationURLHandler: { (preparedURL) -> Void in
+        let store: AnyObject! = NXOAuth2AccountStore.sharedStore()
+        store.requestAccessToAccountWithType(FeedlyAPI.accountType, withPreparedAuthorizationURLHandler: { (preparedURL) -> Void in
             self.loginWebView.loadRequest(NSURLRequest(URL: preparedURL))
         })
     }

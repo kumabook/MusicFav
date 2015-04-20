@@ -22,7 +22,7 @@ class EntryStreamViewController: UITableViewController {
     var indicator:    UIActivityIndicatorView!
     var reloadButton: UIButton!
 
-    var feedlyClient: FeedlyAPIClient { return streamLoader.feedlyClient }
+    var feedlyClient: CloudAPIClient { return streamLoader.feedlyClient }
 
     init(streamLoader: StreamLoader) {
         self.streamLoader = streamLoader

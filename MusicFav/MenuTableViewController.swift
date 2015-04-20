@@ -60,14 +60,14 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     var streamListLoader: StreamListLoader
     var observer:         Disposable?
 
-    var apiClient:   FeedlyAPIClient   { return FeedlyAPIClient.sharedInstance }
+    var apiClient:   CloudAPIClient    { return CloudAPIClient.sharedInstance }
     var appDelegate: AppDelegate       { return UIApplication.sharedApplication().delegate as AppDelegate }
     var root:        UIViewController? { return view.window?.rootViewController }
 
     var refreshControl: UIRefreshControl?
 
     func defaultSections() -> [Section] {
-        if let userId = apiClient.profile?.id {
+        if let userId = FeedlyAPI.profile?.id {
             return [.GlobalResource(FeedlyKit.Category.All(userId)),
                     .GlobalResource(FeedlyKit.Tag.Saved(userId)),
                     .GlobalResource(FeedlyKit.Tag.Read(userId))]
@@ -182,12 +182,12 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
                 self.refreshControl?.endRefreshing()
                 self.treeView?.reloadData()
             case .FailToLoad(let e):
-                FeedlyAPIClient.alertController(error: e, handler: { (action) -> Void in })
+                CloudAPIClient.alertController(error: e, handler: { (action) -> Void in })
                 self.refreshControl?.endRefreshing()
             case .StartUpdating:
                 MBProgressHUD.hideHUDForView(self.view, animated: true)
             case .FailToUpdate(let e):
-                FeedlyAPIClient.alertController(error: e, handler: { (action) -> Void in })
+                CloudAPIClient.alertController(error: e, handler: { (action) -> Void in })
             case .CreateAt(let subscription):
                 self.HUD.show(true , duration: 1.0, after: { () -> Void in
                     self.refresh()

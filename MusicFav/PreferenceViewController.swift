@@ -8,6 +8,7 @@
 
 import UIKit
 import InAppSettingsKit
+import FeedlyKit
 
 class PreferenceViewController: UITableViewController {
     var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as AppDelegate } }
@@ -24,7 +25,7 @@ class PreferenceViewController: UITableViewController {
         var title: String {
             switch self {
             case .LoginOrLogout:
-                if FeedlyAPIClient.sharedInstance.isLoggedIn {
+                if CloudAPIClient.sharedInstance.isLoggedIn {
                     return "Logout".localize()
                 } else {
                     return "Login".localize()
@@ -61,9 +62,8 @@ class PreferenceViewController: UITableViewController {
     }
 
     func logout() {
-        let client = FeedlyAPIClient.sharedInstance
-        client.clearAllAccount()
-        client.profile = nil
+        FeedlyAPI.clearAllAccount()
+        FeedlyAPI.profile = nil
         self.dismissViewControllerAnimated(true) {
             self.appDelegate.didLogout()
         }
@@ -122,7 +122,7 @@ class PreferenceViewController: UITableViewController {
             let row = GeneralRow(rawValue: indexPath.item)!
             switch row {
             case .LoginOrLogout:
-                if FeedlyAPIClient.sharedInstance.isLoggedIn {
+                if CloudAPIClient.sharedInstance.isLoggedIn {
                     showLogoutDialog()
                 } else {
                     showLoginViewController()

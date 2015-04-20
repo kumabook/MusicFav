@@ -13,7 +13,7 @@ import FeedlyKit
 import MBProgressHUD
 
 class CategoryTableViewController: UITableViewController {
-    let client = FeedlyAPIClient.sharedInstance
+    let client = CloudAPIClient.sharedInstance
 
     var HUD:              MBProgressHUD!
     let subscribable:     Subscribable!
@@ -68,11 +68,11 @@ class CategoryTableViewController: UITableViewController {
             case .CompleteLoading:
                 self.tableView.reloadData()
             case .FailToLoad(let e):
-                let ac = FeedlyAPIClient.alertController(error: e, handler: { (action) in })
+                let ac = CloudAPIClient.alertController(error: e, handler: { (action) in })
             case .StartUpdating:
                 MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
             case .FailToUpdate(let e):
-                let ac = FeedlyAPIClient.alertController(error: e, handler: { (action) in })
+                let ac = CloudAPIClient.alertController(error: e, handler: { (action) in })
                 self.presentViewController(ac, animated: true, completion: nil)
             case .CreateAt(let subscription):
                 MBProgressHUD.hideHUDForView(self.navigationController!.view, animated:false)

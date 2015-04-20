@@ -11,6 +11,7 @@ import CoreData
 import AVFoundation
 import ReactiveCocoa
 import LlamaKit
+import FeedlyKit
 
 
 @UIApplicationMain
@@ -59,9 +60,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func setupAPIClient() {
-        let feedlyAPIClient = FeedlyAPIClient.sharedInstance
-        if feedlyAPIClient.profile == nil {
-            feedlyAPIClient.clearAllAccount()
+        FeedlyAPI.loadConfig()
+        if FeedlyAPI.profile == nil {
+            FeedlyAPI.clearAllAccount()
+        }
+        if let account = FeedlyAPI.account {
+            CloudAPIClient.setAccessToken(account)
         }
     }
 

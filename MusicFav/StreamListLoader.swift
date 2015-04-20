@@ -29,7 +29,7 @@ class StreamListLoader {
         case RemoveAt(Int, Subscription, FeedlyKit.Category)
     }
 
-    var apiClient:            FeedlyAPIClient  { get { return FeedlyAPIClient.sharedInstance }}
+    var apiClient:            CloudAPIClient { return CloudAPIClient.sharedInstance }
     var state:                State
     var signal:               HotSignal<Event>
     private var sink:         SinkOf<Event>
@@ -55,7 +55,7 @@ class StreamListLoader {
     }
 
     class func defaultStream() -> Stream {
-        if let profile = FeedlyAPIClient.sharedInstance.profile {
+        if let profile = FeedlyAPI.profile {
             return FeedlyKit.Category.All(profile.id)
         } else {
             return StreamListLoader.sampleSubscriptions()[0]
@@ -69,7 +69,7 @@ class StreamListLoader {
         signal               = pipe.0
         sink                 = pipe.1
         uncategorized        = FeedlyKit.Category.Uncategorized()
-        if let userId = apiClient.profile?.id {
+        if let userId = FeedlyAPI.profile?.id {
             uncategorized = FeedlyKit.Category.Uncategorized(userId)
         }
         streamListOfCategory[uncategorized] = []
@@ -147,7 +147,7 @@ class StreamListLoader {
     }
 
     func createCategory(label: String) -> FeedlyKit.Category? {
-        if let profile = FeedlyAPIClient.sharedInstance.profile {
+        if let profile = FeedlyAPI.profile {
             let category = FeedlyKit.Category(label: label, profile: profile)
             streamListOfCategory[category] = []
             return category
@@ -177,7 +177,7 @@ class StreamListLoader {
             self.sink.put(.CreateAt(subscription))
             return
         }
-        FeedlyAPIClient.sharedInstance.client.subscribeTo(subscription) { (req, res, error) -> Void in
+        CloudAPIClient.sharedInstance.subscribeTo(subscription) { (req, res, error) -> Void in
             if let e = error {
                 self.state = .Error
                 self.sink.put(.FailToUpdate(e))
@@ -198,7 +198,7 @@ class StreamListLoader {
             self.sink.put(.RemoveAt(index, subscription, category))
             return
         }
-        apiClient.client.unsubscribeTo(subscription.id, completionHandler: { (req, res, error) -> Void in
+        apiClient.unsubscribeTo(subscription.id, completionHandler: { (req, res, error) -> Void in
             if let e = error {
                 self.state = .Error
                 self.sink.put(.FailToUpdate(e))

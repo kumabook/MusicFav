@@ -155,13 +155,13 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
     }
     
     func favEntry() {
-        let feedlyClient = FeedlyAPIClient.sharedInstance
+        let feedlyClient = CloudAPIClient.sharedInstance
         if feedlyClient.isLoggedIn {
             MBProgressHUD.showHUDAddedTo(view, animated: true)
-            feedlyClient.client.markEntriesAsSaved([entry.id], completionHandler: { (req, res, error) -> Void in
+            feedlyClient.markEntriesAsSaved([entry.id], completionHandler: { (req, res, error) -> Void in
                 MBProgressHUD.hideHUDForView(self.view, animated:false)
                 if let e = error {
-                    let ac = FeedlyAPIClient.alertController(error: e, handler: { (action) in })
+                    let ac = CloudAPIClient.alertController(error: e, handler: { (action) in })
                     self.presentViewController(ac, animated: true, completion: nil)
                 } else {
                     self.HUD.show(true , duration: 1.0, after: { () -> Void in

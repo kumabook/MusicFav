@@ -34,9 +34,9 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
     var indicator: UIActivityIndicatorView!
     var searchBar: UISearchBar!
 
-    let client = FeedlyAPIClient.sharedInstance
+    let client = CloudAPIClient.sharedInstance
     var searchDisposable: Disposable?
-    var isLoggedIn: Bool { return client.account != nil }
+    var isLoggedIn: Bool { return FeedlyAPI.account != nil }
     var feeds:            [Feed]
     var recommendFeeds:   [Feed]
     let blogLoader:       BlogLoader
@@ -134,7 +134,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
                     self.feeds = feeds
                 },
                 error: { error in
-                    let ac = FeedlyAPIClient.alertController(error: error, handler: { (action) in })
+                    let ac = CloudAPIClient.alertController(error: error, handler: { (action) in })
                     self.presentViewController(ac, animated: true, completion: nil)
                 },
                 completed: {
@@ -143,7 +143,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
     }
 
     func fetchRecommendFeeds() {
-        FeedlyAPIClient.sharedInstance.fetchFeedsByIds(RecommendFeed.ids).start(
+        CloudAPIClient.sharedInstance.fetchFeedsByIds(RecommendFeed.ids).start(
             next: { feeds in
                 self.recommendFeeds = feeds
             }, error: { error in

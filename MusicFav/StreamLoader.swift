@@ -34,7 +34,7 @@ class StreamLoader {
         case RemoveAt(Int)
     }
 
-    let feedlyClient     = FeedlyAPIClient.sharedInstance
+    let feedlyClient     = CloudAPIClient.sharedInstance
     let musicfavClient   = MusicFavAPIClient.sharedInstance
 
     let stream:             Stream
@@ -107,7 +107,7 @@ class StreamLoader {
                     if let dic = error.userInfo as NSDictionary? {
                         if let response:NSHTTPURLResponse = dic[key] as? NSHTTPURLResponse {
                             if response.statusCode == 401 {
-                                self.feedlyClient.clearAllAccount()
+                                FeedlyAPI.clearAllAccount()
                                 //TODO: Alert Dialog with login link
                             } else {
                             }
@@ -152,7 +152,7 @@ class StreamLoader {
                     if let dic = error.userInfo as NSDictionary? {
                         if let response:NSHTTPURLResponse = dic[key] as? NSHTTPURLResponse {
                             if response.statusCode == 401 {
-                                self.feedlyClient.clearAllAccount()
+                                FeedlyAPI.clearAllAccount()
                                 //TODO: Alert Dialog with login link
                             } else {
                                 self.state = State.Error
@@ -192,7 +192,7 @@ class StreamLoader {
     }
 
     var unreadOnly: Bool {
-        if let userId = FeedlyAPIClient.sharedInstance.profile?.id {
+        if let userId = FeedlyAPI.profile?.id {
             if stream == Tag.Saved(userId) { return false }
             if stream == Tag.Read(userId) {  return false }
         }
@@ -200,7 +200,7 @@ class StreamLoader {
     }
 
     var removeMark: RemoveMark {
-        if let userId = FeedlyAPIClient.sharedInstance.profile?.id {
+        if let userId = FeedlyAPI.profile?.id {
             if stream == Tag.Saved(userId) { return .Unsave }
             if stream == Tag.Read(userId)  { return .Unread }
         }
@@ -210,7 +210,7 @@ class StreamLoader {
     func markAsRead(index: Int) {
         let entry = entries[index]
         if feedlyClient.isLoggedIn {
-            feedlyClient.client.markEntriesAsRead([entry.id], completionHandler: { (req, res, error) -> Void in
+            feedlyClient.markEntriesAsRead([entry.id], completionHandler: { (req, res, error) -> Void in
                 if let e = error { println("Failed to mark as read") }
                 else             { println("Succeeded in marking as read") }
             })
@@ -222,7 +222,7 @@ class StreamLoader {
     func markAsUnread(index: Int) {
         let entry = entries[index]
         if feedlyClient.isLoggedIn {
-            feedlyClient.client.keepEntriesAsUnread([entry.id], completionHandler: { (req, res, error) -> Void in
+            feedlyClient.keepEntriesAsUnread([entry.id], completionHandler: { (req, res, error) -> Void in
                 if let e = error { println("Failed to mark as unread") }
                 else             { println("Succeeded in marking as unread") }
             })
@@ -234,11 +234,11 @@ class StreamLoader {
     func markAsUnsaved(index: Int) {
         let entry = entries[index]
         if feedlyClient.isLoggedIn {
-            feedlyClient.client.markEntriesAsUnsaved([entry.id], completionHandler: { (req, res, error) -> Void in
+            feedlyClient.markEntriesAsUnsaved([entry.id], completionHandler: { (req, res, error) -> Void in
                 if let e = error { println("Failed to mark as unsaved") }
                 else             { println("Succeeded in marking as unsaved") }
             })
-            feedlyClient.client.markEntriesAsRead([entry.id], completionHandler: { (req, res, error) -> Void in
+            feedlyClient.markEntriesAsRead([entry.id], completionHandler: { (req, res, error) -> Void in
                 if let e = error { println("Failed to mark as read") }
                 else             { println("Succeeded in marking as read") }
             })
