@@ -6,3 +6,20 @@
   Copyright (c) 2015 Hiroki Kumamoto. All rights reserved.
 */
 
+"first_page_title"    = "MusicFav\nA Music RSS Reader";
+"first_page_desc"     = "Follows the music blogs,\n make your favorite playlists.";
+
+"stream_page_title"   = "お気に入りのブログをフォロー";
+"stream_page_desc"    = "・「＋」メニューからブログを追加\n・スワイプで既読\n・星ボタンから記事の保存";
+
+"playlist_page_title" = "プレイリストを聞く、作る";
+"playlist_page_desc"  = "・記事から自動でプレイリストを作成\n・お気に入りの曲からプレイリスト作成も可能";
+
+"player_page_title"   = "記事を見ながら または全画面で";
+"player_page_desc"    = "・タップまたはドラッグミニプレーヤ・フルスクリーンプレーヤを切り替え.\n・バックグラウンド再生・Air-playに対応";
+
+"menu_page_title"     = "Feedly アカウントでの同期";
+"menu_page_desc"      = "・Feedly経由フィードの購読\n・フィード登録・削除可能 \n・検索機能でブログを簡単に探す";
+
+"last_page_title"     = "Enjoy MusicFav!";
+"last_page_desc"      = "※設定メニューからも\nログインできます。";
