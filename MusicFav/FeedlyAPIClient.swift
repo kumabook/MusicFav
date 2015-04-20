@@ -15,7 +15,6 @@ import Alamofire
 import NXOAuth2Client
 
 struct FeedlyAPI {
-    static var baseUrl      = "https://sandbox.feedly.com"
     static var perPage      = 15
     static var clientId     = "sandbox"
     static var clientSecret = ""
@@ -24,8 +23,6 @@ struct FeedlyAPI {
     static let accountType  = "Feedly"
     static let redirectUrl  = "http://localhost"
     static let scopeUrl     = "https://cloud.feedly.com/subscriptions"
-    static var authUrl:  String { return String(format: "%@/%@", baseUrl, authPath)  }
-    static var tokenUrl: String { return String(format: "%@/%@", baseUrl, tokenPath) }
     private static let userDefaults = NSUserDefaults.standardUserDefaults()
     private static var _account: NXOAuth2Account?
     private static var _profile: Profile?
@@ -130,6 +127,10 @@ extension CloudAPIClient {
     var isLoggedIn: Bool {
         return FeedlyAPI.isLoggedIn
     }
+
+    var authUrl:  String { return String(format: "%@/%@", target.baseUrl, FeedlyAPI.authPath)  }
+    var tokenUrl: String { return String(format: "%@/%@", target.baseUrl, FeedlyAPI.tokenPath) }
+
 
     func fetchProfile() -> ColdSignal<Profile> {
         return ColdSignal { (sink, disposable) in
