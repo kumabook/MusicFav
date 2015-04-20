@@ -128,7 +128,6 @@ extension CloudAPIClient {
     }
 
     class func setAccessToken(account: NXOAuth2Account) {
-        println(account.accessToken.accessToken)
         CloudAPIClient.sharedInstance.setAccessToken(account.accessToken.accessToken)
     }
 
