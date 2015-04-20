@@ -10,7 +10,7 @@
 "first_page_desc"     = "Follows the music blogs,\n make your favorite playlists.";
 
 "stream_page_title"   = "Subsribe Feed and Read Article";
-"stream_page_desc"    = "・Mark as read with Swipe\n・Save article with Star button";
+"stream_page_desc"    = "・Add blog from \"+\" menu・Mark as read with Swipe\n・Save article with Star button";
 
 "playlist_page_title" = "Article & Favorite playlist";
 "playlist_page_desc"  = "・Automatically playlist from an article\n・You can also create a custom playlist.";
