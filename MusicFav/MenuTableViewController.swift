@@ -202,9 +202,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
 
     func refresh() {
         observer?.dispose()
-        streamListLoader = StreamListLoader()
         observeStreamList()
-        showStream(stream: StreamListLoader.defaultStream())
         streamListLoader.refresh()
     }
 
