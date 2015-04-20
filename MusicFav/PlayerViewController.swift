@@ -47,7 +47,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
     var currentLabel:        UILabel!
     var totalLabel:          UILabel!
     var playerView:          PlayerView!
-    var adBannerView:              ADBannerView?
+    var adBannerView:        ADBannerView?
 
     var app:                 UIApplication { get { return UIApplication.sharedApplication() }}
     var appDelegate:         AppDelegate   { get { return app.delegate as AppDelegate }}
@@ -301,7 +301,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
     }
 
     func addAdView() {
-        if adBannerView == nil{
+        if adBannerView == nil {
             let adView = ADBannerView()
             adView.delegate = self
             adView.alpha = 0.0
@@ -325,6 +325,8 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
 
     func showAdView() { if let adView = adBannerView { adView.hidden = false } }
     func hideAdView() { if let adView = adBannerView { adView.hidden = true } }
+
+    // MARK: - ADBannerViewDelegate
 
     func bannerViewDidLoadAd(banner: ADBannerView!) {
         adBannerView?.alpha = 1.0
