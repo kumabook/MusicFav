@@ -76,6 +76,7 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
     }
     
     func onLoggedIn(account: NXOAuth2Account) {
+        feedlyClient.setAccessToken(account.accessToken.accessToken)
         feedlyClient.fetchProfile()
             .deliverOn(MainScheduler())
             .start(
