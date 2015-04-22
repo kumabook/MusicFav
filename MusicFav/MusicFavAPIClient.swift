@@ -23,8 +23,8 @@ class MusicFavAPIClient {
         }
         return Static.instance
     }
-    func playlistify(targetUrl: NSURL) -> ColdSignal<Playlist> {
-        return ColdSignal { (sink, disposable) in
+    func playlistify(targetUrl: NSURL) -> SignalProducer<Playlist, NSError> {
+        return SignalProducer { (sink, disposable) in
             let manager = AFHTTPRequestOperationManager()
             manager.completionQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
             let url = String(format: "%@/playlistify?url=%@", MusicFavAPIClientConfig.baseUrl, targetUrl)
@@ -37,7 +37,7 @@ class MusicFavAPIClient {
                 failure: { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
                     println(error)
                     println(operation.response)
-                    sink.put(.Error(error))
+                    sink.put(.Error(Box(error)))
             })
             disposable.addDisposable {
                 manager.operationQueue.cancelAllOperations()

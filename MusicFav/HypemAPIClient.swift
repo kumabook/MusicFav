@@ -23,18 +23,18 @@ class HypemAPIClient {
         return Static.instance
     }
 
-    func getSiteInfo(siteId: Int64) -> ColdSignal<SiteInfo> {
-        return ColdSignal { (sink, disposable) in
+    func getSiteInfo(siteId: Int64) -> SignalProducer<SiteInfo, NSError> {
+        return SignalProducer { (sink, disposable) in
             let manager = AFHTTPRequestOperationManager()
             let url = String(format: "%@/get_site_info?siteid=%d", self.baseUrl + self.apiRoot, siteId)
-            manager.GET(url, parameters: nil,
+            manager.GET(url, parameters: [:],
                 success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
                     let json = JSON(response)
                     sink.put(.Next(Box(SiteInfo(json: json))))
                     sink.put(.Completed)
                 },
                 failure: { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
-                    sink.put(.Error(error))
+                    sink.put(.Error(Box(error)))
             })
             disposable.addDisposable {
                 manager.operationQueue.cancelAllOperations()
@@ -42,18 +42,18 @@ class HypemAPIClient {
         }
     }
 
-    func getAllBlogs() -> ColdSignal<[Blog]> {
-        return ColdSignal { (sink, disposable) in
+    func getAllBlogs() -> SignalProducer<[Blog], NSError> {
+        return SignalProducer { (sink, disposable) in
             let manager = AFHTTPRequestOperationManager()
             let url = String(format: "%@/get_all_blogs", self.baseUrl + self.apiRoot)
-            manager.GET(url, parameters: nil,
+            manager.GET(url, parameters: [:],
                 success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
                     let json = JSON(response)
                     sink.put(.Next(Box(json.arrayValue.map({ Blog(json: $0) }))))
                     sink.put(.Completed)
                 },
                 failure: { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
-                    sink.put(.Error(error))
+                    sink.put(.Error(Box(error)))
             })
             disposable.addDisposable {
                 manager.operationQueue.cancelAllOperations()

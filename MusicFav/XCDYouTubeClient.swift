@@ -15,12 +15,12 @@ struct XCDYouTubeClientConfig {
 }
 
 extension XCDYouTubeClient {
-    func fetchVideo(identifier: String, errorOnFailure: Bool) -> ColdSignal<XCDYouTubeVideo> {
-        return ColdSignal { (sink, disposable) in
+    func fetchVideo(identifier: String, errorOnFailure: Bool) -> SignalProducer<XCDYouTubeVideo, NSError> {
+        return SignalProducer { (sink, disposable) in
             let operation = self.getVideoWithIdentifier(identifier, completionHandler: { (video, error) -> Void in
                 if let e = error {
                     if errorOnFailure {
-                        sink.put(.Error(error))
+                        sink.put(.Error(Box(error)))
                     } else {
                         sink.put(.Completed)
                     }

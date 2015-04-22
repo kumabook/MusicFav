@@ -52,8 +52,8 @@ struct FeedlyAPI {
             if let a = _account {
                 return a
             }
-            let store = NXOAuth2AccountStore.sharedStore() as NXOAuth2AccountStore
-            for account in store.accounts as [NXOAuth2Account] {
+            let store = NXOAuth2AccountStore.sharedStore() as! NXOAuth2AccountStore
+            for account in store.accounts as! [NXOAuth2Account] {
                 if account.accountType == "Feedly" {
                     _account = account
                     return account
@@ -68,8 +68,8 @@ struct FeedlyAPI {
     }
 
     static func clearAllAccount() {
-        let store = NXOAuth2AccountStore.sharedStore() as NXOAuth2AccountStore
-        for account in store.accounts as [NXOAuth2Account] {
+        let store = NXOAuth2AccountStore.sharedStore() as! NXOAuth2AccountStore
+        for account in store.accounts as! [NXOAuth2Account] {
             if account.accountType == "Feedly" {
                 store.removeAccount(account)
             }
@@ -132,11 +132,11 @@ extension CloudAPIClient {
     var tokenUrl: String { return String(format: "%@/%@", target.baseUrl, FeedlyAPI.tokenPath) }
 
 
-    func fetchProfile() -> ColdSignal<Profile> {
-        return ColdSignal { (sink, disposable) in
+    func fetchProfile() -> SignalProducer<Profile, NSError> {
+        return SignalProducer { (sink, disposable) in
             let req = self.fetchProfile({ (req, res, profile, error) -> Void in
                 if let e = error {
-                    sink.put(.Error(e))
+                    sink.put(.Error(Box(e)))
                 } else {
                     sink.put(Event.Next(Box(profile!)))
                     sink.put(.Completed)
@@ -146,11 +146,11 @@ extension CloudAPIClient {
         }
     }
 
-    func fetchSubscriptions() -> ColdSignal<[Subscription]> {
-        return ColdSignal { (sink, disposable) in
+    func fetchSubscriptions() -> SignalProducer<[Subscription], NSError> {
+        return SignalProducer { (sink, disposable) in
             let req = self.fetchSubscriptions({ (req, res, subscriptions, error) -> Void in
                 if let e = error {
-                    sink.put(.Error(e))
+                    sink.put(.Error(Box(e)))
                 } else {
                     sink.put(.Next(Box(subscriptions!)))
                     sink.put(.Completed)
@@ -160,7 +160,7 @@ extension CloudAPIClient {
         }
     }
 
-    func fetchEntries(#streamId: String, newerThan: Int64, unreadOnly: Bool) -> ColdSignal<PaginatedEntryCollection> {
+    func fetchEntries(#streamId: String, newerThan: Int64, unreadOnly: Bool) -> SignalProducer<PaginatedEntryCollection, NSError> {
         var paginationParams        = PaginationParams()
         paginationParams.unreadOnly = unreadOnly
         paginationParams.count      = FeedlyAPI.perPage
@@ -168,7 +168,7 @@ extension CloudAPIClient {
         return fetchEntries(streamId: streamId, paginationParams: paginationParams)
     }
 
-    func fetchEntries(#streamId: String, continuation: String?, unreadOnly: Bool) -> ColdSignal<PaginatedEntryCollection> {
+    func fetchEntries(#streamId: String, continuation: String?, unreadOnly: Bool) -> SignalProducer<PaginatedEntryCollection, NSError> {
         var paginationParams          = PaginationParams()
         paginationParams.unreadOnly   = unreadOnly
         paginationParams.count        = FeedlyAPI.perPage
@@ -176,11 +176,11 @@ extension CloudAPIClient {
         return fetchEntries(streamId: streamId, paginationParams: paginationParams)
     }
 
-    func fetchEntries(#streamId: String, paginationParams: PaginationParams) -> ColdSignal<PaginatedEntryCollection> {
-        return ColdSignal { (sink, disposable) in
+    func fetchEntries(#streamId: String, paginationParams: PaginationParams) -> SignalProducer<PaginatedEntryCollection, NSError> {
+        return SignalProducer { (sink, disposable) in
             let req = self.fetchContents(streamId, paginationParams: paginationParams, completionHandler: { (req, res, entries, error) -> Void in
                 if let e = error {
-                    sink.put(.Error(e))
+                    sink.put(.Error(Box(e)))
                 } else {
                     sink.put(.Next(Box(entries!)))
                     sink.put(.Completed)
@@ -190,11 +190,11 @@ extension CloudAPIClient {
         }
     }
 
-    func fetchFeedsByIds(feedIds: [String]) -> ColdSignal<[Feed]> {
-        return ColdSignal { (sink, disposable) in
+    func fetchFeedsByIds(feedIds: [String]) -> SignalProducer<[Feed], NSError> {
+        return SignalProducer { (sink, disposable) in
             let req = self.fetchFeeds(feedIds, completionHandler: { (req, res, feeds, error) -> Void in
                 if let e = error {
-                    sink.put(.Error(e))
+                    sink.put(.Error(Box(e)))
                 } else {
                     sink.put(.Next(Box(feeds!)))
                     sink.put(.Completed)
@@ -204,11 +204,11 @@ extension CloudAPIClient {
         }
     }
 
-    func fetchCategories() -> ColdSignal<[FeedlyKit.Category]> {
-        return ColdSignal { (sink, disposable) in
+    func fetchCategories() -> SignalProducer<[FeedlyKit.Category], NSError> {
+        return SignalProducer { (sink, disposable) in
             let req = self.fetchCategories({ (req, res, categories, error) -> Void in
                 if let e = error {
-                    sink.put(.Error(e))
+                    sink.put(.Error(Box(e)))
                 } else {
                     sink.put(.Next(Box(categories!)))
                     sink.put(.Completed)
@@ -218,11 +218,11 @@ extension CloudAPIClient {
         }
     }
 
-    func searchFeeds(query: SearchQueryOfFeed) -> ColdSignal<[Feed]> {
-        return ColdSignal { (sink, disposable) in
+    func searchFeeds(query: SearchQueryOfFeed) -> SignalProducer<[Feed], NSError> {
+        return SignalProducer { (sink, disposable) in
             let req = self.searchFeeds(query, completionHandler: { (req, res, feedResults, error) -> Void in
                 if let e = error {
-                    sink.put(.Error(e))
+                    sink.put(.Error(Box(e)))
                 } else {
                     if let _feedResults = feedResults {
                         sink.put(.Next(Box(_feedResults.results)))

@@ -46,12 +46,11 @@ class SoundCloudAPIClient {
         self.clientId = clientId
     }
 
-    func fetchTrack(track_id: String, errorOnFailure: Bool) -> ColdSignal<SoundCloudAudio> {
-        return ColdSignal { (sink, disposable) in
+    func fetchTrack(track_id: String, errorOnFailure: Bool) -> SignalProducer<SoundCloudAudio, NSError> {
+        return SignalProducer { (sink, disposable) in
             let manager = AFHTTPRequestOperationManager()
             manager.completionQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-            let url = NSString(format: "%@/tracks/%@.json?client_id=%@",
-                ClassProperty.baseUrl, track_id, self.clientId)
+            let url = String(format: "%@/tracks/%@.json?client_id=%@", ClassProperty.baseUrl, track_id, self.clientId)
             manager.GET(url, parameters: nil,
                 success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
                     let json = JSON(response)
@@ -60,7 +59,7 @@ class SoundCloudAPIClient {
                 },
                 failure: { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
                     if errorOnFailure {
-                        sink.put(.Error(error))
+                        sink.put(.Error(Box(error)))
                     } else {
                         sink.put(.Completed)
                     }
