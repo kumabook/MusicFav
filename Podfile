@@ -9,7 +9,7 @@ pod 'MCSwipeTableViewCell', '>= 2.1.0'
 pod 'Snap',                 '>= 0.0.6'
 pod 'InAppSettingsKit',     '~> 2.1'
 pod 'EAIntroView',          '~> 2.7.0'
-pod 'PageMenu'
+pod 'PageMenu',             :git => 'https://github.com/uacaps/PageMenu'
 pod 'MarqueeLabel'
-pod 'RATreeView',           :git => "https://github.com/kumabook/RATreeView.git",
+pod 'RATreeView',           :git => 'https://github.com/kumabook/RATreeView.git',
                             :branch => 'pull_to_refresh'

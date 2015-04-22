@@ -1,6 +1,6 @@
 [submodule "Carthage/Checkouts/Alamofire"]
 	path = Carthage/Checkouts/Alamofire
-	url = https://github.com/kumabook/Alamofire.git
+	url = https://github.com/Alamofire/Alamofire.git
 [submodule "Carthage/Checkouts/LlamaKit"]
 	path = Carthage/Checkouts/LlamaKit
 	url = https://github.com/LlamaKit/LlamaKit.git
@@ -12,13 +12,10 @@
 	url = https://github.com/Quick/Quick.git
 [submodule "Carthage/Checkouts/SwiftyJSON"]
 	path = Carthage/Checkouts/SwiftyJSON
-	url = https://github.com/kumabook/SwiftyJSON.git
+	url = https://github.com/SwiftyJSON/SwiftyJSON.git
 [submodule "Carthage/Checkouts/realm-cocoa"]
 	path = Carthage/Checkouts/realm-cocoa
 	url = https://github.com/realm/realm-cocoa.git
-[submodule "Carthage/Checkouts/xcconfigs"]
-	path = Carthage/Checkouts/xcconfigs
-	url = https://github.com/jspahrsummers/xcconfigs.git
 [submodule "Carthage/Checkouts/FeedlyKit"]
 	path = Carthage/Checkouts/FeedlyKit
 	url = https://github.com/kumabook/FeedlyKit.git
