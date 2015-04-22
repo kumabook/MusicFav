@@ -6,10 +6,10 @@
 //  Copyright (c) 2015 Hiroki Kumamoto. All rights reserved.
 //
 
+import Foundation
 import FeedlyKit
 import ReactiveCocoa
 import LlamaKit
-import FeedlyKit
 
 class StreamListLoader {
     enum State {
@@ -31,8 +31,8 @@ class StreamListLoader {
 
     var apiClient:            CloudAPIClient { return CloudAPIClient.sharedInstance }
     var state:                State
-    var signal:               HotSignal<Event>
-    private var sink:         SinkOf<Event>
+    var signal:               Signal<Event, NSError>
+    private var sink:         SinkOf<ReactiveCocoa.Event<Event, NSError>>
     var disposable:           Disposable?
     var streamListOfCategory: [FeedlyKit.Category: [Stream]]
     var uncategorized:        FeedlyKit.Category
@@ -65,7 +65,7 @@ class StreamListLoader {
     init() {
         state                = .Normal
         streamListOfCategory = [:]
-        let pipe = HotSignal<Event>.pipe()
+        let pipe = Signal<Event, NSError>.pipe()
         signal               = pipe.0
         sink                 = pipe.1
         uncategorized        = FeedlyKit.Category.Uncategorized()
@@ -108,42 +108,40 @@ class StreamListLoader {
 
     func refresh() {
         state = .Fetching
-        sink.put(.StartLoading)
+        sink.put(.Next(Box(.StartLoading)))
         disposable?.dispose()
-        disposable = fetch().deliverOn(MainScheduler()).start(
+        disposable = fetch() |> startOn(UIScheduler()) |> start(
             next: { dic in
-                self.sink.put(.StartLoading)
+                self.sink.put(.Next(Box(.StartLoading)))
             }, error: { error in
                 self.state = .Error
-                self.sink.put(.FailToLoad(error))
+                self.sink.put(.Next(Box(.FailToLoad(error))))
             }, completed: {
                 self.state = .Normal
-                self.sink.put(.CompleteLoading)
+                self.sink.put(.Next(Box(.CompleteLoading)))
         })
     }
 
-    func fetch() -> ColdSignal<[FeedlyKit.Category: [Stream]]> {
+    func fetch() -> SignalProducer<[FeedlyKit.Category: [Stream]], NSError> {
         if apiClient.isLoggedIn {
             return self.fetchSubscriptions()
         } else {
-            return ColdSignal<[FeedlyKit.Category: [Stream]]>.empty()
+            return SignalProducer<[FeedlyKit.Category: [Stream]], NSError>.empty
         }
     }
 
-    func fetchSubscriptions() -> ColdSignal<[FeedlyKit.Category: [Stream]]> {
-        return apiClient.fetchCategories().merge({categoryListSignal in
-            self.apiClient.fetchSubscriptions().map({ subscriptions in
-                return categoryListSignal.map({ categories in
-                    for category in categories {
-                        self.streamListOfCategory[category] = [] as [Stream]
-                    }
-                    for subscription in subscriptions {
-                        self.addSubscription(subscription)
-                    }
-                    return self.streamListOfCategory
-                })
-            })
-        })
+    func fetchSubscriptions() -> SignalProducer<[FeedlyKit.Category: [Stream]], NSError> {
+        return apiClient.fetchCategories() |> map { categories in
+            for category in categories {
+                self.streamListOfCategory[category] = [] as [Stream]
+            }
+            return self.apiClient.fetchSubscriptions() |> map { subscriptions in
+                for subscription in subscriptions {
+                    self.addSubscription(subscription)
+                }
+                return self.streamListOfCategory
+            }
+        } |> flatten(.Merge)
     }
 
     func createCategory(label: String) -> FeedlyKit.Category? {
@@ -170,42 +168,42 @@ class StreamListLoader {
 
     func subscribeTo(subscription: Subscription) {
         state = .Updating
-        sink.put(.StartUpdating)
+        sink.put(.Next(Box(.StartUpdating)))
         if !apiClient.isLoggedIn {
             self.addSubscription(subscription)
             self.state = .Normal
-            self.sink.put(.CreateAt(subscription))
+            self.sink.put(.Next(Box(.CreateAt(subscription))))
             return
         }
         CloudAPIClient.sharedInstance.subscribeTo(subscription) { (req, res, error) -> Void in
             if let e = error {
                 self.state = .Error
-                self.sink.put(.FailToUpdate(e))
+                self.sink.put(.Next(Box(.FailToUpdate(e))))
             } else {
                 self.addSubscription(subscription)
                 self.state = .Normal
-                self.sink.put(.CreateAt(subscription))
+                self.sink.put(.Next(Box(.CreateAt(subscription))))
             }
         }
     }
 
     func unsubscribeTo(subscription: Subscription, index: Int, category: FeedlyKit.Category) {
         state = .Updating
-        self.sink.put(.StartUpdating)
+        self.sink.put(.Next(Box(.StartUpdating)))
         if !apiClient.isLoggedIn {
             self.removeSubscription(subscription)
             self.state = .Normal
-            self.sink.put(.RemoveAt(index, subscription, category))
+            self.sink.put(.Next(Box(.RemoveAt(index, subscription, category))))
             return
         }
         apiClient.unsubscribeTo(subscription.id, completionHandler: { (req, res, error) -> Void in
             if let e = error {
                 self.state = .Error
-                self.sink.put(.FailToUpdate(e))
+                self.sink.put(.Next(Box(.FailToUpdate(e))))
             } else {
                 self.removeSubscription(subscription)
                 self.state = .Normal
-                self.sink.put(.RemoveAt(index, subscription, category))
+                self.sink.put(.Next(Box(.RemoveAt(index, subscription, category))))
             }
         })
     }

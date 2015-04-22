@@ -16,11 +16,11 @@ class Playlist: Equatable, Hashable {
     var title:        String
     var tracks:       [Track]
     var thumbnailUrl: NSURL? { return tracks.first?.thumbnailUrl }
-    var signal:       HotSignal<Int>
-    var sink:         SinkOf<Int>
+    var signal:       Signal<Int, NSError>
+    var sink:         SinkOf<ReactiveCocoa.Event<Int, NSError>>
 
     struct ClassProperty {
-        static let pipe    = HotSignal<Event>.pipe()
+        static let pipe    = Signal<Event, NSError>.pipe()
         static var current = Playlist.findAll()
     }
     enum Event {
@@ -32,7 +32,7 @@ class Playlist: Equatable, Hashable {
         case TrackUpdated(Playlist, Track)
     }
 
-    class var shared: (signal: HotSignal<Event>, sink: SinkOf<Event>, current: [Playlist]) {
+    class var shared: (signal: Signal<Event, NSError>, sink: SinkOf<ReactiveCocoa.Event<Event, NSError>>, current: [Playlist]) {
         get { return (signal: ClassProperty.pipe.0,
                         sink: ClassProperty.pipe.1,
                      current: ClassProperty.current) }
@@ -58,7 +58,7 @@ class Playlist: Equatable, Hashable {
             break
         }
 
-        shared.sink.put(event)
+        shared.sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(event)))
     }
 
     private class func dateFormatter() -> NSDateFormatter {
@@ -71,7 +71,7 @@ class Playlist: Equatable, Hashable {
         self.id     = "created-\(Playlist.dateFormatter().stringFromDate(NSDate()))"
         self.title  = title
         self.tracks = []
-        let pipe    = HotSignal<Int>.pipe()
+        let pipe    = Signal<Int, NSError>.pipe()
         self.signal = pipe.0
         self.sink   = pipe.1
     }
@@ -80,7 +80,7 @@ class Playlist: Equatable, Hashable {
         id     = json["url"].stringValue
         title  = json["title"].stringValue
         tracks = json["tracks"].arrayValue.map({ Track(json: $0) })
-        let pipe    = HotSignal<Int>.pipe()
+        let pipe    = Signal<Int, NSError>.pipe()
         self.signal = pipe.0
         self.sink   = pipe.1
     }
@@ -90,9 +90,9 @@ class Playlist: Equatable, Hashable {
         title  = store.title
         tracks = [] as [Track]
         for trackStore in store.tracks {
-            tracks.append(Track(store:trackStore as TrackStore))
+            tracks.append(Track(store:trackStore as! TrackStore))
         }
-        let pipe    = HotSignal<Int>.pipe()
+        let pipe    = Signal<Int, NSError>.pipe()
         self.signal = pipe.0
         self.sink   = pipe.1
     }

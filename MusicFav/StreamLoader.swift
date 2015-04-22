@@ -45,8 +45,8 @@ class StreamLoader {
     var loaderOfPlaylist:   [Playlist:(PlaylistLoader, Disposable)]
     var playlistifier:      Disposable?
     var streamContinuation: String?
-    var hotSignal:          HotSignal<Event>
-    var sink:               SinkOf<Event>
+    var signal:             Signal<Event, NSError>
+    var sink:               SinkOf<ReactiveCocoa.Event<Event, NSError>>
 
     init(stream: Stream) {
         self.stream      = stream
@@ -55,8 +55,8 @@ class StreamLoader {
         entries          = []
         playlistsOfEntry = [:]
         loaderOfPlaylist = [:]
-        let pipe = HotSignal<Event>.pipe()
-        hotSignal        = pipe.0
+        let pipe         = Signal<Event, NSError>.pipe()
+        signal           = pipe.0
         sink             = pipe.1
     }
 
@@ -84,19 +84,19 @@ class StreamLoader {
             return
         }
 
-        var signal: ColdSignal<PaginatedEntryCollection>
-        signal = feedlyClient.fetchEntries(streamId: stream.streamId,
+        var producer: SignalProducer<PaginatedEntryCollection, NSError>
+        producer = feedlyClient.fetchEntries(streamId: stream.streamId,
                                           newerThan: lastUpdated,
                                          unreadOnly: unreadOnly)
-        sink.put(.StartLoadingLatest)
-        signal.deliverOn(MainScheduler())
-            .start(
+        sink.put(.Next(Box(.StartLoadingLatest)))
+        producer |> startOn(UIScheduler())
+               |> start(
                 next: { paginatedCollection in
                     var latestEntries = paginatedCollection.items
                     self.playlistifier = latestEntries.map({
                         self.loadPlaylistOfEntry($0)
-                    }).reduce(ColdSignal<Void>.empty(), combine: { (signal, nextSignal) in
-                        signal.concat(nextSignal)
+                    }).reduce(SignalProducer<Void, NSError>.empty, combine: { (currentSignal, nextSignal) in
+                        currentSignal |> concat(nextSignal)
                     }).start(next: {}, error: {error in}, completed: {})
                     latestEntries.extend(self.entries)
                     self.entries = latestEntries
@@ -116,7 +116,7 @@ class StreamLoader {
                     }
                 },
                 completed: {
-                    self.sink.put(.CompleteLoadingLatest)
+                    self.sink.put(.Next(Box(.CompleteLoadingLatest)))
             })
     }
 
@@ -125,23 +125,23 @@ class StreamLoader {
             return
         }
         state = .Fetching
-        sink.put(.StartLoadingNext)
-        var signal: ColdSignal<PaginatedEntryCollection>
-        signal = feedlyClient.fetchEntries(streamId:stream.streamId, continuation: streamContinuation, unreadOnly: unreadOnly)
-        signal.deliverOn(MainScheduler())
-            .start(
+        sink.put(.Next(Box(.StartLoadingNext)))
+        var producer: SignalProducer<PaginatedEntryCollection, NSError>
+        producer = feedlyClient.fetchEntries(streamId:stream.streamId, continuation: streamContinuation, unreadOnly: unreadOnly)
+        producer |> startOn(UIScheduler())
+               |> start(
                 next: {paginatedCollection in
                     let entries = paginatedCollection.items
                     self.entries.extend(entries)
                     self.playlistifier = entries.map({
                         self.loadPlaylistOfEntry($0)
-                    }).reduce(ColdSignal<Void>.empty(), combine: { (signal, nextSignal) in
-                        signal.concat(nextSignal)
-                    }).start(next: {}, error: {error in}, completed: {})
+                    }).reduce(SignalProducer<Void, NSError>.empty, combine: { (currentSignal, nextSignal) in
+                        currentSignal |> concat(nextSignal)
+                    }) |> start(next: {}, error: {error in}, completed: {})
                     self.streamContinuation = paginatedCollection.continuation
                     self.updateLastUpdated(paginatedCollection.updated)
-                    self.sink.put(.CompleteLoadingNext)           // First reload tableView,
-                    if paginatedCollection.continuation == nil {  // then wait for next load
+                    self.sink.put(.Next(Box(.CompleteLoadingNext))) // First reload tableView,
+                    if paginatedCollection.continuation == nil {    // then wait for next load
                         self.state = .Complete
                     } else {
                         self.state = .Normal
@@ -156,11 +156,11 @@ class StreamLoader {
                                 //TODO: Alert Dialog with login link
                             } else {
                                 self.state = State.Error
-                                self.sink.put(.FailToLoadNext)
+                                self.sink.put(.Next(Box(.FailToLoadNext)))
                             }
                         } else {
                             self.state = State.Error
-                            self.sink.put(.FailToLoadNext)
+                            self.sink.put(.Next(Box(.FailToLoadNext)))
                         }
                     }
                 },
@@ -168,12 +168,12 @@ class StreamLoader {
             })
     }
 
-    func loadPlaylistOfEntry(entry: Entry) -> ColdSignal<Void> {
+    func loadPlaylistOfEntry(entry: Entry) -> SignalProducer<Void, NSError> {
         if let url = entry.url {
-            return musicfavClient.playlistify(url).map({ playlist in
+            return musicfavClient.playlistify(url) |> map({ playlist in
                 self.playlistsOfEntry[entry] = playlist
-                MainScheduler().schedule {
-                    self.sink.put(.CompleteLoadingPlaylist(playlist, entry))
+                UIScheduler().schedule {
+                    self.sink.put(.Next(Box(.CompleteLoadingPlaylist(playlist, entry))))
                 }
                 if let _disposable = self.loaderOfPlaylist[playlist] {
                     _disposable.1.dispose()
@@ -188,7 +188,7 @@ class StreamLoader {
                 return ()
             })
         }
-        return ColdSignal<Void>.empty()
+        return SignalProducer<Void, NSError>.empty
     }
 
     var unreadOnly: Bool {
@@ -216,7 +216,7 @@ class StreamLoader {
             })
         }
         entries.removeAtIndex(index)
-        sink.put(.RemoveAt(index))
+        sink.put(.Next(Box(.RemoveAt(index))))
     }
 
     func markAsUnread(index: Int) {
@@ -228,7 +228,7 @@ class StreamLoader {
             })
         }
         entries.removeAtIndex(index)
-        sink.put(.RemoveAt(index))
+        sink.put(.Next(Box(.RemoveAt(index))))
     }
 
     func markAsUnsaved(index: Int) {
@@ -244,6 +244,6 @@ class StreamLoader {
             })
         }
         entries.removeAtIndex(index)
-        sink.put(.RemoveAt(index))
+        sink.put(.Next(Box(.RemoveAt(index))))
     }
 }

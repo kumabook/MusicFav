@@ -78,19 +78,19 @@ class Track {
         return store
     }
 
-    func fetchTrackDetail(errorOnFailure: Bool) -> ColdSignal<Track>{
+    func fetchTrackDetail(errorOnFailure: Bool) -> SignalProducer<Track, NSError>{
         switch provider {
         case .Youtube:
             return XCDYouTubeClient.defaultClient().fetchVideo(identifier, errorOnFailure: errorOnFailure)
-                .deliverOn(MainScheduler())
-                .map({
+                |> startOn(UIScheduler())
+                |> map({
                     self.updatePropertiesWithYouTubeVideo($0)
                     return self
                 })
         case .SoundCloud:
             return SoundCloudAPIClient.sharedInstance.fetchTrack(identifier, errorOnFailure: errorOnFailure)
-                .deliverOn(MainScheduler())
-                .map({
+                |> startOn(UIScheduler())
+                |> map({
                     self.updateProperties($0)
                     return self
                 })

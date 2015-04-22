@@ -71,8 +71,8 @@ class Blog {
         return "feed/\(syndUrl)"
     }
 
-    func fetchSiteInfo() -> ColdSignal<Blog> {
-        return HypemAPIClient.sharedInstance.getSiteInfo(siteId).map({
+    func fetchSiteInfo() -> SignalProducer<Blog, NSError> {
+        return HypemAPIClient.sharedInstance.getSiteInfo(siteId) |> map({
             self.siteInfo = $0
             return self
         })

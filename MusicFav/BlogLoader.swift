@@ -28,29 +28,29 @@ class BlogLoader {
 
     private var _blogs: [Blog]
     var blogs:          [Blog]
-    var offset = 0
+    var offset  = 0
     var perPage = 5
     var state:          State
-    var hotSignal:      HotSignal<Event>
-    var sink:           SinkOf<Event>
+    var signal:         Signal<Event, NSError>
+    var sink:           SinkOf<ReactiveCocoa.Event<Event, NSError>>
 
     init() {
         self._blogs = []
         self.blogs  = []
-        self.state = .Init
-        let pipe   = HotSignal<Event>.pipe()
-        hotSignal  = pipe.0
-        sink       = pipe.1
+        self.state  = .Init
+        let pipe    = Signal<Event, NSError>.pipe()
+        signal      = pipe.0
+        sink        = pipe.1
     }
 
-    private func fetchAllBlogs() -> ColdSignal<Void> {
+    private func fetchAllBlogs() -> SignalProducer<Void, NSError> {
         state = State.FetchingAllBlogs
-        sink.put(.StartLoading)
-        return HypemAPIClient.sharedInstance.getAllBlogs().map({
+        sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.StartLoading)))
+        return HypemAPIClient.sharedInstance.getAllBlogs() |> map {
             self._blogs = $0
             self.fetchNextDetails()
             return
-        })
+        }
     }
 
     func fetchBlogs() {
@@ -66,13 +66,13 @@ class BlogLoader {
 
     private func fetchNextDetails() {
         self.state  = State.FetchingDetails
-        sink.put(.StartLoading)
+        sink.put(.Next(Box(.StartLoading)))
         fetchDetails(start: offset, length: perPage).start(
             next: { blog in
                 self.offset += self.perPage
-                self.sink.put(.CompleteLoading)
+                self.sink.put(.Next(Box(.CompleteLoading)))
             }, error: { error in
-                self.sink.put(.FailToLoad)
+                self.sink.put(.Next(Box(.FailToLoad)))
             }, completed: {
                 if self.offset >= self._blogs.count {
                     self.state = .Complete
@@ -83,24 +83,24 @@ class BlogLoader {
         })
     }
 
-    private func fetchDetails(#start: Int, length: Int) -> ColdSignal<[Blog]> {
-        var signal = ColdSignal<Blog>.empty()
+    private func fetchDetails(#start: Int, length: Int) -> SignalProducer<[Blog], NSError> {
+        var producer = SignalProducer<Blog, NSError>.empty
         for i in start..<start+length {
-            signal = signal.concat(fetchSiteInfo(i))
+            producer = producer |> concat(fetchSiteInfo(i))
         }
-        return signal.reduce(initial: [], {var list = $0; list.append($1); return list})
+        return producer |> reduce([], {var list = $0; list.append($1); return list})
     }
 
-    private func fetchSiteInfo(index: Int) -> ColdSignal<Blog> {
-        return ColdSignal<Blog> { (coldSink, disposable) in
+    private func fetchSiteInfo(index: Int) -> SignalProducer<Blog, NSError> {
+        return SignalProducer<Blog, NSError> { (blogSink, disposable) in
             self._blogs[index].fetchSiteInfo().start(
                 next: { blog in
                     self.blogs.append(blog)
-                    coldSink.put(.Next(Box(blog)))
-                    coldSink.put(.Completed)
+                    blogSink.put(.Next(Box(blog)))
+                    blogSink.put(.Completed)
                 },
                 error: { error in
-                    coldSink.put(.Error(error))
+                    blogSink.put(.Error(Box(error)))
                     return
                 },
                 completed: {
