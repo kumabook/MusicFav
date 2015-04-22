@@ -74,7 +74,7 @@ class PlaylistStore: RLMObject {
     class func findAll() -> [Playlist] {
         var playlists: [Playlist] = []
         for store in PlaylistStore.allObjectsInRealm(realm) {
-            playlists.append(Playlist(store: store as PlaylistStore))
+            playlists.append(Playlist(store: store as! PlaylistStore))
         }
         return playlists
     }

@@ -56,7 +56,7 @@ class TrackStore: RLMObject {
         RLMRealm.setSchemaVersion(2, forRealmAtPath: RLMRealm.defaultRealmPath()) { (migration, oldVersion) -> Void in
             if (oldVersion < 1) {
                 migration.enumerateObjects(TrackStore.className()) { oldObject, newObject in
-                    let serviceId = oldObject["serviceId"] as String
+                    let serviceId = oldObject["serviceId"] as! String
                     newObject["identifier"] = serviceId
                 }
             }
@@ -64,7 +64,7 @@ class TrackStore: RLMObject {
                 migration.enumerateObjects(TrackStore.className()) { oldObject, newObject in
                     let properties = ["title", "streamUrl", "thumbnailUrl"]
                     for prop in properties {
-                        let val = oldObject[prop] as String?
+                        let val = oldObject[prop] as! String?
                         if let v = val {
                             newObject[prop] = v
                         }
