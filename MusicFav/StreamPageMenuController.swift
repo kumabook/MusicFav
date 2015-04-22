@@ -22,6 +22,8 @@ class StreamPageMenuController: UIViewController {
     }
     
     required init(coder aDecoder: NSCoder) {
+        self.stream       = DummyStream()
+        self.streamLoader = StreamLoader(stream: stream)
         super.init(coder:aDecoder)
     }
 
@@ -74,7 +76,7 @@ class StreamPageMenuController: UIViewController {
     }
 
     func showPlaylist() {
-        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.miniPlayerViewController?.mainViewController.showRightPanelAnimated(true)
     }
 }

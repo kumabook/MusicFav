@@ -13,7 +13,7 @@ import SwiftyJSON
 import FeedlyKit
 
 class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableViewCellDelegate {
-    let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     let cellHeight: CGFloat = 120
     let playlistStreamTableCellReuseIdentifier = "PlaylistStreamTableViewCell"
 
@@ -76,7 +76,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
 
     func observeStreamLoader() {
         observer?.dispose()
-        observer = streamLoader.hotSignal.observe({ event in
+        observer = streamLoader.signal.observe(next: { event in
             switch event {
             case .StartLoadingLatest:
                 self.refreshControl?.beginRefreshing()
@@ -104,12 +104,12 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
         })
 
         tableView?.reloadData()
-        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.miniPlayerViewController?.mainViewController.showCenterPanelAnimated(true)
     }
 
     func showPlaylist(playlist: Playlist?) {
-        let vc    = appDelegate.miniPlayerViewController?
+        let vc = appDelegate.miniPlayerViewController
         if let _playlist = playlist {
             appDelegate.selectedPlaylist = _playlist
             appDelegate.miniPlayerViewController?.playlistTableViewController.updateNavbar()
@@ -181,7 +181,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let entry = streamLoader.entries[indexPath.row]
-        let cell = tableView.dequeueReusableCellWithIdentifier(playlistStreamTableCellReuseIdentifier, forIndexPath:indexPath) as PlaylistStreamTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(playlistStreamTableCellReuseIdentifier, forIndexPath:indexPath) as! PlaylistStreamTableViewCell
         cell.titleLabel.text = entry.title
         if let playlist = streamLoader.playlistsOfEntry[entry] {
             cell.delegate           = self

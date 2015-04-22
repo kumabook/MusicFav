@@ -13,7 +13,7 @@ import SwiftyJSON
 import FeedlyKit
 
 class EntryStreamViewController: UITableViewController {
-    let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     let cellHeight: CGFloat = 120
     let entryStreamTableCellReuseIdentifier = "EntryStreamTableViewCell"
 
@@ -30,10 +30,12 @@ class EntryStreamViewController: UITableViewController {
     }
 
     override init(style: UITableViewStyle) {
+        self.streamLoader = StreamLoader(stream: DummyStream())
         super.init(style: style)
     }
 
     required init(coder aDecoder: NSCoder) {
+        self.streamLoader = StreamLoader(stream: DummyStream())
         super.init(coder:aDecoder)
     }
 
@@ -85,7 +87,7 @@ class EntryStreamViewController: UITableViewController {
 
     func observeStreamLoader() {
         observer?.dispose()
-        observer = streamLoader.hotSignal.observe({ event in
+        observer = streamLoader.signal.observe(next: { event in
             switch event {
             case .StartLoadingLatest:
                 self.refreshControl?.beginRefreshing()
@@ -113,12 +115,12 @@ class EntryStreamViewController: UITableViewController {
         })
 
         tableView?.reloadData()
-        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.miniPlayerViewController?.mainViewController.showCenterPanelAnimated(true)
     }
 
     func showPlaylist() {
-        let appDelegate = UIApplication.sharedApplication().delegate as AppDelegate
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.miniPlayerViewController?.mainViewController.showRightPanelAnimated(true)
     }
 
@@ -183,7 +185,7 @@ class EntryStreamViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let entry = streamLoader.entries[indexPath.row]
-        let cell = tableView.dequeueReusableCellWithIdentifier(entryStreamTableCellReuseIdentifier, forIndexPath:indexPath) as EntryStreamTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(entryStreamTableCellReuseIdentifier, forIndexPath:indexPath) as! EntryStreamTableViewCell
         let markAs = streamLoader.removeMark
         weak var _self = self
         cell.prepareSwipeViews(markAs, onSwipe: { (cell) -> Void in
