@@ -143,7 +143,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func showStreamSelectViewController() {
-        weak var mini   = miniPlayerViewController?
+        weak var mini = miniPlayerViewController
         if let streamListLoader = mini?.menuViewController?.streamListLoader {
             let stvc = StreamTableViewController(streamListLoader: streamListLoader)
             let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.3 * Double(NSEC_PER_SEC)))
