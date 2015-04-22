@@ -12,7 +12,7 @@ import LlamaKit
 
 class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     let NEW_PLAYLIST_INDEX = -1
-    var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as AppDelegate } }
+    var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as! AppDelegate } }
     enum Section: Int {
         case Playing     = 0
         case Selected    = 1
@@ -113,29 +113,31 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     func observePlaylists() {
         playlists = Playlist.shared.current
         tableView.reloadData()
-        playlistsObserver = Playlist.shared.signal.observe { event in
-            let section = Section.Favorites.rawValue
-            switch event {
-            case .Created(let playlist):
-                let indexPath = NSIndexPath(forItem: self.playlists.count, inSection: section)
-                self.playlists.append(playlist)
-                self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-            case .Updated(let playlist):
-                self.updatePlaylist(playlist)
-            case .Removed(let playlist):
-                if let index = find(self.playlists, playlist) {
-                    let playlist = self.playlists.removeAtIndex(index)
-                    let indexPath = NSIndexPath(forItem: index, inSection: section)
-                    self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        playlistsObserver = Playlist.shared.signal.observe(
+            next: { event in
+                let section = Section.Favorites.rawValue
+                switch event {
+                case .Created(let playlist):
+                    let indexPath = NSIndexPath(forItem: self.playlists.count, inSection: section)
+                    self.playlists.append(playlist)
+                    self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                case .Updated(let playlist):
+                    self.updatePlaylist(playlist)
+                case .Removed(let playlist):
+                    if let index = find(self.playlists, playlist) {
+                        let playlist = self.playlists.removeAtIndex(index)
+                        let indexPath = NSIndexPath(forItem: index, inSection: section)
+                        self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                    }
+                case .TracksAdded(let playlist, let tracks):
+                    self.updatePlaylist(playlist)
+                case .TrackRemoved(let playlist, let Track, let index):
+                    self.updatePlaylist(playlist)
+                case .TrackUpdated(let playlist, let track):
+                    self.updatePlaylist(playlist)
                 }
-            case .TracksAdded(let playlist, let tracks):
-                self.updatePlaylist(playlist)
-            case .TrackRemoved(let playlist, let Track, let index):
-                self.updatePlaylist(playlist)
-            case .TrackUpdated(let playlist, let track):
-                self.updatePlaylist(playlist)
-            }
-        }
+                return
+            })
     }
 
     func updatePlaylist(playlist: Playlist) {
@@ -207,7 +209,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(self.tableCellReuseIdentifier, forIndexPath: indexPath) as PlaylistTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(self.tableCellReuseIdentifier, forIndexPath: indexPath) as! PlaylistTableViewCell
         var playlist: Playlist?
         switch (Section(rawValue: indexPath.section)!) {
         case .Playing:

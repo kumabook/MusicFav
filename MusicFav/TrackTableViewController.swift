@@ -21,7 +21,7 @@ class TrackTableViewController: UITableViewController {
     
     var playlist: Playlist! = nil
     var playlistLoader: PlaylistLoader!
-    var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as AppDelegate }}
+    var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as! AppDelegate }}
     var isSelectedPlaylist: Bool {
         get {
             if playlist != nil && appDelegate.selectedPlaylist != nil {
@@ -129,7 +129,7 @@ class TrackTableViewController: UITableViewController {
         weak var _self = self
         playlistLoader.fetchTracks().start(
             next: { (index, track) in
-                MainScheduler().schedule {
+                UIScheduler().schedule {
                     if let __self = _self {
                         __self.tableView?.reloadRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)],
                             withRowAnimation: UITableViewRowAnimation.None)
@@ -159,7 +159,7 @@ class TrackTableViewController: UITableViewController {
         return self.cellHeight
     }
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(self.tableCellReuseIdentifier, forIndexPath: indexPath) as TrackTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(self.tableCellReuseIdentifier, forIndexPath: indexPath) as! TrackTableViewCell
         if let p = playlist {
             let track = p.tracks[indexPath.item]
             if let title = track.title { cell.trackNameLabel.text = title }
