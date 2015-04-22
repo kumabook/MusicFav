@@ -61,7 +61,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     var observer:         Disposable?
 
     var apiClient:   CloudAPIClient    { return CloudAPIClient.sharedInstance }
-    var appDelegate: AppDelegate       { return UIApplication.sharedApplication().delegate as AppDelegate }
+    var appDelegate: AppDelegate       { return UIApplication.sharedApplication().delegate as! AppDelegate }
     var root:        UIViewController? { return view.window?.rootViewController }
 
     var refreshControl: UIRefreshControl?
@@ -77,7 +77,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         }
     }
 
-    override init() {
+    init() {
         sections         = []
         streamListLoader = StreamListLoader()
         super.init(nibName: nil, bundle: nil)
@@ -164,7 +164,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
 
     func observeStreamList() {
         observer?.dispose()
-        observer = streamListLoader.signal.observe({ event in
+        observer = streamListLoader.signal.observe(next: { event in
             switch event {
             case .StartLoading:
                 self.refreshControl?.beginRefreshing()
@@ -175,7 +175,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
                 self.sections  = self.defaultSections()
                 self.sections.extend(categories.map({ Section.FeedlyCategory($0) }))
                 self.sections.extend(self.streamListLoader.uncategorizedStreams.map({
-                    Section.UncategorizedSubscription($0 as Subscription)
+                    Section.UncategorizedSubscription($0 as! Subscription)
                 }))
                 self.refreshControl?.endRefreshing()
                 self.treeView?.reloadData()
@@ -223,7 +223,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     }
     
     func treeView(treeView: RATreeView!, cellForItem item: AnyObject!) -> UITableViewCell! {
-        let cell = treeView.dequeueReusableCellWithIdentifier("reuseIdentifier") as UITableViewCell
+        let cell = treeView.dequeueReusableCellWithIdentifier("reuseIdentifier") as! UITableViewCell
         if item == nil {
             cell.textLabel?.text = "Nothing"
         } else if let index = item as? Int {
@@ -282,11 +282,11 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
             default: break
             }
         } else if let stream = item as? Stream {
-            let sectionIndex = treeView.parentForItem(item) as Int
+            let sectionIndex = treeView.parentForItem(item) as! Int
             switch sections[sectionIndex] {
             case .FeedlyCategory(let category):
                 if var streams = streamListLoader.streamListOfCategory[category] {
-                    var stream = item as Stream
+                    var stream = item as! Stream
                     if let i = find(streams, stream) {
                         if let subscription = item as? Subscription {
                             unsubscribeTo(subscription, index: i, category: category)

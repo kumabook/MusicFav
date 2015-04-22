@@ -11,7 +11,7 @@ import InAppSettingsKit
 import FeedlyKit
 
 class PreferenceViewController: UITableViewController {
-    var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as AppDelegate } }
+    var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as! AppDelegate } }
     enum Section: Int {
         case Genenral = 0
         static let count = 1
@@ -58,7 +58,7 @@ class PreferenceViewController: UITableViewController {
     }
     
     func close() {
-        self.navigationController?.dismissViewControllerAnimated(true, nil)
+        self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
     }
 
     func logout() {
@@ -104,7 +104,7 @@ class PreferenceViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as! UITableViewCell
         let section = Section(rawValue: indexPath.section)!
         switch section {
         case .Genenral:

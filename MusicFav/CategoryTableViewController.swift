@@ -16,8 +16,8 @@ class CategoryTableViewController: UITableViewController {
     let client = CloudAPIClient.sharedInstance
 
     var HUD:              MBProgressHUD!
-    let subscribable:     Subscribable!
-    let streamListLoader: StreamListLoader!
+    var subscribable:     Subscribable!
+    var streamListLoader: StreamListLoader!
     var observer:         Disposable?
 
     var categories: [FeedlyKit.Category] { return streamListLoader.streamListOfCategory.keys.array }
@@ -62,7 +62,7 @@ class CategoryTableViewController: UITableViewController {
 
     func observeStreamList() {
         observer?.dispose()
-        observer = streamListLoader.signal.observe({ event in
+        observer = streamListLoader.signal.observe(next: { event in
             switch event {
             case .StartLoading: break
             case .CompleteLoading:
@@ -127,7 +127,7 @@ class CategoryTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as! UITableViewCell
         cell.textLabel?.text = categories[indexPath.item].label
         return cell
     }

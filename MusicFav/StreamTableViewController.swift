@@ -128,8 +128,8 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
         }
         let query = SearchQueryOfFeed(query: text)
         searchDisposable = client.searchFeeds(query)
-            .deliverOn(MainScheduler())
-            .start(
+            |> startOn(UIScheduler())
+            |> start(
                 next: { feeds in
                     self.feeds = feeds
                 },
@@ -154,7 +154,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
 
     func observeBlogs() {
         observer?.dispose()
-        observer = blogLoader.hotSignal.observe({ event in
+        observer = blogLoader.signal.observe(next: { event in
             switch event {
             case .StartLoading:
                 self.showIndicator()
@@ -218,7 +218,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(streamTableViewCellReuseIdentifier, forIndexPath: indexPath) as StreamTableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier(streamTableViewCellReuseIdentifier, forIndexPath: indexPath) as! StreamTableViewCell
         switch Section(rawValue: indexPath.section)! {
         case .SearchResult:
             cell.updateView(feed: feeds[indexPath.item])
@@ -267,6 +267,6 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
     }
 
     func close() {
-        self.navigationController?.dismissViewControllerAnimated(true, nil)
+        self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
     }
 }
