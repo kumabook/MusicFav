@@ -30,7 +30,7 @@ class MiniPlayerView: UIView {
     }
     
     func baseInit() {
-        let view = NSBundle.mainBundle().loadNibNamed("MiniPlayerView", owner:self, options:nil)[0] as UIView
+        let view = NSBundle.mainBundle().loadNibNamed("MiniPlayerView", owner:self, options:nil)[0] as! UIView
         view.frame = self.bounds;
         view.autoresizingMask = UIViewAutoresizing.FlexibleWidth|UIViewAutoresizing.FlexibleHeight;
         self.addSubview(view)

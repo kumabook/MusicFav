@@ -99,11 +99,11 @@ class PlaylistStreamTableViewCell: UITableViewCell {
 
     func observePlaylist(playlist: Playlist) {
         observer?.dispose()
-        observer = playlist.signal.observe { index in
-            MainScheduler().schedule {
+        observer = playlist.signal.observe(next: { index in
+            UIScheduler().schedule {
                 self.loadThumbnail(self.imageViews[index], track: playlist.tracks[index])
             }
             return
-        }
+        })
     }
 }

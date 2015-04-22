@@ -13,11 +13,11 @@ class PlayerView: UIButton {
     var videoEnabled = false
     var player: AVPlayer? {
         get {
-            let layer: AVPlayerLayer = self.layer as AVPlayerLayer
+            let layer: AVPlayerLayer = self.layer as! AVPlayerLayer
             return layer.player
         }
         set(newValue) {
-            let layer: AVPlayerLayer = self.layer as AVPlayerLayer
+            let layer: AVPlayerLayer = self.layer as! AVPlayerLayer
             layer.player = newValue
         }
     }
@@ -26,8 +26,8 @@ class PlayerView: UIButton {
         return AVPlayerLayer.self
     }
 
-    func setVideoFillMode(mode: NSString) {
-        let layer: AVPlayerLayer = self.layer as AVPlayerLayer
+    func setVideoFillMode(mode: String) {
+        let layer: AVPlayerLayer = self.layer as! AVPlayerLayer
         layer.videoGravity = mode
     }
 }
