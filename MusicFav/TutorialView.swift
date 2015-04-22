@@ -46,7 +46,7 @@ class TutorialView: EAIntroView {
         page.title          = String.tutorialString("first_page_title")
         page.titleFont      = UIFont.boldSystemFontOfSize(32)
         page.titlePositionY = frame.height * 0.6
-        page.titleIconView  = UIImageView(image: UIImage(named: "icon"))
+        page.titleIconView  = UIImageView(image: UIImage(named: "note"))
         page.desc           = String.tutorialString("first_page_desc")
         page.descFont       = UIFont.systemFontOfSize(24)
         page.descPositionY  = frame.height * 0.4
@@ -57,22 +57,31 @@ class TutorialView: EAIntroView {
     class func capturePage(frame: CGRect, title: String, desc: String, bgColor: UIColor, imageName: String) -> EAIntroPage {
         let height = frame.height
         let width  = frame.width
+        let deviceType = DeviceType.from(device: UIDevice.currentDevice())
+
         let descLabel           = UILabel(frame: CGRect(x: width*0.1, y: height*0.68,
             width: width*0.8, height: height*0.2))
         descLabel.textColor     = UIColor.whiteColor()
-        descLabel.font          = UIFont.systemFontOfSize(16)
         descLabel.textAlignment = NSTextAlignment.Left
         descLabel.numberOfLines = 6
         descLabel.lineBreakMode = NSLineBreakMode.ByWordWrapping
         descLabel.text          = desc
 
-        let page            = EAIntroPage()
-        page.title          = title
-        page.titleFont      = UIFont.boldSystemFontOfSize(24)
-        page.titlePositionY = frame.height * 0.35
-        page.bgColor        = bgColor
-        page.titleIconView  = UIImageView(image: UIImage(named: imageName))
-        page.subviews       = [descLabel]
+        let page                = EAIntroPage()
+        page.title              = title
+        page.titlePositionY     = frame.height * 0.35
+        page.bgColor            = bgColor
+        page.titleIconView      = UIImageView(image: UIImage(named: imageName))
+        page.subviews           = [descLabel]
+
+        if deviceType == DeviceType.iPhone4OrLess || deviceType == DeviceType.iPhone5 {
+            descLabel.font      = UIFont.systemFontOfSize(14)
+            page.titleFont      = UIFont.boldSystemFontOfSize(20)
+        } else {
+            descLabel.font      = UIFont.systemFontOfSize(16)
+            page.titleFont      = UIFont.boldSystemFontOfSize(24)
+        }
+
         return page
     }
 
@@ -91,7 +100,7 @@ class TutorialView: EAIntroView {
         page.title          = String.tutorialString("last_page_title")
         page.titleFont      = UIFont.boldSystemFontOfSize(32)
         page.titlePositionY = height * 0.6
-        page.titleIconView  = UIImageView(image: UIImage(named: "icon"))
+        page.titleIconView  = UIImageView(image: UIImage(named: "note"))
         page.desc           = String.tutorialString("last_page_desc")
         page.descFont       = UIFont.systemFontOfSize(20)
         page.descPositionY  = height * 0.3

@@ -67,6 +67,7 @@
 		67AF8E231A922AB80043DF33 /* FeedlyKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671664271A738E2A005FE005 /* FeedlyKit.framework */; };
 		67B366DC1AE168E200E089B2 /* soundcloud.json in Resources */ = {isa = PBXBuildFile; fileRef = 67B366DB1AE168E200E089B2 /* soundcloud.json */; };
 		67B366DE1AE1CBA800E089B2 /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B366DD1AE1CBA800E089B2 /* TutorialViewController.swift */; };
+		67BE4F371AE7D95800E40E98 /* DeviceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67BE4F361AE7D95800E40E98 /* DeviceType.swift */; };
 		67CB43F01A4ECD470010465E /* playlistify-userscript.js in Resources */ = {isa = PBXBuildFile; fileRef = 67CB43EF1A4ECD470010465E /* playlistify-userscript.js */; };
 		67CB43F21A4ED6D50010465E /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 67CB43F11A4ED6D50010465E /* main.js */; };
 		67CE596A1A51206D00C86681 /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67CE59691A51206D00C86681 /* MiniPlayerView.swift */; };
@@ -195,6 +196,7 @@
 		6794E7F41AE318720054B3DB /* TutorialView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		67B366DB1AE168E200E089B2 /* soundcloud.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = soundcloud.json; sourceTree = "<group>"; };
 		67B366DD1AE1CBA800E089B2 /* TutorialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialViewController.swift; sourceTree = "<group>"; };
+		67BE4F361AE7D95800E40E98 /* DeviceType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceType.swift; sourceTree = "<group>"; };
 		67CB43EF1A4ECD470010465E /* playlistify-userscript.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "playlistify-userscript.js"; path = "UserScript/playlistify-userscript.js"; sourceTree = "<group>"; };
 		67CB43F11A4ED6D50010465E /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = main.js; path = UserScript/main.js; sourceTree = "<group>"; };
 		67CE59691A51206D00C86681 /* MiniPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
@@ -266,6 +268,7 @@
 				6731BC9D1AD82321004F488D /* UIAlertControllerExtension.swift */,
 				6731BC9F1AD8F069004F488D /* JASidePanelControllerExtension.swift */,
 				6767AE531ADAC70500A92497 /* IASKAppSettingsViewControllerExtension.swift */,
+				67BE4F361AE7D95800E40E98 /* DeviceType.swift */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -738,6 +741,7 @@
 				6728FA391A60580A00F693B3 /* PreferenceViewController.swift in Sources */,
 				67254C791A493A570064E5DF /* EntryStreamTableViewCell.swift in Sources */,
 				6767AE621ADC20D300A92497 /* RecommendFeed.swift in Sources */,
+				67BE4F371AE7D95800E40E98 /* DeviceType.swift in Sources */,
 				6794E7F51AE318720054B3DB /* TutorialView.swift in Sources */,
 				6747CEB41AA3204900A6A16B /* Player.swift in Sources */,
 				67DB2A121A5588A6006BB490 /* MiniPlayerViewDelegate.swift in Sources */,
