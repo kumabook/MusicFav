@@ -50,7 +50,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
     var adBannerView:        ADBannerView?
 
     var app:                 UIApplication { get { return UIApplication.sharedApplication() }}
-    var appDelegate:         AppDelegate   { get { return app.delegate as AppDelegate }}
+    var appDelegate:         AppDelegate   { get { return app.delegate as! AppDelegate }}
     var player:              Player<PlayerObserver>? { get { return appDelegate.player }}
     var currentPlaylist:     Playlist? { get { return player?.currentPlaylist }}
     var currentTrack:        Track?    { get { return player?.currentTrack }}
@@ -59,8 +59,8 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
 
     var draggableCoverViewController: DraggableCoverViewController?
 
-    override init() {
-        super.init()
+    init() {
+        super.init(nibName: nil, bundle: nil)
         modalPlayerObserver = ModalPlayerObserver(playerViewController: self)
     }
 
@@ -84,9 +84,9 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         currentLabel           = UILabel()
         totalLabel             = UILabel()
         slider                 = UISlider()
-        nextButton             = UIButton.buttonWithType(UIButtonType.System) as UIButton
-        playButton             = UIButton.buttonWithType(UIButtonType.System) as UIButton
-        previousButton         = UIButton.buttonWithType(UIButtonType.System) as UIButton
+        nextButton             = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        playButton             = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        previousButton         = UIButton.buttonWithType(UIButtonType.System) as! UIButton
         playerView             = PlayerView()
 
         titleLabel.textColor     = UIColor.whiteColor()
@@ -274,12 +274,8 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
             playerView.setImage(UIImage(named: "icon"), forState: UIControlState.allZeros)
         }
         if let (current, total) = player?.secondPair {
-            if !slider.tracking { updateViewsOfTime(current: current, total: total) }
+            if !slider.tracking { updateViewsOfTime(current: Float(current), total: Float(total)) }
         }
-    }
-
-    func updateViewsOfTime(#current: Float64, total: Float64) {
-        updateViewsOfTime(current: Float(current), total: Float(total))
     }
 
     func updateViewsOfTime(#current: Float, total: Float) {

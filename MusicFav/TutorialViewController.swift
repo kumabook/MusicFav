@@ -10,7 +10,7 @@ import UIKit
 import EAIntroView
 
 class TutorialViewController: UIViewController, TutorialViewDelegate, FeedlyOAuthViewDelegate {
-    var appDelegate: AppDelegate { return UIApplication.sharedApplication().delegate as AppDelegate }
+    var appDelegate: AppDelegate { return UIApplication.sharedApplication().delegate as! AppDelegate }
     var tutorialView: TutorialView!
 
     override func viewDidLoad() {

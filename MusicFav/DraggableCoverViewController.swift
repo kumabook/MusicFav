@@ -36,7 +36,7 @@ class DraggableCoverViewController: UIViewController {
     var floorViewController: UIViewController!
 
     init(coverViewController:DraggableCoverViewControllerDelegate, floorViewController: UIViewController) {
-        super.init()
+        super.init(nibName: nil, bundle: nil)
         self.coverViewController = coverViewController
         self.floorViewController = floorViewController
         self.coverViewController.draggableCoverViewController = self

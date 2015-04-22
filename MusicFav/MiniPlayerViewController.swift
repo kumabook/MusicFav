@@ -34,12 +34,12 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
     var currentTrack:                Track?    { get { return player?.currentTrack }}
     var miniPlayerObserver:          MiniPlayerObserver!
     var app:                         UIApplication { get { return UIApplication.sharedApplication() }}
-    var appDelegate:                 AppDelegate   { get { return app.delegate as AppDelegate }}
+    var appDelegate:                 AppDelegate   { get { return app.delegate as! AppDelegate }}
     var player:                      Player<PlayerObserver>? { get { return appDelegate.player }}
     @IBOutlet weak var mainViewContainer: UIView!
     @IBOutlet weak var miniPlayerView:    MiniPlayerView!
 
-    override init() {
+    init() {
         super.init(nibName: "MiniPlayerViewController", bundle: NSBundle.mainBundle())
         mainViewController                      = JASidePanelController()
         playlistTableViewController             = PlaylistTableViewController()

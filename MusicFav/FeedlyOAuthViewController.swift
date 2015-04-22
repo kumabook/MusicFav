@@ -17,14 +17,14 @@ protocol FeedlyOAuthViewDelegate: class {
 }
 
 class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
-    var appDelegate:  AppDelegate    { return UIApplication.sharedApplication().delegate as AppDelegate }
+    var appDelegate:  AppDelegate    { return UIApplication.sharedApplication().delegate as! AppDelegate }
     var feedlyClient: CloudAPIClient { return CloudAPIClient.sharedInstance }
     weak var delegate: FeedlyOAuthViewDelegate?
     var observers: [NSObjectProtocol]!
 
     var loginWebView: UIWebView!
 
-    override init() {
+    init() {
         super.init(nibName: nil, bundle: nil)
         observers = []
     }
@@ -64,13 +64,13 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
     }
 
     func close() {
-        self.navigationController?.dismissViewControllerAnimated(true, nil)
+        self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
     }
 
     func setupOAuth2AccountStore() {
         NXOAuth2AccountStore.sharedStore().setClientID(FeedlyAPI.clientId,
                                            secret: FeedlyAPI.clientSecret,
-                                            scope: NSSet(object: FeedlyAPI.scopeUrl),
+                                            scope: Set<NSObject>(arrayLiteral: [FeedlyAPI.scopeUrl]),
                                  authorizationURL: NSURL(string: feedlyClient.authUrl),
                                          tokenURL: NSURL(string: feedlyClient.tokenUrl),
                                       redirectURL: NSURL(string: FeedlyAPI.redirectUrl),
@@ -84,7 +84,7 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
             object: NXOAuth2AccountStore.sharedStore(),
             queue: nil) { (notification) -> Void in
                 if notification.userInfo != nil {
-                    let account = notification.userInfo![NXOAuth2AccountStoreNewAccountUserInfoKey] as NXOAuth2Account
+                    let account = notification.userInfo![NXOAuth2AccountStoreNewAccountUserInfoKey] as! NXOAuth2Account
                     self.onLoggedIn(account)
                 } else {
                     self.showAlert()
@@ -114,8 +114,8 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
     func onLoggedIn(account: NXOAuth2Account) {
         feedlyClient.setAccessToken(account.accessToken.accessToken)
         feedlyClient.fetchProfile()
-            .deliverOn(MainScheduler())
-            .start(
+            |> startOn(UIScheduler())
+            |> start(
                 next: {profile in
                     FeedlyAPI.profile = profile
                 },
