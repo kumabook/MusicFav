@@ -86,7 +86,6 @@
 		67DA46651A87B49C0048B29C /* SelectPlaylistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DA46631A87B49C0048B29C /* SelectPlaylistTableViewCell.swift */; };
 		67DA46661A87B49C0048B29C /* SelectPlaylistTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67DA46641A87B49C0048B29C /* SelectPlaylistTableViewCell.xib */; };
 		67DB2A121A5588A6006BB490 /* MiniPlayerViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DB2A111A5588A6006BB490 /* MiniPlayerViewDelegate.swift */; };
-		67F7CF151A635BD0008FB7AD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 67F7CF141A635BD0008FB7AD /* Main.storyboard */; };
 		67F7D48A1A625A4F00A5AE68 /* LlamaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4851A625A4F00A5AE68 /* LlamaKit.framework */; };
 		67F7D48B1A625A4F00A5AE68 /* LlamaKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4851A625A4F00A5AE68 /* LlamaKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		67F7D4901A625A4F00A5AE68 /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4881A625A4F00A5AE68 /* ReactiveCocoa.framework */; };
@@ -215,7 +214,6 @@
 		67DA46631A87B49C0048B29C /* SelectPlaylistTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectPlaylistTableViewCell.swift; sourceTree = "<group>"; };
 		67DA46641A87B49C0048B29C /* SelectPlaylistTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SelectPlaylistTableViewCell.xib; sourceTree = "<group>"; };
 		67DB2A111A5588A6006BB490 /* MiniPlayerViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerViewDelegate.swift; sourceTree = "<group>"; };
-		67F7CF141A635BD0008FB7AD /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = ../Main.storyboard; sourceTree = "<group>"; };
 		67F7D4651A62458C00A5AE68 /* MusicFav.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = MusicFav.entitlements; sourceTree = "<group>"; };
 		67F7D4851A625A4F00A5AE68 /* LlamaKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LlamaKit.framework; path = Carthage/Build/iOS/LlamaKit.framework; sourceTree = "<group>"; };
 		67F7D4861A625A4F00A5AE68 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
@@ -318,7 +316,6 @@
 				67277CB71A434304002FD3E0 /* Images.xcassets */,
 				6794E7E91AE241AC0054B3DB /* tutorial.xcassets */,
 				67277CB91A434304002FD3E0 /* LaunchScreen.xib */,
-				67F7CF141A635BD0008FB7AD /* Main.storyboard */,
 				67277CAF1A434304002FD3E0 /* MusicFav.xcdatamodeld */,
 				67277CAB1A434304002FD3E0 /* Supporting Files */,
 			);
@@ -614,7 +611,6 @@
 				67CE596C1A51208000C86681 /* MiniPlayerView.xib in Resources */,
 				67F9A2961AD0558C0078EC3C /* PlaylistStreamTableViewCell.xib in Resources */,
 				6794E7EA1AE241AC0054B3DB /* tutorial.xcassets in Resources */,
-				67F7CF151A635BD0008FB7AD /* Main.storyboard in Resources */,
 				67277CB81A434304002FD3E0 /* Images.xcassets in Resources */,
 				67254C7A1A493A570064E5DF /* EntryStreamTableViewCell.xib in Resources */,
 				6767AE5E1ADBECCC00A92497 /* StreamTableViewCell.xib in Resources */,
