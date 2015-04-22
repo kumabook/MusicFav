@@ -266,12 +266,12 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
             if let url = track.thumbnailUrl {
                 playerView.sd_setImageWithURL(url, forState: UIControlState.allZeros)
             } else {
-                playerView.setImage(UIImage(named: "icon"), forState: UIControlState.allZeros)
+                playerView.setImage(UIImage(named: "note"), forState: UIControlState.allZeros)
             }
         } else {
             totalLabel.text   = "00:00"
             currentLabel.text = "00:00"
-            playerView.setImage(UIImage(named: "icon"), forState: UIControlState.allZeros)
+            playerView.setImage(UIImage(named: "note"), forState: UIControlState.allZeros)
         }
         if let (current, total) = player?.secondPair {
             if !slider.tracking { updateViewsOfTime(current: Float(current), total: Float(total)) }
