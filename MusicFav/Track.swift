@@ -12,21 +12,21 @@ import LlamaKit
 import XCDYouTubeKit
 import UIKit
 
-enum Provider: String {
+public enum Provider: String {
     case Youtube    = "YouTube"
     case SoundCloud = "SoundCloud"
 }
 
-class Track {
-    let provider:     Provider
-    let url:          String
-    let identifier:   String
-    var title:        String?
-    var streamUrl:    NSURL?
-    var thumbnailUrl: NSURL?
-    var duration:     NSTimeInterval
+public class Track {
+    public let provider:     Provider
+    public let url:          String
+    public let identifier:   String
+    public var title:        String?
+    public var streamUrl:    NSURL?
+    public var thumbnailUrl: NSURL?
+    public var duration:     NSTimeInterval
 
-    init(json: JSON) {
+    public init(json: JSON) {
         provider    = Provider(rawValue: json["provider"].stringValue)!
         title       = nil
         url         = json["url"].stringValue
@@ -34,7 +34,7 @@ class Track {
         duration    = 0 as NSTimeInterval
     }
 
-    init(store: TrackStore) {
+    public init(store: TrackStore) {
         provider    = Provider(rawValue: store.providerRaw)!
         title       = store.title
         url         = store.url
@@ -45,7 +45,7 @@ class Track {
         if let url = NSURL(string: store.thumbnailUrl) { thumbnailUrl = url }
     }
 
-    func updateProperties(soundCloudAudio: SoundCloudAudio) {
+    public func updateProperties(soundCloudAudio: SoundCloudAudio) {
         title        = soundCloudAudio.title
         duration     = NSTimeInterval(soundCloudAudio.duration / 1000)
         if let sUrl = soundCloudAudio.streamUrl {
@@ -57,7 +57,7 @@ class Track {
 //        TrackStore.save(self)
     }
     
-    func updatePropertiesWithYouTubeVideo(video: XCDYouTubeVideo) {
+    public func updatePropertiesWithYouTubeVideo(video: XCDYouTubeVideo) {
         title          = video.title
         duration       = video.duration
         streamUrl      = video.streamURLs[XCDYouTubeVideoQuality.Medium360.rawValue] as? NSURL
@@ -65,7 +65,7 @@ class Track {
 //        TrackStore.save(self)
     }
 
-    func toStoreObject() -> TrackStore {
+    internal func toStoreObject() -> TrackStore {
         var store            = TrackStore()
         store.url            = url
         store.providerRaw    = provider.rawValue
@@ -78,7 +78,7 @@ class Track {
         return store
     }
 
-    func fetchTrackDetail(errorOnFailure: Bool) -> SignalProducer<Track, NSError>{
+    public func fetchTrackDetail(errorOnFailure: Bool) -> SignalProducer<Track, NSError>{
         switch provider {
         case .Youtube:
             return XCDYouTubeClient.defaultClient().fetchVideo(identifier, errorOnFailure: errorOnFailure)
@@ -97,12 +97,19 @@ class Track {
         }
     }
 
-    class func findBy(#url: String) {
-        TrackStore.findBy(url: url)
+    public class func findBy(#url: String) -> Track? {
+        if let store = TrackStore.findBy(url: url) {
+            return Track(store: store)
+        }
+        return nil
+    }
+
+    public class func findAll() -> [Track] {
+        return TrackStore.findAll().map({ Track(store: $0) })
     }
 }
 
-class SoundCloudAudio {
+public class SoundCloudAudio {
     let title:               String
     let descriptionProperty: String
     let artworkUrl:         String?

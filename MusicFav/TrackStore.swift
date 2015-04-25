@@ -10,7 +10,7 @@ import Foundation
 import Realm
 import FeedlyKit
 
-class TrackStore: RLMObject {
+public class TrackStore: RLMObject {
     dynamic var url:          String = ""
     dynamic var providerRaw:  String = ""
     dynamic var identifier:   String = ""
@@ -25,10 +25,10 @@ class TrackStore: RLMObject {
         }
     }
 
-    override class func primaryKey() -> String {
+    override public class func primaryKey() -> String {
         return "url"
     }
-    class func findBy(#url: String) -> TrackStore? {
+    public class func findBy(#url: String) -> TrackStore? {
         let results = TrackStore.objectsInRealm(realm, withPredicate: NSPredicate(format: "url = %@", url))
         if results.count == 0 {
             return nil
@@ -37,7 +37,16 @@ class TrackStore: RLMObject {
         }
     }
 
-    class func save(track: Track) {
+    public class func findAll() -> [TrackStore] {
+        let results = TrackStore.allObjectsInRealm(realm)
+        var trackStores: [TrackStore] = []
+        for result in results {
+            trackStores.append(result as! TrackStore)
+        }
+        return trackStores
+    }
+
+    public class func save(track: Track) {
         if let store = findBy(url: track.url) {
             realm.transactionWithBlock() {
                 if let title        = track.title                        { store.title        = title }
@@ -52,7 +61,21 @@ class TrackStore: RLMObject {
         }
     }
 
-    class func migration() -> Void {
+    public class func remove(track: TrackStore) {
+        if let store = findBy(url: track.url) {
+            realm.transactionWithBlock() {
+                self.realm.deleteObject(store)
+            }
+        }
+    }
+
+    public class func removeAll() {
+        realm.transactionWithBlock() {
+            self.realm.deleteAllObjects()
+        }
+    }
+
+    public class func migration() -> Void {
         RLMRealm.setSchemaVersion(2, forRealmAtPath: RLMRealm.defaultRealmPath()) { (migration, oldVersion) -> Void in
             if (oldVersion < 1) {
                 migration.enumerateObjects(TrackStore.className()) { oldObject, newObject in
