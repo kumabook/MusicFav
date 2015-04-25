@@ -45,25 +45,15 @@
 		675AB33B1AD3D80A0003824C /* feedly.json in Resources */ = {isa = PBXBuildFile; fileRef = 675AB33A1AD3D80A0003824C /* feedly.json */; };
 		675AB3411AD3E3DA0003824C /* StringExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675AB3401AD3E3DA0003824C /* StringExtension.swift */; };
 		675AB3521AD4334D0003824C /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 675AB3501AD4334D0003824C /* Localizable.strings */; };
-		675BEBF41AEAF81900BD853D /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671664291A738E36005FE005 /* Alamofire.framework */; };
-		675BEBF51AEAF81900BD853D /* FeedlyKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671664271A738E2A005FE005 /* FeedlyKit.framework */; };
-		675BEBF61AEAF81900BD853D /* LlamaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4851A625A4F00A5AE68 /* LlamaKit.framework */; };
 		675BEBF71AEAF81900BD853D /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4861A625A4F00A5AE68 /* Nimble.framework */; };
 		675BEBF81AEAF81900BD853D /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4871A625A4F00A5AE68 /* Quick.framework */; };
-		675BEBF91AEAF81900BD853D /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4881A625A4F00A5AE68 /* ReactiveCocoa.framework */; };
-		675BEBFA1AEAF81900BD853D /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 676629B61A85AA3100F3FD33 /* Realm.framework */; };
 		675BEBFB1AEAF81900BD853D /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */; };
-		675BEBFC1AEAF81900BD853D /* XCDYouTubeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 675AB3331AD3903B0003824C /* XCDYouTubeKit.framework */; };
-		675BEBFE1AEAF84600BD853D /* XCDYouTubeKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 675AB3331AD3903B0003824C /* XCDYouTubeKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		675BEBFF1AEAF84600BD853D /* Realm.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 676629B61A85AA3100F3FD33 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		675BEC001AEAF84600BD853D /* Alamofire.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 671664291A738E36005FE005 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		675BEC011AEAF84600BD853D /* FeedlyKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 671664271A738E2A005FE005 /* FeedlyKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		675BEC021AEAF84600BD853D /* LlamaKit.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 67F7D4851A625A4F00A5AE68 /* LlamaKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		675BEC031AEAF84600BD853D /* Nimble.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 67F7D4861A625A4F00A5AE68 /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		675BEC041AEAF84600BD853D /* Quick.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 67F7D4871A625A4F00A5AE68 /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		675BEC051AEAF84600BD853D /* ReactiveCocoa.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 67F7D4881A625A4F00A5AE68 /* ReactiveCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		675BEC061AEAF84600BD853D /* SwiftyJSON.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		675BEC081AEAFB4B00BD853D /* MusicFavTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675BEC071AEAFB4B00BD853D /* MusicFavTests.swift */; };
+		675BEC031AEAF84600BD853D /* Nimble.framework in Copy carthage Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4861A625A4F00A5AE68 /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		675BEC041AEAF84600BD853D /* Quick.framework in Copy carthage Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4871A625A4F00A5AE68 /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		675BEC061AEAF84600BD853D /* SwiftyJSON.framework in Copy carthage Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		675BEC0A1AEAFC5A00BD853D /* TrackSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675BEC091AEAFC5900BD853D /* TrackSpec.swift */; };
+		675BEC0C1AEAFD6400BD853D /* SpecHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675BEC0B1AEAFD6400BD853D /* SpecHelper.swift */; };
+		675BEC101AEB007700BD853D /* track.json in Resources */ = {isa = PBXBuildFile; fileRef = 675BEC0F1AEB007700BD853D /* track.json */; };
 		676629B71A85AA3100F3FD33 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 676629B61A85AA3100F3FD33 /* Realm.framework */; };
 		676629B81A85AA3B00F3FD33 /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 676629B61A85AA3100F3FD33 /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6767AE541ADAC70500A92497 /* IASKAppSettingsViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6767AE531ADAC70500A92497 /* IASKAppSettingsViewControllerExtension.swift */; };
@@ -147,22 +137,17 @@
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		675BEBFD1AEAF82000BD853D /* CopyFiles */ = {
+		675BEBFD1AEAF82000BD853D /* Copy carthage Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				675BEBFE1AEAF84600BD853D /* XCDYouTubeKit.framework in CopyFiles */,
-				675BEBFF1AEAF84600BD853D /* Realm.framework in CopyFiles */,
-				675BEC001AEAF84600BD853D /* Alamofire.framework in CopyFiles */,
-				675BEC011AEAF84600BD853D /* FeedlyKit.framework in CopyFiles */,
-				675BEC021AEAF84600BD853D /* LlamaKit.framework in CopyFiles */,
-				675BEC031AEAF84600BD853D /* Nimble.framework in CopyFiles */,
-				675BEC041AEAF84600BD853D /* Quick.framework in CopyFiles */,
-				675BEC051AEAF84600BD853D /* ReactiveCocoa.framework in CopyFiles */,
-				675BEC061AEAF84600BD853D /* SwiftyJSON.framework in CopyFiles */,
+				675BEC031AEAF84600BD853D /* Nimble.framework in Copy carthage Frameworks */,
+				675BEC041AEAF84600BD853D /* Quick.framework in Copy carthage Frameworks */,
+				675BEC061AEAF84600BD853D /* SwiftyJSON.framework in Copy carthage Frameworks */,
 			);
+			name = "Copy carthage Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -209,7 +194,9 @@
 		675AB33A1AD3D80A0003824C /* feedly.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = feedly.json; sourceTree = "<group>"; };
 		675AB3401AD3E3DA0003824C /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		675AB3511AD4334D0003824C /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
-		675BEC071AEAFB4B00BD853D /* MusicFavTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicFavTests.swift; sourceTree = "<group>"; };
+		675BEC091AEAFC5900BD853D /* TrackSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackSpec.swift; sourceTree = "<group>"; };
+		675BEC0B1AEAFD6400BD853D /* SpecHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecHelper.swift; sourceTree = "<group>"; };
+		675BEC0F1AEB007700BD853D /* track.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = track.json; path = Fixtures/track.json; sourceTree = "<group>"; };
 		676629B61A85AA3100F3FD33 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
 		6767AE531ADAC70500A92497 /* IASKAppSettingsViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IASKAppSettingsViewControllerExtension.swift; sourceTree = "<group>"; };
 		6767AE551ADACA2400A92497 /* HypemAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HypemAPIClient.swift; sourceTree = "<group>"; };
@@ -285,15 +272,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				675BEBF41AEAF81900BD853D /* Alamofire.framework in Frameworks */,
-				675BEBF51AEAF81900BD853D /* FeedlyKit.framework in Frameworks */,
-				675BEBF61AEAF81900BD853D /* LlamaKit.framework in Frameworks */,
 				675BEBF71AEAF81900BD853D /* Nimble.framework in Frameworks */,
 				675BEBF81AEAF81900BD853D /* Quick.framework in Frameworks */,
-				675BEBF91AEAF81900BD853D /* ReactiveCocoa.framework in Frameworks */,
-				675BEBFA1AEAF81900BD853D /* Realm.framework in Frameworks */,
 				675BEBFB1AEAF81900BD853D /* SwiftyJSON.framework in Frameworks */,
-				675BEBFC1AEAF81900BD853D /* XCDYouTubeKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -383,7 +364,7 @@
 		67277CC31A434304002FD3E0 /* UnitTests */ = {
 			isa = PBXGroup;
 			children = (
-				675BEC071AEAFB4B00BD853D /* MusicFavTests.swift */,
+				675BEC0D1AEAFDFA00BD853D /* Fixtures */,
 				675BEBE11AEAF1F300BD853D /* Model */,
 				67277CC41A434304002FD3E0 /* Supporting Files */,
 			);
@@ -521,8 +502,18 @@
 		675BEBE11AEAF1F300BD853D /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				675BEC091AEAFC5900BD853D /* TrackSpec.swift */,
+				675BEC0B1AEAFD6400BD853D /* SpecHelper.swift */,
 			);
 			name = Model;
+			sourceTree = "<group>";
+		};
+		675BEC0D1AEAFDFA00BD853D /* Fixtures */ = {
+			isa = PBXGroup;
+			children = (
+				675BEC0F1AEB007700BD853D /* track.json */,
+			);
+			name = Fixtures;
 			sourceTree = "<group>";
 		};
 		676629B51A85A43500F3FD33 /* Persistent */ = {
@@ -593,7 +584,7 @@
 				67277CBC1A434304002FD3E0 /* Sources */,
 				67277CBD1A434304002FD3E0 /* Frameworks */,
 				67277CBE1A434304002FD3E0 /* Resources */,
-				675BEBFD1AEAF82000BD853D /* CopyFiles */,
+				675BEBFD1AEAF82000BD853D /* Copy carthage Frameworks */,
 			);
 			buildRules = (
 			);
@@ -611,7 +602,7 @@
 		67277CA01A434304002FD3E0 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0610;
+				LastUpgradeCheck = 0630;
 				ORGANIZATIONNAME = "Hiroki Kumamoto";
 				TargetAttributes = {
 					67277CA71A434304002FD3E0 = {
@@ -680,6 +671,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				675BEC101AEB007700BD853D /* track.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -837,7 +829,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				675BEC081AEAFB4B00BD853D /* MusicFavTests.swift in Sources */,
+				675BEC0A1AEAFC5A00BD853D /* TrackSpec.swift in Sources */,
+				675BEC0C1AEAFD6400BD853D /* SpecHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -918,7 +911,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				SDKROOT = iphoneos8.3;
+				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -955,7 +948,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
-				SDKROOT = iphoneos8.3;
+				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1040,6 +1033,7 @@
 				);
 				INFOPLIST_FILE = UnitTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				ONLY_ACTIVE_ARCH = NO;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MusicFav.app/MusicFav";
 			};
