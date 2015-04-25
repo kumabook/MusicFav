@@ -19,23 +19,30 @@ class TrackSpec: QuickSpec {
             track = Track(json: json)
         }
 
-        afterEach { TrackStore.removeAll() }
+        afterEach { Track.removeAll() }
 
         describe("A Track") {
             it("should be constructed with json") {
-                let json = JSON(SpecHelper.fixtureJSONObject(fixtureNamed: "track")!)
-                let track = Track(json: json)
                 expect(track).notTo(beNil())
                 expect(track.provider).to(equal(Provider.Youtube))
                 expect(track.identifier).to(equal("abcdefg"))
             }
 
-            it("should be saved to persistent store") {
+            it("should create if not exist") {
                 var tracks = Track.findAll()
                 expect(tracks.count).to(equal(0))
-                TrackStore.save(track)
+                expect(track.create()).to(equal(true))
+                expect(track.create()).to(equal(false))
                 tracks = Track.findAll()
                 expect(tracks.count).to(equal(1))
+            }
+
+            it ("should save if exist") {
+                var tracks = Track.findAll()
+                expect(tracks.count).to(equal(0))
+                expect(track.save()).to(equal(false))
+                expect(track.create()).to(equal(true))
+                expect(track.save()).to(equal(true))
             }
         }
     }

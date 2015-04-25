@@ -28,7 +28,7 @@ public class TrackStore: RLMObject {
     override public class func primaryKey() -> String {
         return "url"
     }
-    public class func findBy(#url: String) -> TrackStore? {
+    internal class func findBy(#url: String) -> TrackStore? {
         let results = TrackStore.objectsInRealm(realm, withPredicate: NSPredicate(format: "url = %@", url))
         if results.count == 0 {
             return nil
@@ -37,7 +37,7 @@ public class TrackStore: RLMObject {
         }
     }
 
-    public class func findAll() -> [TrackStore] {
+    internal class func findAll() -> [TrackStore] {
         let results = TrackStore.allObjectsInRealm(realm)
         var trackStores: [TrackStore] = []
         for result in results {
@@ -46,22 +46,29 @@ public class TrackStore: RLMObject {
         return trackStores
     }
 
-    public class func save(track: Track) {
+    internal class func create(track: Track) -> Bool {
+        if let store = findBy(url: track.url) { return false }
+        let store = track.toStoreObject()
+        realm.transactionWithBlock() {
+            self.realm.addObject(store)
+        }
+        return true
+    }
+
+    internal class func save(track: Track) -> Bool {
         if let store = findBy(url: track.url) {
             realm.transactionWithBlock() {
                 if let title        = track.title                        { store.title        = title }
                 if let streamUrl    = track.streamUrl?.absoluteString    { store.streamUrl    = streamUrl }
                 if let thumbnailUrl = track.thumbnailUrl?.absoluteString { store.thumbnailUrl = thumbnailUrl }
             }
+            return true
         } else {
-            let store = track.toStoreObject()
-            realm.transactionWithBlock() {
-                self.realm.addObject(store)
-            }
+            return false
         }
     }
 
-    public class func remove(track: TrackStore) {
+    internal class func remove(track: TrackStore) {
         if let store = findBy(url: track.url) {
             realm.transactionWithBlock() {
                 self.realm.deleteObject(store)
@@ -69,13 +76,13 @@ public class TrackStore: RLMObject {
         }
     }
 
-    public class func removeAll() {
+    internal class func removeAll() {
         realm.transactionWithBlock() {
             self.realm.deleteAllObjects()
         }
     }
 
-    public class func migration() -> Void {
+    internal class func migration() -> Void {
         RLMRealm.setSchemaVersion(2, forRealmAtPath: RLMRealm.defaultRealmPath()) { (migration, oldVersion) -> Void in
             if (oldVersion < 1) {
                 migration.enumerateObjects(TrackStore.className()) { oldObject, newObject in

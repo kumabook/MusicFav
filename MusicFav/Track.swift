@@ -45,6 +45,14 @@ public class Track {
         if let url = NSURL(string: store.thumbnailUrl) { thumbnailUrl = url }
     }
 
+    public func create() -> Bool {
+        return TrackStore.create(self)
+    }
+
+    public func save() -> Bool {
+        return TrackStore.save(self)
+    }
+
     public func updateProperties(soundCloudAudio: SoundCloudAudio) {
         title        = soundCloudAudio.title
         duration     = NSTimeInterval(soundCloudAudio.duration / 1000)
@@ -54,7 +62,7 @@ public class Track {
         if let aUrl = soundCloudAudio.artworkUrl {
             thumbnailUrl = NSURL(string: aUrl)
         }
-//        TrackStore.save(self)
+//      save()
     }
     
     public func updatePropertiesWithYouTubeVideo(video: XCDYouTubeVideo) {
@@ -62,7 +70,7 @@ public class Track {
         duration       = video.duration
         streamUrl      = video.streamURLs[XCDYouTubeVideoQuality.Medium360.rawValue] as? NSURL
         thumbnailUrl   = video.mediumThumbnailURL
-//        TrackStore.save(self)
+//      save()
     }
 
     internal func toStoreObject() -> TrackStore {
@@ -106,6 +114,10 @@ public class Track {
 
     public class func findAll() -> [Track] {
         return TrackStore.findAll().map({ Track(store: $0) })
+    }
+
+    public class func removeAll() {
+        return TrackStore.removeAll()
     }
 }
 
