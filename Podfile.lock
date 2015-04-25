@@ -23,6 +23,10 @@ PODS:
   - EAIntroView (2.7.0):
     - EARestrictedScrollView (~> 0.1.0)
   - EARestrictedScrollView (0.1.0)
+  - Fabric (1.2.3):
+    - Fabric/Core (= 1.2.3)
+  - Fabric/Core (1.2.3)
+  - Fabric/Crashlytics (1.2.3)
   - InAppSettingsKit (2.5.2)
   - JASidePanels (1.3.2)
   - MarqueeLabel (2.2.3)
@@ -39,6 +43,8 @@ PODS:
 DEPENDENCIES:
   - AFNetworking (>= 2.0)
   - EAIntroView (~> 2.7.0)
+  - Fabric (~> 1.2)
+  - Fabric/Crashlytics (~> 1.2)
   - InAppSettingsKit (~> 2.1)
   - JASidePanels (>= 1.3)
   - MarqueeLabel
@@ -69,6 +75,7 @@ SPEC CHECKSUMS:
   AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
   EAIntroView: 9becdb1441712405346a3e6bc31b0d9a57b63b10
   EARestrictedScrollView: 5ab3eadd9ea55282cc72df0daecb09803059e3a0
+  Fabric: 8a5b89c2131962830d92bbc88d482e80665846b2
   InAppSettingsKit: 90b3f9b99d857f95fd1422467d857de143cac099
   JASidePanels: c8f5b130e18d51ee3de988d1c1fad2f88e0b0d21
   MarqueeLabel: f03d12e3a1572893f78ecb22aa5dd774099c7208

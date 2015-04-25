@@ -96,6 +96,11 @@
 		67DA46651A87B49C0048B29C /* SelectPlaylistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DA46631A87B49C0048B29C /* SelectPlaylistTableViewCell.swift */; };
 		67DA46661A87B49C0048B29C /* SelectPlaylistTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67DA46641A87B49C0048B29C /* SelectPlaylistTableViewCell.xib */; };
 		67DB2A121A5588A6006BB490 /* MiniPlayerViewDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DB2A111A5588A6006BB490 /* MiniPlayerViewDelegate.swift */; };
+		67E5DEE31AEC4CEA000E016F /* FabricConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E5DEE21AEC4CEA000E016F /* FabricConfig.swift */; };
+		67E5DEE71AEC4F4F000E016F /* FabricConfigSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E5DEE61AEC4F4F000E016F /* FabricConfigSpec.swift */; };
+		67E5DEE91AEC5E8A000E016F /* fabric_invalid.json in Resources */ = {isa = PBXBuildFile; fileRef = 67E5DEE81AEC5E8A000E016F /* fabric_invalid.json */; };
+		67E5DEEB1AEC5EA5000E016F /* fabric.json in Resources */ = {isa = PBXBuildFile; fileRef = 67E5DEEA1AEC5EA5000E016F /* fabric.json */; };
+		67E5DEED1AEC6079000E016F /* fabric_valid.json in Resources */ = {isa = PBXBuildFile; fileRef = 67E5DEEC1AEC6079000E016F /* fabric_valid.json */; };
 		67F7D48A1A625A4F00A5AE68 /* LlamaKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4851A625A4F00A5AE68 /* LlamaKit.framework */; };
 		67F7D48B1A625A4F00A5AE68 /* LlamaKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4851A625A4F00A5AE68 /* LlamaKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		67F7D4901A625A4F00A5AE68 /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4881A625A4F00A5AE68 /* ReactiveCocoa.framework */; };
@@ -241,6 +246,11 @@
 		67DA46631A87B49C0048B29C /* SelectPlaylistTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SelectPlaylistTableViewCell.swift; sourceTree = "<group>"; };
 		67DA46641A87B49C0048B29C /* SelectPlaylistTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SelectPlaylistTableViewCell.xib; sourceTree = "<group>"; };
 		67DB2A111A5588A6006BB490 /* MiniPlayerViewDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerViewDelegate.swift; sourceTree = "<group>"; };
+		67E5DEE21AEC4CEA000E016F /* FabricConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FabricConfig.swift; sourceTree = "<group>"; };
+		67E5DEE61AEC4F4F000E016F /* FabricConfigSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FabricConfigSpec.swift; sourceTree = "<group>"; };
+		67E5DEE81AEC5E8A000E016F /* fabric_invalid.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = fabric_invalid.json; path = Fixtures/fabric_invalid.json; sourceTree = "<group>"; };
+		67E5DEEA1AEC5EA5000E016F /* fabric.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = fabric.json; sourceTree = "<group>"; };
+		67E5DEEC1AEC6079000E016F /* fabric_valid.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = fabric_valid.json; path = Fixtures/fabric_valid.json; sourceTree = "<group>"; };
 		67F7D4651A62458C00A5AE68 /* MusicFav.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = MusicFav.entitlements; sourceTree = "<group>"; };
 		67F7D4851A625A4F00A5AE68 /* LlamaKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = LlamaKit.framework; path = Carthage/Build/iOS/LlamaKit.framework; sourceTree = "<group>"; };
 		67F7D4861A625A4F00A5AE68 /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Nimble.framework; path = Carthage/Build/iOS/Nimble.framework; sourceTree = "<group>"; };
@@ -297,6 +307,7 @@
 				6731BC9F1AD8F069004F488D /* JASidePanelControllerExtension.swift */,
 				6767AE531ADAC70500A92497 /* IASKAppSettingsViewControllerExtension.swift */,
 				67BE4F361AE7D95800E40E98 /* DeviceType.swift */,
+				67E5DEE21AEC4CEA000E016F /* FabricConfig.swift */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -360,6 +371,7 @@
 				67277CAC1A434304002FD3E0 /* Info.plist */,
 				67B366DB1AE168E200E089B2 /* soundcloud.json */,
 				675AB33A1AD3D80A0003824C /* feedly.json */,
+				67E5DEEA1AEC5EA5000E016F /* fabric.json */,
 				6709D8AA1ADA4E860003F469 /* Settings.bundle */,
 			);
 			name = "Supporting Files";
@@ -509,6 +521,7 @@
 				67C9A89A1AEBAA6900E3401E /* PlaylistSpec.swift */,
 				675BEC091AEAFC5900BD853D /* TrackSpec.swift */,
 				675BEC0B1AEAFD6400BD853D /* SpecHelper.swift */,
+				67E5DEE61AEC4F4F000E016F /* FabricConfigSpec.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -516,6 +529,8 @@
 		675BEC0D1AEAFDFA00BD853D /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
+				67E5DEEC1AEC6079000E016F /* fabric_valid.json */,
+				67E5DEE81AEC5E8A000E016F /* fabric_invalid.json */,
 				67C9A8981AEBAA5A00E3401E /* playlist.json */,
 				675BEC0F1AEB007700BD853D /* track.json */,
 			);
@@ -573,6 +588,7 @@
 				67C4A36B1A62948400E6BB67 /* Carthage copy-frameworks */,
 				AB552B6E71CD4410AB4381B5 /* Embed Pods Frameworks */,
 				6709D8AC1ADA5A970003F469 /* Update Setting Bundle */,
+				67C9A89C1AEBCF1100E3401E /* Fabric run script */,
 			);
 			buildRules = (
 			);
@@ -669,6 +685,7 @@
 				6727EDFF1A5AC1DE003C6A47 /* MiniPlayerViewController.xib in Resources */,
 				675AB3521AD4334D0003824C /* Localizable.strings in Resources */,
 				67CB43F21A4ED6D50010465E /* main.js in Resources */,
+				67E5DEEB1AEC5EA5000E016F /* fabric.json in Resources */,
 				67DA46601A8656A90048B29C /* PlaylistTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -678,7 +695,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				675BEC101AEB007700BD853D /* track.json in Resources */,
+				67E5DEE91AEC5E8A000E016F /* fabric_invalid.json in Resources */,
 				67C9A8991AEBAA5A00E3401E /* playlist.json in Resources */,
+				67E5DEED1AEC6079000E016F /* fabric_valid.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -719,6 +738,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/usr/local/bin/carthage copy-frameworks";
+		};
+		67C9A89C1AEBCF1100E3401E /* Fabric run script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Fabric run script";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ -e MusicFav/fabric.txt ]; then\n    echo \"Running Fabric run script \" `cat MusicFav/fabric.txt`\n#    ./Pods/CrashlyticsFramework/Crashlytics.framework/run `cat MusicFav/fabric.txt`\n    ruby ./fabric.rb\nelse\n    echo \"Running MusicFav/fabric.txt is not found, do nothing.\"\nfi\n";
 		};
 		AB552B6E71CD4410AB4381B5 /* Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -820,6 +853,7 @@
 				673A98BD1AE7C0A10071E413 /* DummyStream.swift in Sources */,
 				6767AE561ADACA2400A92497 /* HypemAPIClient.swift in Sources */,
 				67773A701ACB81AA00E7BC8E /* MusicFavAPIClient.swift in Sources */,
+				67E5DEE31AEC4CEA000E016F /* FabricConfig.swift in Sources */,
 				67F9A2981AD13D130078EC3C /* PlaylistLoader.swift in Sources */,
 				67F9A2911AD03C0D0078EC3C /* PlaylistStreamViewController.swift in Sources */,
 				67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */,
@@ -837,6 +871,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				675BEC0A1AEAFC5A00BD853D /* TrackSpec.swift in Sources */,
+				67E5DEE71AEC4F4F000E016F /* FabricConfigSpec.swift in Sources */,
 				675BEC0C1AEAFD6400BD853D /* SpecHelper.swift in Sources */,
 				67C9A89B1AEBAA6900E3401E /* PlaylistSpec.swift in Sources */,
 			);
@@ -973,6 +1008,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = MusicFav/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -995,6 +1031,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = MusicFav/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;

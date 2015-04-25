@@ -12,6 +12,8 @@ import AVFoundation
 import ReactiveCocoa
 import LlamaKit
 import FeedlyKit
+import Fabric
+import Crashlytics
 
 
 @UIApplicationMain
@@ -82,6 +84,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        let fabricConfig = FabricConfig(filePath: NSBundle.mainBundle().pathForResource("fabric", ofType: "json")!)
+        if !fabricConfig.skip {
+            Crashlytics.startWithAPIKey(fabricConfig.apiKey)
+        }
         TrackStore.migration()
         setupAudioSession(application)
         setupAPIClient()

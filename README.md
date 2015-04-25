@@ -21,10 +21,13 @@ but is available via TestFlight Beta Testing.
       - You can get sandbox api key at [Feedly Cloud API][]
     - MusicFav/soundcloud.json
       - Put your [SoundCloud API][] app Client ID
+    - MusicFav/fabric.json (not necessary)
+      - Put your [Fabric][] api key and build secret
 - Open and build MusicFav.xcworkspace with xcode
 
 [Carthage]:                https://github.com/Carthage/Carthage
 [CocoaPods]:               https://cocoapods.org/
 [Feedly Cloud API]:        https://developer.feedly.com/
 [SoundCloud API]:          https://developers.soundcloud.com/
+[Fabric]:                  https://get.fabric.io/
 [TestFlight Beta Testing]: http://musicfav.github.io//flight/
