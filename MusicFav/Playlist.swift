@@ -11,19 +11,19 @@ import SwiftyJSON
 import ReactiveCocoa
 import LlamaKit
 
-class Playlist: Equatable, Hashable {
-    let id:           String
-    var title:        String
-    var tracks:       [Track]
-    var thumbnailUrl: NSURL? { return tracks.first?.thumbnailUrl }
-    var signal:       Signal<Int, NSError>
-    var sink:         SinkOf<ReactiveCocoa.Event<Int, NSError>>
+public class Playlist: Equatable, Hashable {
+    public   let id:           String
+    public   var title:        String
+    public   var tracks:       [Track]
+    public   var thumbnailUrl: NSURL? { return tracks.first?.thumbnailUrl }
+    public   var signal:       Signal<Int, NSError>
+    internal var sink:         SinkOf<ReactiveCocoa.Event<Int, NSError>>
 
     struct ClassProperty {
         static let pipe    = Signal<Event, NSError>.pipe()
         static var current = Playlist.findAll()
     }
-    enum Event {
+    public enum Event {
         case Created(Playlist)
         case Removed(Playlist)
         case Updated(Playlist)
@@ -32,13 +32,13 @@ class Playlist: Equatable, Hashable {
         case TrackUpdated(Playlist, Track)
     }
 
-    class var shared: (signal: Signal<Event, NSError>, sink: SinkOf<ReactiveCocoa.Event<Event, NSError>>, current: [Playlist]) {
+    public class var shared: (signal: Signal<Event, NSError>, sink: SinkOf<ReactiveCocoa.Event<Event, NSError>>, current: [Playlist]) {
         get { return (signal: ClassProperty.pipe.0,
                         sink: ClassProperty.pipe.1,
                      current: ClassProperty.current) }
     }
 
-    class func notifyChange(event: Event) {
+    public class func notifyChange(event: Event) {
         switch event {
         case .Created(let playlist):
             ClassProperty.current.append(playlist)
@@ -67,7 +67,7 @@ class Playlist: Equatable, Hashable {
         return dateFormatter
     }
 
-    init(title: String) {
+    public init(title: String) {
         self.id     = "created-\(Playlist.dateFormatter().stringFromDate(NSDate()))"
         self.title  = title
         self.tracks = []
@@ -76,7 +76,7 @@ class Playlist: Equatable, Hashable {
         self.sink   = pipe.1
     }
 
-    init(json: JSON) {
+    public init(json: JSON) {
         id     = json["url"].stringValue
         title  = json["title"].stringValue
         tracks = json["tracks"].arrayValue.map({ Track(json: $0) })
@@ -85,7 +85,7 @@ class Playlist: Equatable, Hashable {
         self.sink   = pipe.1
     }
 
-    init(store: PlaylistStore) {
+    public init(store: PlaylistStore) {
         id     = store.id
         title  = store.title
         tracks = [] as [Track]
@@ -97,11 +97,11 @@ class Playlist: Equatable, Hashable {
         self.sink   = pipe.1
     }
 
-    var hashValue: Int {
+    public var hashValue: Int {
         return id.hashValue
     }
 
-    func toStoreObject() -> PlaylistStore {
+    internal func toStoreObject() -> PlaylistStore {
         let store    = PlaylistStore()
         store.id     = id
         store.title  = title
@@ -109,46 +109,54 @@ class Playlist: Equatable, Hashable {
         return store
     }
 
-    func create() {
-        PlaylistStore.save(self)
-        Playlist.notifyChange(.Created(self))
+    public func create() -> Bool {
+        if PlaylistStore.create(self) {
+            Playlist.notifyChange(.Created(self))
+            return true
+        } else {
+            return false
+        }
     }
 
-    func save() {
-        PlaylistStore.save(self)
-        Playlist.notifyChange(.Updated(self))
+    public func save() -> Bool {
+        if PlaylistStore.save(self) {
+            Playlist.notifyChange(.Updated(self))
+            return true
+        } else {
+            return false
+        }
     }
 
-    func remove() {
+    public func remove() {
         PlaylistStore.remove(self)
         Playlist.notifyChange(.Removed(self))
     }
 
-    func removeTrackAtIndex(index: UInt) {
+    public func removeTrackAtIndex(index: UInt) {
         PlaylistStore.removeTrackAtIndex(index, playlist: self)
         let track = tracks.removeAtIndex(Int(index))
         Playlist.notifyChange(.TrackRemoved(self, track, Int(index)))
     }
 
-    func appendTracks(tracks: [Track]) {
+    public func appendTracks(tracks: [Track]) {
         PlaylistStore.appendTracks(tracks, playlist: self)
         self.tracks.extend(tracks)
         Playlist.notifyChange(.TracksAdded(self, tracks))
     }
 
-    class func findAll() -> [Playlist] {
+    public class func findAll() -> [Playlist] {
         return PlaylistStore.findAll()
     }
 
-    class func removeAll() {
+    public class func removeAll() {
         PlaylistStore.removeAll()
     }
 
-    class func createDefaultPlaylist() {
+    public class func createDefaultPlaylist() {
         Playlist(title: "Favorite").save()
     }
 }
 
-func ==(lhs: Playlist, rhs: Playlist) -> Bool {
+public func ==(lhs: Playlist, rhs: Playlist) -> Bool {
     return lhs.id == rhs.id
 }

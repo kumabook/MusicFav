@@ -23,11 +23,11 @@ extension RLMResults: SequenceType {
 }
 
 
-class PlaylistStore: RLMObject {
+public class PlaylistStore: RLMObject {
     dynamic var id:     String = ""
     dynamic var title:  String = ""
     dynamic var tracks = RLMArray(objectClassName: TrackStore.className())
-    override class func primaryKey() -> String {
+    public override class func primaryKey() -> String {
         return "id"
     }
 
@@ -37,7 +37,7 @@ class PlaylistStore: RLMObject {
         }
     }
 
-    class func removeTrackAtIndex(index: UInt, playlist: Playlist) {
+    internal class func removeTrackAtIndex(index: UInt, playlist: Playlist) {
         if let store = findBy(id: playlist.id) {
             realm.transactionWithBlock() {
                 store.tracks.removeObjectAtIndex(index)
@@ -45,7 +45,7 @@ class PlaylistStore: RLMObject {
         }
     }
 
-    class func appendTracks(tracks: [Track], playlist: Playlist) {
+    internal class func appendTracks(tracks: [Track], playlist: Playlist) {
         let trackStores: [TrackStore] = tracks.map({ track in
             if let trackStore = TrackStore.findBy(url: track.url) { return trackStore }
             else                                                  { return track.toStoreObject() }
@@ -58,20 +58,27 @@ class PlaylistStore: RLMObject {
         }
     }
 
-    class func save(playlist: Playlist) {
+    internal class func create(playlist: Playlist) -> Bool {
+        if let store = findBy(id: playlist.id) { return false }
+        let store = playlist.toStoreObject()
+        realm.transactionWithBlock() {
+            self.realm.addObject(store)
+        }
+        return true
+    }
+
+    internal class func save(playlist: Playlist) -> Bool {
         if let store = findBy(id: playlist.id) {
             realm.transactionWithBlock() {
                 store.title = playlist.title
             }
+            return true
         } else {
-            let store = playlist.toStoreObject()
-            realm.transactionWithBlock() {
-                self.realm.addObject(store)
-            }
+            return false
         }
     }
 
-    class func findAll() -> [Playlist] {
+    internal class func findAll() -> [Playlist] {
         var playlists: [Playlist] = []
         for store in PlaylistStore.allObjectsInRealm(realm) {
             playlists.append(Playlist(store: store as! PlaylistStore))
@@ -79,7 +86,7 @@ class PlaylistStore: RLMObject {
         return playlists
     }
 
-    class func findBy(#id: String) -> PlaylistStore? {
+    internal class func findBy(#id: String) -> PlaylistStore? {
         let results = PlaylistStore.objectsInRealm(realm, withPredicate: NSPredicate(format: "id = %@", id))
         if results.count == 0 {
             return nil
@@ -88,7 +95,7 @@ class PlaylistStore: RLMObject {
         }
     }
 
-    class func remove(playlist: Playlist) {
+    internal class func remove(playlist: Playlist) {
         if let store = findBy(id: playlist.id) {
             realm.transactionWithBlock() {
                 self.realm.deleteObject(store)
@@ -96,7 +103,7 @@ class PlaylistStore: RLMObject {
         }
     }
 
-    class func removeAll() {
+    internal class func removeAll() {
         realm.transactionWithBlock() {
             self.realm.deleteAllObjects()
         }

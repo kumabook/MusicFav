@@ -1,0 +1,13 @@
+{
+    "url": "http://dummy.com/playlist.html",
+    "title": "playlist_title",
+    "tracks": [{
+        "provider": "YouTube",
+        "url": "http://dummy.com/track.mp3",
+        "identifier": "youtube"
+    }, {
+        "provider": "SoundCloud",
+        "url": "http://dummy.com/sound_cloud.mp3",
+        "identifier": "soundcloud"
+    }]
+}

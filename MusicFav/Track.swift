@@ -26,6 +26,14 @@ public class Track {
     public var thumbnailUrl: NSURL?
     public var duration:     NSTimeInterval
 
+    public init(provider: Provider, url: String, identifier: String, title: String?) {
+        self.provider   = provider
+        self.url        = url
+        self.identifier = identifier
+        self.title      = title
+        self.duration   = 0 as NSTimeInterval
+    }
+
     public init(json: JSON) {
         provider    = Provider(rawValue: json["provider"].stringValue)!
         title       = nil
