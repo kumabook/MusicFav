@@ -88,7 +88,20 @@ class BlogLoader {
         for i in start..<start+length {
             producer = producer |> concat(fetchSiteInfo(i))
         }
-        return producer |> reduce([], {var list = $0; list.append($1); return list})
+        /*
+        // TODO: this code causes crash
+        return producer |> reduce([], { (_blogs: [Blog], blog: Blog) -> [Blog] in
+            return _blogs
+        })
+        */
+        // this is workaround.
+        return combineLatest(fetchSiteInfo(start),
+                      fetchSiteInfo(start+1),
+                      fetchSiteInfo(start+2),
+                      fetchSiteInfo(start+3),
+                      fetchSiteInfo(start+4)) |> map({
+                        return [$0, $1, $2, $3, $4]
+        })
     }
 
     private func fetchSiteInfo(index: Int) -> SignalProducer<Blog, NSError> {
