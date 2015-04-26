@@ -14,6 +14,8 @@ class StreamPageMenuController: UIViewController {
     var pageMenu:     CAPSPageMenu!
     let stream:       Stream!
     let streamLoader: StreamLoader!
+    weak var entryStreamViewController:    EntryStreamViewController?
+    weak var playlistStreamViewController: PlaylistStreamViewController?
 
     init(stream: Stream) {
         self.stream       = stream
@@ -42,8 +44,8 @@ class StreamPageMenuController: UIViewController {
             action: "showPlaylist")
         navigationItem.title = stream.streamTitle
 
-        var entryStream      = EntryStreamViewController(streamLoader: streamLoader)
-        var playlistStream   = PlaylistStreamViewController(streamLoader: streamLoader)
+        let entryStream      = EntryStreamViewController(streamLoader: streamLoader)
+        let playlistStream   = PlaylistStreamViewController(streamLoader: streamLoader)
 
         entryStream.title    = "Article".localize()
         playlistStream.title = "Playlist".localize()
@@ -68,6 +70,8 @@ class StreamPageMenuController: UIViewController {
                                         options: parameters)
         self.view.addSubview(pageMenu.view)
         addChildViewController(pageMenu)
+        entryStreamViewController    = entryStream
+        playlistStreamViewController = playlistStream
         streamLoader.fetchEntries()
     }
 

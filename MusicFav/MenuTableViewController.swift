@@ -156,10 +156,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     }
 
     func showStream(#stream: Stream) {
-        let mainViewController          = appDelegate.miniPlayerViewController?.mainViewController
-        let vc                          = StreamPageMenuController(stream: stream)
-        mainViewController?.centerPanel = UINavigationController(rootViewController: vc)
-        mainViewController?.showCenterPanelAnimated(true)
+        appDelegate.miniPlayerViewController?.setStreamPageMenu(stream)
     }
 
     func observeStreamList() {

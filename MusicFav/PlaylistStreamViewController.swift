@@ -169,6 +169,10 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
         if tableView.contentOffset.y >= tableView.contentSize.height - tableView.bounds.size.height {
             streamLoader.fetchEntries()
         }
+        let streamPageMenu: StreamPageMenuController? = appDelegate.miniPlayerViewController?.streamPageMenuController
+        if streamPageMenu?.entryStreamViewController?.tableView != nil {
+            streamPageMenu?.entryStreamViewController?.tableView.contentOffset = tableView.contentOffset
+        }
     }
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {

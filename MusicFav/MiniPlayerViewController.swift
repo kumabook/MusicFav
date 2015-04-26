@@ -11,6 +11,7 @@ import AVFoundation
 import JASidePanels
 import MediaPlayer
 import SDWebImage
+import FeedlyKit
 
 class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
     class MiniPlayerObserver: PlayerObserver {
@@ -118,6 +119,12 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
             info[MPMediaItemPropertyArtwork] = albumArt
             infoCenter.nowPlayingInfo        = info
         }
+    }
+
+    func setStreamPageMenu(stream: Stream) {
+        streamPageMenuController        = StreamPageMenuController(stream: stream)
+        mainViewController?.centerPanel = UINavigationController(rootViewController: streamPageMenuController)
+        mainViewController?.showCenterPanelAnimated(true)
     }
 
     func showMenu() {
