@@ -67,7 +67,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
         tableView.registerNib(nib, forCellReuseIdentifier: streamTableViewCellReuseIdentifier)
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
 
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title:"close".localize(),
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title:"Close".localize(),
                                                            style: UIBarButtonItemStyle.Plain,
                                                           target: self,
                                                           action: "close")

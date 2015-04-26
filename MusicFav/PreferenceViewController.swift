@@ -40,7 +40,7 @@ class PreferenceViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "close".localize(),
+        self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Close".localize(),
                                                                 style: UIBarButtonItemStyle.Plain,
                                                                target: self,
                                                                action: "close")

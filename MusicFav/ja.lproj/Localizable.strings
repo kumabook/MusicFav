@@ -8,7 +8,7 @@
 
 "OK"           = "OK";
 "Cancel"       = "キャンセル";
-"close"        = "閉じる";
+"Close"        = "閉じる";
 "Login"        = "ログイン";
 "Logout"       = "ログアウト";
 "Article"      = "記事";
