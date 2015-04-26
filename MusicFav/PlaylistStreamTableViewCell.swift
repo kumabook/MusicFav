@@ -42,6 +42,16 @@ class PlaylistStreamTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
 
+    func clearThumbnails() {
+        observer?.dispose()
+        observer = nil
+        for imageView in imageViews {
+            imageView.sd_cancelCurrentImageLoad()
+            imageView.removeFromSuperview()
+        }
+        imageViews = []
+    }
+
     func loadThumbnail(imageView: UIImageView, track: Track) {
         if let thumbnailUrl = track.thumbnailUrl {
             imageView.sd_setImageWithURL(thumbnailUrl,
@@ -56,12 +66,8 @@ class PlaylistStreamTableViewCell: UITableViewCell {
 
     func loadThumbnails(playlist: Playlist) {
         let tw = thumbnailWidth
-        for imageView in imageViews {
-            imageView.sd_cancelCurrentImageLoad()
-            imageView.removeFromSuperview()
-        }
+        clearThumbnails()
         self.playlist = playlist
-        imageViews = []
         for (i, track) in enumerate(playlist.tracks) {
             let rect = CGRect(x: tw * CGFloat(i), y: 0.0, width: tw, height: tw)
             let imageView = UIImageView(frame: rect)

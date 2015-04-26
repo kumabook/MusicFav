@@ -193,6 +193,8 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
             cell.loadThumbnails(playlist)
             cell.observePlaylist(playlist)
         } else {
+            cell.delegate           = nil
+            cell.clearThumbnails()
             cell.trackNumLabel.text = "? tracks"
         }
         return cell
