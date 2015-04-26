@@ -84,24 +84,11 @@ class BlogLoader {
     }
 
     private func fetchDetails(#start: Int, length: Int) -> SignalProducer<[Blog], NSError> {
-        var producer = SignalProducer<Blog, NSError>.empty
-        for i in start..<start+length {
-            producer = producer |> concat(fetchSiteInfo(i))
+        return (start..<start+length).map({$0}).reduce(SignalProducer(value: [])) {
+            combineLatest($0, self.fetchSiteInfo($1)) |> map {
+                var list = $0.0; list.append($0.1); return list
+            }
         }
-        /*
-        // TODO: this code causes crash
-        return producer |> reduce([], { (_blogs: [Blog], blog: Blog) -> [Blog] in
-            return _blogs
-        })
-        */
-        // this is workaround.
-        return combineLatest(fetchSiteInfo(start),
-                      fetchSiteInfo(start+1),
-                      fetchSiteInfo(start+2),
-                      fetchSiteInfo(start+3),
-                      fetchSiteInfo(start+4)) |> map({
-                        return [$0, $1, $2, $3, $4]
-        })
     }
 
     private func fetchSiteInfo(index: Int) -> SignalProducer<Blog, NSError> {
