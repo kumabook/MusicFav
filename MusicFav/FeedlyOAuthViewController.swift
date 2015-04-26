@@ -70,7 +70,7 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
     func setupOAuth2AccountStore() {
         NXOAuth2AccountStore.sharedStore().setClientID(FeedlyAPI.clientId,
                                            secret: FeedlyAPI.clientSecret,
-                                            scope: Set<NSObject>(arrayLiteral: [FeedlyAPI.scopeUrl]),
+                                            scope: Set([FeedlyAPI.scopeUrl]),
                                  authorizationURL: NSURL(string: feedlyClient.authUrl),
                                          tokenURL: NSURL(string: feedlyClient.tokenUrl),
                                       redirectURL: NSURL(string: FeedlyAPI.redirectUrl),
