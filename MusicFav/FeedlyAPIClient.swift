@@ -122,8 +122,8 @@ extension CloudAPIClient {
         return FeedlyAPI.isLoggedIn
     }
 
-    var authUrl:  String { return String(format: "%@/%@", target.baseUrl, FeedlyAPI.authPath)  }
-    var tokenUrl: String { return String(format: "%@/%@", target.baseUrl, FeedlyAPI.tokenPath) }
+    var authUrl:  String { return String(format: "%@%@", target.baseUrl, FeedlyAPI.authPath)  }
+    var tokenUrl: String { return String(format: "%@%@", target.baseUrl, FeedlyAPI.tokenPath) }
 
 
     func fetchProfile() -> SignalProducer<Profile, NSError> {
