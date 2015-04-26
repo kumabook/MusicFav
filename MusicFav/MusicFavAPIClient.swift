@@ -12,22 +12,14 @@ import ReactiveCocoa
 import LlamaKit
 import AFNetworking
 
-struct MusicFavAPIClientConfig {
-    static let baseUrl   = "http://musicfav-cloud.herokuapp.com"
-}
-
 class MusicFavAPIClient {
-    class var sharedInstance : MusicFavAPIClient {
-        struct Static {
-            static let instance : MusicFavAPIClient = MusicFavAPIClient()
-        }
-        return Static.instance
-    }
+    static let baseUrl   = "http://musicfav-cloud.herokuapp.com"
+    static var sharedInstance = MusicFavAPIClient()
     func playlistify(targetUrl: NSURL) -> SignalProducer<Playlist, NSError> {
         return SignalProducer { (sink, disposable) in
             let manager = AFHTTPRequestOperationManager()
             manager.completionQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-            let url = String(format: "%@/playlistify?url=%@", MusicFavAPIClientConfig.baseUrl, targetUrl)
+            let url = String(format: "%@/playlistify?url=%@", MusicFavAPIClient.baseUrl, targetUrl)
             manager.GET(url, parameters: nil,
                 success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
                     let json = JSON(response)

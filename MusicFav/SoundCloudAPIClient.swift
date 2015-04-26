@@ -14,15 +14,10 @@ import AFNetworking
 
 
 class SoundCloudAPIClient {
-    private struct ClassProperty {
-        static var instance: SoundCloudAPIClient = SoundCloudAPIClient(clientId: clientId)
-        static var baseUrl = "http://api.soundcloud.com"
-        static var clientId = "Put_your_SoundCloud_app_client_id"
-    }
 
-    class var sharedInstance : SoundCloudAPIClient {
-        return ClassProperty.instance
-    }
+    static var clientId = "Put_your_SoundCloud_app_client_id"
+    static var baseUrl  = "http://api.soundcloud.com"
+    static var sharedInstance = SoundCloudAPIClient(clientId: clientId)
 
     class func loadConfig() {
         let bundle = NSBundle.mainBundle()
@@ -34,7 +29,7 @@ class SoundCloudAPIClient {
             if let obj: AnyObject = jsonObject {
                 let json = JSON(obj)
                 if let clientId = json["client_id"].string {
-                    ClassProperty.clientId = clientId
+                    SoundCloudAPIClient.clientId = clientId
                 }
             }
         }
@@ -50,7 +45,7 @@ class SoundCloudAPIClient {
         return SignalProducer { (sink, disposable) in
             let manager = AFHTTPRequestOperationManager()
             manager.completionQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
-            let url = String(format: "%@/tracks/%@.json?client_id=%@", ClassProperty.baseUrl, track_id, self.clientId)
+            let url = String(format: "%@/tracks/%@.json?client_id=%@", SoundCloudAPIClient.baseUrl, track_id, self.clientId)
             manager.GET(url, parameters: nil,
                 success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
                     let json = JSON(response)
@@ -71,7 +66,7 @@ class SoundCloudAPIClient {
     }
     func streamUrl(track_id: Int) -> NSURL {
         return NSURL(string:String(format:"%@/tracks/%@/stream?client_id=%@",
-                                ClassProperty.baseUrl,
+                                SoundCloudAPIClient.baseUrl,
                                 track_id,
                                 clientId))!
     }

@@ -87,9 +87,9 @@ struct FeedlyAPI {
             if let obj: AnyObject = jsonObject {
                 let json = JSON(obj)
                 if json["target"].stringValue == "production" {
-                    CloudAPIClient.ClassProperty.instance = CloudAPIClient(target: .Production)
+                    CloudAPIClient.sharedInstance = CloudAPIClient(target: .Production)
                 } else {
-                    CloudAPIClient.ClassProperty.instance = CloudAPIClient(target: .Sandbox)
+                    CloudAPIClient.sharedInstance = CloudAPIClient(target: .Sandbox)
                 }
                 if let clientId = json["client_id"].string {
                     FeedlyAPI.clientId = clientId
@@ -103,13 +103,7 @@ struct FeedlyAPI {
 }
 
 extension CloudAPIClient {
-    struct ClassProperty {
-        static var instance: CloudAPIClient = CloudAPIClient(target: Target.Sandbox)
-    }
-
-    class var sharedInstance: CloudAPIClient {
-        return ClassProperty.instance
-    }
+    static var sharedInstance: CloudAPIClient = CloudAPIClient(target: Target.Sandbox)
 
     class func alertController(#error:NSError, handler: (UIAlertAction!) -> Void) -> UIAlertController {
         let ac = UIAlertController(title: "Network error".localize(),

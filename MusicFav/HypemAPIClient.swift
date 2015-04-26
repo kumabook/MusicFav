@@ -16,12 +16,7 @@ class HypemAPIClient {
     let baseUrl = "http://api.hypem.com"
     let apiRoot = "/api"
 
-    class var sharedInstance: HypemAPIClient {
-        struct Static {
-            static let instance: HypemAPIClient = HypemAPIClient()
-        }
-        return Static.instance
-    }
+    static var sharedInstance = HypemAPIClient()
 
     func getSiteInfo(siteId: Int64) -> SignalProducer<SiteInfo, NSError> {
         return SignalProducer { (sink, disposable) in

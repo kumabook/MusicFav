@@ -10,10 +10,6 @@ import XCDYouTubeKit
 import ReactiveCocoa
 import LlamaKit
 
-struct XCDYouTubeClientConfig {
-    static var languageIdentifier: String? = "en"
-}
-
 extension XCDYouTubeClient {
     func fetchVideo(identifier: String, errorOnFailure: Bool) -> SignalProducer<XCDYouTubeVideo, NSError> {
         return SignalProducer { (sink, disposable) in
