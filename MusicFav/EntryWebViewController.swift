@@ -92,7 +92,6 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
     func loadURL(url: NSURL) {
         currentURL = url
         if let webView = self.webView {
-            println("load \(currentURL)")
             self.webView!.loadRequest(NSURLRequest(URL: url))
         }
     }
@@ -101,7 +100,6 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         super.didReceiveMemoryWarning()
     }
     func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
-        println(message.body)
         if let body = message.body as? String {
             if message.name == "MusicFav" {
                 let error: NSError? = nil
