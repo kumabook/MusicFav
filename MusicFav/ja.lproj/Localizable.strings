@@ -6,32 +6,32 @@
   Copyright (c) 2015 Hiroki Kumamoto. All rights reserved.
 */
 
-"OK"           = "OK";
-"Cancel"       = "キャンセル";
-"Close"        = "閉じる";
-"Login"        = "ログイン";
-"Logout"       = "ログアウト";
-"Add"          = "追加";
-"Article"      = "記事";
-"Playlist"     = "プレイリスト";
-"Remove"       = "削除";
-"Copy"         = "コピー";
-"Fav　　"      = "お気に入り";
-"Completed"    = "完了";
-"Loading..."   = "読み込み中...";
-"Now playing"  = "再生中";
-"Selected"     = "選択中";
-"Not playing"  = "再生中のプレイリスト";
-"Not selected" = "選択中のプレイリスト";
-"Edit title"   = "タイトルを編集";
-"Sample Feeds" = "サンプルフィード";
-"Mark as Read" = "既読";
-"Mark as Save" = "保存";
-"New Category" = "新しいカテゴリ";
-"subscribers"  = "人が購読";
-"Notice"       = "お知らせ";
-"Tutorial"     = "チュートリアル";
-"Settings"     = "設定";
+"OK"            = "OK";
+"Cancel"        = "キャンセル";
+"Close"         = "閉じる";
+"Login"         = "ログイン";
+"Logout"        = "ログアウト";
+"Add"           = "追加";
+"Article"       = "記事";
+"Playlist"      = "プレイリスト";
+"Remove"        = "削除";
+"Copy"          = "コピー";
+"Fav　　"       = "お気に入り";
+"Completed"     = "完了";
+"Loading..."    = "読み込み中...";
+"Now playing"   = "再生中";
+"Selected"      = "選択中";
+"Not playing"   = "再生中のプレイリスト";
+"Not selected"  = "選択中のプレイリスト";
+"Edit title"    = "タイトルを編集";
+"Sample Feeds"  = "サンプルフィード";
+"Mark as Read"  = "既読";
+"Mark as Save"  = "保存";
+"New Category"  = "新しいカテゴリ";
+"subscribers"   = "人が購読";
+"Notice"        = "お知らせ";
+"Tutorial"      = "チュートリアル";
+"Settings"      = "設定";
 
 "All"           = "すべて";
 "Uncategorized" = "未分類";
@@ -44,7 +44,7 @@
 "URL or Keyword"                    = "URL または キーワード";
 "Edit playlist title"               = "プレイリストを編集";
 "New playlist"                      = "プレイリストを新規作成";
-"Are you sure you want to logout?" = "ログアウトしてよろしいですか？";
+"Are you sure you want to logout?"  = "ログアウトしてよろしいですか？";
 "Sorry, network error occured."     = "通信状況が良くありません。";
 
 
