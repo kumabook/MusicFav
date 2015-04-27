@@ -13,6 +13,7 @@ import FeedlyKit
 
 class StreamTableViewController: UITableViewController, UISearchBarDelegate {
     let cellHeight:        CGFloat = 100
+    let accessoryWidth:    CGFloat = 30
     let SEARCH_BAR_HEIGHT: CGFloat = 40
     enum Section: Int {
         case SearchResult = 0
@@ -71,6 +72,11 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
                                                            style: UIBarButtonItemStyle.Plain,
                                                           target: self,
                                                           action: "close")
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title:"Add".localize(),
+                                                           style: UIBarButtonItemStyle.Plain,
+                                                          target: self,
+                                                          action: "add")
+
         searchBar                 = UISearchBar(frame:CGRectMake(0, 0, view.bounds.size.width, SEARCH_BAR_HEIGHT))
         searchBar.placeholder     = "URL or Keyword".localize()
         searchBar.delegate        = self
@@ -83,7 +89,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
                              height: indicator.bounds.height * 3)
         indicator.hidesWhenStopped = true
         indicator.stopAnimating()
-
+        tableView.allowsMultipleSelection = true
         fetchRecommendFeeds()
         observeBlogs()
         fetchBlogs()
@@ -122,7 +128,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
             searchDisposable!.dispose()
         }
         feeds = []
-        tableView.reloadData()
+        reloadData(keepSelection: false)
         if !needSearch() {
             return
         }
@@ -138,7 +144,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
                     self.presentViewController(ac, animated: true, completion: nil)
                 },
                 completed: {
-                    self.tableView.reloadData()
+                    self.reloadData(keepSelection: false)
             })
     }
 
@@ -148,7 +154,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
                 self.recommendFeeds = feeds
             }, error: { error in
             }, completed: {
-                self.tableView.reloadData()
+                self.reloadData(keepSelection: true)
         })
     }
 
@@ -160,7 +166,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
                 self.showIndicator()
             case .CompleteLoading:
                 self.hideIndicator()
-                self.tableView.reloadData()
+                self.reloadData(keepSelection: true)
             case .FailToLoad:
                 self.hideIndicator()
             }
@@ -169,6 +175,37 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
 
     func fetchBlogs() {
         if !needSearch() { blogLoader.fetchBlogs() }
+    }
+
+    func reloadData(#keepSelection: Bool) {
+        let indexPaths = tableView.indexPathsForSelectedRows()
+        tableView.reloadData()
+        if keepSelection, let indexes = indexPaths as? [NSIndexPath] {
+            for index in indexes {
+                tableView.selectRowAtIndexPath(index, animated: false, scrollPosition: UITableViewScrollPosition.None)
+            }
+        }
+    }
+
+    func isSelected(#indexPath: NSIndexPath) -> Bool {
+        if let indexPaths = tableView.indexPathsForSelectedRows() as? [NSIndexPath] {
+            return contains(indexPaths, { $0 == indexPath})
+        }
+        return false
+    }
+
+    func setAccessoryView(cell: UITableViewCell, indexPath: NSIndexPath) {
+        if isSelected(indexPath: indexPath) {
+            var image             = UIImage(named: "checkmark")
+            image                 = image!.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+            let imageView         = UIImageView(image: image)
+            imageView.frame       = CGRect(x: 0, y: 0, width: accessoryWidth, height: cellHeight)
+            imageView.contentMode = UIViewContentMode.ScaleAspectFit
+            imageView.tintColor   = UIColor.theme
+            cell.accessoryView    = imageView
+        } else {
+            cell.accessoryView = UIView(frame: CGRect(x: 0, y: 0, width: accessoryWidth, height: cellHeight))
+        }
     }
 
     // MARK: - UISearchBar delegate
@@ -219,6 +256,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(streamTableViewCellReuseIdentifier, forIndexPath: indexPath) as! StreamTableViewCell
+        setAccessoryView(cell, indexPath: indexPath)
         switch Section(rawValue: indexPath.section)! {
         case .SearchResult:
             cell.updateView(feed: feeds[indexPath.item])
@@ -233,27 +271,16 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        var subscribable: Subscribable?
-        switch Section(rawValue: indexPath.section)! {
-        case .SearchResult:
-            subscribable = Subscribable.ToFeed(feeds[indexPath.item])
-        case .Recommend:
-            subscribable = Subscribable.ToFeed(recommendFeeds[indexPath.item])
-        case .Hypem:
-            subscribable = Subscribable.ToBlog(blogLoader.blogs[indexPath.item])
-        }
-        if let s = subscribable {
-            if isLoggedIn {
-                let ctc = CategoryTableViewController(subscribable: s, streamListLoader: streamListLoader)
-                navigationController?.pushViewController(ctc, animated: true)
-            } else {
-                if let s = subscribable {
-                    streamListLoader.subscribeTo(s, categories: [])
-                    navigationController?.dismissViewControllerAnimated(true, completion: {})
-                }
-            }
+        if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+            setAccessoryView(cell, indexPath: indexPath)
         }
     }
+
+    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
+        if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+            setAccessoryView(cell, indexPath: indexPath)
+        }
+     }
 
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         switch Section(rawValue: indexPath.section)! {
@@ -268,5 +295,32 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
 
     func close() {
         self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
+    }
+
+    func add() {
+        if let indexPaths = tableView.indexPathsForSelectedRows() {
+            let subscribables: [Subscribable] = indexPaths.map({
+                switch Section(rawValue: $0.section)! {
+                case .SearchResult:
+                    return Subscribable.ToFeed(self.feeds[$0.item])
+                case .Recommend:
+                    return Subscribable.ToFeed(self.recommendFeeds[$0.item])
+                case .Hypem:
+                    return Subscribable.ToBlog(self.blogLoader.blogs[$0.item])
+                }
+            })
+            if isLoggedIn {
+                let ctc = CategoryTableViewController(subscribables: subscribables, streamListLoader: streamListLoader)
+                navigationController?.pushViewController(ctc, animated: true)
+            } else {
+                subscribables.reduce(SignalProducer<[Subscription], NSError>(value: [])) {
+                    combineLatest($0, streamListLoader.subscribeTo($1, categories: [])) |> map {
+                        var list = $0.0; list.append($0.1); return list
+                    }
+                } |> start(next: { subscriptions in
+                    self.navigationController?.dismissViewControllerAnimated(true, completion: {})
+                })
+            }
+        }
     }
 }

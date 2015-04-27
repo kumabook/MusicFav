@@ -16,19 +16,20 @@ class CategoryTableViewController: UITableViewController {
     let client = CloudAPIClient.sharedInstance
 
     var HUD:              MBProgressHUD!
-    var subscribable:     Subscribable!
+    var subscribables:    [Subscribable]
     var streamListLoader: StreamListLoader!
     var observer:         Disposable?
 
     var categories: [FeedlyKit.Category] { return streamListLoader.streamListOfCategory.keys.array }
 
-    init(subscribable: Subscribable, streamListLoader: StreamListLoader) {
-        self.subscribable     = subscribable
+    init(subscribables: [Subscribable], streamListLoader: StreamListLoader) {
+        self.subscribables    = subscribables
         self.streamListLoader = streamListLoader
         super.init(nibName: nil, bundle: nil)
     }
 
     required init(coder aDecoder: NSCoder) {
+        self.subscribables = []
         super.init(coder: aDecoder)
     }
 
@@ -67,20 +68,13 @@ class CategoryTableViewController: UITableViewController {
             case .StartLoading: break
             case .CompleteLoading:
                 self.tableView.reloadData()
-            case .FailToLoad(let e):
-                let ac = CloudAPIClient.alertController(error: e, handler: { (action) in })
-            case .StartUpdating:
-                MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
-            case .FailToUpdate(let e):
-                let ac = CloudAPIClient.alertController(error: e, handler: { (action) in })
-                self.presentViewController(ac, animated: true, completion: nil)
-            case .CreateAt(let subscription):
-                MBProgressHUD.hideHUDForView(self.navigationController!.view, animated:false)
-                self.HUD.show(true , duration: 1.0, after: { () -> Void in
-                    self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
-                    return
-                })
-            case .RemoveAt(let index, let subscription, let category): break
+            case .FailToLoad(let e):             break
+            case .StartUpdating:                 break
+            case .FailToUpdate(let e):           break
+            case .StartUpdating:                 break
+            case .FailToUpdate(let e):           break
+            case .CreateAt(let subscription):    break
+            case .RemoveAt(let i, let s, let c): break
             }
         })
     }
@@ -101,19 +95,42 @@ class CategoryTableViewController: UITableViewController {
         presentViewController(ac, animated: true, completion: nil)
     }
 
+    func _subscribeTo(category: FeedlyKit.Category) -> SignalProducer<[Subscription], NSError> {
+        var subscriptions: [Subscription] = subscribables.map({
+            switch $0 {
+            case Subscribable.ToFeed(let feed):
+                return Subscription(feed: feed, categories: [category])
+            case .ToBlog(let blog):
+                return Subscription(id: blog.feedId,
+                                 title: blog.siteName,
+                            categories: [category])
+            }
+        })
+        return subscriptions.reduce(SignalProducer(value: [])) {
+            combineLatest($0, streamListLoader.subscribeTo($1)) |> map {
+                var list = $0.0; list.append($0.1); return list
+            }
+        }
+    }
+
     func subscribeTo(category: FeedlyKit.Category) {
-        var subscription: Subscription?
-        switch subscribable as Subscribable {
-        case Subscribable.ToFeed(let feed):
-            subscription = Subscription(feed: feed, categories: [category])
-        case .ToBlog(let blog):
-            subscription = Subscription(id: blog.feedId,
-                                     title: blog.siteName,
-                                categories: [category])
-        }
-        if let s = subscription {
-            streamListLoader.subscribeTo(s)
-        }
+        MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
+        _subscribeTo(category) |> start(
+            next: {subscriptions in
+                MBProgressHUD.hideHUDForView(self.navigationController!.view, animated:false)
+            },
+            error: {e in
+                MBProgressHUD.hideHUDForView(self.navigationController!.view, animated:false)
+                let ac = CloudAPIClient.alertController(error: e, handler: { (action) in })
+                self.presentViewController(ac, animated: true, completion: nil)
+            },
+            completed: {
+                self.HUD.show(true , duration: 1.0, after: { () -> Void in
+                    self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
+                })
+            },
+            interrupted: {}
+        )
     }
 
     // MARK: - Table view data source

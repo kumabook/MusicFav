@@ -153,7 +153,7 @@ class StreamListLoader {
         return nil
     }
 
-    func subscribeTo(subscribable: Subscribable, categories: [FeedlyKit.Category]) {
+    func subscribeTo(subscribable: Subscribable, categories: [FeedlyKit.Category]) -> SignalProducer<Subscription, NSError> {
         var subscription: Subscription?
         switch subscribable as Subscribable {
         case Subscribable.ToFeed(let feed):
@@ -163,26 +163,37 @@ class StreamListLoader {
                 title: blog.siteName,
                 categories: categories)
         }
-        if let s = subscription { subscribeTo(s) }
+        if let s = subscription {
+            return subscribeTo(s)
+        } else {
+            return SignalProducer<Subscription, NSError>.empty
+        }
     }
 
-    func subscribeTo(subscription: Subscription) {
+    func subscribeTo(subscription: Subscription) -> SignalProducer<Subscription, NSError> {
         state = .Updating
         sink.put(.Next(Box(.StartUpdating)))
-        if !apiClient.isLoggedIn {
-            self.addSubscription(subscription)
-            self.state = .Normal
-            self.sink.put(.Next(Box(.CreateAt(subscription))))
-            return
-        }
-        CloudAPIClient.sharedInstance.subscribeTo(subscription) { (req, res, error) -> Void in
-            if let e = error {
-                self.state = .Error
-                self.sink.put(.Next(Box(.FailToUpdate(e))))
-            } else {
+        return SignalProducer<Subscription, NSError> { (sink, disposable) in
+            if !self.apiClient.isLoggedIn {
                 self.addSubscription(subscription)
                 self.state = .Normal
                 self.sink.put(.Next(Box(.CreateAt(subscription))))
+                sink.put(.Next(Box(subscription)))
+                sink.put(.Completed)
+            } else {
+                CloudAPIClient.sharedInstance.subscribeTo(subscription) { (req, res, error) -> Void in
+                    if let e = error {
+                        self.state = .Error
+                        self.sink.put(.Next(Box(.FailToUpdate(e))))
+                        sink.put(.Error(Box(e)))
+                    } else {
+                        self.addSubscription(subscription)
+                        self.state = .Normal
+                        self.sink.put(.Next(Box(.CreateAt(subscription))))
+                        sink.put(.Next(Box(subscription)))
+                        sink.put(.Completed)
+                    }
+                }
             }
         }
     }
