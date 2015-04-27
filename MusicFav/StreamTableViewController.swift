@@ -76,6 +76,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
                                                            style: UIBarButtonItemStyle.Plain,
                                                           target: self,
                                                           action: "add")
+        navigationItem.rightBarButtonItem?.enabled = false
 
         searchBar                 = UISearchBar(frame:CGRectMake(0, 0, view.bounds.size.width, SEARCH_BAR_HEIGHT))
         searchBar.placeholder     = "URL or Keyword".localize()
@@ -208,6 +209,14 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
         }
     }
 
+    func updateAddButton() {
+        if let count = tableView.indexPathsForSelectedRows()?.count {
+            navigationItem.rightBarButtonItem?.enabled = count > 0
+        } else {
+            navigationItem.rightBarButtonItem?.enabled = false
+        }
+    }
+
     // MARK: - UISearchBar delegate
 
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
@@ -274,12 +283,14 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
         if let cell = tableView.cellForRowAtIndexPath(indexPath) {
             setAccessoryView(cell, indexPath: indexPath)
         }
+        updateAddButton()
     }
 
     override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
         if let cell = tableView.cellForRowAtIndexPath(indexPath) {
             setAccessoryView(cell, indexPath: indexPath)
         }
+        updateAddButton()
      }
 
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
