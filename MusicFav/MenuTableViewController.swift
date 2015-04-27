@@ -189,12 +189,34 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
                 })
             case .RemoveAt(let index, let subscription, let category):
                 self.HUD.show(true , duration: 1.0, after: { () -> Void in
-                    self.treeView!.deleteItemsAtIndexes(NSIndexSet(index: index),
-                        inParent: self.treeView!.parentForItem(subscription),
-                        withAnimation: RATreeViewRowAnimationRight)
+                    let l = self.streamListLoader
+                    if category == l.uncategorized {
+                        let i = self.indexOfUncategorizedSubscription(subscription)
+                        self.treeView!.deleteItemsAtIndexes(NSIndexSet(index: i),
+                                 inParent: nil,
+                            withAnimation: RATreeViewRowAnimationRight)
+                    } else {
+                        self.treeView!.deleteItemsAtIndexes(NSIndexSet(index: index),
+                                 inParent: self.treeView!.parentForItem(subscription),
+                            withAnimation: RATreeViewRowAnimationRight)
+                    }
                 })
             }
         })
+    }
+
+    func indexOfUncategorizedSubscription(subscription: Subscription) -> Int {
+        var i = 0
+        for section in sections {
+            switch section {
+            case .UncategorizedSubscription(let sub):
+                if sub == subscription { return i }
+            default:
+                break
+            }
+            i++
+        }
+        return i
     }
 
     func refresh() {
