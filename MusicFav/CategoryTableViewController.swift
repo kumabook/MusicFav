@@ -20,7 +20,12 @@ class CategoryTableViewController: UITableViewController {
     var streamListLoader: StreamListLoader!
     var observer:         Disposable?
 
-    var categories: [FeedlyKit.Category] { return streamListLoader.streamListOfCategory.keys.array }
+    var categories: [FeedlyKit.Category] {
+        var _categories   = streamListLoader.streamListOfCategory.keys.array
+        var list          = [streamListLoader.uncategorized]
+        list.extend(_categories.filter({$0 != self.streamListLoader.uncategorized }))
+        return list
+    }
 
     init(subscribables: [Subscribable], streamListLoader: StreamListLoader) {
         self.subscribables    = subscribables
