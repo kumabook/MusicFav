@@ -107,6 +107,8 @@ class StreamListLoader {
     }
 
     func refresh() {
+        streamListOfCategory                = [:]
+        streamListOfCategory[uncategorized] = []
         state = .Fetching
         sink.put(.Next(Box(.StartLoading)))
         disposable?.dispose()

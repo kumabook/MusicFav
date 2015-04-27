@@ -180,14 +180,17 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
                 CloudAPIClient.alertController(error: e, handler: { (action) -> Void in })
                 self.refreshControl?.endRefreshing()
             case .StartUpdating:
-                MBProgressHUD.hideHUDForView(self.view, animated: true)
+                MBProgressHUD.showHUDAddedTo(self.view, animated: true)
             case .FailToUpdate(let e):
+                MBProgressHUD.hideHUDForView(self.view, animated: true)
                 CloudAPIClient.alertController(error: e, handler: { (action) -> Void in })
             case .CreateAt(let subscription):
+                MBProgressHUD.hideHUDForView(self.view, animated: true)
                 self.HUD.show(true , duration: 1.0, after: { () -> Void in
                     self.refresh()
                 })
             case .RemoveAt(let index, let subscription, let category):
+                MBProgressHUD.hideHUDForView(self.view, animated: true)
                 self.HUD.show(true , duration: 1.0, after: { () -> Void in
                     let l = self.streamListLoader
                     if category == l.uncategorized {
@@ -199,20 +202,32 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
                         self.treeView!.deleteItemsAtIndexes(NSIndexSet(index: index),
                                  inParent: self.treeView!.parentForItem(subscription),
                             withAnimation: RATreeViewRowAnimationRight)
+                        self.treeView!.reloadRowsForItems([self.indexOfCategory(category)],
+                                                withRowAnimation: RATreeViewRowAnimationRight)
                     }
                 })
             }
         })
     }
 
+    func indexOfCategory(category: FeedlyKit.Category) -> Int {
+        var i = 0
+        for section in sections {
+            switch section {
+            case .FeedlyCategory(let c): if c == category { return i }
+            default:                     break
+            }
+            i++
+        }
+        return i
+    }
+
     func indexOfUncategorizedSubscription(subscription: Subscription) -> Int {
         var i = 0
         for section in sections {
             switch section {
-            case .UncategorizedSubscription(let sub):
-                if sub == subscription { return i }
-            default:
-                break
+            case .UncategorizedSubscription(let sub): if sub == subscription { return i }
+            default:                                  break
             }
             i++
         }
