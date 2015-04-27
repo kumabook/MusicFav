@@ -129,6 +129,7 @@ class PreferenceViewController: UITableViewController {
                 }
             case .Settings:
                 let vc = IASKAppSettingsViewController()
+                vc.showCreditsFooter = false
                 navigationController?.pushViewController(vc, animated: true)
                 vc.navigationItem.rightBarButtonItems = []
             case .Tutorial:
