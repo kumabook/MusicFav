@@ -33,6 +33,11 @@
 "Tutorial"     = "チュートリアル";
 "Settings"     = "設定";
 
+"All"           = "すべて";
+"Uncategorized" = "未分類";
+"Read"          = "既読";
+"Saved"         = "お気に入り";
+
 "Network error"                     = "通信エラー";
 "Import Feed"                       = "フィードをインポート";
 "Select Category"                   = "カテゴリを選択";

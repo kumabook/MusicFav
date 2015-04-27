@@ -150,7 +150,11 @@ class CategoryTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as! UITableViewCell
-        cell.textLabel?.text = categories[indexPath.item].label
+        if categories[indexPath.item] == streamListLoader.uncategorized {
+            cell.textLabel?.text = categories[indexPath.item].label.localize()
+        } else {
+            cell.textLabel?.text = categories[indexPath.item].label
+        }
         return cell
     }
 

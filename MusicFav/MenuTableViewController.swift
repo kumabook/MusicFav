@@ -23,7 +23,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
 
         var title: String {
             switch self {
-            case .GlobalResource(let stream):                  return stream.streamTitle
+            case .GlobalResource(let stream):                  return stream.streamTitle.localize()
             case .Pocket:                                      return "Pocket"
             case .Twitter:                                     return "Twitter"
             case .FeedlyCategory(let category):                return category.label
