@@ -35,6 +35,8 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         fatalError("init(coder:) has not been implemented")
     }
 
+    deinit {}
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.webView = createWebView()
@@ -57,7 +59,6 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
                 constant: 0)
             ])
         
-        self.webView!.navigationDelegate                  = self
         self.webView!.allowsBackForwardNavigationGestures = true
         playlistButton        = UIBarButtonItem(image: UIImage(named: "playlist"),
                                                 style: UIBarButtonItemStyle.Plain,
@@ -89,16 +90,29 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         updateViews()
     }
 
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        webView!.navigationDelegate = self
+        webView!.configuration.userContentController.addScriptMessageHandler(self, name: "MusicFav")
+    }
+
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        webView!.navigationDelegate = nil
+        webView!.configuration.userContentController.removeScriptMessageHandlerForName("MusicFav")
+    }
+
     func loadURL(url: NSURL) {
         currentURL = url
         if let webView = self.webView {
-            self.webView!.loadRequest(NSURLRequest(URL: url))
+            webView.loadRequest(NSURLRequest(URL: url))
         }
     }
-    
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
+
     func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
         if let body = message.body as? String {
             if message.name == "MusicFav" {
@@ -120,7 +134,6 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         let script = WKUserScript(source: getSource(), injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: false)
         let userContentController = WKUserContentController()
         userContentController.addUserScript(script)
-        userContentController.addScriptMessageHandler(self, name: "MusicFav")
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = userContentController;
         return WKWebView(frame: self.view.bounds, configuration: configuration)
@@ -178,7 +191,6 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
     // MARK: - WKNavigationDelegate
     
     func webView(webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
-        print("didFailNavigation")
     }
     
     func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
