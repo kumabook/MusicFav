@@ -49,7 +49,6 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
         mainViewController.rightPanel           = UINavigationController(rootViewController:playlistTableViewController)
         mainViewController.prepare()
         miniPlayerObserver                      = MiniPlayerObserver(miniPlayerViewController: self)
-        addChildViewController(mainViewController)
     }
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
@@ -63,10 +62,10 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         addChildViewController(mainViewController)
+        mainViewController.view.frame = mainViewContainer.bounds
         mainViewController.didMoveToParentViewController(self)
         miniPlayerView.delegate = self
         mainViewContainer.addSubview(mainViewController.view)
-        mainViewController.view.frame = mainViewContainer.bounds
         view.bringSubviewToFront(miniPlayerView)
         updateViews()
         player?.addObserver(miniPlayerObserver)

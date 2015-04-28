@@ -34,7 +34,6 @@ class StreamPageMenuController: UIViewController {
     }
 
     override func viewDidLoad() {
-        super.viewDidLoad()
         self.navigationController?.toolbar.translucent       = false
         self.navigationController?.navigationBar.translucent = false
 
@@ -63,15 +62,14 @@ class StreamPageMenuController: UIViewController {
                                                          "menuItemFont": UIFont.boldSystemFontOfSize(14)
                                         ]
         pageMenu = CAPSPageMenu(viewControllers: controllerArray,
-                                          frame: CGRectMake(self.view.frame.origin.x,
-                                                            self.view.frame.origin.y,
-                                                            self.view.frame.width,
-                                                            self.view.frame.height),
+                                          frame: view.frame,
                                         options: parameters)
-        self.view.addSubview(pageMenu.view)
         addChildViewController(pageMenu)
+        view.addSubview(pageMenu.view)
+        pageMenu.didMoveToParentViewController(self)
         entryStreamViewController    = entryStream
         playlistStreamViewController = playlistStream
+        super.viewDidLoad()
         streamLoader.fetchEntries()
     }
 
