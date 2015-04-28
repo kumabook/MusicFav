@@ -39,27 +39,27 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.webView = createWebView()
-        self.webView!.setTranslatesAutoresizingMaskIntoConstraints(false)
-        self.view.insertSubview(self.webView!, atIndex:0)
-        self.view.addConstraints([
-            NSLayoutConstraint(item: self.webView!,
+        webView = createWebView()
+        webView!.setTranslatesAutoresizingMaskIntoConstraints(false)
+        view.insertSubview(webView!, atIndex:0)
+        view.addConstraints([
+            NSLayoutConstraint(item: webView!,
                 attribute: NSLayoutAttribute.Width,
                 relatedBy: NSLayoutRelation.Equal,
-                toItem: self.view,
+                   toItem: view,
                 attribute: NSLayoutAttribute.Width,
-                multiplier: 1.0,
-                constant: 0),
-            NSLayoutConstraint(item: self.webView!,
+               multiplier: 1.0,
+                 constant: 0),
+            NSLayoutConstraint(item: webView!,
                 attribute: NSLayoutAttribute.Height,
                 relatedBy: NSLayoutRelation.Equal,
-                toItem: self.view,
+                   toItem: view,
                 attribute: NSLayoutAttribute.Height,
-                multiplier: 1.0,
-                constant: 0)
+               multiplier: 1.0,
+                 constant: 0)
             ])
         
-        self.webView!.allowsBackForwardNavigationGestures = true
+        webView!.allowsBackForwardNavigationGestures = true
         playlistButton        = UIBarButtonItem(image: UIImage(named: "playlist"),
                                                 style: UIBarButtonItemStyle.Plain,
                                                target: self,
@@ -81,7 +81,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
                                                    favEntryButton!,
                                                    historyForwardButton!,
                                                    historyBackButton!]
-        HUD = MBProgressHUD.createCompletedHUD(self.view)
+        HUD = MBProgressHUD.createCompletedHUD(view)
         navigationController?.view.addSubview(HUD)
 
         if let url = entry.url {
@@ -104,8 +104,8 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
 
     func loadURL(url: NSURL) {
         currentURL = url
-        if let webView = self.webView {
-            webView.loadRequest(NSURLRequest(URL: url))
+        if let _webView = webView {
+            _webView.loadRequest(NSURLRequest(URL: url))
         }
     }
 
@@ -119,11 +119,11 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
                 let error: NSError? = nil
                 let json: AnyObject? = NSJSONSerialization.JSONObjectWithData(body.dataUsingEncoding(NSUTF8StringEncoding)!, options: NSJSONReadingOptions.AllowFragments, error: nil)
                 
-                let playlist = Playlist(json: JSON(json!))
-                if playlist.tracks.count > 0 {
-                    self.playlist = playlist
+                let p = Playlist(json: JSON(json!))
+                if p.tracks.count > 0 {
+                    playlist = p
                     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-                    appDelegate.selectedPlaylist = self.playlist!
+                    appDelegate.selectedPlaylist = p
                     appDelegate.miniPlayerViewController?.playlistTableViewController.updateNavbar()
                     appDelegate.miniPlayerViewController?.playlistTableViewController.tableView.reloadData()
                 }
@@ -136,15 +136,14 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         userContentController.addUserScript(script)
         let configuration = WKWebViewConfiguration()
         configuration.userContentController = userContentController;
-        return WKWebView(frame: self.view.bounds, configuration: configuration)
+        return WKWebView(frame: view.bounds, configuration: configuration)
     }
     
     private func getSource() -> String {
-        let bundle = NSBundle.mainBundle()
+        let bundle                  = NSBundle.mainBundle()
         let playlistifyPath: String = bundle.pathForResource("playlistify-userscript", ofType: "js")!
         let mainPath:        String = bundle.pathForResource("main", ofType: "js")!
-        let source = String(contentsOfFile: playlistifyPath)! + String(contentsOfFile: mainPath)!
-        return source
+        return String(contentsOfFile: playlistifyPath)! + String(contentsOfFile: mainPath)!
     }
     
     func updateViews() {
@@ -196,5 +195,4 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
     func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
         updateViews()
     }
-
 }
