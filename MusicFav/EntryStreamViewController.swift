@@ -11,6 +11,7 @@ import ReactiveCocoa
 import LlamaKit
 import SwiftyJSON
 import FeedlyKit
+import PageMenu
 
 class EntryStreamViewController: UITableViewController {
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -71,7 +72,14 @@ class EntryStreamViewController: UITableViewController {
 
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action:"fetchLatestEntries", forControlEvents:UIControlEvents.ValueChanged)
-
+        // workaround because tableView height is too long
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1)), dispatch_get_main_queue()) {
+            if let pageMenu = self.parentViewController as? CAPSPageMenu {
+                let f = self.view.frame
+                self.view.frame = CGRect(x: f.origin.x, y: f.origin.y, width: f.width, height: f.height - pageMenu.menuHeight)
+            }
+            return
+        }
     }
 
     override func viewDidAppear(animated: Bool) {
