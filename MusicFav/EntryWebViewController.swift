@@ -93,6 +93,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         webView!.navigationDelegate = self
+        webView!.configuration.userContentController.removeScriptMessageHandlerForName("MusicFav")
         webView!.configuration.userContentController.addScriptMessageHandler(self, name: "MusicFav")
     }
 
