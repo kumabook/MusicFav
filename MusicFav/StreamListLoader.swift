@@ -73,9 +73,6 @@ class StreamListLoader {
             uncategorized = FeedlyKit.Category.Uncategorized(userId)
         }
         streamListOfCategory[uncategorized] = []
-        if !apiClient.isLoggedIn {
-            streamListOfCategory[uncategorized]?.extend(StreamListLoader.sampleSubscriptions() as [Stream])
-        }
     }
 
     deinit {
@@ -128,6 +125,7 @@ class StreamListLoader {
         if apiClient.isLoggedIn {
             return self.fetchSubscriptions()
         } else {
+            streamListOfCategory[uncategorized]?.extend(StreamListLoader.sampleSubscriptions() as [Stream])
             return SignalProducer<[FeedlyKit.Category: [Stream]], NSError>.empty
         }
     }
