@@ -184,11 +184,6 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
             case .FailToUpdate(let e):
                 MBProgressHUD.hideHUDForView(self.view, animated: true)
                 CloudAPIClient.alertController(error: e, handler: { (action) -> Void in })
-            case .CreateAt(let subscription):
-                MBProgressHUD.hideHUDForView(self.view, animated: true)
-                self.HUD.show(true , duration: 1.0, after: { () -> Void in
-                    self.refresh()
-                })
             case .RemoveAt(let index, let subscription, let category):
                 MBProgressHUD.hideHUDForView(self.view, animated: true)
                 self.HUD.show(true , duration: 1.0, after: { () -> Void in

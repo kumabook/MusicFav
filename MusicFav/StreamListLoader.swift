@@ -25,7 +25,6 @@ class StreamListLoader {
         case FailToLoad(NSError)
         case StartUpdating
         case FailToUpdate(NSError)
-        case CreateAt(Subscription)
         case RemoveAt(Int, Subscription, FeedlyKit.Category)
     }
 
@@ -104,12 +103,20 @@ class StreamListLoader {
     }
 
     func refresh() {
+        if !apiClient.isLoggedIn {
+            sink.put(.Next(Box(.StartLoading)))
+            if streamListOfCategory[uncategorized]!.count == 0 {
+                streamListOfCategory[uncategorized]?.extend(StreamListLoader.sampleSubscriptions() as [Stream])
+            }
+            self.sink.put(.Next(Box(.CompleteLoading)))
+            return
+        }
         streamListOfCategory                = [:]
         streamListOfCategory[uncategorized] = []
         state = .Fetching
         sink.put(.Next(Box(.StartLoading)))
         disposable?.dispose()
-        disposable = fetch() |> startOn(UIScheduler()) |> start(
+        disposable = self.fetchSubscriptions() |> startOn(UIScheduler()) |> start(
             next: { dic in
                 self.sink.put(.Next(Box(.StartLoading)))
             }, error: { error in
@@ -119,15 +126,6 @@ class StreamListLoader {
                 self.state = .Normal
                 self.sink.put(.Next(Box(.CompleteLoading)))
         })
-    }
-
-    func fetch() -> SignalProducer<[FeedlyKit.Category: [Stream]], NSError> {
-        if apiClient.isLoggedIn {
-            return self.fetchSubscriptions()
-        } else {
-            streamListOfCategory[uncategorized]?.extend(StreamListLoader.sampleSubscriptions() as [Stream])
-            return SignalProducer<[FeedlyKit.Category: [Stream]], NSError>.empty
-        }
     }
 
     func fetchSubscriptions() -> SignalProducer<[FeedlyKit.Category: [Stream]], NSError> {
@@ -171,13 +169,10 @@ class StreamListLoader {
     }
 
     func subscribeTo(subscription: Subscription) -> SignalProducer<Subscription, NSError> {
-        state = .Updating
-        sink.put(.Next(Box(.StartUpdating)))
         return SignalProducer<Subscription, NSError> { (sink, disposable) in
             if !self.apiClient.isLoggedIn {
                 self.addSubscription(subscription)
                 self.state = .Normal
-                self.sink.put(.Next(Box(.CreateAt(subscription))))
                 sink.put(.Next(Box(subscription)))
                 sink.put(.Completed)
             } else {
@@ -189,7 +184,6 @@ class StreamListLoader {
                     } else {
                         self.addSubscription(subscription)
                         self.state = .Normal
-                        self.sink.put(.Next(Box(.CreateAt(subscription))))
                         sink.put(.Next(Box(subscription)))
                         sink.put(.Completed)
                     }

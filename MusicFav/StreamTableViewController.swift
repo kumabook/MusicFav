@@ -10,6 +10,7 @@ import UIKit
 import ReactiveCocoa
 import LlamaKit
 import FeedlyKit
+import MBProgressHUD
 
 class StreamTableViewController: UITableViewController, UISearchBarDelegate {
     let cellHeight:        CGFloat = 100
@@ -32,6 +33,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
         }
     }
 
+    var HUD:       MBProgressHUD!
     var indicator: UIActivityIndicatorView!
     var searchBar: UISearchBar!
 
@@ -90,6 +92,10 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
                              height: indicator.bounds.height * 3)
         indicator.hidesWhenStopped = true
         indicator.stopAnimating()
+
+        HUD = MBProgressHUD.createCompletedHUD(view)
+        navigationController?.view.addSubview(HUD)
+
         tableView.allowsMultipleSelection = true
         fetchRecommendFeeds()
         observeBlogs()
@@ -324,12 +330,22 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
                 let ctc = CategoryTableViewController(subscribables: subscribables, streamListLoader: streamListLoader)
                 navigationController?.pushViewController(ctc, animated: true)
             } else {
+                MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
                 subscribables.reduce(SignalProducer<[Subscription], NSError>(value: [])) {
-                    combineLatest($0, streamListLoader.subscribeTo($1, categories: [])) |> map {
+                    combineLatest($0, self.streamListLoader.subscribeTo($1, categories: [])) |> map {
                         var list = $0.0; list.append($0.1); return list
                     }
-                } |> start(next: { subscriptions in
-                    self.navigationController?.dismissViewControllerAnimated(true, completion: {})
+                } |> start(
+                    next: { subscriptions in
+                        MBProgressHUD.hideHUDForView(self.navigationController!.view, animated:false)
+                    }, error: { e in
+                        MBProgressHUD.hideHUDForView(self.navigationController!.view, animated:false)
+                        let ac = CloudAPIClient.alertController(error: e, handler: { (action) in })
+                    }, completed: {
+                        self.HUD.show(true , duration: 1.0, after: {
+                            self.streamListLoader.refresh()
+                            self.navigationController?.dismissViewControllerAnimated(true, completion: {})
+                        })
                 })
             }
         }

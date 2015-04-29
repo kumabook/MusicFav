@@ -78,7 +78,6 @@ class CategoryTableViewController: UITableViewController {
             case .FailToUpdate(let e):           break
             case .StartUpdating:                 break
             case .FailToUpdate(let e):           break
-            case .CreateAt(let subscription):    break
             case .RemoveAt(let i, let s, let c): break
             }
         })
@@ -131,6 +130,7 @@ class CategoryTableViewController: UITableViewController {
             },
             completed: {
                 self.HUD.show(true , duration: 1.0, after: { () -> Void in
+                    self.streamListLoader.refresh()
                     self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
                 })
             },
