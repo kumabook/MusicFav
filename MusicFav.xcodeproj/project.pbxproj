@@ -751,7 +751,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ -e MusicFav/fabric.txt ]; then\n    echo \"Running Fabric run script \" `cat MusicFav/fabric.txt`\n#    ./Pods/CrashlyticsFramework/Crashlytics.framework/run `cat MusicFav/fabric.txt`\n    ruby ./fabric.rb\nelse\n    echo \"Running MusicFav/fabric.txt is not found, do nothing.\"\nfi\n";
+			shellScript = "if [ -e MusicFav/fabric.json ]; then\n    ruby ./fabric.rb\nelse\n    echo \"Running MusicFav/fabric.json is not found, do nothing.\"\nfi\n";
 		};
 		AB552B6E71CD4410AB4381B5 /* Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
