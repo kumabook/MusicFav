@@ -82,6 +82,16 @@ class EntryStreamViewController: UITableViewController {
         }
     }
 
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        let streamPageMenu: StreamPageMenuController? = appDelegate.miniPlayerViewController?.streamPageMenuController
+        if let other = streamPageMenu?.playlistStreamViewController {
+            if other.tableView != nil {
+                tableView.contentOffset = other.tableView.contentOffset
+            }
+        }
+    }
+
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         observeStreamLoader()
@@ -180,10 +190,6 @@ class EntryStreamViewController: UITableViewController {
     override func scrollViewDidScroll(scrollView: UIScrollView) {
         if tableView.contentOffset.y >= tableView.contentSize.height - tableView.bounds.size.height {
             streamLoader.fetchEntries()
-        }
-        let streamPageMenu: StreamPageMenuController? = appDelegate.miniPlayerViewController?.streamPageMenuController
-        if streamPageMenu?.playlistStreamViewController?.tableView != nil {
-            streamPageMenu?.playlistStreamViewController?.tableView.contentOffset = tableView.contentOffset
         }
     }
 

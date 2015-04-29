@@ -64,6 +64,16 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
         refreshControl?.addTarget(self, action:"fetchLatestEntries", forControlEvents:UIControlEvents.ValueChanged)
     }
 
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        let streamPageMenu: StreamPageMenuController? = appDelegate.miniPlayerViewController?.streamPageMenuController
+        if let other = streamPageMenu?.entryStreamViewController {
+            if other.tableView != nil {
+                tableView.contentOffset = other.tableView.contentOffset
+            }
+        }
+    }
+
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         observeStreamLoader()
@@ -168,10 +178,6 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
     override func scrollViewDidScroll(scrollView: UIScrollView) {
         if tableView.contentOffset.y >= tableView.contentSize.height - tableView.bounds.size.height {
             streamLoader.fetchEntries()
-        }
-        let streamPageMenu: StreamPageMenuController? = appDelegate.miniPlayerViewController?.streamPageMenuController
-        if streamPageMenu?.entryStreamViewController?.tableView != nil {
-            streamPageMenu?.entryStreamViewController?.tableView.contentOffset = tableView.contentOffset
         }
     }
 
