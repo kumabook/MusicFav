@@ -19,10 +19,8 @@ public class Playlist: Equatable, Hashable {
     public   var signal:       Signal<Int, NSError>
     internal var sink:         SinkOf<ReactiveCocoa.Event<Int, NSError>>
 
-    struct ClassProperty {
-        static let pipe    = Signal<Event, NSError>.pipe()
-        static var current = Playlist.findAll()
-    }
+    static var sharedPipe    = Signal<Event, NSError>.pipe()
+    static var sharedList    = Playlist.findAll()
     public enum Event {
         case Created(Playlist)
         case Removed(Playlist)
@@ -33,22 +31,22 @@ public class Playlist: Equatable, Hashable {
     }
 
     public class var shared: (signal: Signal<Event, NSError>, sink: SinkOf<ReactiveCocoa.Event<Event, NSError>>, current: [Playlist]) {
-        get { return (signal: ClassProperty.pipe.0,
-                        sink: ClassProperty.pipe.1,
-                     current: ClassProperty.current) }
+        get { return (signal: Playlist.sharedPipe.0,
+                        sink: Playlist.sharedPipe.1,
+                     current: Playlist.sharedList) }
     }
 
     public class func notifyChange(event: Event) {
         switch event {
         case .Created(let playlist):
-            ClassProperty.current.append(playlist)
+            Playlist.sharedList.append(playlist)
         case .Removed(let playlist):
-            if let index = find(ClassProperty.current, playlist) {
-                ClassProperty.current.removeAtIndex(index)
+            if let index = find(Playlist.sharedList, playlist) {
+                Playlist.sharedList.removeAtIndex(index)
             }
         case .Updated(let playlist):
-            if let index = find(ClassProperty.current, playlist) {
-                ClassProperty.current[index] = playlist
+            if let index = find(Playlist.sharedList, playlist) {
+                Playlist.sharedList[index] = playlist
             }
         case .TracksAdded(let playlist, let tracks):
             break
@@ -153,7 +151,9 @@ public class Playlist: Equatable, Hashable {
     }
 
     public class func createDefaultPlaylist() {
-        Playlist(title: "Favorite").save()
+        if Playlist.sharedList.count == 0 {
+            Playlist(title: "Favorite").create()
+        }
     }
 }
 
