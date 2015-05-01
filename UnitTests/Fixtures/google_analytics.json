@@ -1,0 +1,5 @@
+{
+    "tracker_id": "UA-12345678-9",
+    "log_level": "verbose",
+    "dispatch_inverval": "20"
+}

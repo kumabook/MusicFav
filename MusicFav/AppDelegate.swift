@@ -15,10 +15,8 @@ import FeedlyKit
 import Fabric
 import Crashlytics
 
-
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     var appearanceManager:        AppearanceManager?
     var window:                   UIWindow?
     var coverViewController:      DraggableCoverViewController?
@@ -84,11 +82,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        let fabricConfig = FabricConfig(filePath: NSBundle.mainBundle().pathForResource("fabric", ofType: "json")!)
+        let mainBundle = NSBundle.mainBundle()
+        let fabricConfig = FabricConfig(filePath: mainBundle.pathForResource("fabric", ofType: "json")!)
         if !fabricConfig.skip {
-            Crashlytics.startWithAPIKey(fabricConfig.apiKey)
+            var crashlytics = Crashlytics.startWithAPIKey(fabricConfig.apiKey)
         }
         TrackStore.migration()
+        if let path = mainBundle.pathForResource("google_analytics", ofType: "json") {
+            GAIConfig.setup(path)
+        }
         setupAudioSession(application)
         setupAPIClient()
         registerNSUserDefaults()

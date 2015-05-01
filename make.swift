@@ -21,19 +21,28 @@ enum Target: String {
     }
     var soundCloudConfig: String { return "MusicFav/soundcloud.json.production" }
     var fabricConfig:     String { return "MusicFav/fabric.json.production" }
+    var gaConfig:         String {
+        switch self {
+        case .Production: return "MusicFav/google_analytics.json.production"
+        case .Sandbox:    return "MusicFav/google_analytics.json.sandbox"
+        }
+    }
 
     var feedlyConfigDst:     String { return "MusicFav/feedly.json" }
     var soundCloudConfigDst: String { return "MusicFav/soundcloud.json" }
     var fabricConfigDst:     String { return "MusicFav/fabric.json" }
+    var gaConfigDst:         String { return "MusicFav/google_analytics.json" }
     func prepare() {
         run("cp \(feedlyConfig) \(feedlyConfigDst)")
         run("cp \(soundCloudConfig) \(soundCloudConfigDst)")
         run("cp \(fabricConfig) \(fabricConfigDst)")
+        run("cp \(gaConfig) \(gaConfigDst)")
     }
     func clean() {
         run("git checkout HEAD \(feedlyConfigDst)")
         run("git checkout HEAD \(soundCloudConfigDst)")
         run("git checkout HEAD \(fabricConfigDst)")
+        run("git checkout HEAD \(gaConfigDst)")
     }
     func build() {
         install_lib()
@@ -56,6 +65,7 @@ func run(command: String) {
 let feedlyConfig     = "MusicFav/feedly.json"
 let soundCloudConfig = "MusicFav/soundcloud.json"
 let fabricConfig     = "MusicFav/fabric.json"
+let gaConfig         = "MusicFav/google_analytics.json"
 
 
 let args = NSProcessInfo.processInfo().arguments as! [String]
