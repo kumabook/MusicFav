@@ -25,3 +25,6 @@
 [submodule "Carthage/Checkouts/XCDYouTubeKit"]
 	path = Carthage/Checkouts/XCDYouTubeKit
 	url = https://github.com/kumabook/XCDYouTubeKit.git
+[submodule "GoogleAnalytics-SDK-iOS"]
+	path = GoogleAnalytics-SDK-iOS
+	url = git@github.com:kumabook/GoogleAnalytics-SDK-iOS.git
