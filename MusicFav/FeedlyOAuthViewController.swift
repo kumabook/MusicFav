@@ -51,6 +51,7 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        Logger.sendScreenView(self)
         addObservers()
     }
 

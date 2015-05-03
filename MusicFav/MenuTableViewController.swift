@@ -122,6 +122,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        Logger.sendScreenView(self)
     }
 
     override func viewDidDisappear(animated: Bool) {
@@ -280,6 +281,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     }
 
     func treeView(treeView: RATreeView!, didSelectRowForItem item: AnyObject!) {
+        Logger.sendUIActionEvent(self, action: "didSelectRowForItem", label: "")
         if item == nil {
         } else if let index = item as? Int {
             showStream(section:sections[index])
@@ -301,6 +303,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     }
 
     func treeView(treeView: RATreeView!, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowForItem item: AnyObject!) {
+        Logger.sendUIActionEvent(self, action: "commitEditingStyle", label: "")
         if let index = item as? Int {
             switch sections[index] {
             case Section.UncategorizedSubscription(let subscription):

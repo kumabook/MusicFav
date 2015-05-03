@@ -108,6 +108,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        Logger.sendScreenView(self)
         observeBlogs()
     }
 
@@ -131,6 +132,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
     }
 
     func searchFeeds(text: String) {
+        Logger.sendUIActionEvent(self, action: "searchFeeds", label: "")
         if searchDisposable != nil && !searchDisposable!.disposed {
             searchDisposable!.dispose()
         }
@@ -326,6 +328,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
                     return Subscribable.ToBlog(self.blogLoader.blogs[$0.item])
                 }
             })
+            Logger.sendUIActionEvent(self, action: "add", label: "")
             if isLoggedIn {
                 let ctc = CategoryTableViewController(subscribables: subscribables, streamListLoader: streamListLoader)
                 navigationController?.pushViewController(ctc, animated: true)

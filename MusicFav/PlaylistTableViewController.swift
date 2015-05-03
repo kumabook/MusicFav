@@ -66,6 +66,8 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     }
 
     override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        Logger.sendScreenView(self)
         observePlaylists()
         observePlayer()
         updateNavbar()
@@ -84,20 +86,24 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     }
 
     func newPlaylist() {
+        Logger.sendUIActionEvent(self, action: "newPlaylist", label: "")
         showTitleEditAlertViewAtIndex(NEW_PLAYLIST_INDEX)
     }
 
     func showPlaylist(playlist: Playlist) {
+        Logger.sendUIActionEvent(self, action: "showPlaylist", label: "")
         let ttc = TrackTableViewController(playlist: playlist)
         navigationController?.popToRootViewControllerAnimated(true)
         navigationController?.pushViewController(ttc, animated: true)
     }
 
     func showPlayingPlaylist() {
+        Logger.sendUIActionEvent(self, action: "showPlayingPlaylist", label: "")
         if let playlist = appDelegate.playingPlaylist { showPlaylist(playlist) }
     }
 
     func showSelectedPlaylist() {
+        Logger.sendUIActionEvent(self, action: "showSelectedPlaylist", label: "")
         if let playlist = appDelegate.selectedPlaylist { showPlaylist(playlist) }
     }
 
@@ -157,6 +163,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     }
 
     func showTitleEditAlertViewAtIndex(index: Int) {
+        Logger.sendUIActionEvent(self, action: "showTitleEditAlertViewAtIndex", label: "")
         var title: String!
         if index >= 0 { title = "Edit playlist title".localize() }
         else          { title = "New playlist".localize() }

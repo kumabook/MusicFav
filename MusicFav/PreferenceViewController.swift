@@ -47,6 +47,11 @@ class PreferenceViewController: UITableViewController {
         self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
     }
 
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        Logger.sendScreenView(self)
+    }
+
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
         self.tableView.reloadData()

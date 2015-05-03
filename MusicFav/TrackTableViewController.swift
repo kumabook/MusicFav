@@ -63,7 +63,12 @@ class TrackTableViewController: UITableViewController {
         updateNavbar()
         fetchTrackDetails()
     }
-    
+
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        Logger.sendScreenView(self)
+    }
+
     func updateNavbar() {
         let showFavListButton         = UIBarButtonItem(image: UIImage(named: "fav_list"),
                                                         style: UIBarButtonItemStyle.Plain,
@@ -89,15 +94,18 @@ class TrackTableViewController: UITableViewController {
     }
     
     func showPlayingPlaylist() {
+        Logger.sendUIActionEvent(self, action: "showPlayingPlaylist", label: "")
         appDelegate.miniPlayerViewController?.playlistTableViewController.showPlayingPlaylist()
     }
 
     func showSelectedPlaylist() {
+        Logger.sendUIActionEvent(self, action: "showSelectedPlaylist", label: "")
         appDelegate.miniPlayerViewController?.playlistTableViewController.showSelectedPlaylist()
     }
     
     func favPlaylist() {
         if let currentPlaylist = playlist {
+            Logger.sendUIActionEvent(self, action: "favPlaylist", label: "")
             showSelectPlaylistViewController(currentPlaylist.tracks)
         }
     }
@@ -180,6 +188,7 @@ class TrackTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
         let remove = UITableViewRowAction(style: .Default, title: "Remove".localize()) {
             (action, indexPath) in
+            Logger.sendUIActionEvent(self, action: "removeTrack", label: "\(indexPath.item)")
             self.playlist?.removeTrackAtIndex(UInt(indexPath.item))
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
@@ -187,6 +196,7 @@ class TrackTableViewController: UITableViewController {
         remove.backgroundColor = UIColor.red
         let copy = UITableViewRowAction(style: .Default, title: "Fav　　".localize()) {
             (action, indexPath) in
+            Logger.sendUIActionEvent(self, action: "FavTrackAtIndex", label: "\(indexPath.item)")
             let track = self.playlist!.tracks[indexPath.item]
             self.showSelectPlaylistViewController([track])
         }

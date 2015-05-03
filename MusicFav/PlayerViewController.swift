@@ -185,23 +185,28 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
     }
 
     func toggle() {
+        Logger.sendUIActionEvent(self, action: "toggle", label: "")
         player?.toggle()
     }
 
     func next() {
+        Logger.sendUIActionEvent(self, action: "next", label: "")
         player?.next()
     }
 
     func previous() {
+        Logger.sendUIActionEvent(self, action: "previous", label: "")
         player?.previous()
     }
 
     func didMinimizedCoverView() {
+        Logger.sendUIActionEvent(self, action: "didMinimizedCoverView", label: "")
         updateViews()
         removeAdView()
     }
 
     func didMaximizedCoverView() {
+        Logger.sendUIActionEvent(self, action: "didMaximizedCoverView", label: "")
         updateViews()
         addAdView()
         showAdView()
@@ -225,6 +230,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
     }
 
     func toggleScreen() {
+        Logger.sendUIActionEvent(self, action: "toggleScreen", label: "")
         draggableCoverViewController?.toggleScreen()
     }
 
@@ -241,6 +247,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
     }
 
     func stopSeek() {
+        Logger.sendUIActionEvent(self, action: "stopSeek", label: "")
         if let _player = player {
             _player.seekToTime(CMTimeMakeWithSeconds(Float64(slider.value), 1))
         }

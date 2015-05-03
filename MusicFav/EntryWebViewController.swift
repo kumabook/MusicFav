@@ -92,6 +92,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        Logger.sendScreenView(self)
         webView!.navigationDelegate = self
         webView!.configuration.userContentController.removeScriptMessageHandlerForName("MusicFav")
         webView!.configuration.userContentController.addScriptMessageHandler(self, name: "MusicFav")
@@ -158,14 +159,17 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
     }
 
     func historyBack() {
+        Logger.sendUIActionEvent(self, action: "goBack", label: "")
         webView?.goBack()
     }
     
     func historyForward() {
+        Logger.sendUIActionEvent(self, action: "goForward", label: "")
         webView?.goForward()
     }
     
     func favEntry() {
+        Logger.sendUIActionEvent(self, action: "favEntry", label: "")
         let feedlyClient = CloudAPIClient.sharedInstance
         if feedlyClient.isLoggedIn {
             MBProgressHUD.showHUDAddedTo(view, animated: true)

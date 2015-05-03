@@ -13,12 +13,15 @@ class TutorialViewController: UIViewController, TutorialViewDelegate, FeedlyOAut
     var appDelegate: AppDelegate { return UIApplication.sharedApplication().delegate as! AppDelegate }
     var tutorialView: TutorialView!
 
+    deinit {}
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.theme
         modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         tutorialView = TutorialView.tutorialView(view.frame, delegate: self)
         tutorialView.skipButton.hidden = true
+        tutorialView.skipButton.addTarget(self, action: "skipButtonTapped", forControlEvents: UIControlEvents.TouchUpInside)
         view.addSubview(tutorialView)
     }
 
@@ -27,6 +30,8 @@ class TutorialViewController: UIViewController, TutorialViewDelegate, FeedlyOAut
     }
 
     override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        Logger.sendScreenView(self)
         navigationController?.navigationBarHidden = true
     }
 
@@ -46,15 +51,21 @@ class TutorialViewController: UIViewController, TutorialViewDelegate, FeedlyOAut
         }
     }
 
+    func skipButtonTapped() {
+        Logger.sendUIActionEvent(self, action: "skipButtonTapped", label: "")
+    }
+
     // MARK: - FeedlyOAuthViewDelegate
 
     func onLoggedIn() {
+        Logger.sendUIActionEvent(self, action: "onLoggedIn", label: "")
         close()
     }
 
     // MARK: - TutorialViewDelegate
 
     func tutorialLoginButtonTapped() {
+        Logger.sendUIActionEvent(self, action: "tutorialLoginButtonTapped", label: "")
         let oauthvc = FeedlyOAuthViewController()
         oauthvc.delegate = self
         let vc = UINavigationController(rootViewController: oauthvc)

@@ -54,6 +54,7 @@ class CategoryTableViewController: UITableViewController {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        Logger.sendScreenView(self)
         observeStreamList()
     }
 
@@ -84,11 +85,14 @@ class CategoryTableViewController: UITableViewController {
     }
 
     func newCategory() {
+        Logger.sendUIActionEvent(self, action: "newCategory", label: "")
         let ac = UIAlertController(title: "New Category".localize(), message: nil, preferredStyle: UIAlertControllerStyle.Alert)
         ac.addAction(UIAlertAction(title: "Cancel".localize(), style: UIAlertActionStyle.Cancel, handler: { (action) -> Void in
+            Logger.sendUIActionEvent(self, action: "Cancel", label: "")
         }))
         ac.addAction(UIAlertAction(title: "OK".localize(), style: UIAlertActionStyle.Default, handler: { (action) -> Void in
             if let textField = ac.textFields?.first as? UITextField {
+                Logger.sendUIActionEvent(self, action: "OK", label: "")
                 if let category = self.streamListLoader.createCategory(textField.text) {
                     self.subscribeTo(category)
                 }
@@ -159,6 +163,7 @@ class CategoryTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        Logger.sendUIActionEvent(self, action: "didSelectRowAtIndexPath", label: String(indexPath.row))
         subscribeTo(categories[indexPath.item])
     }
 }

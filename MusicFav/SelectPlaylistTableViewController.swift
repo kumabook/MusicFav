@@ -25,6 +25,7 @@ class SelectPlaylistTableViewController: UITableViewController {
     }
 
     override func viewWillAppear(animated: Bool) {
+        Logger.sendScreenView(self)
         updateNavbar()
     }
 

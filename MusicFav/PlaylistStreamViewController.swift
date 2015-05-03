@@ -66,6 +66,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        Logger.sendScreenView(self)
         let streamPageMenu: StreamPageMenuController? = appDelegate.miniPlayerViewController?.streamPageMenuController
         if let other = streamPageMenu?.entryStreamViewController {
             if other.tableView != nil {
@@ -213,6 +214,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let entry = streamLoader.entries[indexPath.row]
         if let playlist = streamLoader.playlistsOfEntry[entry] {
+            Logger.sendUIActionEvent(self, action: "didSelectRowAtIndexPath", label: String(indexPath.row))
             showPlaylist(playlist)
         }
     }

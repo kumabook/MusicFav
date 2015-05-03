@@ -141,14 +141,17 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
     // MARK: - MiniPlayerViewDelegate -
     
     func miniPlayerViewPlayButtonTouched() {
+        Logger.sendUIActionEvent(self, action: "miniPlayerViewPlayButtonTouched", label: "")
         player?.toggle()
     }
     
     func miniPlayerViewPreviousButtonTouched() {
+        Logger.sendUIActionEvent(self, action: "miniPlayerViewPreviousButtonTouched", label: "")
         player?.previous()
     }
     
     func miniPlayerViewNextButtonTouched() {
+        Logger.sendUIActionEvent(self, action: "miniPlayerViewNextButtonTouched", label: "")
         player?.next()
     }
 }

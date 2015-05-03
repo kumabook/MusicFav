@@ -84,6 +84,7 @@ class EntryStreamViewController: UITableViewController {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        Logger.sendScreenView(self)
         let streamPageMenu: StreamPageMenuController? = appDelegate.miniPlayerViewController?.streamPageMenuController
         if let other = streamPageMenu?.playlistStreamViewController {
             if other.tableView != nil {
@@ -240,6 +241,7 @@ class EntryStreamViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let entry = streamLoader.entries[indexPath.item]
         if let nav = parentViewController?.parentViewController?.navigationController {
+            Logger.sendUIActionEvent(self, action: "didSelectRowAtIndexPath", label: String(indexPath.item))
             let vc = EntryWebViewController(entry: entry, playlist: streamLoader.playlistsOfEntry[entry])
             appDelegate.selectedPlaylist = vc.playlist
             appDelegate.miniPlayerViewController?.playlistTableViewController.updateNavbar()

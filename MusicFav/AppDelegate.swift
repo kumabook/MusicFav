@@ -90,6 +90,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         TrackStore.migration()
         if let path = mainBundle.pathForResource("google_analytics", ofType: "json") {
             GAIConfig.setup(path)
+            Logger.info("google analytics enabled")
         }
         setupAudioSession(application)
         setupAPIClient()
@@ -106,6 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillResignActive(application: UIApplication) {
+        Logger.sendEndSession()
         playerViewController?.disablePlayerView()
     }
 
@@ -116,7 +118,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         playerViewController?.enablePlayerView()
     }
 
-    func applicationDidBecomeActive(application: UIApplication) {}
+    func applicationDidBecomeActive(application: UIApplication) {
+        Logger.sendStartSession()
+    }
 
     func applicationWillTerminate(application: UIApplication) {}
 
