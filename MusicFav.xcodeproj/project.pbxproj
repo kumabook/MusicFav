@@ -59,6 +59,7 @@
 		673DCC9D1AF53AFB0043E51D /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 673DCC881AF530FF0043E51D /* libz.dylib */; };
 		673DCC9E1AF53B010043E51D /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 673DCC8C1AF531210043E51D /* libsqlite3.dylib */; };
 		673DCCA01AF53B860043E51D /* google_analytics.json in Resources */ = {isa = PBXBuildFile; fileRef = 673DCC9F1AF53B860043E51D /* google_analytics.json */; };
+		673DCCA21AF54BC90043E51D /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673DCCA11AF54BC90043E51D /* Logger.swift */; };
 		6747CEB41AA3204900A6A16B /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6747CEB31AA3204900A6A16B /* Player.swift */; };
 		67554F091A4F127400F7AE72 /* TrackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */; };
 		67554F0A1A4F127400F7AE72 /* TrackTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */; };
@@ -240,6 +241,7 @@
 		673DCC8A1AF531090043E51D /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 		673DCC8C1AF531210043E51D /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
 		673DCC9F1AF53B860043E51D /* google_analytics.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = google_analytics.json; path = Fixtures/google_analytics.json; sourceTree = "<group>"; };
+		673DCCA11AF54BC90043E51D /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		6747CEB31AA3204900A6A16B /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
 		67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewCell.swift; sourceTree = "<group>"; };
 		67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrackTableViewCell.xib; sourceTree = "<group>"; };
@@ -373,6 +375,7 @@
 				67BE4F361AE7D95800E40E98 /* DeviceType.swift */,
 				67E5DEE21AEC4CEA000E016F /* FabricConfig.swift */,
 				67CC02391AF328EE005F5F3F /* GAIConfig.swift */,
+				673DCCA11AF54BC90043E51D /* Logger.swift */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -1027,6 +1030,7 @@
 				67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */,
 				67277CE01A46F4BC002FD3E0 /* MenuTableViewController.swift in Sources */,
 				67DA46561A86103B0048B29C /* PlaylistStore.swift in Sources */,
+				673DCCA21AF54BC90043E51D /* Logger.swift in Sources */,
 				6731BC9E1AD82321004F488D /* UIAlertControllerExtension.swift in Sources */,
 				67D935981AA369C40061C1A0 /* PlayerViewController.swift in Sources */,
 				67F9A2951AD0558C0078EC3C /* PlaylistStreamTableViewCell.swift in Sources */,
