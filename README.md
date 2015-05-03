@@ -12,9 +12,16 @@ but is available via TestFlight Beta Testing.
 - Use xcode 6.3
 - Install [Carthage][] and [CocoaPods][]
 - Install dependencies with below:
+
   ```shell
   carthage bootstrap --use-submodule
   pod install
+  ```
+- Download [Google analytics iOS SDK][] as submobule
+
+  ```shell
+  git submodule init
+  git submodule update
   ```
 - Edit config files for third party api
     - MusicFav/feedly.json
@@ -25,9 +32,10 @@ but is available via TestFlight Beta Testing.
       - Put your [Fabric][] api key and build secret
 - Open and build MusicFav.xcworkspace with xcode
 
-[Carthage]:                https://github.com/Carthage/Carthage
-[CocoaPods]:               https://cocoapods.org/
-[Feedly Cloud API]:        https://developer.feedly.com/
-[SoundCloud API]:          https://developers.soundcloud.com/
-[Fabric]:                  https://get.fabric.io/
-[TestFlight Beta Testing]: http://musicfav.github.io//flight/
+[Carthage]:                 https://github.com/Carthage/Carthage
+[CocoaPods]:                https://cocoapods.org/
+[Feedly Cloud API]:         https://developer.feedly.com/
+[SoundCloud API]:           https://developers.soundcloud.com/
+[Fabric]:                   https://get.fabric.io/
+[TestFlight Beta Testing]:  http://musicfav.github.io//flight/
+[Google analytics iOS SDK]: https://developers.google.com/analytics/devguides/collection/ios/resources
