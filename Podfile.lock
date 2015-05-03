@@ -20,7 +20,7 @@ PODS:
   - AFNetworking/UIKit (2.5.3):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - EAIntroView (2.7.0):
+  - EAIntroView (2.7.3):
     - EARestrictedScrollView (~> 0.1.0)
   - EARestrictedScrollView (0.1.0)
   - Fabric (1.2.3):
@@ -65,7 +65,7 @@ EXTERNAL SOURCES:
 
 CHECKOUT OPTIONS:
   PageMenu:
-    :commit: db40f6a277d827fb34d3119faf39c19c65eab599
+    :commit: 28228b5fea5dadad11fd4fd123c06d56b6714afd
     :git: https://github.com/uacaps/PageMenu
   RATreeView:
     :commit: 568138a2d96bbadc028aad394bbdca9a2f5ff072
@@ -73,7 +73,7 @@ CHECKOUT OPTIONS:
 
 SPEC CHECKSUMS:
   AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
-  EAIntroView: 9becdb1441712405346a3e6bc31b0d9a57b63b10
+  EAIntroView: bedde44388280d71c9798ce36c82720901596355
   EARestrictedScrollView: 5ab3eadd9ea55282cc72df0daecb09803059e3a0
   Fabric: 8a5b89c2131962830d92bbc88d482e80665846b2
   InAppSettingsKit: 90b3f9b99d857f95fd1422467d857de143cac099

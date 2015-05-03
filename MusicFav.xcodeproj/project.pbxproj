@@ -31,7 +31,6 @@
 		6727EDFE1A5AC1DE003C6A47 /* MiniPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6727EDFC1A5AC1DE003C6A47 /* MiniPlayerViewController.swift */; };
 		6727EDFF1A5AC1DE003C6A47 /* MiniPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6727EDFD1A5AC1DE003C6A47 /* MiniPlayerViewController.xib */; };
 		6728FA391A60580A00F693B3 /* PreferenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6728FA371A60580A00F693B3 /* PreferenceViewController.swift */; };
-		6728FA3A1A60580A00F693B3 /* PreferenceViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6728FA381A60580A00F693B3 /* PreferenceViewController.xib */; };
 		6728FA3E1A60B9FD00F693B3 /* TrackTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6728FA3D1A60B9FD00F693B3 /* TrackTableViewController.swift */; };
 		6731BC9E1AD82321004F488D /* UIAlertControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6731BC9D1AD82321004F488D /* UIAlertControllerExtension.swift */; };
 		6731BCA01AD8F069004F488D /* JASidePanelControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6731BC9F1AD8F069004F488D /* JASidePanelControllerExtension.swift */; };
@@ -219,7 +218,6 @@
 		6727EDFC1A5AC1DE003C6A47 /* MiniPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerViewController.swift; sourceTree = "<group>"; };
 		6727EDFD1A5AC1DE003C6A47 /* MiniPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MiniPlayerViewController.xib; sourceTree = "<group>"; };
 		6728FA371A60580A00F693B3 /* PreferenceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferenceViewController.swift; sourceTree = "<group>"; };
-		6728FA381A60580A00F693B3 /* PreferenceViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PreferenceViewController.xib; sourceTree = "<group>"; };
 		6728FA3D1A60B9FD00F693B3 /* TrackTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewController.swift; sourceTree = "<group>"; };
 		6731BC9D1AD82321004F488D /* UIAlertControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExtension.swift; sourceTree = "<group>"; };
 		6731BC9F1AD8F069004F488D /* JASidePanelControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JASidePanelControllerExtension.swift; sourceTree = "<group>"; };
@@ -548,7 +546,6 @@
 				67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */,
 				67277CDF1A46F4BC002FD3E0 /* MenuTableViewController.swift */,
 				6728FA371A60580A00F693B3 /* PreferenceViewController.swift */,
-				6728FA381A60580A00F693B3 /* PreferenceViewController.xib */,
 				6701D4A71A93A3D5006BFEC6 /* CategoryTableViewController.swift */,
 			);
 			name = Left;
@@ -792,7 +789,6 @@
 			files = (
 				6709D8AB1ADA4E860003F469 /* Settings.bundle in Resources */,
 				67CB43F01A4ECD470010465E /* playlistify-userscript.js in Resources */,
-				6728FA3A1A60580A00F693B3 /* PreferenceViewController.xib in Resources */,
 				675AB33B1AD3D80A0003824C /* feedly.json in Resources */,
 				6794E7ED1AE256300054B3DB /* Tutorial.strings in Resources */,
 				67277CBB1A434304002FD3E0 /* LaunchScreen.xib in Resources */,

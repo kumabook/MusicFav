@@ -38,6 +38,15 @@ class PreferenceViewController: UITableViewController {
         }
     }
     
+
+    init() {
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init(coder aDecoder: NSCoder!) {
+        super.init(coder: aDecoder)
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Close".localize(),
