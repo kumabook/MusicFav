@@ -21,12 +21,12 @@ class FeedbackWebViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        navigationItem.title = "Feedback".localize()
+        navigationItem.title = "Send Feedback".localize()
         navigationItem.backBarButtonItem?.title = ""
         webView = UIWebView(frame: view.frame)
         view.addSubview(webView)
         let mainBundle = NSBundle.mainBundle()
-        if let file = mainBundle.pathForResource("feedback", ofType:"html"), let data = NSData(contentsOfFile: file) {
+        if let file = mainBundle.pathForResource("feedback_en".localize(), ofType:"html"), let data = NSData(contentsOfFile: file) {
             webView.loadData(data, MIMEType: "text/html", textEncodingName: "UTF-8", baseURL: NSURL(fileURLWithPath: file)!)
         }
     }
