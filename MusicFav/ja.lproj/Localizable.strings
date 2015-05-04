@@ -31,13 +31,15 @@
 "subscribers"   = "人が購読";
 "Notice"        = "お知らせ";
 "Tutorial"      = "チュートリアル";
-"Settings"      = "設定";
-
+"Preferences"   = "設定";
+"Send Feedback" = "フィードバック";
+"About"         = "MusicFavについて";
 "All"           = "すべて";
 "Uncategorized" = "未分類";
 "Read"          = "既読";
 "Saved"         = "お気に入り";
 
+"Please Rate MusicFav"              = "MusicFavを評価";
 "Network error"                     = "通信エラー";
 "Import Feed"                       = "フィードをインポート";
 "Select Category"                   = "カテゴリを選択";

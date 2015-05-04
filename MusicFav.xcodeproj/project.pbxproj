@@ -32,6 +32,8 @@
 		6727EDFF1A5AC1DE003C6A47 /* MiniPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6727EDFD1A5AC1DE003C6A47 /* MiniPlayerViewController.xib */; };
 		6728FA391A60580A00F693B3 /* PreferenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6728FA371A60580A00F693B3 /* PreferenceViewController.swift */; };
 		6728FA3E1A60B9FD00F693B3 /* TrackTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6728FA3D1A60B9FD00F693B3 /* TrackTableViewController.swift */; };
+		67311E2E1AF61BAC00711DAC /* feedback.html in Resources */ = {isa = PBXBuildFile; fileRef = 67311E2D1AF61BAC00711DAC /* feedback.html */; };
+		67311E301AF63BD500711DAC /* FeedbackWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67311E2F1AF63BD500711DAC /* FeedbackWebViewController.swift */; };
 		6731BC9E1AD82321004F488D /* UIAlertControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6731BC9D1AD82321004F488D /* UIAlertControllerExtension.swift */; };
 		6731BCA01AD8F069004F488D /* JASidePanelControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6731BC9F1AD8F069004F488D /* JASidePanelControllerExtension.swift */; };
 		673A98BD1AE7C0A10071E413 /* DummyStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673A98BC1AE7C0A10071E413 /* DummyStream.swift */; };
@@ -219,6 +221,8 @@
 		6727EDFD1A5AC1DE003C6A47 /* MiniPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MiniPlayerViewController.xib; sourceTree = "<group>"; };
 		6728FA371A60580A00F693B3 /* PreferenceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferenceViewController.swift; sourceTree = "<group>"; };
 		6728FA3D1A60B9FD00F693B3 /* TrackTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewController.swift; sourceTree = "<group>"; };
+		67311E2D1AF61BAC00711DAC /* feedback.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = feedback.html; sourceTree = "<group>"; };
+		67311E2F1AF63BD500711DAC /* FeedbackWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackWebViewController.swift; sourceTree = "<group>"; };
 		6731BC9D1AD82321004F488D /* UIAlertControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExtension.swift; sourceTree = "<group>"; };
 		6731BC9F1AD8F069004F488D /* JASidePanelControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JASidePanelControllerExtension.swift; sourceTree = "<group>"; };
 		673A98BC1AE7C0A10071E413 /* DummyStream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DummyStream.swift; sourceTree = "<group>"; };
@@ -433,6 +437,7 @@
 		67277CAB1A434304002FD3E0 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				67311E2D1AF61BAC00711DAC /* feedback.html */,
 				675AB3501AD4334D0003824C /* Localizable.strings */,
 				6794E7EF1AE256300054B3DB /* Tutorial.strings */,
 				67277CAC1A434304002FD3E0 /* Info.plist */,
@@ -547,6 +552,7 @@
 				67277CDF1A46F4BC002FD3E0 /* MenuTableViewController.swift */,
 				6728FA371A60580A00F693B3 /* PreferenceViewController.swift */,
 				6701D4A71A93A3D5006BFEC6 /* CategoryTableViewController.swift */,
+				67311E2F1AF63BD500711DAC /* FeedbackWebViewController.swift */,
 			);
 			name = Left;
 			sourceTree = "<group>";
@@ -805,6 +811,7 @@
 				6727EDFF1A5AC1DE003C6A47 /* MiniPlayerViewController.xib in Resources */,
 				675AB3521AD4334D0003824C /* Localizable.strings in Resources */,
 				67CB43F21A4ED6D50010465E /* main.js in Resources */,
+				67311E2E1AF61BAC00711DAC /* feedback.html in Resources */,
 				67E5DEEB1AEC5EA5000E016F /* fabric.json in Resources */,
 				67DA46601A8656A90048B29C /* PlaylistTableViewCell.xib in Resources */,
 			);
@@ -975,6 +982,7 @@
 				67277CDE1A46DF98002FD3E0 /* FeedlyAPIClient.swift in Sources */,
 				671664261A738DC5005FE005 /* Playlist.swift in Sources */,
 				67554F091A4F127400F7AE72 /* TrackTableViewCell.swift in Sources */,
+				67311E301AF63BD500711DAC /* FeedbackWebViewController.swift in Sources */,
 				67CC023A1AF328EE005F5F3F /* GAIConfig.swift in Sources */,
 				67DA46651A87B49C0048B29C /* SelectPlaylistTableViewCell.swift in Sources */,
 				67277CE31A46F844002FD3E0 /* EntryStreamViewController.swift in Sources */,
