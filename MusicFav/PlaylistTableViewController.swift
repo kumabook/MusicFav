@@ -82,6 +82,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
                                                 style: UIBarButtonItemStyle.Plain,
                                                target: self,
                                                action: "newPlaylist")
+        newPlaylistButton.accessibilityLabel = AccessibilityLabel.NewPlaylistButton.s
         navigationItem.rightBarButtonItems = [newPlaylistButton]
     }
 
@@ -174,6 +175,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
                         otherButtonTitles: "OK".localize())
         alertView.alertViewStyle = UIAlertViewStyle.PlainTextInput
         alertView.tag = index
+        alertView.textFieldAtIndex(0)?.accessibilityLabel = AccessibilityLabel.PlaylistName.s
         if index >= 0 { alertView.textFieldAtIndex(0)?.text = playlists[index].title }
         else          { alertView.textFieldAtIndex(0)?.text = "" }
         alertView.show()

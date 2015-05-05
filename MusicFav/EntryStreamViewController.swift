@@ -50,6 +50,7 @@ class EntryStreamViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.accessibilityIdentifier = AccessibilityLabel.EntryStreamTableView.s
         let nib = UINib(nibName: "EntryStreamTableViewCell", bundle: nil)
         tableView.registerNib(nib, forCellReuseIdentifier: entryStreamTableCellReuseIdentifier)
 

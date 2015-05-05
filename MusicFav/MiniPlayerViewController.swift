@@ -64,6 +64,7 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
         addChildViewController(mainViewController)
         mainViewController.view.frame = mainViewContainer.bounds
         mainViewController.didMoveToParentViewController(self)
+        mainViewController.leftButtonForCenterPanel().accessibilityIdentifier = AccessibilityLabel.MenuButton.s
         miniPlayerView.delegate = self
         mainViewContainer.addSubview(mainViewController.view)
         view.bringSubviewToFront(miniPlayerView)

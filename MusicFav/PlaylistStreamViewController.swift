@@ -41,6 +41,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.accessibilityIdentifier = AccessibilityLabel.PlaylistStreamTableView.s
         let nib = UINib(nibName: "PlaylistStreamTableViewCell", bundle: nil)
         tableView.registerNib(nib, forCellReuseIdentifier: playlistStreamTableCellReuseIdentifier)
         clearsSelectionOnViewWillAppear = true

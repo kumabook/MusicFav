@@ -22,7 +22,7 @@ class StreamPageMenuController: UIViewController {
         self.streamLoader = StreamLoader(stream: stream)
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init(coder aDecoder: NSCoder) {
         self.stream       = DummyStream()
         self.streamLoader = StreamLoader(stream: stream)
@@ -41,6 +41,7 @@ class StreamPageMenuController: UIViewController {
             style: UIBarButtonItemStyle.Plain,
             target: self,
             action: "showPlaylist")
+        navigationItem.rightBarButtonItem!.accessibilityLabel = AccessibilityLabel.PlaylistMenuButton.s
         navigationItem.title = stream.streamTitle
 
         let entryStream      = EntryStreamViewController(streamLoader: streamLoader)
@@ -64,6 +65,8 @@ class StreamPageMenuController: UIViewController {
         pageMenu = CAPSPageMenu(viewControllers: controllerArray,
                                           frame: view.frame,
                                         options: parameters)
+        pageMenu.view.accessibilityLabel = AccessibilityLabel.StreamPageMenu.s
+        self.view.addSubview(pageMenu.view)
         addChildViewController(pageMenu)
         view.addSubview(pageMenu.view)
         pageMenu.didMoveToParentViewController(self)
