@@ -16,10 +16,10 @@
 "playlist_page_desc"  = "・記事から自動でプレイリストを作成\n・お気に入りの曲からプレイリスト作成も可能";
 
 "player_page_title"   = "記事を見ながら または全画面で";
-"player_page_desc"    = "・タップまたはドラッグミニプレーヤ・フルスクリーンプレーヤを切り替え.\n・バックグラウンド再生・Air-playに対応";
+"player_page_desc"    = "・タップまたはドラッグミニプレーヤ・フルスクリーンプレーヤを切り替え\n・バックグラウンド再生・Air-playに対応";
 
 "menu_page_title"     = "Feedly アカウントでの同期";
-"menu_page_desc"      = "・Feedly経由フィードの購読\n・フィード登録・削除可能 \n・検索機能でブログを簡単に探す";
+"menu_page_desc"      = "・Feedly経由フィードの購読\n・フィード登録・削除可能 \n・検索機能でブログを簡単に検索";
 
 "last_page_title"     = "Enjoy MusicFav!";
 "last_page_desc"      = "※設定メニューからも\nログインできます。";
