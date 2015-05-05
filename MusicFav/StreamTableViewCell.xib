@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14E7f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7702" systemVersion="14E11f" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
@@ -49,7 +49,7 @@
                     <constraint firstItem="Lqf-1G-0aL" firstAttribute="leading" secondItem="L0g-x2-fpA" secondAttribute="trailing" constant="10" id="JrE-cy-bM4"/>
                     <constraint firstItem="Dyg-Ad-6be" firstAttribute="leading" secondItem="L0g-x2-fpA" secondAttribute="trailing" constant="10" id="M72-RH-JGP"/>
                     <constraint firstAttribute="bottomMargin" secondItem="Dyg-Ad-6be" secondAttribute="bottom" constant="16" id="NIB-Wl-dyB"/>
-                    <constraint firstItem="Dyg-Ad-6be" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="Xdh-tL-Szw"/>
+                    <constraint firstItem="Dyg-Ad-6be" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="Xdh-tL-Szw"/>
                     <constraint firstItem="L0g-x2-fpA" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="-10" id="cUx-6L-IgU"/>
                     <constraint firstAttribute="bottomMargin" secondItem="Lqf-1G-0aL" secondAttribute="bottom" constant="-4" id="fVb-De-f5M"/>
                     <constraint firstItem="Lqf-1G-0aL" firstAttribute="trailing" secondItem="H2p-sc-9uM" secondAttribute="trailingMargin" id="fvl-BN-1mD"/>
