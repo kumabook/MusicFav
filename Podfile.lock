@@ -29,6 +29,9 @@ PODS:
   - Fabric/Crashlytics (1.2.3)
   - InAppSettingsKit (2.5.2)
   - JASidePanels (1.3.2)
+  - KIF (3.2.1):
+    - KIF/XCTest (= 3.2.1)
+  - KIF/XCTest (3.2.1)
   - MarqueeLabel (2.2.3)
   - MBProgressHUD (0.9.1)
   - MCSwipeTableViewCell (2.1.2)
@@ -47,6 +50,7 @@ DEPENDENCIES:
   - Fabric/Crashlytics (~> 1.2)
   - InAppSettingsKit (~> 2.1)
   - JASidePanels (>= 1.3)
+  - KIF
   - MarqueeLabel
   - MBProgressHUD (>= 0.8)
   - MCSwipeTableViewCell (>= 2.1.0)
@@ -78,6 +82,7 @@ SPEC CHECKSUMS:
   Fabric: 8a5b89c2131962830d92bbc88d482e80665846b2
   InAppSettingsKit: 90b3f9b99d857f95fd1422467d857de143cac099
   JASidePanels: c8f5b130e18d51ee3de988d1c1fad2f88e0b0d21
+  KIF: ef1691e54e1d969c3b4fd0b5b56a3d7ddf37f216
   MarqueeLabel: f03d12e3a1572893f78ecb22aa5dd774099c7208
   MBProgressHUD: c47f2c166c126cf2ce36498d80f33e754d4e93ad
   MCSwipeTableViewCell: 0fc22bd3635b9b5f4ce08675218b0a7278b6440f
@@ -87,4 +92,4 @@ SPEC CHECKSUMS:
   SDWebImage: 71b7cdc1d1721d6a82ed62889030225f2c249e29
   Snap: 7318f07bc3d43adb0706f36ede18fa18d2347037
 
-COCOAPODS: 0.37.0.rc.2
+COCOAPODS: 0.37.0

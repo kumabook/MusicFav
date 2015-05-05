@@ -16,3 +16,6 @@ pod 'Fabric/Crashlytics',   '~> 1.2'
 pod 'MarqueeLabel'
 pod 'RATreeView',           :git => 'https://github.com/kumabook/RATreeView.git',
                             :branch => 'pull_to_refresh'
+target 'AcceptanceTests', :exclusive => true do
+  pod 'KIF', :configurations => ['Debug']
+end
