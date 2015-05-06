@@ -1,6 +1,6 @@
 platform :ios, '8.0'
 use_frameworks!
-link_with 'MusicFav', 'UnitTests'
+
 pod 'NXOAuth2Client',       '>= 1.2.2'
 pod 'AFNetworking',         '>= 2.0'
 pod 'JASidePanels',         '>= 1.3'
