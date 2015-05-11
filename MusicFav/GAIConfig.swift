@@ -33,7 +33,11 @@ public class GAIConfig {
         let json                    = JSON(jsonObject!)
         
         if let trackerId = json["tracker_id"].string {
-            gai.trackerWithTrackingId(trackerId)
+            if trackerId.rangeOfString("UA-", options: NSStringCompareOptions.allZeros, range: nil, locale: NSLocale.autoupdatingCurrentLocale()) == nil {
+                return
+            } else {
+                gai.trackerWithTrackingId(trackerId)
+            }
         }
 
         gai.trackUncaughtExceptions = true;

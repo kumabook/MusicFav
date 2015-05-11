@@ -90,7 +90,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         TrackStore.migration()
         if let path = mainBundle.pathForResource("google_analytics", ofType: "json") {
             GAIConfig.setup(path)
-            Logger.info("google analytics enabled")
         }
         setupAudioSession(application)
         setupAPIClient()
