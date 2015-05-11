@@ -211,13 +211,20 @@ class EntryStreamViewController: UITableViewController {
         cell.prepareSwipeViews(markAs, onSwipe: { (cell) -> Void in
             if _self == nil { return }
             let __self = _self!
-            switch markAs {
-            case .Read:
-                __self.markAsRead(__self.tableView.indexPathForCell(cell)!)
-            case .Unread:
-                __self.markAsUnread(__self.tableView.indexPathForCell(cell)!)
-            case .Unsave:
-                __self.markAsUnsaved(__self.tableView.indexPathForCell(cell)!)
+            if !__self.feedlyClient.isLoggedIn {
+                let title   = "Notice".localize()
+                let message = "You can mark article as read after login.".localize() + "Please login from the menu of the top of left panel.".localize()
+                UIAlertController.show(self, title: title, message: message, handler: { (action) in })
+                cell.swipeToOriginWithCompletion({})
+            } else {
+                switch markAs {
+                case .Read:
+                    __self.markAsRead(__self.tableView.indexPathForCell(cell)!)
+                case .Unread:
+                    __self.markAsUnread(__self.tableView.indexPathForCell(cell)!)
+                case .Unsave:
+                    __self.markAsUnsaved(__self.tableView.indexPathForCell(cell)!)
+                }
             }
         })
         cell.titleLabel?.text = entry.title

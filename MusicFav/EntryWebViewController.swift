@@ -187,7 +187,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
             })
         } else {
             let title   = "Notice".localize()
-            let message = "You can mark article as saved after login. Please login from left top setting menu.".localize()
+            let message = "You can mark article as saved after login.".localize() +  "Please login from the menu of the top of left panel.".localize()
             UIAlertController.show(self, title: title, message: message, handler: { (action) in })
         }
     }

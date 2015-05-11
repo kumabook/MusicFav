@@ -51,5 +51,6 @@
 "Are you sure you want to logout?"  = "ログアウトしてよろしいですか？";
 "Sorry, network error occured."     = "通信状況が良くありません。";
 
-
-"You can mark article as saved after login. Please login from left top setting menu." = "ログインすると、記事の保存ができます。右上のメニューからログインしてください。";
+"You can mark article as read after login."  = "ログインすると記事の既読・未読の管理ができます。";
+"You can mark article as saved after login." = "ログインすると記事の保存ができます。";
+"Please login from the menu of the top of left panel."   = "左パネル上部のメニューからログインできます。";
