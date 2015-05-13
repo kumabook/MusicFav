@@ -73,7 +73,11 @@ class PreferenceViewController: UITableViewController {
         }
         var detail: String {
             if let components = FeedlyAPI.notificationDateComponents {
-                return String(format: "%02d:%02d", components.hour, components.minute)
+                if components.hour <= 11 {
+                    return String(format: "%02d:%02d AM", components.hour, components.minute)
+                } else {
+                    return String(format: "%02d:%02d PM", components.hour - 12, components.minute)
+                }
             }
             return "No notification".localize()
         }
