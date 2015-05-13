@@ -85,28 +85,6 @@ struct FeedlyAPI {
         }
     }
 
-    static var nextNotificationDate: NSDate? {
-        if let time = notificationTime {
-            let calendar = NSCalendar.currentCalendar()
-            var components = calendar.components(NSCalendarUnit.CalendarUnitYear  |
-                                                 NSCalendarUnit.CalendarUnitMonth |
-                                                 NSCalendarUnit.CalendarUnitDay   |
-                                                 NSCalendarUnit.CalendarUnitHour  |
-                                                 NSCalendarUnit.CalendarUnitMinute, fromDate: NSDate())
-            components.hour   = time.hour
-            components.minute = time.minute
-            components.second = 0
-            if let date = calendar.dateFromComponents(components) {
-                if date.timeIntervalSinceNow > 0 {
-                    return date
-                }
-                components.day = components.day + 1
-                return calendar.dateFromComponents(components)
-            }
-        }
-        return nil
-    }
-
     static var lastChecked: NSDate? {
         get {
             if let time = _lastChecked {

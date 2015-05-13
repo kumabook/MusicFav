@@ -20,9 +20,15 @@ class UpdateChecker {
             newerThan = NSDate().yesterDay
         }
     }
+    var nextNotificationDate: NSDate? {
+        if let time = FeedlyAPI.notificationTime {
+            return NSDate.nextDateFromComponents(time)
+        }
+        return nil
+    }
     func check(application: UIApplication, completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
         let apiClient = CloudAPIClient.sharedInstance
-        if apiClient.isLoggedIn, let fireDate = FeedlyAPI.nextNotificationDate {
+        if apiClient.isLoggedIn, let fireDate = nextNotificationDate {
             fetchNewTracks().start(
                 next: { tracks in
                     UIScheduler().schedule {
