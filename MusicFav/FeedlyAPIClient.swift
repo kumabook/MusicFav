@@ -24,10 +24,10 @@ struct FeedlyAPI {
     static let redirectUrl  = "http://localhost"
     static let scopeUrl     = "https://cloud.feedly.com/subscriptions"
     private static let userDefaults = NSUserDefaults.standardUserDefaults()
-    private static var _account:          NXOAuth2Account?
-    private static var _profile:          Profile?
-    private static var _notificationTime: NSDateComponents?
-    private static var _lastChecked:      NSDate?
+    private static var _account:                    NXOAuth2Account?
+    private static var _profile:                    Profile?
+    private static var _notificationDateComponents: NSDateComponents?
+    private static var _lastChecked:                NSDate?
     static var profile: Profile? {
         get {
             if let p = _profile {
@@ -65,23 +65,23 @@ struct FeedlyAPI {
         }
     }
 
-    static var notificationTime: NSDateComponents? {
+    static var notificationDateComponents: NSDateComponents? {
         get {
-            if let time = _notificationTime {
-                return time
+            if let components = _notificationDateComponents {
+                return components
             }
-            if let data: NSData = userDefaults.objectForKey("notification_time") as? NSData {
+            if let data: NSData = userDefaults.objectForKey("notification_date_components") as? NSData {
                 return NSKeyedUnarchiver.unarchiveObjectWithData(data) as? NSDateComponents
             }
             return nil
         }
-        set(notificationTime) {
-            if let time = notificationTime {
-                userDefaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(time), forKey: "notification_time")
+        set(notificationDateComponents) {
+            if let components = notificationDateComponents {
+                userDefaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(components), forKey: "notification_date_components")
             } else {
-                userDefaults.removeObjectForKey("notification_time")
+                userDefaults.removeObjectForKey("notification_date_components")
             }
-            _notificationTime = notificationTime
+            _notificationDateComponents = notificationDateComponents
         }
     }
 

@@ -72,8 +72,8 @@ class PreferenceViewController: UITableViewController {
             return "Notification of new arrivals".localize()
         }
         var detail: String {
-            if let time = FeedlyAPI.notificationTime {
-                return String(format: "%02d:%02d", time.hour, time.minute)
+            if let components = FeedlyAPI.notificationDateComponents {
+                return String(format: "%02d:%02d", components.hour, components.minute)
             }
             return "No notification".localize()
         }
@@ -223,18 +223,18 @@ class PreferenceViewController: UITableViewController {
             var dateSelectionVC = RMDateSelectionViewController.dateSelectionController()
             dateSelectionVC.selectButtonAction = { (controller, date) in
                 let calendar = NSCalendar.currentCalendar()
-                FeedlyAPI.notificationTime = calendar.components(NSCalendarUnit.CalendarUnitHour|NSCalendarUnit.CalendarUnitMinute, fromDate: date)
+                FeedlyAPI.notificationDateComponents = calendar.components(NSCalendarUnit.CalendarUnitHour|NSCalendarUnit.CalendarUnitMinute, fromDate: date)
                 tableView.reloadData()
                 UpdateChecker().check(UIApplication.sharedApplication(), completionHandler: nil)
             }
             dateSelectionVC.cancelButtonAction = { controller in }
             dateSelectionVC.nowButtonAction = { controller in
-                FeedlyAPI.notificationTime = nil
+                FeedlyAPI.notificationDateComponents = nil
                 self.tableView.reloadData()
                 dateSelectionVC.dismissViewControllerAnimated(true, completion: {})
                 UpdateChecker().check(UIApplication.sharedApplication(), completionHandler: nil)
             }
-            if let time = FeedlyAPI.notificationTime {
+            if let time = FeedlyAPI.notificationDateComponents {
                 let calendar = NSCalendar.currentCalendar()
                 let date = calendar.dateWithEra(1, year: 2015, month: 5, day: 11,
                                                    hour: time.hour, minute: time.minute,

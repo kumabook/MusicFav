@@ -21,8 +21,8 @@ class UpdateChecker {
         }
     }
     var nextNotificationDate: NSDate? {
-        if let time = FeedlyAPI.notificationTime {
-            return NSDate.nextDateFromComponents(time)
+        if let components = FeedlyAPI.notificationDateComponents {
+            return NSDate.nextDateFromComponents(components)
         }
         return nil
     }

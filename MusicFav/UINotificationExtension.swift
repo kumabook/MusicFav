@@ -23,14 +23,13 @@ enum NotificationType: String {
 }
 
 extension UILocalNotification {
-    static var notificationTimeMinutesInterval: Int            { return 30 }
-    static var updateCheckInterval:             NSTimeInterval { return NSTimeInterval(60 * notificationTimeMinutesInterval * 2) }
+    static var notificationTimeMinutesInterval:   Int            { return 30 }
+    static var updateCheckInterval:               NSTimeInterval { return NSTimeInterval(60 * notificationTimeMinutesInterval * 2) }
     static func setup(application: UIApplication) {
         application.setMinimumBackgroundFetchInterval(UILocalNotification.updateCheckInterval)
         application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: .Badge, categories: nil))
         application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: .Alert, categories: nil))
         application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: .Sound, categories: nil))
-
     }
     static func buildNewTracksInfo(application: UIApplication, tracks: [Track]) -> [String] {
         let notifications = application.scheduledLocalNotifications as! [UILocalNotification]
