@@ -239,8 +239,8 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             playlist = playlists[indexPath.item]
             cell.titleLabel.text = playlists[indexPath.item].title
         }
-        if let p = playlist {
-            cell.thumbImageView.sd_setImageWithURL(p.thumbnailUrl)
+        if let p = playlist, thumbnailUrl = p.thumbnailUrl {
+            cell.thumbImageView.sd_setImageWithURL(thumbnailUrl)
             cell.trackNumLabel.text = "\(p.tracks.count) tracks"
         } else {
             cell.thumbImageView.image = UIImage(named: "default_thumb")
