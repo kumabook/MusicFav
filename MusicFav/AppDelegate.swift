@@ -102,6 +102,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
         if !didFinishTutorial { startTutorial() }
         reload()
+        UILocalNotification.setup(application)
         return true
     }
 
@@ -119,9 +120,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationDidBecomeActive(application: UIApplication) {
         Logger.sendStartSession()
+        application.applicationIconBadgeNumber = 0
     }
 
     func applicationWillTerminate(application: UIApplication) {}
+
+    func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+        UpdateChecker().check(application, completionHandler: completionHandler)
+    }
+
+    func application(application: UIApplication, didReceiveLocalNotification notification: UILocalNotification) {
+    }
 
     override func remoteControlReceivedWithEvent(event: UIEvent) {
         if event.type == UIEventType.RemoteControl {

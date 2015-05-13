@@ -57,3 +57,5 @@
 "You can mark article as read after login."  = "ログインすると記事の既読・未読の管理ができます。";
 "You can mark article as saved after login." = "ログインすると記事の保存ができます。";
 "Please login from the menu of the top of left panel."   = "左パネル上部のメニューからログインできます。";
+
+"New %d tracks are added." = "%dトラックが新しく追加されました。";

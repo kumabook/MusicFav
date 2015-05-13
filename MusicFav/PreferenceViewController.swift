@@ -240,7 +240,7 @@ class PreferenceViewController: UITableViewController {
                 dateSelectionVC.datePicker.date = date
             }
             dateSelectionVC.datePicker.datePickerMode = UIDatePickerMode.Time
-            dateSelectionVC.datePicker.minuteInterval = AppDelegate.notificationTimeMinutesInterval
+            dateSelectionVC.datePicker.minuteInterval = UILocalNotification.notificationTimeMinutesInterval
             presentViewController(dateSelectionVC, animated:true, completion:{})
         case .Feedback:
             switch FeedbackRow(rawValue: indexPath.row)! {
