@@ -14,6 +14,7 @@ pod 'PageMenu',             :git => 'https://github.com/uacaps/PageMenu'
 pod 'Fabric',               '~> 1.2'
 pod 'Fabric/Crashlytics',   '~> 1.2'
 pod 'MarqueeLabel'
+pod "RMDateSelectionViewController", "~> 1.5.1"
 pod 'RATreeView',           :git => 'https://github.com/kumabook/RATreeView.git',
                             :branch => 'pull_to_refresh'
 target 'AcceptanceTests', :exclusive => true do
