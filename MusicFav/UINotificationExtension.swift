@@ -25,6 +25,18 @@ enum NotificationType: String {
 extension UILocalNotification {
     static var notificationTimeMinutesInterval:   Int            { return 30 }
     static var updateCheckInterval:               NSTimeInterval { return NSTimeInterval(60 * notificationTimeMinutesInterval * 2) }
+    static var defaultNotificationDateComponents: NSDateComponents {
+        let calendar = NSCalendar.currentCalendar()
+        var components = calendar.components(NSCalendarUnit.CalendarUnitYear  |
+                                             NSCalendarUnit.CalendarUnitMonth |
+                                             NSCalendarUnit.CalendarUnitDay   |
+                                             NSCalendarUnit.CalendarUnitHour  |
+                                             NSCalendarUnit.CalendarUnitMinute, fromDate: NSDate())
+        components.hour   = 8
+        components.minute = 0
+        components.second = 0
+        return components
+    }
     static func setup(application: UIApplication) {
         application.setMinimumBackgroundFetchInterval(UILocalNotification.updateCheckInterval)
         application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: .Badge, categories: nil))

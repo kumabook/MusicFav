@@ -96,6 +96,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         registerNSUserDefaults()
         if isFirstLaunch {
             Playlist.createDefaultPlaylist()
+            FeedlyAPI.notificationDateComponents = UILocalNotification.defaultNotificationDateComponents
             markAsLaunched()
         }
         setupMainViewControllers()
