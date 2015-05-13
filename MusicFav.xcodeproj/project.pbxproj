@@ -476,7 +476,6 @@
 			children = (
 				6747CEB21AA31A7000A6A16B /* Player */,
 				6701D4A91A94F308006BFEC6 /* Util */,
-				67F7D4651A62458C00A5AE68 /* MusicFav.entitlements */,
 				67254C7D1A499FC70064E5DF /* UserScript */,
 				67277CD51A450CB3002FD3E0 /* Model */,
 				676629B51A85A43500F3FD33 /* Persistent */,
@@ -489,6 +488,7 @@
 				6794E7E91AE241AC0054B3DB /* tutorial.xcassets */,
 				67277CB91A434304002FD3E0 /* LaunchScreen.xib */,
 				67277CAF1A434304002FD3E0 /* MusicFav.xcdatamodeld */,
+				67F7D4651A62458C00A5AE68 /* MusicFav.entitlements */,
 				67277CAB1A434304002FD3E0 /* Supporting Files */,
 			);
 			path = MusicFav;
