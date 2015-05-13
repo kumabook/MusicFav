@@ -6,10 +6,9 @@
 //  Copyright (c) 2015 Hiroki Kumamoto. All rights reserved.
 //
 
-import ReactiveCocoa
 import SwiftyJSON
-import ReactiveCocoa
 import LlamaKit
+import ReactiveCocoa
 import AFNetworking
 
 class HypemAPIClient {
@@ -43,9 +42,12 @@ class HypemAPIClient {
             let url = String(format: "%@/get_all_blogs", self.baseUrl + self.apiRoot)
             manager.GET(url, parameters: [:],
                 success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
-                    let json = JSON(response)
-                    sink.put(.Next(Box(json.arrayValue.map({ Blog(json: $0) }))))
-                    sink.put(.Completed)
+                    QueueScheduler().schedule {
+                        let json = JSON(response)
+                        sink.put(.Next(Box(json.arrayValue.map({ Blog(json: $0) }))))
+                        sink.put(.Completed)
+                    }
+                    return
                 },
                 failure: { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
                     sink.put(.Error(Box(error)))
