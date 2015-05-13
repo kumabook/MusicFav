@@ -24,8 +24,10 @@ struct FeedlyAPI {
     static let redirectUrl  = "http://localhost"
     static let scopeUrl     = "https://cloud.feedly.com/subscriptions"
     private static let userDefaults = NSUserDefaults.standardUserDefaults()
-    private static var _account: NXOAuth2Account?
-    private static var _profile: Profile?
+    private static var _account:          NXOAuth2Account?
+    private static var _profile:          Profile?
+    private static var _notificationTime: NSDateComponents?
+    private static var _lastChecked:      NSDate?
     static var profile: Profile? {
         get {
             if let p = _profile {
@@ -60,6 +62,68 @@ struct FeedlyAPI {
                 }
             }
             return nil
+        }
+    }
+
+    static var notificationTime: NSDateComponents? {
+        get {
+            if let time = _notificationTime {
+                return time
+            }
+            if let data: NSData = userDefaults.objectForKey("notification_time") as? NSData {
+                return NSKeyedUnarchiver.unarchiveObjectWithData(data) as? NSDateComponents
+            }
+            return nil
+        }
+        set(notificationTime) {
+            if let time = notificationTime {
+                userDefaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(time), forKey: "notification_time")
+            } else {
+                userDefaults.removeObjectForKey("notification_time")
+            }
+            _notificationTime = notificationTime
+        }
+    }
+
+    static var nextNotificationDate: NSDate? {
+        if let time = notificationTime {
+            let calendar = NSCalendar.currentCalendar()
+            var components = calendar.components(NSCalendarUnit.CalendarUnitYear  |
+                                                 NSCalendarUnit.CalendarUnitMonth |
+                                                 NSCalendarUnit.CalendarUnitDay   |
+                                                 NSCalendarUnit.CalendarUnitHour  |
+                                                 NSCalendarUnit.CalendarUnitMinute, fromDate: NSDate())
+            components.hour   = time.hour
+            components.minute = time.minute
+            components.second = 0
+            if let date = calendar.dateFromComponents(components) {
+                if date.timeIntervalSinceNow > 0 {
+                    return date
+                }
+                components.day = components.day + 1
+                return calendar.dateFromComponents(components)
+            }
+        }
+        return nil
+    }
+
+    static var lastChecked: NSDate? {
+        get {
+            if let time = _lastChecked {
+                return time
+            }
+            if let data: NSData = userDefaults.objectForKey("last_checked") as? NSData {
+                return NSKeyedUnarchiver.unarchiveObjectWithData(data) as? NSDate
+            }
+            return nil
+        }
+        set(lastChecked) {
+            if let date = lastChecked {
+                userDefaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(date), forKey: "last_checked")
+            } else {
+                userDefaults.removeObjectForKey("last_checked")
+            }
+            _lastChecked = lastChecked
         }
     }
 

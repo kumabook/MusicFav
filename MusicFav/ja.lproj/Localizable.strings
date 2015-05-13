@@ -40,6 +40,7 @@
 "Uncategorized" = "未分類";
 "Read"          = "既読";
 "Saved"         = "お気に入り";
+"Select"        = "選択";
 
 "Please Rate MusicFav"              = "MusicFavを評価";
 "Network error"                     = "通信エラー";
@@ -50,6 +51,8 @@
 "New playlist"                      = "プレイリストを新規作成";
 "Are you sure you want to logout?"  = "ログアウトしてよろしいですか？";
 "Sorry, network error occured."     = "通信状況が良くありません。";
+"Notification of new arrivals"      = "新着通知";
+"No notification"                   = "通知なし";
 
 "You can mark article as read after login."  = "ログインすると記事の既読・未読の管理ができます。";
 "You can mark article as saved after login." = "ログインすると記事の保存ができます。";

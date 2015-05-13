@@ -9,6 +9,7 @@
 import UIKit
 import InAppSettingsKit
 import FeedlyKit
+import RMDateSelectionViewController
 
 class PreferenceViewController: UITableViewController {
     var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as! AppDelegate } }
@@ -21,7 +22,7 @@ class PreferenceViewController: UITableViewController {
         var rowCount: Int {
             switch self {
             case .Account:  return AccountRow.count
-            case .Behavior: return 0
+            case .Behavior: return BehaviorRow.count
             case .Feedback: return FeedbackRow.count
             case .Other:    return OtherRow.count
             }
@@ -29,15 +30,23 @@ class PreferenceViewController: UITableViewController {
         func rowTitle(rowIndex: Int) -> String? {
             switch self {
             case .Account:  return AccountRow(rawValue: rowIndex)?.title
-            case .Behavior: return ""
+            case .Behavior: return BehaviorRow(rawValue: rowIndex)?.title
             case .Feedback: return FeedbackRow(rawValue: rowIndex)?.title
             case .Other:    return OtherRow(rawValue: rowIndex)?.title
+            }
+        }
+        func rowDetail(rowIndex: Int) -> String? {
+            switch self {
+            case .Account:  return nil
+            case .Behavior: return BehaviorRow(rawValue: rowIndex)?.detail
+            case .Feedback: return nil
+            case .Other:    return nil
             }
         }
         var title: String {
             switch self {
             case .Account:  return "ACCOUNT"
-            case .Behavior: return ""
+            case .Behavior: return "BEHAVIOR"
             case .Feedback: return "FEEDBACK"
             case .Other:    return ""
             }
@@ -53,6 +62,20 @@ class PreferenceViewController: UITableViewController {
             } else {
                 return "Login".localize()
             }
+        }
+    }
+
+    enum BehaviorRow: Int {
+        case NotificationTime = 0
+        static let count      = 1
+        var title: String {
+            return "Notification of new arrivals".localize()
+        }
+        var detail: String {
+            if let time = FeedlyAPI.notificationTime {
+                return String(format: "%02d:%02d", time.hour, time.minute)
+            }
+            return "No notification".localize()
         }
     }
 
@@ -93,6 +116,9 @@ class PreferenceViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        RMDateSelectionViewController.setLocalizedTitleForSelectButton("Select".localize())
+        RMDateSelectionViewController.setLocalizedTitleForCancelButton("Cancel".localize())
+        RMDateSelectionViewController.setLocalizedTitleForNowButton("No notification".localize())
         navigationItem.title             = "Preferences".localize()
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Close".localize(),
                                                            style: UIBarButtonItemStyle.Plain,
@@ -169,10 +195,13 @@ class PreferenceViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as! UITableViewCell
+        let cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: "reuseIdentifier")
         if let section = Section(rawValue: indexPath.section) {
             if let rowTitle = section.rowTitle(indexPath.row) {
                 cell.textLabel?.text = rowTitle
+            }
+            if let rowDetail = section.rowDetail(indexPath.row) {
+                cell.detailTextLabel?.text = rowDetail
             }
         }
         return cell
@@ -190,7 +219,29 @@ class PreferenceViewController: UITableViewController {
                     showLoginViewController()
                 }
             }
-        case .Behavior: break
+        case .Behavior:
+            var dateSelectionVC = RMDateSelectionViewController.dateSelectionController()
+            dateSelectionVC.selectButtonAction = { (controller, date) in
+                let calendar = NSCalendar.currentCalendar()
+                FeedlyAPI.notificationTime = calendar.components(NSCalendarUnit.CalendarUnitHour|NSCalendarUnit.CalendarUnitMinute, fromDate: date)
+                tableView.reloadData()
+            }
+            dateSelectionVC.cancelButtonAction = { controller in }
+            dateSelectionVC.nowButtonAction = { controller in
+                FeedlyAPI.notificationTime = nil
+                self.tableView.reloadData()
+                dateSelectionVC.dismissViewControllerAnimated(true, completion: {})
+            }
+            if let time = FeedlyAPI.notificationTime {
+                let calendar = NSCalendar.currentCalendar()
+                let date = calendar.dateWithEra(1, year: 2015, month: 5, day: 11,
+                                                   hour: time.hour, minute: time.minute,
+                                                 second: 0, nanosecond: 0)!
+                dateSelectionVC.datePicker.date = date
+            }
+            dateSelectionVC.datePicker.datePickerMode = UIDatePickerMode.Time
+            dateSelectionVC.datePicker.minuteInterval = AppDelegate.notificationTimeMinutesInterval
+            presentViewController(dateSelectionVC, animated:true, completion:{})
         case .Feedback:
             switch FeedbackRow(rawValue: indexPath.row)! {
             case .Feedback:
