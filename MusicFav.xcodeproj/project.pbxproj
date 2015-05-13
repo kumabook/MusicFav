@@ -64,8 +64,11 @@
 		673DCCA01AF53B860043E51D /* google_analytics.json in Resources */ = {isa = PBXBuildFile; fileRef = 673DCC9F1AF53B860043E51D /* google_analytics.json */; };
 		673DCCA21AF54BC90043E51D /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673DCCA11AF54BC90043E51D /* Logger.swift */; };
 		6747CEB41AA3204900A6A16B /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6747CEB31AA3204900A6A16B /* Player.swift */; };
+		674AAC891B02D64E00C1FC18 /* UINotificationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */; };
 		67554F091A4F127400F7AE72 /* TrackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */; };
 		67554F0A1A4F127400F7AE72 /* TrackTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */; };
+		675778521B00E11800F9A2C7 /* UpdateChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675778511B00E11800F9A2C7 /* UpdateChecker.swift */; };
+		675778541B00E48E00F9A2C7 /* NSDateExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675778531B00E48E00F9A2C7 /* NSDateExtension.swift */; };
 		675AB3341AD3903B0003824C /* XCDYouTubeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 675AB3331AD3903B0003824C /* XCDYouTubeKit.framework */; };
 		675AB3351AD390790003824C /* XCDYouTubeKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 675AB3331AD3903B0003824C /* XCDYouTubeKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		675AB3371AD39F540003824C /* XCDYouTubeClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675AB3361AD39F540003824C /* XCDYouTubeClient.swift */; };
@@ -278,8 +281,11 @@
 		673DCC9F1AF53B860043E51D /* google_analytics.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = google_analytics.json; path = Fixtures/google_analytics.json; sourceTree = "<group>"; };
 		673DCCA11AF54BC90043E51D /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		6747CEB31AA3204900A6A16B /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINotificationExtension.swift; sourceTree = "<group>"; };
 		67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewCell.swift; sourceTree = "<group>"; };
 		67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrackTableViewCell.xib; sourceTree = "<group>"; };
+		675778511B00E11800F9A2C7 /* UpdateChecker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UpdateChecker.swift; sourceTree = "<group>"; };
+		675778531B00E48E00F9A2C7 /* NSDateExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSDateExtension.swift; sourceTree = "<group>"; };
 		675AB3331AD3903B0003824C /* XCDYouTubeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCDYouTubeKit.framework; path = Carthage/Build/iOS/XCDYouTubeKit.framework; sourceTree = "<group>"; };
 		675AB3361AD39F540003824C /* XCDYouTubeClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = XCDYouTubeClient.swift; sourceTree = "<group>"; };
 		675AB33A1AD3D80A0003824C /* feedly.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = feedly.json; sourceTree = "<group>"; };
@@ -428,6 +434,8 @@
 				67CC02391AF328EE005F5F3F /* GAIConfig.swift */,
 				673DCCA11AF54BC90043E51D /* Logger.swift */,
 				67FA09661AF8CA570086AA45 /* AccessibilityLabel.swift */,
+				675778531B00E48E00F9A2C7 /* NSDateExtension.swift */,
+				674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -547,6 +555,7 @@
 				6767AE631ADD630000A92497 /* StreamListLoader.swift */,
 				676E38151ADEADC000D38CBC /* Category.swift */,
 				673A98BC1AE7C0A10071E413 /* DummyStream.swift */,
+				675778511B00E11800F9A2C7 /* UpdateChecker.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -1126,8 +1135,10 @@
 				67DA46651A87B49C0048B29C /* SelectPlaylistTableViewCell.swift in Sources */,
 				67277CE31A46F844002FD3E0 /* EntryStreamViewController.swift in Sources */,
 				6767AE5A1ADAE44700A92497 /* BlogLoader.swift in Sources */,
+				675778521B00E11800F9A2C7 /* UpdateChecker.swift in Sources */,
 				6728FA3E1A60B9FD00F693B3 /* TrackTableViewController.swift in Sources */,
 				67DA46581A8610A70048B29C /* TrackStore.swift in Sources */,
+				675778541B00E48E00F9A2C7 /* NSDateExtension.swift in Sources */,
 				67FA09671AF8CA570086AA45 /* AccessibilityLabel.swift in Sources */,
 				675AB3411AD3E3DA0003824C /* StringExtension.swift in Sources */,
 				67B366DE1AE1CBA800E089B2 /* TutorialViewController.swift in Sources */,
@@ -1142,6 +1153,7 @@
 				6794E7F51AE318720054B3DB /* TutorialView.swift in Sources */,
 				6747CEB41AA3204900A6A16B /* Player.swift in Sources */,
 				67DB2A121A5588A6006BB490 /* MiniPlayerViewDelegate.swift in Sources */,
+				674AAC891B02D64E00C1FC18 /* UINotificationExtension.swift in Sources */,
 				67277CDB1A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift in Sources */,
 				67F9A2921AD03C0D0078EC3C /* StreamPageMenuController.swift in Sources */,
 				676E38161ADEADC000D38CBC /* Category.swift in Sources */,
