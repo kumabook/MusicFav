@@ -225,12 +225,14 @@ class PreferenceViewController: UITableViewController {
                 let calendar = NSCalendar.currentCalendar()
                 FeedlyAPI.notificationTime = calendar.components(NSCalendarUnit.CalendarUnitHour|NSCalendarUnit.CalendarUnitMinute, fromDate: date)
                 tableView.reloadData()
+                UpdateChecker().check(UIApplication.sharedApplication(), completionHandler: nil)
             }
             dateSelectionVC.cancelButtonAction = { controller in }
             dateSelectionVC.nowButtonAction = { controller in
                 FeedlyAPI.notificationTime = nil
                 self.tableView.reloadData()
                 dateSelectionVC.dismissViewControllerAnimated(true, completion: {})
+                UpdateChecker().check(UIApplication.sharedApplication(), completionHandler: nil)
             }
             if let time = FeedlyAPI.notificationTime {
                 let calendar = NSCalendar.currentCalendar()
