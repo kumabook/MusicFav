@@ -10,6 +10,7 @@ import UIKit
 import InAppSettingsKit
 import FeedlyKit
 import RMDateSelectionViewController
+import XCDYouTubeKit
 
 class PreferenceViewController: UITableViewController {
     var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as! AppDelegate } }
@@ -66,20 +67,29 @@ class PreferenceViewController: UITableViewController {
     }
 
     enum BehaviorRow: Int {
-        case NotificationTime = 0
-        static let count      = 1
+        case YouTubeVideoQuality = 0
+        case NotificationTime    = 1
+        static let count         = 2
         var title: String {
-            return "Notification of new arrivals".localize()
+            switch self {
+            case .YouTubeVideoQuality: return "Video Quality".localize()
+            case .NotificationTime:    return "Notification of new arrivals".localize()
+            }
         }
         var detail: String {
-            if let components = FeedlyAPI.notificationDateComponents {
-                if components.hour <= 11 {
-                    return String(format: "%02d:%02d AM", components.hour, components.minute)
-                } else {
-                    return String(format: "%02d:%02d PM", components.hour - 12, components.minute)
+            switch self {
+            case .YouTubeVideoQuality:
+                return Track.youTubeVideoQuality.label
+            case .NotificationTime:
+                if let components = FeedlyAPI.notificationDateComponents {
+                    if components.hour <= 11 {
+                        return String(format: "%02d:%02d AM", components.hour, components.minute)
+                    } else {
+                        return String(format: "%02d:%02d PM", components.hour - 12, components.minute)
+                    }
                 }
+                return "No notification".localize()
             }
-            return "No notification".localize()
         }
     }
 
@@ -117,6 +127,8 @@ class PreferenceViewController: UITableViewController {
     required init(coder aDecoder: NSCoder!) {
         super.init(coder: aDecoder)
     }
+
+    deinit {}
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -224,30 +236,40 @@ class PreferenceViewController: UITableViewController {
                 }
             }
         case .Behavior:
-            var dateSelectionVC = RMDateSelectionViewController.dateSelectionController()
-            dateSelectionVC.selectButtonAction = { (controller, date) in
-                let calendar = NSCalendar.currentCalendar()
-                FeedlyAPI.notificationDateComponents = calendar.components(NSCalendarUnit.CalendarUnitHour|NSCalendarUnit.CalendarUnitMinute, fromDate: date)
-                tableView.reloadData()
-                UpdateChecker().check(UIApplication.sharedApplication(), completionHandler: nil)
+            switch BehaviorRow(rawValue: indexPath.row)! {
+            case .YouTubeVideoQuality:
+                var actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+                for action in XCDYouTubeVideoQuality.buildAlertActions({ self.tableView.reloadData() }) {
+                    actionSheet.addAction(action)
+                }
+                actionSheet.addAction(UIAlertAction(title: "Cancel".localize(), style: .Cancel, handler: { action in }))
+                presentViewController(actionSheet, animated: true, completion: {})
+            case .NotificationTime:
+                var dateSelectionVC = RMDateSelectionViewController.dateSelectionController()
+                dateSelectionVC.selectButtonAction = { (controller, date) in
+                    let calendar = NSCalendar.currentCalendar()
+                    FeedlyAPI.notificationDateComponents = calendar.components(NSCalendarUnit.CalendarUnitHour|NSCalendarUnit.CalendarUnitMinute, fromDate: date)
+                    tableView.reloadData()
+                    UpdateChecker().check(UIApplication.sharedApplication(), completionHandler: nil)
+                }
+                dateSelectionVC.cancelButtonAction = { controller in }
+                dateSelectionVC.nowButtonAction = { controller in
+                    FeedlyAPI.notificationDateComponents = nil
+                    self.tableView.reloadData()
+                    dateSelectionVC.dismissViewControllerAnimated(true, completion: {})
+                    UpdateChecker().check(UIApplication.sharedApplication(), completionHandler: nil)
+                }
+                if let time = FeedlyAPI.notificationDateComponents {
+                    let calendar = NSCalendar.currentCalendar()
+                    let date = calendar.dateWithEra(1, year: 2015, month: 5, day: 11,
+                                                       hour: time.hour, minute: time.minute,
+                                                     second: 0, nanosecond: 0)!
+                    dateSelectionVC.datePicker.date = date
+                }
+                dateSelectionVC.datePicker.datePickerMode = UIDatePickerMode.Time
+                dateSelectionVC.datePicker.minuteInterval = UILocalNotification.notificationTimeMinutesInterval
+                presentViewController(dateSelectionVC, animated:true, completion:{})
             }
-            dateSelectionVC.cancelButtonAction = { controller in }
-            dateSelectionVC.nowButtonAction = { controller in
-                FeedlyAPI.notificationDateComponents = nil
-                self.tableView.reloadData()
-                dateSelectionVC.dismissViewControllerAnimated(true, completion: {})
-                UpdateChecker().check(UIApplication.sharedApplication(), completionHandler: nil)
-            }
-            if let time = FeedlyAPI.notificationDateComponents {
-                let calendar = NSCalendar.currentCalendar()
-                let date = calendar.dateWithEra(1, year: 2015, month: 5, day: 11,
-                                                   hour: time.hour, minute: time.minute,
-                                                 second: 0, nanosecond: 0)!
-                dateSelectionVC.datePicker.date = date
-            }
-            dateSelectionVC.datePicker.datePickerMode = UIDatePickerMode.Time
-            dateSelectionVC.datePicker.minuteInterval = UILocalNotification.notificationTimeMinutesInterval
-            presentViewController(dateSelectionVC, animated:true, completion:{})
         case .Feedback:
             switch FeedbackRow(rawValue: indexPath.row)! {
             case .Feedback:

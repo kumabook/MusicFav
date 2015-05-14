@@ -28,3 +28,27 @@ extension XCDYouTubeClient {
         }
     }
 }
+
+extension XCDYouTubeVideoQuality {
+    var label: String {
+        switch self {
+        case .Small240:  return  "Small 240".localize()
+        case .Medium360: return  "Medium 360".localize()
+        case .HD720:     return  "HD 720".localize()
+        default:         return  "Unknown".localize()
+        }
+    }
+    static func buildAlertActions(handler: () -> ()) -> [UIAlertAction] {
+        var actions: [UIAlertAction] = []
+        actions.append(UIAlertAction(title: XCDYouTubeVideoQuality.Small240.label,
+                                     style: .Default,
+                                   handler: { action in Track.youTubeVideoQuality = .Small240; handler() }))
+        actions.append(UIAlertAction(title: XCDYouTubeVideoQuality.Medium360.label,
+                                     style: .Default,
+                                   handler: { action in Track.youTubeVideoQuality = .Medium360; handler() }))
+        actions.append(UIAlertAction(title: XCDYouTubeVideoQuality.HD720.label,
+                                     style: .Default,
+                                   handler: { action in  Track.youTubeVideoQuality = .HD720; handler() }))
+        return actions
+    }
+}

@@ -18,6 +18,20 @@ public enum Provider: String {
 }
 
 public class Track {
+    private static let userDefaults = NSUserDefaults.standardUserDefaults()
+    static var youTubeVideoQuality: XCDYouTubeVideoQuality {
+        get {
+            if let quality = XCDYouTubeVideoQuality(rawValue: UInt(userDefaults.integerForKey("youtube_video_quality"))) {
+                return quality
+            } else {
+                return XCDYouTubeVideoQuality.Medium360
+            }
+        }
+        set(quality) {
+            userDefaults.setInteger(Int(quality.rawValue), forKey: "youtube_video_quality")
+        }
+    }
+
     public enum Status {
         case Init
         case Loading
@@ -28,12 +42,22 @@ public class Track {
     public let url:          String
     public let identifier:   String
     public var title:        String?
-    public var streamUrl:    NSURL?
     public var thumbnailUrl: NSURL?
     public var duration:     NSTimeInterval
 
     public var status:   Status { return _status }
     private var _status: Status
+
+    private var _streamUrl:  NSURL?
+    private var youtubeVideo: XCDYouTubeVideo?
+    public var streamUrl: NSURL? {
+        if let video = youtubeVideo {
+            return video.streamURLs[Track.youTubeVideoQuality.rawValue] as? NSURL
+        } else if let url = _streamUrl {
+            return  url
+        }
+        return nil
+    }
 
     public init(provider: Provider, url: String, identifier: String, title: String?) {
         self.provider   = provider
@@ -60,10 +84,10 @@ public class Track {
         identifier  = store.identifier
         duration    = NSTimeInterval(store.duration)
         if let url = NSURL(string: store.streamUrl) {
-            streamUrl    = url
-            _status      = .Available
+            _streamUrl    = url
+            _status       = .Available
         } else {
-            _status      = .Init
+            _status       = .Init
         }
         if let url = NSURL(string: store.thumbnailUrl) {
             thumbnailUrl = url
@@ -82,8 +106,8 @@ public class Track {
         title        = soundCloudAudio.title
         duration     = NSTimeInterval(soundCloudAudio.duration / 1000)
         if let sUrl = soundCloudAudio.streamUrl {
-            streamUrl = NSURL(string: sUrl)
-            _status   = .Available
+            _streamUrl = NSURL(string: sUrl)
+            _status    = .Available
         }
         if let aUrl = soundCloudAudio.artworkUrl {
             thumbnailUrl = NSURL(string: aUrl)
@@ -92,9 +116,9 @@ public class Track {
     }
     
     public func updatePropertiesWithYouTubeVideo(video: XCDYouTubeVideo) {
+        youtubeVideo   = video
         title          = video.title
         duration       = video.duration
-        streamUrl      = video.streamURLs[XCDYouTubeVideoQuality.Medium360.rawValue] as? NSURL
         thumbnailUrl   = video.mediumThumbnailURL
         _status        = .Available
 //      save()
