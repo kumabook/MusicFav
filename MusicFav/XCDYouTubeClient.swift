@@ -11,15 +11,11 @@ import ReactiveCocoa
 import LlamaKit
 
 extension XCDYouTubeClient {
-    func fetchVideo(identifier: String, errorOnFailure: Bool) -> SignalProducer<XCDYouTubeVideo, NSError> {
+    func fetchVideo(identifier: String) -> SignalProducer<XCDYouTubeVideo, NSError> {
         return SignalProducer { (sink, disposable) in
             let operation = self.getVideoWithIdentifier(identifier, completionHandler: { (video, error) -> Void in
                 if let e = error {
-                    if errorOnFailure {
-                        sink.put(.Error(Box(error)))
-                    } else {
-                        sink.put(.Completed)
-                    }
+                    sink.put(.Error(Box(error)))
                     return
                 }
                 sink.put(.Next(Box(video)))

@@ -41,7 +41,7 @@ class SoundCloudAPIClient {
         self.clientId = clientId
     }
 
-    func fetchTrack(track_id: String, errorOnFailure: Bool) -> SignalProducer<SoundCloudAudio, NSError> {
+    func fetchTrack(track_id: String) -> SignalProducer<SoundCloudAudio, NSError> {
         return SignalProducer { (sink, disposable) in
             let manager = AFHTTPRequestOperationManager()
             manager.completionQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
@@ -53,11 +53,8 @@ class SoundCloudAPIClient {
                     sink.put(.Completed)
                 },
                 failure: { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
-                    if errorOnFailure {
-                        sink.put(.Error(Box(error)))
-                    } else {
-                        sink.put(.Completed)
-                    }
+                    sink.put(.Error(Box(error)))
+                    return
             })
             disposable.addDisposable {
                 manager.operationQueue.cancelAllOperations()

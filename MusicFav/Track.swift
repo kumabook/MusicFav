@@ -18,6 +18,12 @@ public enum Provider: String {
 }
 
 public class Track {
+    public enum Status {
+        case Init
+        case Loading
+        case Available
+        case Unavailable
+    }
     public let provider:     Provider
     public let url:          String
     public let identifier:   String
@@ -26,12 +32,16 @@ public class Track {
     public var thumbnailUrl: NSURL?
     public var duration:     NSTimeInterval
 
+    public var status:   Status { return _status }
+    private var _status: Status
+
     public init(provider: Provider, url: String, identifier: String, title: String?) {
         self.provider   = provider
         self.url        = url
         self.identifier = identifier
         self.title      = title
         self.duration   = 0 as NSTimeInterval
+        self._status    = .Init
     }
 
     public init(json: JSON) {
@@ -40,6 +50,7 @@ public class Track {
         url         = json["url"].stringValue
         identifier  = json["identifier"].stringValue
         duration    = 0 as NSTimeInterval
+        _status     = .Init
     }
 
     public init(store: TrackStore) {
@@ -48,9 +59,15 @@ public class Track {
         url         = store.url
         identifier  = store.identifier
         duration    = NSTimeInterval(store.duration)
-
-        if let url = NSURL(string: store.streamUrl)    { streamUrl    = url }
-        if let url = NSURL(string: store.thumbnailUrl) { thumbnailUrl = url }
+        if let url = NSURL(string: store.streamUrl) {
+            streamUrl    = url
+            _status      = .Available
+        } else {
+            _status      = .Init
+        }
+        if let url = NSURL(string: store.thumbnailUrl) {
+            thumbnailUrl = url
+        }
     }
 
     public func create() -> Bool {
@@ -66,6 +83,7 @@ public class Track {
         duration     = NSTimeInterval(soundCloudAudio.duration / 1000)
         if let sUrl = soundCloudAudio.streamUrl {
             streamUrl = NSURL(string: sUrl)
+            _status   = .Available
         }
         if let aUrl = soundCloudAudio.artworkUrl {
             thumbnailUrl = NSURL(string: aUrl)
@@ -78,6 +96,7 @@ public class Track {
         duration       = video.duration
         streamUrl      = video.streamURLs[XCDYouTubeVideoQuality.Medium360.rawValue] as? NSURL
         thumbnailUrl   = video.mediumThumbnailURL
+        _status        = .Available
 //      save()
     }
 
@@ -95,21 +114,46 @@ public class Track {
     }
 
     public func fetchTrackDetail(errorOnFailure: Bool) -> SignalProducer<Track, NSError>{
+        _status = .Loading
         switch provider {
         case .Youtube:
-            return XCDYouTubeClient.defaultClient().fetchVideo(identifier, errorOnFailure: errorOnFailure)
-                |> startOn(UIScheduler())
-                |> map({
-                    self.updatePropertiesWithYouTubeVideo($0)
-                    return self
-                })
+            return SignalProducer<Track, NSError> { (sink, disposable) in
+                XCDYouTubeClient.defaultClient().fetchVideo(self.identifier).start(
+                    next: { video in
+                        self.updatePropertiesWithYouTubeVideo(video)
+                        sink.put(.Next(Box(self)))
+                        sink.put(.Completed)
+                    }, error: { error in
+                        self._status = .Unavailable
+                        sink.put(.Next(Box(self)))
+                        sink.put(.Completed)
+                    }, completed: {
+                    }, interrupted: {
+                        self._status = .Unavailable
+                        sink.put(.Next(Box(self)))
+                        sink.put(.Completed)
+                    })
+                return
+            }
         case .SoundCloud:
-            return SoundCloudAPIClient.sharedInstance.fetchTrack(identifier, errorOnFailure: errorOnFailure)
-                |> startOn(UIScheduler())
-                |> map({
-                    self.updateProperties($0)
-                    return self
+            return SignalProducer<Track, NSError> { (sink, disposable) in
+                SoundCloudAPIClient.sharedInstance.fetchTrack(self.identifier).start(
+                    next: { track in
+                        self.updateProperties(track)
+                        sink.put(.Next(Box(self)))
+                        sink.put(.Completed)
+                    }, error: { error in
+                        self._status = .Unavailable
+                        sink.put(.Next(Box(self)))
+                        sink.put(.Completed)
+                    }, completed: {
+                    }, interrupted: {
+                        self._status = .Unavailable
+                        sink.put(.Next(Box(self)))
+                        sink.put(.Completed)
                 })
+                return
+            }
         }
     }
 
