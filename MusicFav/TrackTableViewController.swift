@@ -146,7 +146,9 @@ class TrackTableViewController: UITableViewController {
                 }
                 return
             }, error: { error in
+                self.tableView.reloadData()
             }, completed: {
+                self.tableView.reloadData()
         })
     }
 
@@ -170,17 +172,31 @@ class TrackTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCellWithIdentifier(self.tableCellReuseIdentifier, forIndexPath: indexPath) as! TrackTableViewCell
         if let p = playlist {
             let track = p.tracks[indexPath.item]
-            if let title = track.title { cell.trackNameLabel.text = title }
-            else                       { cell.trackNameLabel.text = "Loading...".localize() }
+            switch track.status {
+            case .Loading:
+                cell.trackNameLabel.text = "Loading...".localize()
+            case .Unavailable:
+                cell.trackNameLabel.text = "Unavailable".localize()
+            default:
+                if let title = track.title {
+                    cell.trackNameLabel.text = title
+                } else {
+                    cell.trackNameLabel.text = ""
+                }
+            }
             let minutes = Int(floor(track.duration / 60))
             let seconds = Int(round(track.duration - Double(minutes) * 60))
             cell.durationLabel.text = String(format: "%.2d:%.2d", minutes, seconds)
-            cell.thumbImgView.sd_setImageWithURL(track.thumbnailUrl)
+            if let thumbnailUrl = track.thumbnailUrl {
+                cell.thumbImgView.sd_setImageWithURL(thumbnailUrl)
+            } else {
+                cell.thumbImgView.image = UIImage(named: "default_thumb")
+            }
             return cell
         } else {
             cell.trackNameLabel.text = ""
             cell.durationLabel.text  = ""
-            cell.thumbImgView.sd_setImageWithURL(nil)
+            cell.thumbImgView.image = UIImage(named: "default_thumb")
             return cell
         }
     }
