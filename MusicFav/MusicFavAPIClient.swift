@@ -15,7 +15,7 @@ import AFNetworking
 class MusicFavAPIClient {
     static let baseUrl   = "http://musicfav-cloud.herokuapp.com"
     static var sharedInstance = MusicFavAPIClient()
-    func playlistify(targetUrl: NSURL) -> SignalProducer<Playlist, NSError> {
+    func playlistify(targetUrl: NSURL, errorOnFailure: Bool) -> SignalProducer<Playlist, NSError> {
         return SignalProducer { (sink, disposable) in
             let manager = AFHTTPRequestOperationManager()
             manager.completionQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
@@ -29,7 +29,11 @@ class MusicFavAPIClient {
                 failure: { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
                     println(error)
                     println(operation.response)
-                    sink.put(.Error(Box(error)))
+                    if errorOnFailure {
+                        sink.put(.Error(Box(error)))
+                    } else {
+                        sink.put(.Completed)
+                    }
             })
             disposable.addDisposable {
                 manager.operationQueue.cancelAllOperations()
