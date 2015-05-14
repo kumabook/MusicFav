@@ -9,7 +9,7 @@ if config["api_key"] == "api_key" || config["build_secret"] == "build_secret"
   puts "Skip fabric script because the fabric.json is not set correctly."
   exit
 end
-run_command = "./Pods/CrashlyticsFramework/Crashlytics.framework/run"
+run_command = "./Pods/Fabric/Fabric.framework/run"
 success = system("#{run_command} #{config["api_key"]} #{config["build_secret"]}")
 if success
   puts "Succeeded in running fabric script"
