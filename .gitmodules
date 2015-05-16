@@ -13,9 +13,6 @@
 [submodule "Carthage/Checkouts/SwiftyJSON"]
 	path = Carthage/Checkouts/SwiftyJSON
 	url = https://github.com/SwiftyJSON/SwiftyJSON.git
-[submodule "Carthage/Checkouts/realm-cocoa"]
-	path = Carthage/Checkouts/realm-cocoa
-	url = https://github.com/realm/realm-cocoa.git
 [submodule "Carthage/Checkouts/FeedlyKit"]
 	path = Carthage/Checkouts/FeedlyKit
 	url = https://github.com/kumabook/FeedlyKit.git
