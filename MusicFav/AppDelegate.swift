@@ -18,6 +18,7 @@ import Crashlytics
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     var appearanceManager:        AppearanceManager?
+    var paymentManager:           PaymentManager?
     var window:                   UIWindow?
     var coverViewController:      DraggableCoverViewController?
     var miniPlayerViewController: MiniPlayerViewController?
@@ -91,6 +92,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if let path = mainBundle.pathForResource("google_analytics", ofType: "json") {
             GAIConfig.setup(path)
         }
+        paymentManager = PaymentManager()
         setupAudioSession(application)
         setupAPIClient()
         registerNSUserDefaults()

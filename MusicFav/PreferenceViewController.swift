@@ -11,6 +11,8 @@ import InAppSettingsKit
 import FeedlyKit
 import RMDateSelectionViewController
 import XCDYouTubeKit
+import StoreKit
+import MBProgressHUD
 
 class PreferenceViewController: UITableViewController {
     var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as! AppDelegate } }
@@ -69,11 +71,16 @@ class PreferenceViewController: UITableViewController {
     enum BehaviorRow: Int {
         case YouTubeVideoQuality = 0
         case NotificationTime    = 1
-        static let count         = 2
+        case UnlockEverything    = 2
+        static var count: Int {
+            if PaymentManager.isUnlockedEverything { return 2 }
+            else                                   { return 3 }
+        }
         var title: String {
             switch self {
             case .YouTubeVideoQuality: return "Video Quality".localize()
             case .NotificationTime:    return "Notification of new arrivals".localize()
+            case .UnlockEverything:    return "Unlock Everything".localize()
             }
         }
         var detail: String {
@@ -89,6 +96,7 @@ class PreferenceViewController: UITableViewController {
                     }
                 }
                 return "No notification".localize()
+            case .UnlockEverything: return ""
             }
         }
     }
@@ -145,12 +153,17 @@ class PreferenceViewController: UITableViewController {
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        appDelegate.paymentManager?.viewController = self
         Logger.sendScreenView(self)
     }
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(true)
         self.tableView.reloadData()
+    }
+
+    override func viewWillDisappear(animated: Bool) {
+        appDelegate.paymentManager?.viewController = nil
     }
 
     override func didReceiveMemoryWarning() {
@@ -269,6 +282,8 @@ class PreferenceViewController: UITableViewController {
                 dateSelectionVC.datePicker.datePickerMode = UIDatePickerMode.Time
                 dateSelectionVC.datePicker.minuteInterval = UILocalNotification.notificationTimeMinutesInterval
                 presentViewController(dateSelectionVC, animated:true, completion:{})
+            case .UnlockEverything:
+                appDelegate.paymentManager?.purchaseUnlockEverything()
             }
         case .Feedback:
             switch FeedbackRow(rawValue: indexPath.row)! {
