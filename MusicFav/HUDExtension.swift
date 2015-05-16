@@ -10,12 +10,21 @@ import Foundation
 import MBProgressHUD
 
 extension MBProgressHUD {
-    class func createCompletedHUD(view: UIView) -> MBProgressHUD {
+    private class func createCompletedHUD(view: UIView) -> MBProgressHUD {
         let HUD = MBProgressHUD(view: view)
         HUD.customView = UIImageView(image:UIImage(named:"checkmark"))
         HUD.mode = MBProgressHUDMode.CustomView
         HUD.labelText = "Completed".localize()
         return HUD
+    }
+
+    class func showCompletedHUDForView(view: UIView, animated: Bool, duration: NSTimeInterval, after: () -> Void) {
+        let hud = MBProgressHUD.createCompletedHUD(view)
+        view.addSubview(hud)
+        hud.show(true, duration: duration, after: {
+            hud.removeFromSuperview()
+            after()
+        })
     }
 
     func show(animated:Bool, duration:NSTimeInterval, after:() -> Void) {

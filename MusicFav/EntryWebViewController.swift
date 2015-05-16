@@ -17,7 +17,6 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
     var favEntryButton:       UIBarButtonItem?
     var historyForwardButton: UIBarButtonItem?
     var historyBackButton:    UIBarButtonItem?
-    var HUD:                  MBProgressHUD!
 
     var currentURL: NSURL?
     var webView:    WKWebView?
@@ -81,8 +80,6 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
                                                    favEntryButton!,
                                                    historyForwardButton!,
                                                    historyBackButton!]
-        HUD = MBProgressHUD.createCompletedHUD(view)
-        navigationController?.view.addSubview(HUD)
 
         if let url = entry.url {
             self.loadURL(url)
@@ -179,7 +176,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
                     let ac = CloudAPIClient.alertController(error: e, handler: { (action) in })
                     self.presentViewController(ac, animated: true, completion: nil)
                 } else {
-                    self.HUD.show(true , duration: 1.0, after: { () -> Void in
+                    MBProgressHUD.showCompletedHUDForView(self.navigationController!.view, animated: true, duration: 1.0, after: {
                         self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
                         return
                     })

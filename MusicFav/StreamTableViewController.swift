@@ -33,7 +33,6 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
         }
     }
 
-    var HUD:       MBProgressHUD!
     var indicator: UIActivityIndicatorView!
     var searchBar: UISearchBar!
 
@@ -64,6 +63,8 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
         super.init(nibName: nil, bundle: nil)
     }
 
+    deinit {}
+
     override func viewDidLoad() {
         super.viewDidLoad()
         let nib = UINib(nibName: "StreamTableViewCell", bundle: NSBundle.mainBundle())
@@ -92,9 +93,6 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
                              height: indicator.bounds.height * 3)
         indicator.hidesWhenStopped = true
         indicator.stopAnimating()
-
-        HUD = MBProgressHUD.createCompletedHUD(view)
-        navigationController?.view.addSubview(HUD)
 
         tableView.allowsMultipleSelection = true
         fetchRecommendFeeds()
@@ -345,7 +343,7 @@ class StreamTableViewController: UITableViewController, UISearchBarDelegate {
                         MBProgressHUD.hideHUDForView(self.navigationController!.view, animated:false)
                         let ac = CloudAPIClient.alertController(error: e, handler: { (action) in })
                     }, completed: {
-                        self.HUD.show(true , duration: 1.0, after: {
+                        MBProgressHUD.showCompletedHUDForView(self.navigationController!.view, animated: true, duration: 1.0, after: {
                             self.streamListLoader.refresh()
                             self.navigationController?.dismissViewControllerAnimated(true, completion: {})
                         })

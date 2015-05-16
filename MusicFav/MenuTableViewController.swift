@@ -55,7 +55,6 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
     }
 
     var treeView:         RATreeView?
-    var HUD:              MBProgressHUD!
     var sections:         [Section]
     var streamListLoader: StreamListLoader
     var observer:         Disposable?
@@ -115,8 +114,6 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
         refreshControl?.addTarget(self, action:"refresh", forControlEvents:UIControlEvents.ValueChanged)
         treeView?.addResreshControl(refreshControl!)
 
-        HUD = MBProgressHUD.createCompletedHUD(self.view)
-        navigationController?.view.addSubview(HUD)
         refresh()
     }
 
@@ -187,7 +184,7 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
                 CloudAPIClient.alertController(error: e, handler: { (action) -> Void in })
             case .RemoveAt(let index, let subscription, let category):
                 MBProgressHUD.hideHUDForView(self.view, animated: true)
-                self.HUD.show(true , duration: 1.0, after: { () -> Void in
+                MBProgressHUD.showCompletedHUDForView(self.navigationController!.view, animated: true, duration: 1.0, after: {
                     let l = self.streamListLoader
                     if category == l.uncategorized {
                         let i = self.indexOfUncategorizedSubscription(subscription)

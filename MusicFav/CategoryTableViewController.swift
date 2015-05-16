@@ -15,7 +15,6 @@ import MBProgressHUD
 class CategoryTableViewController: UITableViewController {
     let client = CloudAPIClient.sharedInstance
 
-    var HUD:              MBProgressHUD!
     var subscribables:    [Subscribable]
     var streamListLoader: StreamListLoader!
     var observer:         Disposable?
@@ -48,8 +47,6 @@ class CategoryTableViewController: UITableViewController {
                                                             style: UIBarButtonItemStyle.Plain,
                                                            target: self,
                                                            action: "newCategory")
-        HUD = MBProgressHUD.createCompletedHUD(self.view)
-        navigationController?.view.addSubview(HUD)
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -133,7 +130,7 @@ class CategoryTableViewController: UITableViewController {
                 self.presentViewController(ac, animated: true, completion: nil)
             },
             completed: {
-                self.HUD.show(true , duration: 1.0, after: { () -> Void in
+                MBProgressHUD.showCompletedHUDForView(self.navigationController!.view, animated: true, duration: 1.0, after: {
                     self.streamListLoader.refresh()
                     self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
                 })
