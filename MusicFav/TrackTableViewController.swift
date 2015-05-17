@@ -128,8 +128,8 @@ class TrackTableViewController: UITableViewController {
                     var message = "Failed to add tracks".localize()
                     UIAlertController.show(self, title: "MusicFav", message: message, handler: { action in })
                 case .ExceedLimit:
-                    let message = "Track number of per playlist exceeds the limit.".localize() +
-                            "If you purchase \"Unlock Everything\", you can create playlist infinitely.".localize()
+                    let message = String(format: "Track number of per playlist is limited to %d.".localize(), Playlist.trackNumberLimit) +
+                            "Do you want to purchase \"Unlock Everything\".".localize()
                     UIAlertController.showPurchaseAlert(self, title: "MusicFav", message: message, handler: {action in })
                 }
             }

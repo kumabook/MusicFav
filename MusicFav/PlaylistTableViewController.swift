@@ -195,8 +195,8 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             case .Failure:
                 UIAlertController.show(self, title: "MusicFav", message: "Failed to create playlist", handler: {action in })
             case .ExceedLimit:
-                let message = "Playlist number exceeds the limit.".localize() +
-                    "If you purchase \"Unlock Everything\", you can create playlist infinitely.".localize()
+                let message = String(format: "Playlist number is limited to %d.".localize(), Playlist.playlistNumberLimit) +
+                    "Do you want to purchase \"Unlock Everything\".".localize()
                 UIAlertController.showPurchaseAlert(self, title: "MusicFav", message: message, handler: {action in })
             }
         }

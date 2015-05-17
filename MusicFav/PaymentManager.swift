@@ -11,6 +11,7 @@ import MBProgressHUD
 import StoreKit
 
 class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
+    let unlockEvnerythingIdentifier = "io.kumabook.MusicFav.UnlockEverything"
     enum ProductType: String {
         case UnlockEverything = "io.kumabook.MusicFav.UnlockEverything"
     }
@@ -34,17 +35,17 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
 
     func purchaseUnlockEverything() {
         if SKPaymentQueue.canMakePayments() {
-            var productsRequest = SKProductsRequest(productIdentifiers: ["io.kumabook.MusicFav.UnlockEverything"])
+            var productsRequest = SKProductsRequest(productIdentifiers: [unlockEvnerythingIdentifier])
             productsRequest.delegate = self
             productsRequest.start()
-            if let view = viewController?.view {
+            if let view = viewController?.navigationController?.view {
                 MBProgressHUD.showHUDAddedTo(view, animated: true)
             }
         } else {
-            let alert = UIAlertController(title: "Notice".localize(),
-                message: "Sorry. In-App Purchase is restricted".localize(),
-                preferredStyle: .Alert)
-            viewController?.presentViewController(alert, animated: true, completion: {})
+            let message = "Sorry. In-App Purchase is restricted".localize()
+            if let vc = viewController {
+                UIAlertController.show(vc, title: "MusicFav", message: message, handler: { action in })
+            }
         }
     }
 
@@ -60,9 +61,9 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
     // MARK: - SKProductsRequestDelegate
     func productsRequest(request: SKProductsRequest!, didReceiveResponse response: SKProductsResponse!) {
         if response.invalidProductIdentifiers.count > 0 {
-            var alert = UIAlertController(title: "", message: "Invalid item identifier", preferredStyle: .Alert)
-            alert.addAction(UIAlertAction(title: "OK".localize(), style: .Cancel, handler: {action in }))
-            viewController?.presentViewController(alert, animated: true, completion: {})
+            if let vc = viewController {
+                UIAlertController.show(vc, title: "MusicFav", message: "Invalid item identifier", handler: { action in })
+            }
             return
         }
 
@@ -70,8 +71,23 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
         if let products = response.products as? [SKProduct] {
             for product in products {
                 productDic[product.productIdentifier] = product
-                queue.addPayment(SKPayment(product: product))
             }
+        }
+        if let unlockEverything = productDic[unlockEvnerythingIdentifier] {
+            var alert = UIAlertController(title: "MusicFav",
+                                        message: unlockEverything.localizedTitle + "\n" + unlockEverything.localizedDescription,
+                                 preferredStyle: .Alert)
+            alert.addAction(UIAlertAction(title: "Purchase".localize(), style: UIAlertActionStyle.Default, handler: { action in
+                queue.addPayment(SKPayment(product: unlockEverything))
+            }))
+            alert.addAction(UIAlertAction(title: "Cancel".localize(),
+                                          style: UIAlertActionStyle.Cancel,
+                                        handler: { action in
+                                            if let vc = self.viewController, view = vc.navigationController?.view {
+                                                MBProgressHUD.hideAllHUDsForView(view, animated: true)
+                                            }
+            }))
+            viewController?.presentViewController(alert, animated: true, completion: {})
         }
     }
     // MARK: - SKPaymentTransactionObserver
@@ -81,12 +97,12 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
             if let product = productDic[identifier], title = product.localizedTitle, desc = product.localizedDescription {
                 switch transaction.transactionState {
                 case .Purchasing:
-                    if let vc = viewController, view = vc.view {
+                    if let vc = viewController, view = vc.navigationController?.view {
                         MBProgressHUD.showHUDAddedTo(view, animated: true)
                     }
                 case .Purchased:
                     purchaseProduct(product)
-                    if let vc = viewController, view = vc.view {
+                    if let vc = viewController, view = vc.navigationController?.view {
                         MBProgressHUD.hideAllHUDsForView(view, animated: true)
                         vc.tableView.reloadData()
                         MBProgressHUD.showCompletedHUDForView(view, animated: true, duration: 1.0, after: {
@@ -95,10 +111,10 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
                     }
                 case .Failed:
                     queue.finishTransaction(transaction)
-                    if let vc = viewController, view = vc.view {
+                    if let vc = viewController, view = vc.navigationController?.view {
                         MBProgressHUD.hideAllHUDsForView(view, animated: true)
                         if transaction.error.code != SKErrorPaymentCancelled {
-                            let message = String(format: "Sorry. Failed to purchase \"%@\".", title)
+                            let message = String(format: "Sorry. Failed to purchase \"%@\".".localize(), title)
                             var alert = UIAlertController(title: "MusicFav", message: message, preferredStyle: .Alert)
                             alert.addAction(UIAlertAction(title: "OK".localize(), style: .Cancel, handler: {action in }))
                             vc.presentViewController(alert, animated: true, completion: {})
@@ -106,7 +122,7 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
                     }
                 case .Restored:
                     purchaseProduct(product)
-                    if let vc = viewController, view = vc.view {
+                    if let vc = viewController, view = vc.navigationController?.view {
                         MBProgressHUD.hideAllHUDsForView(view, animated: true)
                         vc.tableView.reloadData()
                         MBProgressHUD.showCompletedHUDForView(view, animated: true, duration: 1.0, after: {
@@ -114,7 +130,7 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
                         })
                     }
                 case .Deferred:
-                    if let vc = viewController, view = vc.view {
+                    if let vc = viewController, view = vc.navigationController?.view {
                         MBProgressHUD.hideAllHUDsForView(view, animated: true)
                     }
                 }
