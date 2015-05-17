@@ -114,14 +114,23 @@ class TrackTableViewController: UITableViewController {
         let ptc = SelectPlaylistTableViewController()
         ptc.callback = {(playlist: Playlist?) in
             if let p = playlist {
-                p.appendTracks(tracks)
-                if p == self.playlist {
-                    var indexes: [NSIndexPath] = []
-                    let offset = p.tracks.count-1
-                    for i in offset..<tracks.count + offset {
-                        indexes.append(NSIndexPath(forItem: i, inSection: 0))
+                switch p.appendTracks(tracks) {
+                case .Success:
+                    if p == self.playlist {
+                        var indexes: [NSIndexPath] = []
+                        let offset = p.tracks.count-1
+                        for i in offset..<tracks.count + offset {
+                            indexes.append(NSIndexPath(forItem: i, inSection: 0))
+                        }
+                        self.tableView.insertRowsAtIndexPaths(indexes, withRowAnimation: UITableViewRowAnimation.Fade)
                     }
-                    self.tableView.insertRowsAtIndexPaths(indexes, withRowAnimation: UITableViewRowAnimation.Fade)
+                case .Failure:
+                    var message = "Failed to add tracks".localize()
+                    UIAlertController.show(self, title: "MusicFav", message: message, handler: { action in })
+                case .ExceedLimit:
+                    let message = "Track number of per playlist exceeds the limit.".localize() +
+                            "If you purchase \"Unlock Everything\", you can create playlist infinitely.".localize()
+                    UIAlertController.showPurchaseAlert(self, title: "MusicFav", message: message, handler: {action in })
                 }
             }
             ptc.callback = nil

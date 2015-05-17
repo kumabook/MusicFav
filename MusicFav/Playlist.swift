@@ -19,6 +19,9 @@ public class Playlist: Equatable, Hashable {
     public   var signal:       Signal<Int, NSError>
     internal var sink:         SinkOf<ReactiveCocoa.Event<Int, NSError>>
 
+    static var playlistNumberLimit: Int { return 5 }
+    static var trackNumberLimit:    Int { return 5 }
+
     static var sharedPipe    = Signal<Event, NSError>.pipe()
     static var sharedList    = Playlist.findAll()
     public enum Event {
@@ -107,13 +110,12 @@ public class Playlist: Equatable, Hashable {
         return store
     }
 
-    public func create() -> Bool {
-        if PlaylistStore.create(self) {
+    public func create() -> PersistentResult {
+        let result = PlaylistStore.create(self)
+        if result == .Success {
             Playlist.notifyChange(.Created(self))
-            return true
-        } else {
-            return false
         }
+        return result
     }
 
     public func save() -> Bool {
@@ -136,10 +138,13 @@ public class Playlist: Equatable, Hashable {
         Playlist.notifyChange(.TrackRemoved(self, track, Int(index)))
     }
 
-    public func appendTracks(tracks: [Track]) {
-        PlaylistStore.appendTracks(tracks, playlist: self)
-        self.tracks.extend(tracks)
-        Playlist.notifyChange(.TracksAdded(self, tracks))
+    public func appendTracks(tracks: [Track]) -> PersistentResult {
+        let result = PlaylistStore.appendTracks(tracks, playlist: self)
+        if result == .Success {
+            self.tracks.extend(tracks)
+            Playlist.notifyChange(.TracksAdded(self, tracks))
+        }
+        return result
     }
 
     public class func findAll() -> [Playlist] {

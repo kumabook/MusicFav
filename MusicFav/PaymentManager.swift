@@ -17,7 +17,7 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
 
     private static let userDefaults = NSUserDefaults.standardUserDefaults()
     var productDic: [String:SKProduct] = [:]
-    weak var viewController: PreferenceViewController?
+    weak var viewController: UITableViewController?
     static var isUnlockedEverything: Bool {
         get      { return userDefaults.boolForKey("is_unlocked_everything") }
         set(val) { userDefaults.setBool(val, forKey: "is_unlocked_everything") }

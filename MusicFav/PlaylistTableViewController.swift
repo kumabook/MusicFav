@@ -190,7 +190,15 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             playlists[index].save()
         } else if index == NEW_PLAYLIST_INDEX {
             let playlist = Playlist(title: newTitle)
-            playlist.create()
+            switch playlist.create() {
+            case .Success: break
+            case .Failure:
+                UIAlertController.show(self, title: "MusicFav", message: "Failed to create playlist", handler: {action in })
+            case .ExceedLimit:
+                let message = "Playlist number exceeds the limit.".localize() +
+                    "If you purchase \"Unlock Everything\", you can create playlist infinitely.".localize()
+                UIAlertController.showPurchaseAlert(self, title: "MusicFav", message: message, handler: {action in })
+            }
         }
         tableView.reloadData()
     }

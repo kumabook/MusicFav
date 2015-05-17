@@ -22,6 +22,11 @@ extension RLMResults: SequenceType {
     }
 }
 
+public enum PersistentResult {
+    case Success
+    case ExceedLimit
+    case Failure
+}
 
 public class PlaylistStore: RLMObject {
     dynamic var id:     String = ""
@@ -45,26 +50,34 @@ public class PlaylistStore: RLMObject {
         }
     }
 
-    internal class func appendTracks(tracks: [Track], playlist: Playlist) {
+    internal class func appendTracks(tracks: [Track], playlist: Playlist) -> PersistentResult {
         let trackStores: [TrackStore] = tracks.map({ track in
             if let trackStore = TrackStore.findBy(url: track.url) { return trackStore }
             else                                                  { return track.toStoreObject() }
         })
 
         if let store = findBy(id: playlist.id) {
+            if !PaymentManager.isUnlockedEverything && Int(store.tracks.count) + trackStores.count > Playlist.trackNumberLimit {
+                return .ExceedLimit
+            }
             realm.transactionWithBlock() {
                 store.tracks.addObjects(trackStores)
             }
+            return .Success
         }
+        return .Failure
     }
 
-    internal class func create(playlist: Playlist) -> Bool {
-        if let store = findBy(id: playlist.id) { return false }
+    internal class func create(playlist: Playlist) -> PersistentResult {
+        if !PaymentManager.isUnlockedEverything && PlaylistStore.findAll().count+1 > Playlist.playlistNumberLimit {
+            return .ExceedLimit
+        }
+        if let store = findBy(id: playlist.id) { return .Failure }
         let store = playlist.toStoreObject()
         realm.transactionWithBlock() {
             self.realm.addObject(store)
         }
-        return true
+        return .Success
     }
 
     internal class func save(playlist: Playlist) -> Bool {

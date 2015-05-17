@@ -18,4 +18,16 @@ extension UIAlertController {
         vc.presentViewController(ac, animated: true, completion: nil)
         return ac
     }
+    class func showPurchaseAlert(vc: UITableViewController, title: String, message: String, handler: (UIAlertAction!) -> Void) -> UIAlertController {
+        var ac = UIAlertController(title: "MusicFav", message: message, preferredStyle: .Alert)
+        ac.addAction(UIAlertAction(title: "Purcahse".localize(), style: .Default, handler: {action in
+            if let appDelegate = UIApplication.sharedApplication().delegate as? AppDelegate {
+                appDelegate.paymentManager?.viewController = vc
+                appDelegate.paymentManager?.purchaseUnlockEverything()
+            }
+        }))
+        ac.addAction(UIAlertAction(title: "Cancel".localize(), style: .Cancel, handler: {action in }))
+        vc.presentViewController(ac, animated: true, completion: {})
+        return ac
+    }
 }
