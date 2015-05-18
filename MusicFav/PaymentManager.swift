@@ -80,6 +80,9 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
             alert.addAction(UIAlertAction(title: "Purchase".localize(), style: UIAlertActionStyle.Default, handler: { action in
                 queue.addPayment(SKPayment(product: unlockEverything))
             }))
+            alert.addAction(UIAlertAction(title: "Restore".localize(), style: UIAlertActionStyle.Default, handler: { action in
+                queue.restoreCompletedTransactions()
+            }))
             alert.addAction(UIAlertAction(title: "Cancel".localize(),
                                           style: UIAlertActionStyle.Cancel,
                                         handler: { action in
@@ -133,6 +136,25 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
                     MBProgressHUD.hideAllHUDsForView(view, animated: true)
                 }
             }
+        }
+    }
+
+    // Sent when an error is encountered while adding transactions from the user's purchase history back to the queue.
+    func paymentQueue(queue: SKPaymentQueue!, restoreCompletedTransactionsFailedWithError error: NSError!) {
+        if let vc = viewController, view = vc.navigationController?.view {
+            MBProgressHUD.hideAllHUDsForView(view, animated: true)
+            let message = String(format: "Sorry. Failed to restore.".localize())
+            var alert = UIAlertController(title: "MusicFav", message: message, preferredStyle: .Alert)
+            alert.addAction(UIAlertAction(title: "OK".localize(), style: .Cancel, handler: {action in }))
+            vc.presentViewController(alert, animated: true, completion: {})
+        }
+    }
+
+    // Sent when all transactions from the user's purchase history have successfully been added back to the queue.
+    func paymentQueueRestoreCompletedTransactionsFinished(queue: SKPaymentQueue!) {
+        if let vc = viewController, view = vc.navigationController?.view {
+            MBProgressHUD.hideAllHUDsForView(view, animated: true)
+            vc.tableView.reloadData()
         }
     }
 }
