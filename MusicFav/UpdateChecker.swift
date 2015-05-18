@@ -28,7 +28,7 @@ class UpdateChecker {
     }
     func check(application: UIApplication, completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
         let apiClient = CloudAPIClient.sharedInstance
-        if apiClient.isLoggedIn, let fireDate = nextNotificationDate {
+        if let fireDate = nextNotificationDate {
             fetchNewTracks().start(
                 next: { tracks in
                     UIScheduler().schedule {
@@ -55,22 +55,28 @@ class UpdateChecker {
         }
     }
     func fetchNewTracks() -> SignalProducer<[Track], NSError> {
+        var entriesSignal: SignalProducer<[Entry], NSError>!
         if let profile = FeedlyAPI.profile {
-            return apiClient.fetchEntries(streamId: FeedlyKit.Category.All(profile.id).streamId,
-                                         newerThan: newerThan.timestamp,
-                                        unreadOnly: true)
+            entriesSignal = apiClient.fetchEntries(streamId: FeedlyKit.Category.All(profile.id).streamId,
+                                                  newerThan: newerThan.timestamp,
+                                                 unreadOnly: true)
                 |> map { $0.items }
-                |> map { entries in
-                    entries.reduce(SignalProducer<[Track], NSError>(value: [])) {
-                        combineLatest($0, self.fetchPlaylistOfEntry($1)) |> map {
-                            var list = $0.0; list.extend($0.1.tracks); return list
-                        }
-                    }
-                }
-                |> flatten(.Concat)
         } else {
-            return SignalProducer<[Track], NSError>.empty
+            entriesSignal = StreamListLoader.sampleSubscriptions().map({ subscription in
+                return self.apiClient.fetchEntries(streamId: subscription.streamId, newerThan: self.newerThan.timestamp, unreadOnly: true) |> map { $0.items }
+            }).reduce(SignalProducer<[Entry], NSError>(value: [])) {
+                combineLatest($0, $1) |> map {
+                    var list = $0.0; list.extend($0.1); return list
+                }
+            }
         }
+        return entriesSignal |> map { entries in
+            entries.reduce(SignalProducer<[Track], NSError>(value: [])) {
+                combineLatest($0, self.fetchPlaylistOfEntry($1)) |> map {
+                    var list = $0.0; list.extend($0.1.tracks); return list
+                }
+            }
+        } |> flatten(.Concat)
     }
 
     func fetchPlaylistOfEntry(entry: Entry) -> SignalProducer<Playlist, NSError> {
