@@ -49,8 +49,8 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
         }
     }
 
-    private func purchaseProduct(product: SKProduct) {
-        if let type = ProductType(rawValue: product.productIdentifier) {
+    private func purchaseProduct(productIdentifier: String) {
+        if let type = ProductType(rawValue: productIdentifier) {
             switch type {
             case .UnlockEverything:
                 PaymentManager.isUnlockedEverything = true
@@ -94,45 +94,43 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
     func paymentQueue(queue: SKPaymentQueue!, updatedTransactions transactions: [AnyObject]!) {
         for transaction in transactions as! [SKPaymentTransaction] {
             let identifier = transaction.payment.productIdentifier
-            if let product = productDic[identifier], title = product.localizedTitle, desc = product.localizedDescription {
-                switch transaction.transactionState {
-                case .Purchasing:
-                    if let vc = viewController, view = vc.navigationController?.view {
-                        MBProgressHUD.showHUDAddedTo(view, animated: true)
-                    }
-                case .Purchased:
-                    purchaseProduct(product)
-                    if let vc = viewController, view = vc.navigationController?.view {
-                        MBProgressHUD.hideAllHUDsForView(view, animated: true)
-                        vc.tableView.reloadData()
-                        MBProgressHUD.showCompletedHUDForView(view, animated: true, duration: 1.0, after: {
-                            queue.finishTransaction(transaction)
-                        })
-                    }
-                case .Failed:
-                    queue.finishTransaction(transaction)
-                    if let vc = viewController, view = vc.navigationController?.view {
-                        MBProgressHUD.hideAllHUDsForView(view, animated: true)
-                        if transaction.error.code != SKErrorPaymentCancelled {
+            switch transaction.transactionState {
+            case .Purchasing:
+                if let vc = viewController, view = vc.navigationController?.view {
+                    MBProgressHUD.showHUDAddedTo(view, animated: true)
+                }
+            case .Purchased:
+                purchaseProduct(identifier)
+                queue.finishTransaction(transaction)
+                if let vc = viewController, view = vc.navigationController?.view {
+                    MBProgressHUD.hideAllHUDsForView(view, animated: true)
+                    vc.tableView.reloadData()
+                    MBProgressHUD.showCompletedHUDForView(view, animated: true, duration: 1.0, after: {})
+                }
+            case .Failed:
+                queue.finishTransaction(transaction)
+                if let vc = viewController, view = vc.navigationController?.view {
+                    MBProgressHUD.hideAllHUDsForView(view, animated: true)
+                    if transaction.error.code != SKErrorPaymentCancelled {
+                        if let product = productDic[identifier], title = product.localizedTitle, desc = product.localizedDescription {
                             let message = String(format: "Sorry. Failed to purchase \"%@\".".localize(), title)
                             var alert = UIAlertController(title: "MusicFav", message: message, preferredStyle: .Alert)
                             alert.addAction(UIAlertAction(title: "OK".localize(), style: .Cancel, handler: {action in }))
                             vc.presentViewController(alert, animated: true, completion: {})
                         }
                     }
-                case .Restored:
-                    purchaseProduct(product)
-                    if let vc = viewController, view = vc.navigationController?.view {
-                        MBProgressHUD.hideAllHUDsForView(view, animated: true)
-                        vc.tableView.reloadData()
-                        MBProgressHUD.showCompletedHUDForView(view, animated: true, duration: 1.0, after: {
-                            queue.finishTransaction(transaction)
-                        })
-                    }
-                case .Deferred:
-                    if let vc = viewController, view = vc.navigationController?.view {
-                        MBProgressHUD.hideAllHUDsForView(view, animated: true)
-                    }
+                }
+            case .Restored:
+                purchaseProduct(identifier)
+                queue.finishTransaction(transaction)
+                if let vc = viewController, view = vc.navigationController?.view {
+                    MBProgressHUD.hideAllHUDsForView(view, animated: true)
+                    vc.tableView.reloadData()
+                    MBProgressHUD.showCompletedHUDForView(view, animated: true, duration: 1.0, after: {})
+                }
+            case .Deferred:
+                if let vc = viewController, view = vc.navigationController?.view {
+                    MBProgressHUD.hideAllHUDsForView(view, animated: true)
                 }
             }
         }
