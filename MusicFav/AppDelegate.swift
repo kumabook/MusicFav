@@ -99,7 +99,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         registerNSUserDefaults()
         if isFirstLaunch {
             Playlist.createDefaultPlaylist()
-            Track.youTubeVideoQuality = XCDYouTubeVideoQuality.Medium360
+            Track.youTubeVideoQuality = YouTubeVideoQuality.Medium360
             FeedlyAPI.notificationDateComponents = UILocalNotification.defaultNotificationDateComponents
             markAsLaunched()
         }

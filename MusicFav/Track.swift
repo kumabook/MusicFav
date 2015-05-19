@@ -17,14 +17,47 @@ public enum Provider: String {
     case SoundCloud = "SoundCloud"
 }
 
+public enum YouTubeVideoQuality: UInt {
+    case AudioOnly = 140
+    case Small240  = 36
+    case Medium360 = 18
+    case HD720     = 22
+    var label: String {
+        switch self {
+        case .AudioOnly: return  "Audio only".localize()
+        case .Small240:  return  "Small 240".localize()
+        case .Medium360: return  "Medium 360".localize()
+        case .HD720:     return  "HD 720".localize()
+        default:         return  "Unknown".localize()
+        }
+    }
+    static func buildAlertActions(handler: () -> ()) -> [UIAlertAction] {
+        var actions: [UIAlertAction] = []
+        actions.append(UIAlertAction(title: YouTubeVideoQuality.AudioOnly.label,
+                                     style: .Default,
+                                  handler: { action in Track.youTubeVideoQuality = .AudioOnly; handler() }))
+
+        actions.append(UIAlertAction(title: YouTubeVideoQuality.Small240.label,
+                                     style: .Default,
+                                   handler: { action in Track.youTubeVideoQuality = .Small240; handler() }))
+        actions.append(UIAlertAction(title: YouTubeVideoQuality.Medium360.label,
+                                     style: .Default,
+                                   handler: { action in Track.youTubeVideoQuality = .Medium360; handler() }))
+        actions.append(UIAlertAction(title: YouTubeVideoQuality.HD720.label,
+                                     style: .Default,
+                                   handler: { action in  Track.youTubeVideoQuality = .HD720; handler() }))
+        return actions
+    }
+}
+
 public class Track {
     private static let userDefaults = NSUserDefaults.standardUserDefaults()
-    static var youTubeVideoQuality: XCDYouTubeVideoQuality {
+    static var youTubeVideoQuality: YouTubeVideoQuality {
         get {
-            if let quality = XCDYouTubeVideoQuality(rawValue: UInt(userDefaults.integerForKey("youtube_video_quality"))) {
+            if let quality = YouTubeVideoQuality(rawValue: UInt(userDefaults.integerForKey("youtube_video_quality"))) {
                 return quality
             } else {
-                return XCDYouTubeVideoQuality.Medium360
+                return YouTubeVideoQuality.Medium360
             }
         }
         set(quality) {

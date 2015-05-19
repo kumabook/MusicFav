@@ -252,7 +252,7 @@ class PreferenceViewController: UITableViewController {
             switch BehaviorRow(rawValue: indexPath.row)! {
             case .YouTubeVideoQuality:
                 var actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
-                for action in XCDYouTubeVideoQuality.buildAlertActions({ self.tableView.reloadData() }) {
+                for action in YouTubeVideoQuality.buildAlertActions({ self.tableView.reloadData() }) {
                     actionSheet.addAction(action)
                 }
                 actionSheet.addAction(UIAlertAction(title: "Cancel".localize(), style: .Cancel, handler: { action in }))
