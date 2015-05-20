@@ -108,11 +108,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if !didFinishTutorial { startTutorial() }
         reload()
         UILocalNotification.setup(application)
+        Logger.sendStartSession()
         return true
     }
 
     func applicationWillResignActive(application: UIApplication) {
-        Logger.sendEndSession()
         playerViewController?.disablePlayerView()
     }
 
@@ -124,11 +124,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
-        Logger.sendStartSession()
         application.applicationIconBadgeNumber = 0
     }
 
-    func applicationWillTerminate(application: UIApplication) {}
+    func applicationWillTerminate(application: UIApplication) {
+        Logger.sendEndSession()
+    }
 
     func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
         UpdateChecker().check(application, completionHandler: completionHandler)
