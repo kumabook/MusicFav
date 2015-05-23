@@ -233,8 +233,8 @@ class EntryStreamViewController: UITableViewController {
         }
         cell.dateLabel?.text  = entry.passedTime
 
-        if let visual = entry.visual {
-            cell.thumbImgView.sd_setImageWithURL(NSURL(string:visual.url), placeholderImage: UIImage(named: "default_thumb"))
+        if let url = entry.thumbnailURL {
+            cell.thumbImgView.sd_setImageWithURL(url, placeholderImage: UIImage(named: "default_thumb"))
         } else {
             cell.thumbImgView.image = UIImage(named: "default_thumb")
         }
