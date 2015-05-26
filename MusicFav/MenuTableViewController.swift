@@ -191,6 +191,8 @@ class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewD
                         self.treeView!.deleteItemsAtIndexes(NSIndexSet(index: i),
                                  inParent: nil,
                             withAnimation: RATreeViewRowAnimationRight)
+                        self.sections.removeAtIndex(i)
+                        self.treeView!.reloadData()
                     } else {
                         self.treeView!.deleteItemsAtIndexes(NSIndexSet(index: index),
                                  inParent: self.treeView!.parentForItem(subscription),
