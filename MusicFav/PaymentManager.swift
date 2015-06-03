@@ -74,8 +74,10 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
             }
         }
         if let unlockEverything = productDic[unlockEvnerythingIdentifier] {
-            var alert = UIAlertController(title: "MusicFav",
-                                        message: unlockEverything.localizedTitle + "\n" + unlockEverything.localizedDescription,
+            var title = "Unlock Everything".localize()
+            var description = "・Unlimited number of playlists\n・Unlimited number of tracks of per playlist".localize()
+            var alert = UIAlertController(title: title,
+                                        message: description,
                                  preferredStyle: .Alert)
             alert.addAction(UIAlertAction(title: "Purchase".localize(), style: UIAlertActionStyle.Default, handler: { action in
                 queue.addPayment(SKPayment(product: unlockEverything))

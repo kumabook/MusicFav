@@ -70,6 +70,7 @@
 "Playlist number is limited to %d."               = "プレイリストの数は%d個に制限されています。";
 "Track number of per playlist is limited to %d."  = "プレイリストあたりのトラックの数は%d個に制限されています。";
 "Do you want to purchase \"Unlock Everything\"."  = "購入して制限を解除しますか？";
+"・Unlimited number of playlists\n・Unlimited number of tracks of per playlist" = "・プレイリストの数の上限解除\n・プレイリストあたりのトラック数の上限解除";
 
 "You can mark article as read after login."  = "ログインすると記事の既読・未読の管理ができます。";
 "You can mark article as saved after login." = "ログインすると記事の保存ができます。";
