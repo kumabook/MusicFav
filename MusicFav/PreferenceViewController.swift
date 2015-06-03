@@ -72,15 +72,17 @@ class PreferenceViewController: UITableViewController {
         case YouTubeVideoQuality = 0
         case NotificationTime    = 1
         case UnlockEverything    = 2
+        case RestorePurchase     = 3
         static var count: Int {
             if PaymentManager.isUnlockedEverything { return 2 }
-            else                                   { return 3 }
+            else                                   { return 4 }
         }
         var title: String {
             switch self {
             case .YouTubeVideoQuality: return "Video Quality".localize()
             case .NotificationTime:    return "Notification of new arrivals".localize()
             case .UnlockEverything:    return "Unlock Everything".localize()
+            case .RestorePurchase:     return "Restore Purchase".localize()
             }
         }
         var detail: String {
@@ -97,6 +99,7 @@ class PreferenceViewController: UITableViewController {
                 }
                 return "No notification".localize()
             case .UnlockEverything: return ""
+            case .RestorePurchase:  return ""
             }
         }
     }
@@ -284,6 +287,8 @@ class PreferenceViewController: UITableViewController {
                 presentViewController(dateSelectionVC, animated:true, completion:{})
             case .UnlockEverything:
                 appDelegate.paymentManager?.purchaseUnlockEverything()
+            case .RestorePurchase:
+                appDelegate.paymentManager?.restorePurchase()
             }
         case .Feedback:
             switch FeedbackRow(rawValue: indexPath.row)! {

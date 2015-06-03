@@ -49,6 +49,20 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
         }
     }
 
+    func restorePurchase() {
+        if SKPaymentQueue.canMakePayments() {
+            SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
+            if let view = viewController?.navigationController?.view {
+                MBProgressHUD.showHUDAddedTo(view, animated: true)
+            }
+        } else {
+            let message = "Sorry. In-App Purchase is restricted".localize()
+            if let vc = viewController {
+                UIAlertController.show(vc, title: "MusicFav", message: message, handler: { action in })
+            }
+        }
+    }
+
     private func purchaseProduct(productIdentifier: String) {
         if let type = ProductType(rawValue: productIdentifier) {
             switch type {
@@ -81,9 +95,6 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
                                  preferredStyle: .Alert)
             alert.addAction(UIAlertAction(title: "Purchase".localize(), style: UIAlertActionStyle.Default, handler: { action in
                 queue.addPayment(SKPayment(product: unlockEverything))
-            }))
-            alert.addAction(UIAlertAction(title: "Restore".localize(), style: UIAlertActionStyle.Default, handler: { action in
-                queue.restoreCompletedTransactions()
             }))
             alert.addAction(UIAlertAction(title: "Cancel".localize(),
                                           style: UIAlertActionStyle.Cancel,
