@@ -102,6 +102,7 @@
 		6794E7F51AE318720054B3DB /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6794E7F41AE318720054B3DB /* TutorialView.swift */; };
 		679F405A1B05091D0070602D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 679F40591B05091D0070602D /* StoreKit.framework */; };
 		679F405C1B0574DD0070602D /* PaymentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679F405B1B0574DD0070602D /* PaymentManager.swift */; };
+		679F453D1AF104F7008D1B7F /* OnpuRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679F453C1AF104F7008D1B7F /* OnpuRefreshControl.swift */; };
 		67AF8E231A922AB80043DF33 /* FeedlyKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671664271A738E2A005FE005 /* FeedlyKit.framework */; };
 		67B1D6031AF8A8C800290AFF /* PlaylistTableViewControllerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B1D6021AF8A8C800290AFF /* PlaylistTableViewControllerSpec.swift */; };
 		67B1D60D1AF8A9FC00290AFF /* QuickSpecExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B1D60C1AF8A9FC00290AFF /* QuickSpecExtension.swift */; };
@@ -319,6 +320,7 @@
 		67AD3DA01AECF31B0059AB3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		67B1D6021AF8A8C800290AFF /* PlaylistTableViewControllerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewControllerSpec.swift; sourceTree = "<group>"; };
 		67B1D60C1AF8A9FC00290AFF /* QuickSpecExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuickSpecExtension.swift; sourceTree = "<group>"; };
+		679F453C1AF104F7008D1B7F /* OnpuRefreshControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnpuRefreshControl.swift; sourceTree = "<group>"; };
 		67B366DB1AE168E200E089B2 /* soundcloud.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = soundcloud.json; sourceTree = "<group>"; };
 		67B366DD1AE1CBA800E089B2 /* TutorialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialViewController.swift; sourceTree = "<group>"; };
 		67BE4F361AE7D95800E40E98 /* DeviceType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceType.swift; sourceTree = "<group>"; };
@@ -594,6 +596,7 @@
 				6767AE5B1ADBECCC00A92497 /* StreamTableViewCell.swift */,
 				6767AE5C1ADBECCC00A92497 /* StreamTableViewCell.xib */,
 				6794E7F41AE318720054B3DB /* TutorialView.swift */,
+				679F453C1AF104F7008D1B7F /* OnpuRefreshControl.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -1186,6 +1189,7 @@
 				67E5DEE31AEC4CEA000E016F /* FabricConfig.swift in Sources */,
 				67F9A2981AD13D130078EC3C /* PlaylistLoader.swift in Sources */,
 				67F9A2911AD03C0D0078EC3C /* PlaylistStreamViewController.swift in Sources */,
+				679F453D1AF104F7008D1B7F /* OnpuRefreshControl.swift in Sources */,
 				67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */,
 				67277CE01A46F4BC002FD3E0 /* MenuTableViewController.swift in Sources */,
 				67DA46561A86103B0048B29C /* PlaylistStore.swift in Sources */,
