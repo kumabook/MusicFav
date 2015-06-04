@@ -27,7 +27,7 @@
 		67277CBB1A434304002FD3E0 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67277CB91A434304002FD3E0 /* LaunchScreen.xib */; };
 		67277CDB1A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67277CD91A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift */; };
 		67277CDE1A46DF98002FD3E0 /* FeedlyAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67277CDD1A46DF98002FD3E0 /* FeedlyAPIClient.swift */; };
-		67277CE01A46F4BC002FD3E0 /* MenuTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67277CDF1A46F4BC002FD3E0 /* MenuTableViewController.swift */; };
+		67277CE01A46F4BC002FD3E0 /* StreamTreeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67277CDF1A46F4BC002FD3E0 /* StreamTreeViewController.swift */; };
 		67277CE31A46F844002FD3E0 /* EntryStreamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67277CE11A46F844002FD3E0 /* EntryStreamViewController.swift */; };
 		6727EDFE1A5AC1DE003C6A47 /* MiniPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6727EDFC1A5AC1DE003C6A47 /* MiniPlayerViewController.swift */; };
 		6727EDFF1A5AC1DE003C6A47 /* MiniPlayerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6727EDFD1A5AC1DE003C6A47 /* MiniPlayerViewController.xib */; };
@@ -250,7 +250,7 @@
 		67277CC51A434304002FD3E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		67277CD91A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedlyOAuthViewController.swift; sourceTree = "<group>"; };
 		67277CDD1A46DF98002FD3E0 /* FeedlyAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedlyAPIClient.swift; sourceTree = "<group>"; };
-		67277CDF1A46F4BC002FD3E0 /* MenuTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuTableViewController.swift; sourceTree = "<group>"; };
+		67277CDF1A46F4BC002FD3E0 /* StreamTreeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTreeViewController.swift; sourceTree = "<group>"; };
 		67277CE11A46F844002FD3E0 /* EntryStreamViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntryStreamViewController.swift; sourceTree = "<group>"; };
 		6727EDFC1A5AC1DE003C6A47 /* MiniPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerViewController.swift; sourceTree = "<group>"; };
 		6727EDFD1A5AC1DE003C6A47 /* MiniPlayerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MiniPlayerViewController.xib; sourceTree = "<group>"; };
@@ -316,11 +316,11 @@
 		6794E7F41AE318720054B3DB /* TutorialView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		679F40591B05091D0070602D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		679F405B1B0574DD0070602D /* PaymentManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentManager.swift; sourceTree = "<group>"; };
+		679F453C1AF104F7008D1B7F /* OnpuRefreshControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnpuRefreshControl.swift; sourceTree = "<group>"; };
 		67AD3D9D1AECF31B0059AB3E /* AcceptanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AcceptanceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		67AD3DA01AECF31B0059AB3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		67B1D6021AF8A8C800290AFF /* PlaylistTableViewControllerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewControllerSpec.swift; sourceTree = "<group>"; };
 		67B1D60C1AF8A9FC00290AFF /* QuickSpecExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuickSpecExtension.swift; sourceTree = "<group>"; };
-		679F453C1AF104F7008D1B7F /* OnpuRefreshControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnpuRefreshControl.swift; sourceTree = "<group>"; };
 		67B366DB1AE168E200E089B2 /* soundcloud.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = soundcloud.json; sourceTree = "<group>"; };
 		67B366DD1AE1CBA800E089B2 /* TutorialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialViewController.swift; sourceTree = "<group>"; };
 		67BE4F361AE7D95800E40E98 /* DeviceType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceType.swift; sourceTree = "<group>"; };
@@ -616,7 +616,7 @@
 			isa = PBXGroup;
 			children = (
 				67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */,
-				67277CDF1A46F4BC002FD3E0 /* MenuTableViewController.swift */,
+				67277CDF1A46F4BC002FD3E0 /* StreamTreeViewController.swift */,
 				6728FA371A60580A00F693B3 /* PreferenceViewController.swift */,
 				6701D4A71A93A3D5006BFEC6 /* CategoryTableViewController.swift */,
 				67311E2F1AF63BD500711DAC /* FeedbackWebViewController.swift */,
@@ -1191,7 +1191,7 @@
 				67F9A2911AD03C0D0078EC3C /* PlaylistStreamViewController.swift in Sources */,
 				679F453D1AF104F7008D1B7F /* OnpuRefreshControl.swift in Sources */,
 				67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */,
-				67277CE01A46F4BC002FD3E0 /* MenuTableViewController.swift in Sources */,
+				67277CE01A46F4BC002FD3E0 /* StreamTreeViewController.swift in Sources */,
 				67DA46561A86103B0048B29C /* PlaylistStore.swift in Sources */,
 				673DCCA21AF54BC90043E51D /* Logger.swift in Sources */,
 				6731BC9E1AD82321004F488D /* UIAlertControllerExtension.swift in Sources */,

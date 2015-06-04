@@ -30,7 +30,7 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
     var mainViewController:          JASidePanelController!
     var streamPageMenuController:    StreamPageMenuController!
     var playlistTableViewController: PlaylistTableViewController!
-    var menuViewController:          MenuTableViewController!
+    var streamTreeViewController:    StreamTreeViewController!
     var currentPlaylist:             Playlist? { get { return player?.currentPlaylist }}
     var currentTrack:                Track?    { get { return player?.currentTrack }}
     var miniPlayerObserver:          MiniPlayerObserver!
@@ -44,8 +44,8 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
         super.init(nibName: "MiniPlayerViewController", bundle: NSBundle.mainBundle())
         mainViewController                      = JASidePanelController()
         playlistTableViewController             = PlaylistTableViewController()
-        menuViewController                      = MenuTableViewController()
-        mainViewController.leftPanel            = UINavigationController(rootViewController:menuViewController)
+        streamTreeViewController                = StreamTreeViewController()
+        mainViewController.leftPanel            = UINavigationController(rootViewController:streamTreeViewController)
         mainViewController.rightPanel           = UINavigationController(rootViewController:playlistTableViewController)
         mainViewController.prepare()
         miniPlayerObserver                      = MiniPlayerObserver(miniPlayerViewController: self)

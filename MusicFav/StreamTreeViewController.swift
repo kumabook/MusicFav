@@ -1,5 +1,5 @@
 //
-//  MenuTableViewController.swift
+//  StreamTreeViewController.swift
 //  MusicFav
 //
 //  Created by Hiroki Kumamoto on 12/21/14.
@@ -13,7 +13,7 @@ import FeedlyKit
 import RATreeView
 import MBProgressHUD
 
-class MenuTableViewController: UIViewController, RATreeViewDelegate, RATreeViewDataSource {
+class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeViewDataSource {
     enum Section {
         case GlobalResource(Stream)
         case FeedlyCategory(FeedlyKit.Category)

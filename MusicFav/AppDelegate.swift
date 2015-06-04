@@ -162,7 +162,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func didLogout() { reload() }
 
     func reload() {
-        let vc               = miniPlayerViewController?.menuViewController
+        let vc               = miniPlayerViewController?.streamTreeViewController
         vc?.streamListLoader = StreamListLoader()
         vc?.showStream(stream: StreamListLoader.defaultStream())
         vc?.refresh()
@@ -170,7 +170,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func showStreamSelectViewController() {
         weak var mini = miniPlayerViewController
-        if let streamListLoader = mini?.menuViewController?.streamListLoader {
+        if let streamListLoader = mini?.streamTreeViewController?.streamListLoader {
             let stvc = StreamTableViewController(streamListLoader: streamListLoader)
             let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.3 * Double(NSEC_PER_SEC)))
             dispatch_after(delayTime, dispatch_get_main_queue()) {
