@@ -96,7 +96,7 @@
 		676E38161ADEADC000D38CBC /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 676E38151ADEADC000D38CBC /* Category.swift */; };
 		67773A701ACB81AA00E7BC8E /* MusicFavAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67773A6F1ACB81AA00E7BC8E /* MusicFavAPIClient.swift */; };
 		67773A721ACC194B00E7BC8E /* Entry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67773A711ACC194B00E7BC8E /* Entry.swift */; };
-		67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */; };
+		67871CA21A62EBB1005D2174 /* AddStreamTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67871CA01A62EBB1005D2174 /* AddStreamTableViewController.swift */; };
 		6794E7EA1AE241AC0054B3DB /* tutorial.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6794E7E91AE241AC0054B3DB /* tutorial.xcassets */; };
 		6794E7ED1AE256300054B3DB /* Tutorial.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6794E7EF1AE256300054B3DB /* Tutorial.strings */; };
 		6794E7F51AE318720054B3DB /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6794E7F41AE318720054B3DB /* TutorialView.swift */; };
@@ -309,7 +309,7 @@
 		67773A6F1ACB81AA00E7BC8E /* MusicFavAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicFavAPIClient.swift; sourceTree = "<group>"; };
 		67773A711ACC194B00E7BC8E /* Entry.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Entry.swift; sourceTree = "<group>"; };
 		677933A8B0BDDEAED4C720D5 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTableViewController.swift; sourceTree = "<group>"; };
+		67871CA01A62EBB1005D2174 /* AddStreamTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddStreamTableViewController.swift; sourceTree = "<group>"; };
 		6794E7E91AE241AC0054B3DB /* tutorial.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = tutorial.xcassets; sourceTree = "<group>"; };
 		6794E7EE1AE256300054B3DB /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Tutorial.strings; sourceTree = "<group>"; };
 		6794E7F11AE2563B0054B3DB /* Base */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Base; path = Base.lproj/Tutorial.strings; sourceTree = "<group>"; };
@@ -615,7 +615,7 @@
 		6728FA341A604C1A00F693B3 /* Left */ = {
 			isa = PBXGroup;
 			children = (
-				67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */,
+				67871CA01A62EBB1005D2174 /* AddStreamTableViewController.swift */,
 				67277CDF1A46F4BC002FD3E0 /* StreamTreeViewController.swift */,
 				6728FA371A60580A00F693B3 /* PreferenceViewController.swift */,
 				6701D4A71A93A3D5006BFEC6 /* CategoryTableViewController.swift */,
@@ -1190,7 +1190,7 @@
 				67F9A2981AD13D130078EC3C /* PlaylistLoader.swift in Sources */,
 				67F9A2911AD03C0D0078EC3C /* PlaylistStreamViewController.swift in Sources */,
 				679F453D1AF104F7008D1B7F /* OnpuRefreshControl.swift in Sources */,
-				67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */,
+				67871CA21A62EBB1005D2174 /* AddStreamTableViewController.swift in Sources */,
 				67277CE01A46F4BC002FD3E0 /* StreamTreeViewController.swift in Sources */,
 				67DA46561A86103B0048B29C /* PlaylistStore.swift in Sources */,
 				673DCCA21AF54BC90043E51D /* Logger.swift in Sources */,

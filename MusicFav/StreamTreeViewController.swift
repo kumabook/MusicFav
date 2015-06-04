@@ -137,7 +137,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
     }
 
     func addStream() {
-        let stvc = StreamTableViewController(streamListLoader: streamListLoader)
+        let stvc = AddStreamTableViewController(streamListLoader: streamListLoader)
         root?.presentViewController(UINavigationController(rootViewController:stvc), animated: true, completion: nil)
     }
 

@@ -1,5 +1,5 @@
 //
-//  StreamTableViewController.swift
+//  AddStreamTableViewController.swift
 //  MusicFav
 //
 //  Created by Hiroki Kumamoto on 1/3/15.
@@ -12,7 +12,7 @@ import LlamaKit
 import FeedlyKit
 import MBProgressHUD
 
-class StreamTableViewController: UITableViewController, UISearchBarDelegate {
+class AddStreamTableViewController: UITableViewController, UISearchBarDelegate {
     let cellHeight:        CGFloat = 100
     let accessoryWidth:    CGFloat = 30
     let SEARCH_BAR_HEIGHT: CGFloat = 40
