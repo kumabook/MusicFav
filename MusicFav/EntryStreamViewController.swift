@@ -12,16 +12,18 @@ import LlamaKit
 import SwiftyJSON
 import FeedlyKit
 import PageMenu
+import ISAlternativeRefreshControl
 
 class EntryStreamViewController: UITableViewController {
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     let cellHeight: CGFloat = 120
     let entryStreamTableCellReuseIdentifier = "EntryStreamTableViewCell"
 
-    let streamLoader: StreamLoader!
-    var observer:     Disposable?
-    var indicator:    UIActivityIndicatorView!
-    var reloadButton: UIButton!
+    let streamLoader:        StreamLoader!
+    var observer:            Disposable?
+    var onpuRefreshControl:  OnpuRefreshControl!
+    var indicator:           UIActivityIndicatorView!
+    var reloadButton:        UIButton!
 
     var feedlyClient: CloudAPIClient { return streamLoader.feedlyClient }
 
@@ -71,9 +73,10 @@ class EntryStreamViewController: UITableViewController {
         reloadButton.setTitle("Sorry, network error occured.".localize(), forState:UIControlState.Normal)
         reloadButton.frame = CGRectMake(0, 0, tableView.frame.size.width, 44);
 
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action:"fetchLatestEntries", forControlEvents:UIControlEvents.ValueChanged)
-        // workaround because tableView height is too long
+        let controlFrame   = CGRect(x: 0, y:0, width: view.frame.size.width, height: 80)
+        onpuRefreshControl = OnpuRefreshControl(frame: controlFrame)
+        onpuRefreshControl.addTarget(self, action: "fetchLatestEntries", forControlEvents:UIControlEvents.ValueChanged)
+        tableView.addSubview(onpuRefreshControl)
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1)), dispatch_get_main_queue()) {
             if let pageMenu = self.parentViewController as? CAPSPageMenu {
                 let f = self.view.frame
@@ -110,10 +113,13 @@ class EntryStreamViewController: UITableViewController {
         observer = streamLoader.signal.observe(next: { event in
             switch event {
             case .StartLoadingLatest:
-                self.refreshControl?.beginRefreshing()
+                self.onpuRefreshControl.beginRefreshing()
             case .CompleteLoadingLatest:
-                self.tableView.reloadData()
-                self.refreshControl?.endRefreshing()
+                let startTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double(NSEC_PER_SEC)))
+                dispatch_after(startTime, dispatch_get_main_queue()) {
+                    self.tableView.reloadData()
+                    self.onpuRefreshControl.endRefreshing()
+                }
             case .StartLoadingNext:
                 self.showIndicator()
             case .CompleteLoadingNext:

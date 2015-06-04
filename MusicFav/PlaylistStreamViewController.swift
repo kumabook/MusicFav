@@ -21,6 +21,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
     var reloadButton: UIButton!
     var streamLoader: StreamLoader!
     var observer:     Disposable?
+    var onpuRefreshControl:  OnpuRefreshControl!
 
     init(streamLoader: StreamLoader) {
         self.streamLoader = streamLoader
@@ -61,8 +62,10 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
         reloadButton.setTitle("Sorry, network error occured.".localize(), forState:UIControlState.Normal)
         reloadButton.frame = CGRectMake(0, 0, tableView.frame.size.width, 44);
 
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action:"fetchLatestEntries", forControlEvents:UIControlEvents.ValueChanged)
+        let controlFrame   = CGRect(x: 0, y:0, width: view.frame.size.width, height: 80)
+        onpuRefreshControl = OnpuRefreshControl(frame: controlFrame)
+        onpuRefreshControl.addTarget(self, action: "fetchLatestEntries", forControlEvents:UIControlEvents.ValueChanged)
+        tableView.addSubview(onpuRefreshControl)
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -91,10 +94,13 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
         observer = streamLoader.signal.observe(next: { event in
             switch event {
             case .StartLoadingLatest:
-                self.refreshControl?.beginRefreshing()
+                self.onpuRefreshControl.beginRefreshing()
             case .CompleteLoadingLatest:
-                self.tableView.reloadData()
-                self.refreshControl?.endRefreshing()
+                let startTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double(NSEC_PER_SEC)))
+                dispatch_after(startTime, dispatch_get_main_queue()) {
+                    self.tableView.reloadData()
+                    self.onpuRefreshControl.endRefreshing()
+                }
             case .StartLoadingNext:
                 self.showIndicator()
             case .CompleteLoadingNext:
