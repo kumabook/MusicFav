@@ -7,7 +7,8 @@
 //
 
 import SwiftyJSON
-import LlamaKit
+import Result
+import Box
 import ReactiveCocoa
 import AFNetworking
 

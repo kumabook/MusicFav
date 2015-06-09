@@ -10,7 +10,6 @@ import UIKit
 import AVFoundation
 import SwiftyJSON
 import ReactiveCocoa
-import LlamaKit
 import XCDYouTubeKit
 import SDWebImage
 

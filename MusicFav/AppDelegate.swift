@@ -10,7 +10,6 @@ import UIKit
 import CoreData
 import AVFoundation
 import ReactiveCocoa
-import LlamaKit
 import FeedlyKit
 import Fabric
 import Crashlytics

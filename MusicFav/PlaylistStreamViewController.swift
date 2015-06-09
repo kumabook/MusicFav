@@ -8,7 +8,6 @@
 
 import UIKit
 import ReactiveCocoa
-import LlamaKit
 import SwiftyJSON
 import FeedlyKit
 

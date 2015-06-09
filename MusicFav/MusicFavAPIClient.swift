@@ -9,8 +9,10 @@
 import Foundation
 import SwiftyJSON
 import ReactiveCocoa
-import LlamaKit
+import Result
+import Box
 import AFNetworking
+import FeedlyKit
 
 class MusicFavAPIClient {
     static let baseUrl   = "http://musicfav-cloud.herokuapp.com"

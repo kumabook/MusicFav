@@ -8,7 +8,8 @@
 
 import XCDYouTubeKit
 import ReactiveCocoa
-import LlamaKit
+import Result
+import Box
 
 extension XCDYouTubeClient {
     func fetchVideo(identifier: String) -> SignalProducer<XCDYouTubeVideo, NSError> {

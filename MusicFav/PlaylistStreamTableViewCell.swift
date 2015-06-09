@@ -9,8 +9,6 @@
 import UIKit
 import Snap
 import ReactiveCocoa
-import LlamaKit
-
 
 protocol PlaylistStreamTableViewCellDelegate: class {
     func trackSelectedAt(index: Int, track: Track, playlist: Playlist)

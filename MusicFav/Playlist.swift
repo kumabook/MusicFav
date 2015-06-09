@@ -9,7 +9,8 @@
 import UIKit
 import SwiftyJSON
 import ReactiveCocoa
-import LlamaKit
+import Result
+import Box
 
 public class Playlist: Equatable, Hashable {
     public   let id:           String

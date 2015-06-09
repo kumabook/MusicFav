@@ -8,7 +8,6 @@
 
 import UIKit
 import ReactiveCocoa
-import LlamaKit
 
 class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     let NEW_PLAYLIST_INDEX = -1

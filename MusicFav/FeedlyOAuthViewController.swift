@@ -9,7 +9,6 @@
 import UIKit
 import FeedlyKit
 import ReactiveCocoa
-import LlamaKit
 import NXOAuth2Client
 
 protocol FeedlyOAuthViewDelegate: class {

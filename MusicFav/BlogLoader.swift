@@ -7,7 +7,8 @@
 //
 
 import ReactiveCocoa
-import LlamaKit
+import Result
+import Box
 import FeedlyKit
 
 class BlogLoader {

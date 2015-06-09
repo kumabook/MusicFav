@@ -8,7 +8,8 @@
 
 import FeedlyKit
 import ReactiveCocoa
-import LlamaKit
+import Result
+import Box
 
 class StreamLoader {
     enum RemoveMark {
