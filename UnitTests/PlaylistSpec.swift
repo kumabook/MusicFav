@@ -33,8 +33,8 @@ class PlaylistSpec: QuickSpec {
             it("should create if not exist") {
                 var playlists = Playlist.findAll()
                 expect(playlists.count).to(equal(0))
-                expect(playlist.create()).to(equal(true))
-                expect(playlist.create()).to(equal(false))
+                expect(playlist.create()).to(equal(PersistentResult.Success))
+                expect(playlist.create()).to(equal(PersistentResult.Failure))
                 playlists = Playlist.findAll()
                 expect(playlists.count).to(equal(1))
                 expect(Track.findAll().count).to(equal(2))
@@ -43,13 +43,13 @@ class PlaylistSpec: QuickSpec {
                 var playlists = Playlist.findAll()
                 expect(playlists.count).to(equal(0))
                 expect(playlist.save()).to(equal(false))
-                expect(playlist.create()).to(equal(true))
+                expect(playlist.create()).to(equal(PersistentResult.Success))
                 expect(playlist.save()).to(equal(true))
                 playlists = Playlist.findAll()
                 expect(playlists.count).to(equal(1))
             }
             it("should append and remove track") {
-                expect(playlist.create()).to(equal(true))
+                expect(playlist.create()).to(equal(PersistentResult.Success))
                 expect(playlist.tracks.count).to(equal(2))
                 let track = Track(provider: Provider.Youtube, url: "http://dummy.com", identifier: "12345", title: nil)
                 playlist.appendTracks([track])
