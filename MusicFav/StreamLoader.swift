@@ -122,7 +122,7 @@ class StreamLoader {
     }
 
     func fetchEntries() {
-        if state == .Fetching || state == .Complete {
+        if state != .Normal {
             return
         }
         state = .Fetching
