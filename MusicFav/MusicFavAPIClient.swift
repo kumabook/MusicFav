@@ -22,7 +22,7 @@ class MusicFavAPIClient {
             let manager = AFHTTPRequestOperationManager()
             manager.completionQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
             let url = String(format: "%@/playlistify?url=%@", MusicFavAPIClient.baseUrl, targetUrl)
-            manager.GET(url, parameters: nil,
+            var operation: AFHTTPRequestOperation? = manager.GET(url, parameters: nil,
                 success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
                     let json = JSON(response)
                     sink.put(.Next(Box(Playlist(json: json))))
@@ -38,7 +38,7 @@ class MusicFavAPIClient {
                     }
             })
             disposable.addDisposable {
-                manager.operationQueue.cancelAllOperations()
+                operation?.cancel()
             }
         }
     }

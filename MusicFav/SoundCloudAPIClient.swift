@@ -47,7 +47,7 @@ class SoundCloudAPIClient {
             let manager = AFHTTPRequestOperationManager()
             manager.completionQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
             let url = String(format: "%@/tracks/%@.json?client_id=%@", SoundCloudAPIClient.baseUrl, track_id, self.clientId)
-            manager.GET(url, parameters: nil,
+            var operation: AFHTTPRequestOperation? = manager.GET(url, parameters: nil,
                 success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
                     let json = JSON(response)
                     sink.put(.Next(Box(SoundCloudAudio(json: json))))
@@ -58,7 +58,7 @@ class SoundCloudAPIClient {
                     return
             })
             disposable.addDisposable {
-                manager.operationQueue.cancelAllOperations()
+                operation?.cancel()
             }
         }
     }
