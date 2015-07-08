@@ -132,8 +132,8 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
         appDelegate.miniPlayerViewController?.mainViewController.showRightPanelAnimated(true)
     }
     
-    func play(index: Int, playlist: Playlist) {
-        player?.play(index, playlist: playlist)
+    func select(index: Int, playlist: Playlist) {
+        player?.select(index, playlist: playlist)
     }
 
     // MARK: - MiniPlayerViewDelegate -

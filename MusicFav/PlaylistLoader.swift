@@ -44,7 +44,7 @@ class PlaylistLoader {
         return track.fetchTrackDetail(false) |> map { _track -> (Int, Track) in
             if let __self = _self {
                 Playlist.notifyChange(.TrackUpdated(__self.playlist, _track))
-                __self.playlist.sink.put(.Next(Box(index)))
+                __self.playlist.sink.put(.Next(Box(PlaylistEvent.Load(index: index))))
             }
             return (index, _track)
         }

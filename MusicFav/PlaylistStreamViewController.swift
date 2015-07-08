@@ -37,6 +37,12 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
             vc.updateSelection(UITableViewScrollPosition.Middle)
             vc.updateCurrentTrack()
         }
+        override func nextPlaylistRequested() {
+            vc.playPlaylist(vc.nextPlaylist())
+        }
+        override func previousPlaylistRequested() {
+            vc.playPlaylist(vc.previousPlaylist())
+        }
         override func trackSelected(track: Track, index: Int, playlist: Playlist) {
             vc.updateTrack(track, index: index, playlist: playlist, playerState: vc.player!.currentState)
             vc.tableView?.reloadData()
@@ -218,6 +224,46 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+
+    func previousPlaylist() -> Playlist? {
+        var prev: Playlist?
+        for e in streamLoader.entries {
+            if let playlist = streamLoader.playlistsOfEntry[e] {
+                if let p = player?.currentPlaylist {
+                    if p == playlist {
+                        return prev
+                    }
+                }
+                if playlist.validTracksCount > 0 {
+                    prev = playlist
+                }
+            }
+        }
+        return nil
+    }
+
+    func nextPlaylist() -> Playlist? {
+        var find = false
+        for e in streamLoader.entries {
+            if let playlist = streamLoader.playlistsOfEntry[e] {
+                if find && playlist.validTracksCount > 0 {
+                    return playlist
+                }
+                if let p = player?.currentPlaylist {
+                    if p == playlist {
+                        find = true
+                    }
+                }
+            }
+        }
+        return nil
+    }
+
+    func playPlaylist(playlist: Playlist?) {
+        if let p = playlist {
+            appDelegate.miniPlayerViewController?.select(0, playlist: p)
+        }
     }
 
     // MARK: - PlaylistStreamTableViewDelegate

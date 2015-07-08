@@ -104,6 +104,10 @@ public class Playlist: Equatable, Hashable {
         self.sink   = pipe.1
     }
 
+    public var validTracksCount: Int {
+        return tracks.filter({ $0.streamUrl != nil}).count
+    }
+
     public var hashValue: Int {
         return id.hashValue
     }

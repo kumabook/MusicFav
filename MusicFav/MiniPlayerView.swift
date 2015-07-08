@@ -43,11 +43,10 @@ class MiniPlayerView: UIView {
     }
 
     func updatePlayButton() {
-        switch (state) {
-        case .Pause:
-            playButton.setImage(UIImage(named: "play"), forState: UIControlState.Normal)
-        case .Play:
+        if state.isPlaying {
             playButton.setImage(UIImage(named: "pause"),  forState: UIControlState.Normal)
+        } else {
+            playButton.setImage(UIImage(named: "play"), forState: UIControlState.Normal)
         }
     }
     
