@@ -23,4 +23,13 @@ extension String {
                                          comment: key)
 
     }
+
+    func toURL() -> NSURL? {
+        if let url = NSURL(string: self) {
+            return url
+        } else if let str = stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) {
+            return NSURL(string: str)
+        }
+        return nil
+    }
 }

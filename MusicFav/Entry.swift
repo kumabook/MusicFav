@@ -43,8 +43,19 @@ extension Entry {
         return "\(day)" + " days ago"
     }
     var thumbnailURL: NSURL? {
-        if let u = visual?.url, url = NSURL(string: u) { return url }
-        else if let url = extractImgSrc() {              return url }
+        if let v = visual, url = v.url.toURL() {
+            if url.scheme != nil { return url }
+        }
+        if let links = enclosure {
+            for link in links {
+                if let url = link.href.toURL() {
+                    if url.scheme != nil { return url }
+                }
+            }
+        }
+        if let url = extractImgSrc() {
+            return url
+        }
         return nil
     }
     func extractImgSrc() -> NSURL? {
@@ -59,7 +70,7 @@ extension Entry {
                     for i in 0...result.numberOfRanges - 1 {
                         let range = result.rangeAtIndex(i)
                         let str = html as NSString
-                        if let url = NSURL(string: str.substringWithRange(range)) {
+                        if let url = str.substringWithRange(range).toURL() {
                             return url
                         }
                     }
