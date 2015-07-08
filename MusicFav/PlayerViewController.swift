@@ -23,12 +23,15 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
             vc = playerViewController
             super.init()
         }
-        override func timeUpdated()      { vc.updateViews() }
-        override func didPlayToEndTime() { vc.updateViews() }
-        override func statusChanged()    { vc.updateViews() }
-        override func trackChanged()     { vc.updateViews() }
-        override func started()          { vc.enablePlayerView() }
-        override func ended()            { vc.updateViews() }
+        override func timeUpdated()               { vc.updateViews() }
+        override func didPlayToEndTime()          { vc.updateViews() }
+        override func statusChanged()             { vc.updateViews() }
+        override func trackSelected(track: Track, index: Int, playlist: Playlist) {
+            vc.updateViews()
+        }
+        override func trackUnselected(track: Track, index: Int, playlist: Playlist) {
+            vc.updateViews()
+        }
     }
 
     let paddingSide:        CGFloat = 10.0
@@ -261,10 +264,9 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
 
     func updateViews() {
         if let state = player?.currentState {
-            switch (state) {
-            case .Play:
+            if state.isPlaying {
                 playButton.setImage(UIImage(named: "pause"), forState: UIControlState.allZeros)
-            case .Pause:
+            } else {
                 playButton.setImage(UIImage(named: "play"), forState: UIControlState.allZeros)
             }
         }

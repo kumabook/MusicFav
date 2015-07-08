@@ -10,9 +10,11 @@ import UIKit
 import ReactiveCocoa
 import SwiftyJSON
 import FeedlyKit
+import Box
 
 class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableViewCellDelegate {
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    var player:     Player<PlayerObserver>? { get { return appDelegate.player }}
     let cellHeight: CGFloat = 120
     let playlistStreamTableCellReuseIdentifier = "PlaylistStreamTableViewCell"
 
@@ -21,10 +23,34 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
     var streamLoader: StreamLoader!
     var observer:     Disposable?
     var onpuRefreshControl:  OnpuRefreshControl!
+    var playerObserver: PlaylistStreamPlayerObserver!
+
+    class PlaylistStreamPlayerObserver: PlayerObserver {
+        let vc: PlaylistStreamViewController
+        init(playlistStreamViewController: PlaylistStreamViewController) {
+            vc = playlistStreamViewController
+            super.init()
+        }
+        override func timeUpdated()      {}
+        override func didPlayToEndTime() {}
+        override func statusChanged() {
+            vc.updateSelection(UITableViewScrollPosition.Middle)
+            vc.updateCurrentTrack()
+        }
+        override func trackSelected(track: Track, index: Int, playlist: Playlist) {
+            vc.updateTrack(track, index: index, playlist: playlist, playerState: vc.player!.currentState)
+            vc.tableView?.reloadData()
+        }
+        override func trackUnselected(track: Track, index: Int, playlist: Playlist) {
+            vc.updateTrack(track, index: index, playlist: playlist, playerState: PlayerState.Init)
+            vc.tableView?.reloadData()
+        }
+    }
 
     init(streamLoader: StreamLoader) {
         self.streamLoader = streamLoader
         super.init(nibName: nil, bundle: nil)
+        self.playerObserver = PlaylistStreamPlayerObserver(playlistStreamViewController: self)
     }
 
     override init(style: UITableViewStyle) {
@@ -46,7 +72,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
         tableView.registerNib(nib, forCellReuseIdentifier: playlistStreamTableCellReuseIdentifier)
         clearsSelectionOnViewWillAppear = true
 
-        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.White)
         indicator.bounds = CGRect(x: 0,
             y: 0,
             width: indicator.bounds.width,
@@ -81,11 +107,40 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         observeStreamLoader()
+        player?.addObserver(playerObserver)
     }
 
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         observer?.dispose()
+        player?.removeObserver(playerObserver)
+    }
+
+    func indexPathOfPlaylist(playlist: Playlist) -> NSIndexPath? {
+        for i in 0..<streamLoader.entries.count {
+            if let p = streamLoader.playlistsOfEntry[streamLoader.entries[i]] {
+                if p == playlist { return NSIndexPath(forRow: i, inSection: 0) }
+            }
+        }
+        return nil
+    }
+
+    func updateSelection(scrollPosition: UITableViewScrollPosition) {
+        if let p = appDelegate.player, pl = p.currentPlaylist {
+            if let index = indexPathOfPlaylist(pl) {
+                tableView.selectRowAtIndexPath(index, animated: true, scrollPosition: scrollPosition)
+            }
+        }
+    }
+
+    func updateCurrentTrack() {
+        if let p = appDelegate.player, pl = p.currentPlaylist, t = p.currentTrack, i = p.currentIndex {
+            updateTrack(t, index: i, playlist: pl, playerState: p.currentState)
+        }
+    }
+
+    func updateTrack(track: Track, index: Int, playlist: Playlist, playerState: PlayerState) {
+        playlist.sink.put(.Next(Box(PlaylistEvent.ChangePlayState(index: index, playerState: playerState))))
     }
 
     func observeStreamLoader() {
@@ -168,10 +223,8 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
     // MARK: - PlaylistStreamTableViewDelegate
 
     func trackSelectedAt(index: Int, track: Track, playlist: Playlist) {
-        appDelegate.miniPlayerViewController?.play(index, playlist: playlist)
-        if track.streamUrl != nil {
-            appDelegate.miniPlayerViewController?.play(index, playlist: playlist)
-        }
+        appDelegate.miniPlayerViewController?.select(index, playlist: playlist)
+        tableView.reloadData()
     }
 
     func trackScrollViewMarginTapped(playlist: Playlist?) {
@@ -204,6 +257,15 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
             cell.delegate           = self
             cell.trackNumLabel.text = "\(playlist.tracks.count) tracks"
             cell.loadThumbnails(playlist)
+            if let p = self.player, cp = p.currentPlaylist, i = p.currentIndex {
+                if cp == playlist {
+                    cell.updatePlayerIcon(i, playerState: p.currentState)
+                } else {
+                    cell.updatePlayerIcon(0, playerState: PlayerState.Init)
+                }
+            } else {
+                cell.updatePlayerIcon(0, playerState: PlayerState.Init)
+            }
             cell.observePlaylist(playlist)
         } else {
             cell.delegate           = nil
@@ -223,6 +285,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
             Logger.sendUIActionEvent(self, action: "didSelectRowAtIndexPath", label: String(indexPath.row))
             showPlaylist(playlist)
         }
+        updateSelection(UITableViewScrollPosition.None)
     }
 
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {

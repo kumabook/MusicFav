@@ -23,9 +23,6 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
         override func timeUpdated()      { vc.updateViews() }
         override func didPlayToEndTime() { vc.updateViews() }
         override func statusChanged()    { vc.updateViews() }
-        override func trackChanged()     { vc.updateViews() }
-        override func started()          { vc.updateViews() }
-        override func ended()            { vc.updateViews() }
     }
     var mainViewController:          JASidePanelController!
     var streamPageMenuController:    StreamPageMenuController!

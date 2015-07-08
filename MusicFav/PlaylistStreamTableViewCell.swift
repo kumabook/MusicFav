@@ -23,13 +23,25 @@ class PlaylistStreamTableViewCell: UITableViewCell {
 
     weak var delegate: PlaylistStreamTableViewCellDelegate?
 
-    var imageViews: [UIImageView] = []
-    var playlist:   Playlist?
-    var observer:   Disposable?
+    var imageViews:  [UIImageView] = []
+    var playerIcon:  UIImageView!
+    var indicator:   UIActivityIndicatorView!
+    var playlist:    Playlist?
+    var observer:    Disposable?
+    var playerState: PlayerState!
 
     @IBOutlet weak var trackNumLabel: UILabel!
     override func awakeFromNib() {
         super.awakeFromNib()
+        let tw = thumbnailWidth
+        playerIcon = UIImageView(frame: CGRect(x: 0, y: 0, width: tw*0.6, height: tw*0.6))
+        playerIcon.hidden = true
+        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        indicator.hidesWhenStopped = true
+        indicator.hidden           = true
+        trackThumbScrollView.addSubview(playerIcon)
+        trackThumbScrollView.addSubview(indicator)
+        playerState = .Init
     }
 
     deinit {
@@ -85,6 +97,54 @@ class PlaylistStreamTableViewCell: UITableViewCell {
         trackThumbScrollView.contentSize = CGSize(width: contentWidth, height: thumbnailWidth)
     }
 
+    func updatePlayerIcon(index: Int, playerState: PlayerState) {
+        let tw = thumbnailWidth
+        let htw = tw * 0.5
+        playerIcon.center = CGPoint(x: tw * CGFloat(index) + htw, y: htw)
+        indicator.center = CGPoint(x: tw * CGFloat(index) + htw, y: htw)
+        trackThumbScrollView.bringSubviewToFront(playerIcon)
+        trackThumbScrollView.bringSubviewToFront(indicator)
+        if self.playerState != playerState {
+            self.playerState = playerState
+            switch playerState {
+            case .Init:
+                playerIcon.hidden = true
+                indicator.stopAnimating()
+            case .Load:
+                playerIcon.hidden = true
+                indicator.hidden = false
+                indicator.startAnimating()
+            case .LoadToPlay:
+                playerIcon.hidden = true
+                indicator.hidden = false
+                indicator.startAnimating()
+            case .Play:
+                playerIcon.hidden = false
+                startPlayerIconAnimation()
+                indicator.stopAnimating()
+            case .Pause:
+                playerIcon.hidden = false
+                stopPlayerIconAnimation()
+                indicator.stopAnimating()
+            }
+        }
+    }
+
+    func startPlayerIconAnimation() {
+        playerIcon.image              = UIImage(named: "loading_icon")
+        let rotationAnimation         = CABasicAnimation(keyPath: "transform.rotation.z")
+        rotationAnimation.toValue     = NSNumber(float: Float(2.0 * M_PI))
+        rotationAnimation.duration    = 1.0
+        rotationAnimation.cumulative  = true
+        rotationAnimation.repeatCount = Float.infinity
+        playerIcon.layer.addAnimation(rotationAnimation, forKey: "rotationAnimation")
+    }
+
+    func stopPlayerIconAnimation() {
+        playerIcon.layer.removeAllAnimations()
+        playerIcon.image = UIImage(named: "loading_icon_1")
+    }
+
     func thumbImageTapped(sender: UITapGestureRecognizer) {
         if let playlist = self.playlist {
             if let delegate = self.delegate {
@@ -103,9 +163,20 @@ class PlaylistStreamTableViewCell: UITableViewCell {
 
     func observePlaylist(playlist: Playlist) {
         observer?.dispose()
-        observer = playlist.signal.observe(next: { index in
+        observer = playlist.signal.observe(next: { event in
             UIScheduler().schedule {
-                self.loadThumbnail(self.imageViews[index], track: playlist.tracks[index])
+                let startTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC)))
+                switch event {
+                case .Load(let index):
+                    self.loadThumbnail(self.imageViews[index], track: playlist.tracks[index])
+                    dispatch_after(startTime, dispatch_get_main_queue()) {
+                        self.updatePlayerIcon(index, playerState: PlayerState.Init)
+                    }
+                case .ChangePlayState(let index, let playerState):
+                    dispatch_after(startTime, dispatch_get_main_queue()) {
+                        self.updatePlayerIcon(index, playerState: playerState)
+                    }
+                }
             }
             return
         })

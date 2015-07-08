@@ -36,11 +36,19 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         }
         override func timeUpdated()      {}
         override func didPlayToEndTime() {}
-        override func statusChanged()    {}
-        override func trackChanged()     { vc.updatePlaylist(vc.appDelegate.playingPlaylist!) }
-        override func started()          {
+        override func statusChanged()    {
+            vc.updatePlaylist(vc.appDelegate.playingPlaylist!)
         }
-        override func ended()            {}
+
+        override func trackSelected(track: Track, index: Int, playlist: Playlist) {
+            update()
+        }
+        override func trackUnselected(track: Track, index: Int, playlist: Playlist) {
+            update()
+        }
+        func update() {
+            vc.updatePlaylist(vc.appDelegate.playingPlaylist!)
+        }
     }
     let tableCellReuseIdentifier      = "playlistTableViewCell"
     let cellHeight:        CGFloat       = 80
