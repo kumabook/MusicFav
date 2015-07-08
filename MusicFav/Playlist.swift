@@ -12,13 +12,18 @@ import ReactiveCocoa
 import Result
 import Box
 
+public enum PlaylistEvent {
+    case Load(index: Int)
+    case ChangePlayState(index: Int, playerState: PlayerState)
+}
+
 public class Playlist: Equatable, Hashable {
     public   let id:           String
     public   var title:        String
     public   var tracks:       [Track]
     public   var thumbnailUrl: NSURL? { return tracks.first?.thumbnailUrl }
-    public   var signal:       Signal<Int, NSError>
-    internal var sink:         SinkOf<ReactiveCocoa.Event<Int, NSError>>
+    public   var signal:       Signal<PlaylistEvent, NSError>
+    internal var sink:         SinkOf<ReactiveCocoa.Event<PlaylistEvent, NSError>>
 
     static var playlistNumberLimit: Int { return 5 }
     static var trackNumberLimit:    Int { return 5 }
@@ -73,7 +78,7 @@ public class Playlist: Equatable, Hashable {
         self.id     = "created-\(Playlist.dateFormatter().stringFromDate(NSDate()))"
         self.title  = title
         self.tracks = []
-        let pipe    = Signal<Int, NSError>.pipe()
+        let pipe    = Signal<PlaylistEvent, NSError>.pipe()
         self.signal = pipe.0
         self.sink   = pipe.1
     }
@@ -82,7 +87,7 @@ public class Playlist: Equatable, Hashable {
         id     = json["url"].stringValue
         title  = json["title"].stringValue
         tracks = json["tracks"].arrayValue.map({ Track(json: $0) })
-        let pipe    = Signal<Int, NSError>.pipe()
+        let pipe    = Signal<PlaylistEvent, NSError>.pipe()
         self.signal = pipe.0
         self.sink   = pipe.1
     }
@@ -94,7 +99,7 @@ public class Playlist: Equatable, Hashable {
         for trackStore in store.tracks {
             tracks.append(Track(store:trackStore as! TrackStore))
         }
-        let pipe    = Signal<Int, NSError>.pipe()
+        let pipe    = Signal<PlaylistEvent, NSError>.pipe()
         self.signal = pipe.0
         self.sink   = pipe.1
     }
