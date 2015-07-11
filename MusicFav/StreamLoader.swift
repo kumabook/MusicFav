@@ -80,6 +80,12 @@ class StreamLoader {
         }
     }
 
+    var playlists: [Playlist] {
+        return entries.map { self.playlistsOfEntry[$0] }
+                      .filter { $0 != nil && $0!.validTracksCount > 0 }
+                      .map { $0! }
+    }
+
     func fetchLatestEntries() {
         if entries.count == 0 {
             return

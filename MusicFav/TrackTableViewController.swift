@@ -245,8 +245,11 @@ class TrackTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         if let p = playlist {
             let track = p.tracks[indexPath.item]
-            if track.streamUrl != nil { appDelegate.miniPlayerViewController?.select(indexPath.item, playlist: p) }
-            else                      { tableView.deselectRowAtIndexPath(indexPath, animated: true) }
+            if track.streamUrl != nil {
+                appDelegate.miniPlayerViewController?.select(indexPath.item, playlist: p, playlists: [p])
+            } else {
+                tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            }
         }
     }
 }

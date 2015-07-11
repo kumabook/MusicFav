@@ -114,6 +114,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
         super.viewDidAppear(animated)
         observeStreamLoader()
         player?.addObserver(playerObserver)
+        updateSelection(UITableViewScrollPosition.None)
     }
 
     override func viewWillDisappear(animated: Bool) {
@@ -140,7 +141,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
     }
 
     func updateCurrentTrack() {
-        if let p = appDelegate.player, pl = p.currentPlaylist, t = p.currentTrack, i = p.currentIndex {
+        if let p = appDelegate.player, pl = p.currentPlaylist, t = p.currentTrack, i = p.currentTrackIndex {
             updateTrack(t, index: i, playlist: pl, playerState: p.currentState)
         }
     }
@@ -160,12 +161,14 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
                 dispatch_after(startTime, dispatch_get_main_queue()) {
                     self.tableView.reloadData()
                     self.onpuRefreshControl.endRefreshing()
+                    self.updateSelection(UITableViewScrollPosition.None)
                 }
             case .StartLoadingNext:
                 self.showIndicator()
             case .CompleteLoadingNext:
                 self.hideIndicator()
                 self.tableView.reloadData()
+                self.updateSelection(UITableViewScrollPosition.None)
             case .FailToLoadNext:
                 self.showReloadButton()
             case .CompleteLoadingPlaylist(let playlist, let entry):
@@ -175,6 +178,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
                         self.tableView.reloadRowsAtIndexPaths([index], withRowAnimation: UITableViewRowAnimation.None)
                     }
                 }
+                self.updateSelection(UITableViewScrollPosition.None)
             case .RemoveAt(let index):
                 let indexPath = NSIndexPath(forItem: index, inSection: 0)
                 self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
@@ -262,14 +266,14 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
 
     func playPlaylist(playlist: Playlist?) {
         if let p = playlist {
-            appDelegate.miniPlayerViewController?.select(0, playlist: p)
+            appDelegate.miniPlayerViewController?.select(0, playlist: p, playlists: streamLoader.playlists)
         }
     }
 
     // MARK: - PlaylistStreamTableViewDelegate
 
     func trackSelectedAt(index: Int, track: Track, playlist: Playlist) {
-        appDelegate.miniPlayerViewController?.select(index, playlist: playlist)
+        appDelegate.miniPlayerViewController?.select(index, playlist: playlist, playlists: streamLoader.playlists)
         tableView.reloadData()
     }
 
@@ -303,7 +307,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
             cell.delegate           = self
             cell.trackNumLabel.text = "\(playlist.tracks.count) tracks"
             cell.loadThumbnails(playlist)
-            if let p = self.player, cp = p.currentPlaylist, i = p.currentIndex {
+            if let p = self.player, cp = p.currentPlaylist, i = p.currentTrackIndex {
                 if cp == playlist {
                     cell.updatePlayerIcon(i, playerState: p.currentState)
                 } else {
