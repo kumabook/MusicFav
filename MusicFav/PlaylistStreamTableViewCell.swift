@@ -67,7 +67,6 @@ class PlaylistStreamTableViewCell: UITableViewCell {
             imageView.sd_setImageWithURL(thumbnailUrl,
                 placeholderImage: UIImage(named: "default_thumb"),
                 completed: { (image, error, cactypeType, url) -> Void in
-                    
             })
         } else {
             imageView.image = UIImage(named: "default_thumb")
@@ -96,8 +95,14 @@ class PlaylistStreamTableViewCell: UITableViewCell {
         trackThumbScrollView.addSubview(marginView)
         trackThumbScrollView.contentSize = CGSize(width: contentWidth, height: thumbnailWidth)
     }
-
     func updatePlayerIcon(index: Int, playerState: PlayerState) {
+        let startTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC)))
+        dispatch_after(startTime, dispatch_get_main_queue()) {
+            self._updatePlayerIcon(index, playerState: playerState)
+        }
+    }
+
+    func _updatePlayerIcon(index: Int, playerState: PlayerState) {
         let tw = thumbnailWidth
         let htw = tw * 0.5
         playerIcon.center = CGPoint(x: tw * CGFloat(index) + htw, y: htw)
@@ -165,17 +170,11 @@ class PlaylistStreamTableViewCell: UITableViewCell {
         observer?.dispose()
         observer = playlist.signal.observe(next: { event in
             UIScheduler().schedule {
-                let startTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC)))
                 switch event {
                 case .Load(let index):
                     self.loadThumbnail(self.imageViews[index], track: playlist.tracks[index])
-                    dispatch_after(startTime, dispatch_get_main_queue()) {
-                        self.updatePlayerIcon(index, playerState: PlayerState.Init)
-                    }
                 case .ChangePlayState(let index, let playerState):
-                    dispatch_after(startTime, dispatch_get_main_queue()) {
-                        self.updatePlayerIcon(index, playerState: playerState)
-                    }
+                    self.updatePlayerIcon(index, playerState: playerState)
                 }
             }
             return

@@ -221,8 +221,8 @@ public enum PlayerState {
     }
 
     func isCurrentPlaying(trackIndex: Int, playlistIndex: Int, playlists: [Playlist]) -> Bool {
-        if let _playlist = currentPlaylist {
-            return  _playlist.id == playlists[playlistIndex].id && currentTrackIndex == trackIndex && playlists == self.playlists
+        if let _playlist = currentPlaylist, _index = currentTrackIndex {
+            return  _playlist.id == playlists[playlistIndex].id && _index == trackIndex
         }
         return false
     }
@@ -315,6 +315,7 @@ public enum PlayerState {
             return
         }
         queuePlayer!.removeItem(queuePlayer!.currentItem)
+        trackUnselected(currentTrack!, index: currentTrackIndex!, playlist: currentPlaylist!)
         itemIndex = (itemIndex + 1) % itemCount
         if itemIndex == 0 {
             if playlistIndex! + 1 < playlists.count {
@@ -322,6 +323,8 @@ public enum PlayerState {
             } else {
                 nextPlaylistRequested()
             }
+        } else {
+            trackSelected(currentTrack!, index: currentTrackIndex!, playlist: currentPlaylist!)
         }
     }
 

@@ -56,7 +56,6 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
     init(streamLoader: StreamLoader) {
         self.streamLoader = streamLoader
         super.init(nibName: nil, bundle: nil)
-        self.playerObserver = PlaylistStreamPlayerObserver(playlistStreamViewController: self)
     }
 
     override init(style: UITableViewStyle) {
@@ -113,6 +112,10 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         observeStreamLoader()
+        if playerObserver != nil {
+            player?.removeObserver(playerObserver)
+        }
+        playerObserver = PlaylistStreamPlayerObserver(playlistStreamViewController: self)
         player?.addObserver(playerObserver)
         updateSelection(UITableViewScrollPosition.None)
     }
@@ -121,6 +124,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
         super.viewWillDisappear(animated)
         observer?.dispose()
         player?.removeObserver(playerObserver)
+        playerObserver = nil
     }
 
     func indexPathOfPlaylist(playlist: Playlist) -> NSIndexPath? {
@@ -147,7 +151,10 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
     }
 
     func updateTrack(track: Track, index: Int, playlist: Playlist, playerState: PlayerState) {
-        playlist.sink.put(.Next(Box(PlaylistEvent.ChangePlayState(index: index, playerState: playerState))))
+        if let indexPath = indexPathOfPlaylist(playlist) {
+            let p = streamLoader.playlistsOfEntry[streamLoader.entries[indexPath.item]]
+            p!.sink.put(.Next(Box(PlaylistEvent.ChangePlayState(index: index, playerState: playerState))))
+        }
     }
 
     func observeStreamLoader() {
@@ -310,6 +317,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
             if let p = self.player, cp = p.currentPlaylist, i = p.currentTrackIndex {
                 if cp == playlist {
                     cell.updatePlayerIcon(i, playerState: p.currentState)
+                    updateSelection(UITableViewScrollPosition.None)
                 } else {
                     cell.updatePlayerIcon(0, playerState: PlayerState.Init)
                 }
