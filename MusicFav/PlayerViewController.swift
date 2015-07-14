@@ -179,7 +179,9 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
 
     func enablePlayerView() {
         if let avPlayer = player?.avPlayer {
-            playerView.player = avPlayer
+            if playerView.player != avPlayer {
+                playerView.player = avPlayer
+            }
         }
     }
 
@@ -263,6 +265,7 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
     }
 
     func updateViews() {
+        enablePlayerView()
         if let state = player?.currentState {
             if state.isPlaying {
                 playButton.setImage(UIImage(named: "pause"), forState: UIControlState.allZeros)
