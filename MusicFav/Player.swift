@@ -255,6 +255,13 @@ public enum PlayerState {
         }
     }
 
+    func keepPlaying() {
+        if state.isPlaying {
+            queuePlayer?.pause()
+            queuePlayer?.play()
+        }
+    }
+
     func toggle() {
         if itemIndex == -1 || queuePlayer == nil || currentPlaylist == nil {
             return

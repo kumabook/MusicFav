@@ -113,9 +113,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillResignActive(application: UIApplication) {
         playerViewController?.disablePlayerView()
+        dispatch_async(dispatch_get_main_queue()) { player?.keepPlaying() }
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
+        dispatch_async(dispatch_get_main_queue()) { player?.keepPlaying() }
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
