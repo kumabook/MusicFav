@@ -118,6 +118,7 @@ struct FeedlyAPI {
             }
         }
         _account = nil
+        profile = nil
     }
 
     static func loadConfig() {
@@ -147,6 +148,17 @@ struct FeedlyAPI {
 
 extension CloudAPIClient {
     static var sharedInstance: CloudAPIClient = CloudAPIClient(target: Target.Sandbox)
+    static let errorResponseKey = "com.alamofire.serialization.response.error.response"
+
+    class func handleError(#error:NSError) {
+        if let dic = error.userInfo as NSDictionary? {
+            if let response:NSHTTPURLResponse = dic[errorResponseKey] as? NSHTTPURLResponse {
+                if response.statusCode == 401 {
+                    FeedlyAPI.clearAllAccount()
+                }
+            }
+        }
+    }
 
     class func alertController(#error:NSError, handler: (UIAlertAction!) -> Void) -> UIAlertController {
         let ac = UIAlertController(title: "Network error".localize(),
@@ -174,11 +186,20 @@ extension CloudAPIClient {
     }
     var tokenUrl: String { return String(format: "%@%@", target.baseUrl, FeedlyAPI.tokenPath) }
 
+    func buildError(error: NSError, response: NSHTTPURLResponse?) -> NSError {
+        if let r = response {
+            return NSError(domain: error.domain,
+                            code: error.code,
+                        userInfo: [CloudAPIClient.errorResponseKey: r])
+        }
+        return error
+    }
+
     func fetchProfile() -> SignalProducer<Profile, NSError> {
         return SignalProducer { (sink, disposable) in
             let req = self.fetchProfile({ (req, res, profile, error) -> Void in
                 if let e = error {
-                    sink.put(.Error(Box(e)))
+                    sink.put(.Error(Box(self.buildError(e, response: res))))
                 } else {
                     sink.put(Event.Next(Box(profile!)))
                     sink.put(.Completed)
@@ -192,7 +213,7 @@ extension CloudAPIClient {
         return SignalProducer { (sink, disposable) in
             let req = self.fetchSubscriptions({ (req, res, subscriptions, error) -> Void in
                 if let e = error {
-                    sink.put(.Error(Box(e)))
+                    sink.put(.Error(Box(self.buildError(e, response: res))))
                 } else {
                     sink.put(.Next(Box(subscriptions!)))
                     sink.put(.Completed)
@@ -222,7 +243,7 @@ extension CloudAPIClient {
         return SignalProducer { (sink, disposable) in
             let req = self.fetchContents(streamId, paginationParams: paginationParams, completionHandler: { (req, res, entries, error) -> Void in
                 if let e = error {
-                    sink.put(.Error(Box(e)))
+                    sink.put(.Error(Box(self.buildError(e, response: res))))
                 } else {
                     sink.put(.Next(Box(entries!)))
                     sink.put(.Completed)
@@ -236,7 +257,7 @@ extension CloudAPIClient {
         return SignalProducer { (sink, disposable) in
             let req = self.fetchFeeds(feedIds, completionHandler: { (req, res, feeds, error) -> Void in
                 if let e = error {
-                    sink.put(.Error(Box(e)))
+                    sink.put(.Error(Box(self.buildError(e, response: res))))
                 } else {
                     sink.put(.Next(Box(feeds!)))
                     sink.put(.Completed)
@@ -250,7 +271,7 @@ extension CloudAPIClient {
         return SignalProducer { (sink, disposable) in
             let req = self.fetchCategories({ (req, res, categories, error) -> Void in
                 if let e = error {
-                    sink.put(.Error(Box(e)))
+                    sink.put(.Error(Box(self.buildError(e, response: res))))
                 } else {
                     sink.put(.Next(Box(categories!)))
                     sink.put(.Completed)
@@ -264,7 +285,7 @@ extension CloudAPIClient {
         return SignalProducer { (sink, disposable) in
             let req = self.searchFeeds(query, completionHandler: { (req, res, feedResults, error) -> Void in
                 if let e = error {
-                    sink.put(.Error(Box(e)))
+                    sink.put(.Error(Box(self.buildError(e, response: res))))
                 } else {
                     if let _feedResults = feedResults {
                         sink.put(.Next(Box(_feedResults.results)))
