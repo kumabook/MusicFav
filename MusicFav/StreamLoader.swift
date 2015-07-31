@@ -109,19 +109,7 @@ class StreamLoader {
                     self.entries = latestEntries
                     self.updateLastUpdated(paginatedCollection.updated)
                 },
-                error: {error in
-                    let key = "com.alamofire.serialization.response.error.response"
-                    if let dic = error.userInfo as NSDictionary? {
-                        if let response:NSHTTPURLResponse = dic[key] as? NSHTTPURLResponse {
-                            if response.statusCode == 401 {
-                                FeedlyAPI.clearAllAccount()
-                                //TODO: Alert Dialog with login link
-                            } else {
-                            }
-                        } else {
-                        }
-                    }
-                },
+                error: { error in CloudAPIClient.handleError(error: error) },
                 completed: {
                     self.sink.put(.Next(Box(.CompleteLoadingLatest)))
             })
@@ -155,21 +143,9 @@ class StreamLoader {
                     }
                 },
                 error: {error in
-                    let key = "com.alamofire.serialization.response.error.response"
-                    if let dic = error.userInfo as NSDictionary? {
-                        if let response:NSHTTPURLResponse = dic[key] as? NSHTTPURLResponse {
-                            if response.statusCode == 401 {
-                                FeedlyAPI.clearAllAccount()
-                                //TODO: Alert Dialog with login link
-                            } else {
-                                self.state = State.Error
-                                self.sink.put(.Next(Box(.FailToLoadNext)))
-                            }
-                        } else {
-                            self.state = State.Error
-                            self.sink.put(.Next(Box(.FailToLoadNext)))
-                        }
-                    }
+                    CloudAPIClient.handleError(error: error)
+                    self.state = State.Error
+                    self.sink.put(.Next(Box(.FailToLoadNext)))
                 },
                 completed: {
             })

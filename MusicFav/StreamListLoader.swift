@@ -121,6 +121,7 @@ class StreamListLoader {
             next: { dic in
                 self.sink.put(.Next(Box(.StartLoading)))
             }, error: { error in
+                CloudAPIClient.handleError(error: error)
                 self.state = .Error
                 self.sink.put(.Next(Box(.FailToLoad(error))))
             }, completed: {
@@ -179,6 +180,7 @@ class StreamListLoader {
             } else {
                 CloudAPIClient.sharedInstance.subscribeTo(subscription) { (req, res, error) -> Void in
                     if let e = error {
+                        CloudAPIClient.handleError(error: e)
                         self.state = .Error
                         self.sink.put(.Next(Box(.FailToUpdate(e))))
                         sink.put(.Error(Box(e)))
