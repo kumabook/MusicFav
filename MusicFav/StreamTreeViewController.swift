@@ -101,11 +101,10 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
                                              action: "addStream")
         navigationItem.leftBarButtonItems  = [settingsButton, addStreamButton]
         view.backgroundColor = UIColor.whiteColor()
-        let f = view.frame
-        treeView = RATreeView(frame: CGRect(x: 0, y: 0, width: appDelegate.leftVisibleWidth!, height: f.height))
+        treeView = RATreeView(frame: CGRect(x: 0, y: 0, width: appDelegate.leftVisibleWidth!, height: view.frame.height))
         treeView?.backgroundColor = UIColor.whiteColor()
-        treeView?.delegate = self;
-        treeView?.dataSource = self;
+        treeView?.delegate = self
+        treeView?.dataSource = self
         treeView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
         view.addSubview(self.treeView!)
 
@@ -114,6 +113,11 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         treeView?.addResreshControl(refreshControl!)
 
         refresh()
+    }
+
+    override func viewWillLayoutSubviews() {
+        super.viewWillLayoutSubviews()
+        treeView!.frame = CGRect(x: 0, y: 0, width: appDelegate.leftVisibleWidth!, height: view.frame.height)
     }
 
     override func viewWillAppear(animated: Bool) {
