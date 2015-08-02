@@ -50,21 +50,22 @@ class StreamPageMenuController: UIViewController {
         entryStream.title    = "Article".localize()
         playlistStream.title = "Playlist".localize()
         var controllerArray : [UIViewController] = [entryStream, playlistStream]
-        var parameters: [String: AnyObject] = ["menuItemSeparatorWidth": 0.0,
-                                          "useMenuLikeSegmentedControl": true,
-                                    "menuItemSeparatorPercentageHeight": 0.0,
-                                                           "menuHeight": 24,
-                                            "scrollMenuBackgroundColor": UIColor.whiteColor(),
-                                              "selectionIndicatorColor": UIColor.theme,
-                                           "selectedMenuItemLabelColor": UIColor.theme,
-                                         "unselectedMenuItemLabelColor": UIColor.grayColor(),
-                                               "menuItemSeparatorColor": UIColor.lightGray,
-                                              "bottomMenuHairlineColor": UIColor.lightGray,
-                                                         "menuItemFont": UIFont.boldSystemFontOfSize(14)
-                                        ]
+        var parameters: [CAPSPageMenuOption] = [
+            .MenuItemSeparatorWidth(0.0),
+            .UseMenuLikeSegmentedControl(true),
+            .MenuItemSeparatorPercentageHeight(0.0),
+            .MenuHeight(24),
+            .ScrollMenuBackgroundColor(UIColor.whiteColor()),
+            .SelectionIndicatorColor(UIColor.theme),
+            .SelectedMenuItemLabelColor(UIColor.theme),
+            .UnselectedMenuItemLabelColor(UIColor.grayColor()),
+            .MenuItemSeparatorColor(UIColor.lightGray),
+            .BottomMenuHairlineColor(UIColor.lightGray),
+            .MenuItemFont(UIFont.boldSystemFontOfSize(14))
+        ]
         pageMenu = CAPSPageMenu(viewControllers: controllerArray,
                                           frame: view.frame,
-                                        options: parameters)
+                                pageMenuOptions: parameters)
         pageMenu.view.accessibilityLabel = AccessibilityLabel.StreamPageMenu.s
         self.view.addSubview(pageMenu.view)
         addChildViewController(pageMenu)
