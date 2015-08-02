@@ -1,24 +1,39 @@
 [submodule "GoogleAnalytics-SDK-iOS"]
-	path = GoogleAnalytics-SDK-iOS
-	url = git@github.com:kumabook/GoogleAnalytics-SDK-iOS.git
+       path = GoogleAnalytics-SDK-iOS
+       url = git@github.com:kumabook/GoogleAnalytics-SDK-iOS.git
 [submodule "Carthage/Checkouts/Alamofire"]
 	path = Carthage/Checkouts/Alamofire
-	url = https://github.com/Alamofire/Alamofire.git
-[submodule "Carthage/Checkouts/XCDYouTubeKit"]
-	path = Carthage/Checkouts/XCDYouTubeKit
-	url = https://github.com/kumabook/XCDYouTubeKit.git
-[submodule "Carthage/Checkouts/ReactiveCocoa"]
-	path = Carthage/Checkouts/ReactiveCocoa
-	url = https://github.com/ReactiveCocoa/ReactiveCocoa.git
-[submodule "Carthage/Checkouts/Nimble"]
-	path = Carthage/Checkouts/Nimble
-	url = https://github.com/Quick/Nimble.git
-[submodule "Carthage/Checkouts/Result"]
-	path = Carthage/Checkouts/Result
-	url = https://github.com/antitypical/Result.git
-[submodule "Carthage/Checkouts/FeedlyKit"]
-	path = Carthage/Checkouts/FeedlyKit
-	url = https://github.com/kumabook/FeedlyKit.git
+	url = ssh://git@github.com/Alamofire/Alamofire.git
+[submodule "Carthage/Checkouts/Box"]
+	path = Carthage/Checkouts/Box
+	url = ssh://git@github.com/robrix/Box.git
+[submodule "Carthage/Checkouts/PlayerKit"]
+	path = Carthage/Checkouts/PlayerKit
+	url = ssh://git@github.com/kumabook/PlayerKit.git
 [submodule "Carthage/Checkouts/SwiftyJSON"]
 	path = Carthage/Checkouts/SwiftyJSON
-	url = https://github.com/SwiftyJSON/SwiftyJSON.git
+	url = ssh://git@github.com/SwiftyJSON/SwiftyJSON.git
+[submodule "Carthage/Checkouts/XCDYouTubeKit"]
+	path = Carthage/Checkouts/XCDYouTubeKit
+	url = ssh://git@github.com/kumabook/XCDYouTubeKit.git
+[submodule "Carthage/Checkouts/realm-cocoa"]
+	path = Carthage/Checkouts/realm-cocoa
+	url = ssh://git@github.com/realm/realm-cocoa.git
+[submodule "Carthage/Checkouts/Result"]
+	path = Carthage/Checkouts/Result
+	url = ssh://git@github.com/antitypical/Result.git
+[submodule "Carthage/Checkouts/ReactiveCocoa"]
+	path = Carthage/Checkouts/ReactiveCocoa
+	url = ssh://git@github.com/ReactiveCocoa/ReactiveCocoa.git
+[submodule "Carthage/Checkouts/FeedlyKit"]
+	path = Carthage/Checkouts/FeedlyKit
+	url = ssh://git@github.com/kumabook/FeedlyKit.git
+[submodule "Carthage/Checkouts/MusicFeeder"]
+	path = Carthage/Checkouts/MusicFeeder
+	url = ssh://git@github.com/kumabook/MusicFeeder.git
+[submodule "Carthage/Checkouts/Nimble"]
+	path = Carthage/Checkouts/Nimble
+	url = ssh://git@github.com/Quick/Nimble.git
+[submodule "Carthage/Checkouts/Quick"]
+	path = Carthage/Checkouts/Quick
+	url = ssh://git@github.com/Quick/Quick.git

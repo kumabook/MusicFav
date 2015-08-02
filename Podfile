@@ -10,11 +10,10 @@ pod 'MCSwipeTableViewCell', '>= 2.1.0'
 pod 'Snap',                 '>= 0.0.6'
 pod 'InAppSettingsKit',     '~> 2.1'
 pod 'EAIntroView',          '~> 2.7.0'
-pod 'PageMenu',             :git => 'https://github.com/uacaps/PageMenu'
+pod 'PageMenu'
 pod 'Fabric'
 pod 'Crashlytics'
 pod 'MarqueeLabel'
-pod "Realm"
 pod "RMDateSelectionViewController", "~> 1.5.1"
 pod 'ISAlternativeRefreshControl'
 pod 'RATreeView',           :git => 'https://github.com/kumabook/RATreeView.git',

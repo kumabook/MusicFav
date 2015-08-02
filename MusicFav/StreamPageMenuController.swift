@@ -9,6 +9,7 @@
 import UIKit
 import PageMenu
 import FeedlyKit
+import MusicFeeder
 
 class StreamPageMenuController: UIViewController {
     var pageMenu:     CAPSPageMenu!
@@ -44,12 +45,12 @@ class StreamPageMenuController: UIViewController {
         navigationItem.rightBarButtonItem!.accessibilityLabel = AccessibilityLabel.PlaylistMenuButton.s
         navigationItem.title = stream.streamTitle
 
-        let entryStream      = EntryStreamViewController(streamLoader: streamLoader)
-        let playlistStream   = PlaylistStreamViewController(streamLoader: streamLoader)
+        let entrySVC    = EntryStreamViewController(streamLoader: streamLoader)
+        let playlistSVC = PlaylistStreamViewController(streamLoader: streamLoader)
 
-        entryStream.title    = "Article".localize()
-        playlistStream.title = "Playlist".localize()
-        var controllerArray : [UIViewController] = [entryStream, playlistStream]
+        entrySVC.title    = "Article".localize()
+        playlistSVC.title = "Playlist".localize()
+        var controllerArray : [UIViewController] = [entrySVC, playlistSVC]
         var parameters: [CAPSPageMenuOption] = [
             .MenuItemSeparatorWidth(0.0),
             .UseMenuLikeSegmentedControl(true),
@@ -67,13 +68,12 @@ class StreamPageMenuController: UIViewController {
                                           frame: view.frame,
                                 pageMenuOptions: parameters)
         pageMenu.view.accessibilityLabel = AccessibilityLabel.StreamPageMenu.s
-        self.view.addSubview(pageMenu.view)
-        addChildViewController(pageMenu)
         view.addSubview(pageMenu.view)
+        addChildViewController(pageMenu)
         pageMenu.didMoveToParentViewController(self)
-        entryStreamViewController    = entryStream
-        playlistStreamViewController = playlistStream
         super.viewDidLoad()
+        entryStreamViewController    = entrySVC
+        playlistStreamViewController = playlistSVC
         streamLoader.fetchEntries()
     }
 

@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import MusicFeeder
+import PlayerKit
 
 class MiniPlayerView: UIView {
     @IBOutlet weak var durationLabel:  UILabel!

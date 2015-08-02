@@ -8,6 +8,7 @@
 
 import UIKit
 import ReactiveCocoa
+import MusicFeeder
 
 class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     let NEW_PLAYLIST_INDEX = -1
@@ -40,10 +41,10 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             vc.updatePlaylist(vc.appDelegate.playingPlaylist!)
         }
 
-        override func trackSelected(track: Track, index: Int, playlist: Playlist) {
+        override func trackSelected(track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist) {
             update()
         }
-        override func trackUnselected(track: Track, index: Int, playlist: Playlist) {
+        override func trackUnselected(track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist) {
             update()
         }
         func update() {
@@ -52,7 +53,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     }
     let tableCellReuseIdentifier      = "playlistTableViewCell"
     let cellHeight:        CGFloat       = 80
-    var playlists:         [Playlist]    = []
+    var playlists:         [MusicFeeder.Playlist]    = []
     var playerObserver:    PlaylistTableViewPlayerObserver?
     var playlistsObserver: Disposable?
 
@@ -98,7 +99,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         showTitleEditAlertViewAtIndex(NEW_PLAYLIST_INDEX)
     }
 
-    func showPlaylist(playlist: Playlist) {
+    func showPlaylist(playlist: MusicFeeder.Playlist) {
         Logger.sendUIActionEvent(self, action: "showPlaylist", label: "")
         let ttc = TrackTableViewController(playlist: playlist)
         navigationController?.popToRootViewControllerAnimated(true)
@@ -154,7 +155,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             })
     }
 
-    func updatePlaylist(playlist: Playlist) {
+    func updatePlaylist(playlist: MusicFeeder.Playlist) {
         let section = Section.Favorites.rawValue
         if playlist == self.appDelegate.playingPlaylist {
             let indexPath = NSIndexPath(forItem: 0, inSection: Section.Playing.rawValue)

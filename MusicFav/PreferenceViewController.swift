@@ -9,6 +9,7 @@
 import UIKit
 import InAppSettingsKit
 import FeedlyKit
+import MusicFeeder
 import RMDateSelectionViewController
 import XCDYouTubeKit
 import StoreKit
@@ -60,7 +61,7 @@ class PreferenceViewController: UITableViewController {
         case LoginOrLogout = 0
         static let count   = 1
         var title: String {
-            if CloudAPIClient.sharedInstance.isLoggedIn {
+            if CloudAPIClient.isLoggedIn {
                 return "Logout".localize()
             } else {
                 return "Login".localize()
@@ -179,8 +180,7 @@ class PreferenceViewController: UITableViewController {
     }
 
     func logout() {
-        FeedlyAPI.clearAllAccount()
-        FeedlyAPI.profile = nil
+        CloudAPIClient.logout()
         self.dismissViewControllerAnimated(true) {
             self.appDelegate.didLogout()
         }
@@ -245,7 +245,7 @@ class PreferenceViewController: UITableViewController {
         case .Account:
             switch AccountRow(rawValue: indexPath.row)! {
             case .LoginOrLogout:
-                if CloudAPIClient.sharedInstance.isLoggedIn {
+                if CloudAPIClient.isLoggedIn {
                     showLogoutDialog()
                 } else {
                     showLoginViewController()

@@ -12,6 +12,7 @@ import JASidePanels
 import MediaPlayer
 import SDWebImage
 import FeedlyKit
+import MusicFeeder
 
 class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
     class MiniPlayerObserver: PlayerObserver {
@@ -28,8 +29,8 @@ class MiniPlayerViewController: UIViewController, MiniPlayerViewDelegate {
     var streamPageMenuController:    StreamPageMenuController!
     var playlistTableViewController: PlaylistTableViewController!
     var streamTreeViewController:    StreamTreeViewController!
-    var currentPlaylist:             Playlist? { get { return player?.currentPlaylist }}
-    var currentTrack:                Track?    { get { return player?.currentTrack }}
+    var currentPlaylist:             MusicFeeder.Playlist? { get { return player?.currentPlaylist as? MusicFeeder.Playlist }}
+    var currentTrack:                MusicFeeder.Track?    { get { return player?.currentTrack as? MusicFeeder.Track }}
     var miniPlayerObserver:          MiniPlayerObserver!
     var app:                         UIApplication { get { return UIApplication.sharedApplication() }}
     var appDelegate:                 AppDelegate   { get { return app.delegate as! AppDelegate }}

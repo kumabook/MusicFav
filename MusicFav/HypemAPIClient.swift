@@ -12,13 +12,13 @@ import Box
 import ReactiveCocoa
 import AFNetworking
 
-class HypemAPIClient {
+public class HypemAPIClient {
     let baseUrl = "http://api.hypem.com"
     let apiRoot = "/api"
 
-    static var sharedInstance = HypemAPIClient()
+    public static var sharedInstance = HypemAPIClient()
 
-    func getSiteInfo(siteId: Int64) -> SignalProducer<SiteInfo, NSError> {
+    public func getSiteInfo(siteId: Int64) -> SignalProducer<SiteInfo, NSError> {
         return SignalProducer { (sink, disposable) in
             let manager = AFHTTPRequestOperationManager()
             let url = String(format: "%@/get_site_info?siteid=%d", self.baseUrl + self.apiRoot, siteId)
@@ -37,7 +37,7 @@ class HypemAPIClient {
         }
     }
 
-    func getAllBlogs() -> SignalProducer<[Blog], NSError> {
+    public func getAllBlogs() -> SignalProducer<[Blog], NSError> {
         return SignalProducer { (sink, disposable) in
             let manager = AFHTTPRequestOperationManager()
             let url = String(format: "%@/get_all_blogs", self.baseUrl + self.apiRoot)

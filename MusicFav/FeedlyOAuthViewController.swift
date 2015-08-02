@@ -8,6 +8,7 @@
 
 import UIKit
 import FeedlyKit
+import MusicFeeder
 import ReactiveCocoa
 import NXOAuth2Client
 
@@ -68,14 +69,14 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
     }
 
     func setupOAuth2AccountStore() {
-        NXOAuth2AccountStore.sharedStore().setClientID(FeedlyAPI.clientId,
-                                           secret: FeedlyAPI.clientSecret,
-                                            scope: Set([FeedlyAPI.scopeUrl]),
+        NXOAuth2AccountStore.sharedStore().setClientID(CloudAPIClient.clientId,
+                                           secret: CloudAPIClient.clientSecret,
+                                            scope: Set([CloudAPIClient.scopeUrl]),
                                  authorizationURL: NSURL(string: feedlyClient.authUrl),
                                          tokenURL: NSURL(string: feedlyClient.tokenUrl),
-                                      redirectURL: NSURL(string: FeedlyAPI.redirectUrl),
+                                      redirectURL: NSURL(string: CloudAPIClient.redirectUrl),
                                     keyChainGroup: "Feedly",
-                                   forAccountType: FeedlyAPI.accountType)
+                                   forAccountType: CloudAPIClient.accountType)
             }
 
     func addObservers() {
@@ -107,7 +108,7 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
 
     func showAlert() {
         UIAlertController.show(self, title: "Notice".localize(), message: "Login failed.", handler: { (action) -> Void in
-            FeedlyAPI.clearAllAccount()
+            CloudAPIClient.logout()
         })
     }
     
@@ -117,7 +118,7 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
             |> startOn(UIScheduler())
             |> start(
                 next: {profile in
-                    FeedlyAPI.profile = profile
+                    CloudAPIClient.login(profile, token: account.accessToken.accessToken)
                 },
                 error: {error in
                     self.showAlert()
@@ -131,7 +132,7 @@ class FeedlyOAuthViewController: UIViewController, UIWebViewDelegate {
     
     func requestOAuth2Access() {
         let store: AnyObject! = NXOAuth2AccountStore.sharedStore()
-        store.requestAccessToAccountWithType(FeedlyAPI.accountType, withPreparedAuthorizationURLHandler: { (preparedURL) -> Void in
+        store.requestAccessToAccountWithType(CloudAPIClient.accountType, withPreparedAuthorizationURLHandler: { (preparedURL) -> Void in
             self.loginWebView.loadRequest(NSURLRequest(URL: preparedURL))
         })
     }

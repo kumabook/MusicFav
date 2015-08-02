@@ -11,9 +11,11 @@ import CoreData
 import AVFoundation
 import ReactiveCocoa
 import FeedlyKit
+import MusicFeeder
 import Fabric
 import Crashlytics
 import XCDYouTubeKit
+import PlayerKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -23,8 +25,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var coverViewController:      DraggableCoverViewController?
     var miniPlayerViewController: MiniPlayerViewController?
     var player:                   Player<PlayerObserver>?
-    var selectedPlaylist:         Playlist?
-    var playingPlaylist:          Playlist? {
+    var selectedPlaylist:         MusicFeeder.Playlist?
+    var playingPlaylist:          MusicFeeder.Playlist? {
         get {
             return miniPlayerViewController?.currentPlaylist
         }
@@ -67,13 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func setupAPIClient() {
-        FeedlyAPI.loadConfig()
-        if FeedlyAPI.profile == nil {
-            FeedlyAPI.clearAllAccount()
-        }
-        if let account = FeedlyAPI.account {
-            CloudAPIClient.setAccessToken(account)
-        }
+        FeedlyAPI.setup()
         SoundCloudAPIClient.loadConfig()
     }
 

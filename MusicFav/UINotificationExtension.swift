@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import FeedlyKit
+import MusicFeeder
 
 enum NotificationType: String {
     case NewTracks      = "new_tracks"

@@ -9,6 +9,7 @@
 import Foundation
 import MBProgressHUD
 import StoreKit
+import MusicFeeder
 
 class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionObserver {
     let unlockEvnerythingIdentifier = "io.kumabook.MusicFav.UnlockEverything"
@@ -21,7 +22,20 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
     weak var viewController: UITableViewController?
     static var isUnlockedEverything: Bool {
         get      { return userDefaults.boolForKey("is_unlocked_everything") }
-        set(val) { userDefaults.setBool(val, forKey: "is_unlocked_everything") }
+        set(val) {
+            userDefaults.setBool(val, forKey: "is_unlocked_everything")
+            updateLimitValues()
+        }
+    }
+
+    static func updateLimitValues() {
+        if PaymentManager.isUnlockedEverything {
+            Playlist.playlistNumberLimit = Int.max
+            Playlist.trackNumberLimit    = Int.max
+        } else {
+            Playlist.playlistNumberLimit = 5
+            Playlist.trackNumberLimit    = 5
+        }
     }
 
     override init() {

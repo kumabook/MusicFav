@@ -9,6 +9,7 @@
 import Foundation
 import ReactiveCocoa
 import FeedlyKit
+import MusicFeeder
 
 class UpdateChecker {
     let apiClient = CloudAPIClient.sharedInstance
@@ -73,7 +74,7 @@ class UpdateChecker {
         return entriesSignal |> map { entries in
             entries.reduce(SignalProducer<[Track], NSError>(value: [])) {
                 combineLatest($0, self.fetchPlaylistOfEntry($1)) |> map {
-                    var list = $0.0; list.extend($0.1.tracks); return list
+                    var list = $0.0; list.extend($0.1.getTracks()); return list
                 }
             }
         } |> flatten(.Concat)

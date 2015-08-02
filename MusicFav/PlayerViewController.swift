@@ -12,6 +12,7 @@ import AVFoundation
 import Snap
 import SDWebImage
 import MarqueeLabel
+import MusicFeeder
 
 class PlayerViewController: UIViewController, DraggableCoverViewControllerDelegate, ADBannerViewDelegate {
     let minThumbnailWidth:  CGFloat = 75.0
@@ -26,10 +27,10 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
         override func timeUpdated()               { vc.updateViews() }
         override func didPlayToEndTime()          { vc.updateViews() }
         override func statusChanged()             { vc.updateViews() }
-        override func trackSelected(track: Track, index: Int, playlist: Playlist) {
+        override func trackSelected(track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist) {
             vc.updateViews()
         }
-        override func trackUnselected(track: Track, index: Int, playlist: Playlist) {
+        override func trackUnselected(track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist) {
             vc.updateViews()
         }
     }
@@ -55,8 +56,8 @@ class PlayerViewController: UIViewController, DraggableCoverViewControllerDelega
     var app:                 UIApplication { get { return UIApplication.sharedApplication() }}
     var appDelegate:         AppDelegate   { get { return app.delegate as! AppDelegate }}
     var player:              Player<PlayerObserver>? { get { return appDelegate.player }}
-    var currentPlaylist:     Playlist? { get { return player?.currentPlaylist }}
-    var currentTrack:        Track?    { get { return player?.currentTrack }}
+    var currentPlaylist:     Playlist? { get { return player?.currentPlaylist as? Playlist }}
+    var currentTrack:        Track?    { get { return player?.currentTrack as? Track }}
     var modalPlayerObserver: ModalPlayerObserver!
     var thumbnailView:       UIView { get { return playerView }}
 

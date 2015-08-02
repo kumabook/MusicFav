@@ -10,6 +10,7 @@ import UIKit
 import ReactiveCocoa
 import SwiftyJSON
 import FeedlyKit
+import MusicFeeder
 import Box
 
 class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableViewCellDelegate {
@@ -43,11 +44,11 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
         override func previousPlaylistRequested() {
             vc.playPlaylist(vc.previousPlaylist())
         }
-        override func trackSelected(track: Track, index: Int, playlist: Playlist) {
+        override func trackSelected(track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist) {
             vc.updateTrack(track, index: index, playlist: playlist, playerState: vc.player!.currentState)
             vc.tableView?.reloadData()
         }
-        override func trackUnselected(track: Track, index: Int, playlist: Playlist) {
+        override func trackUnselected(track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist) {
             vc.updateTrack(track, index: index, playlist: playlist, playerState: PlayerState.Init)
             vc.tableView?.reloadData()
         }
@@ -137,7 +138,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
     }
 
     func updateSelection(scrollPosition: UITableViewScrollPosition) {
-        if let p = appDelegate.player, pl = p.currentPlaylist {
+        if let p = appDelegate.player, pl = p.currentPlaylist as? Playlist {
             if let index = indexPathOfPlaylist(pl) {
                 tableView.selectRowAtIndexPath(index, animated: true, scrollPosition: scrollPosition)
             }
@@ -150,8 +151,8 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
         }
     }
 
-    func updateTrack(track: Track, index: Int, playlist: Playlist, playerState: PlayerState) {
-        if let indexPath = indexPathOfPlaylist(playlist) {
+    func updateTrack(track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist, playerState: PlayerState) {
+        if let p = playlist as? Playlist, indexPath = indexPathOfPlaylist(p) {
             let p = streamLoader.playlistsOfEntry[streamLoader.entries[indexPath.item]]
             p!.sink.put(.Next(Box(PlaylistEvent.ChangePlayState(index: index, playerState: playerState))))
         }
@@ -241,7 +242,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
         var prev: Playlist?
         for e in streamLoader.entries {
             if let playlist = streamLoader.playlistsOfEntry[e] {
-                if let p = player?.currentPlaylist {
+                if let p = player?.currentPlaylist as? Playlist {
                     if p == playlist {
                         return prev
                     }
@@ -261,7 +262,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
                 if find && playlist.validTracksCount > 0 {
                     return playlist
                 }
-                if let p = player?.currentPlaylist {
+                if let p = player?.currentPlaylist as? Playlist {
                     if p == playlist {
                         find = true
                     }
@@ -271,8 +272,8 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
         return nil
     }
 
-    func playPlaylist(playlist: Playlist?) {
-        if let p = playlist {
+    func playPlaylist(playlist: PlayerKitPlaylist?) {
+        if let p = playlist as? Playlist {
             appDelegate.miniPlayerViewController?.select(0, playlist: p, playlists: streamLoader.playlists)
         }
     }
@@ -314,7 +315,7 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
             cell.delegate           = self
             cell.trackNumLabel.text = "\(playlist.tracks.count) tracks"
             cell.loadThumbnails(playlist)
-            if let p = self.player, cp = p.currentPlaylist, i = p.currentTrackIndex {
+            if let p = self.player, cp = p.currentPlaylist as? Playlist, i = p.currentTrackIndex {
                 if cp == playlist {
                     cell.updatePlayerIcon(i, playerState: p.currentState)
                     updateSelection(UITableViewScrollPosition.None)

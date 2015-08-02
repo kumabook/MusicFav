@@ -9,20 +9,21 @@
 import SwiftyJSON
 import ReactiveCocoa
 import FeedlyKit
+import MusicFeeder
 
-class SiteInfo {
-    let siteId:         Int64
-    let siteName:       String
-    let siteUrl:        String
-    let blogImage:      String?
-    let blogImageSmall: String?
-    let firstPosted:    Int64?
-    let lastPosted:     Int64?
-    let followers:      Int?
-    let isFavorite:     Bool?
-    let regionName:     String?
-    let totalTracks:    Int?
-    init(json: JSON) {
+public class SiteInfo {
+    public let siteId:         Int64
+    public let siteName:       String
+    public let siteUrl:        String
+    public let blogImage:      String?
+    public let blogImageSmall: String?
+    public let firstPosted:    Int64?
+    public let lastPosted:     Int64?
+    public let followers:      Int?
+    public let isFavorite:     Bool?
+    public let regionName:     String?
+    public let totalTracks:    Int?
+    public init(json: JSON) {
         self.siteId         = json["siteid"].int64Value
         self.siteName       = json["sitename"].stringValue
         self.siteUrl        = json["siteurl"].stringValue
@@ -37,22 +38,22 @@ class SiteInfo {
     }
 }
 
-class Blog {
-    let siteId:         Int64
-    let siteName:       String
-    let siteUrl:        String
-    let blogImage:      String?
-    let blogImageSmall: String?
-    var syndUrl:        String
-    let city:           String?
-    let country:        String?
-    var region:         String?
-    let locStr:         String?
-    let email:          String
+public class Blog: Subscribable {
+    public let siteId:         Int64
+    public let siteName:       String
+    public let siteUrl:        String
+    public let blogImage:      String?
+    public let blogImageSmall: String?
+    public var syndUrl:        String
+    public let city:           String?
+    public let country:        String?
+    public var region:         String?
+    public let locStr:         String?
+    public let email:          String
 
-    var siteInfo:       SiteInfo?
+    public var siteInfo:       SiteInfo?
 
-    init(json: JSON) {
+    public init(json: JSON) {
         self.siteId         = json["siteid"].int64Value
         self.siteName       = json["sitename"].stringValue
         self.siteUrl        = json["siteurl"].stringValue
@@ -66,14 +67,18 @@ class Blog {
         self.email          = json["email"].stringValue
     }
 
-    var feedId: String {
+    public var feedId: String {
         return "feed/\(syndUrl)"
     }
 
-    func fetchSiteInfo() -> SignalProducer<Blog, NSError> {
+    public func fetchSiteInfo() -> SignalProducer<Blog, NSError> {
         return HypemAPIClient.sharedInstance.getSiteInfo(siteId) |> map({
             self.siteInfo = $0
             return self
         })
+    }
+
+    public func toSubscription() -> Subscription {
+        return Subscription(id: feedId, title: siteName, categories: [])
     }
 }

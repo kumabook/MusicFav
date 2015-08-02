@@ -9,6 +9,7 @@
 import UIKit
 import Snap
 import ReactiveCocoa
+import MusicFeeder
 
 protocol PlaylistStreamTableViewCellDelegate: class {
     func trackSelectedAt(index: Int, track: Track, playlist: Playlist)
@@ -77,7 +78,7 @@ class PlaylistStreamTableViewCell: UITableViewCell {
         let tw = thumbnailWidth
         clearThumbnails()
         self.playlist = playlist
-        for (i, track) in enumerate(playlist.tracks) {
+        for (i, track) in enumerate(playlist.getTracks()) {
             let rect = CGRect(x: tw * CGFloat(i), y: 0.0, width: tw, height: tw)
             let imageView = UIImageView(frame: rect)
             imageView.userInteractionEnabled = true
@@ -155,7 +156,7 @@ class PlaylistStreamTableViewCell: UITableViewCell {
             if let delegate = self.delegate {
                 if let view = sender.view as? UIImageView {
                     if let i = find(imageViews, view) {
-                        delegate.trackSelectedAt(i, track: playlist.tracks[i], playlist: playlist)
+                        delegate.trackSelectedAt(i, track: playlist.getTracks()[i], playlist: playlist)
                     }
                 }
             }
@@ -172,7 +173,7 @@ class PlaylistStreamTableViewCell: UITableViewCell {
             UIScheduler().schedule {
                 switch event {
                 case .Load(let index):
-                    self.loadThumbnail(self.imageViews[index], track: playlist.tracks[index])
+                    self.loadThumbnail(self.imageViews[index], track: playlist.getTracks()[index])
                 case .ChangePlayState(let index, let playerState):
                     self.updatePlayerIcon(index, playerState: playerState)
                 }

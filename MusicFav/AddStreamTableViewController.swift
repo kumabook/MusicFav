@@ -9,6 +9,7 @@
 import UIKit
 import ReactiveCocoa
 import FeedlyKit
+import MusicFeeder
 import MBProgressHUD
 
 class AddStreamTableViewController: UITableViewController, UISearchBarDelegate {
@@ -318,11 +319,11 @@ class AddStreamTableViewController: UITableViewController, UISearchBarDelegate {
             let subscribables: [Subscribable] = indexPaths.map({
                 switch Section(rawValue: $0.section)! {
                 case .SearchResult:
-                    return Subscribable.ToFeed(self.feeds[$0.item])
+                    return SubscribableFeed(feed: self.feeds[$0.item])
                 case .Recommend:
-                    return Subscribable.ToFeed(self.recommendFeeds[$0.item])
+                    return SubscribableFeed(feed: self.recommendFeeds[$0.item])
                 case .Hypem:
-                    return Subscribable.ToBlog(self.blogLoader.blogs[$0.item])
+                    return self.blogLoader.blogs[$0.item]
                 }
             })
             Logger.sendUIActionEvent(self, action: "add", label: "")

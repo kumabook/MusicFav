@@ -11,8 +11,8 @@ import Result
 import Box
 import FeedlyKit
 
-class BlogLoader {
-    enum State {
+public class BlogLoader {
+    public enum State {
         case Init
         case FetchingAllBlogs
         case Normal
@@ -21,21 +21,21 @@ class BlogLoader {
         case Error
     }
 
-    enum Event {
+    public enum Event {
         case StartLoading
         case CompleteLoading
         case FailToLoad
     }
 
     private var _blogs: [Blog]
-    var blogs:          [Blog]
+    public var blogs:          [Blog]
     var offset  = 0
     var perPage = 5
-    var state:          State
-    var signal:         Signal<Event, NSError>
-    var sink:           SinkOf<ReactiveCocoa.Event<Event, NSError>>
+    public var state:          State
+    public var signal:         Signal<Event, NSError>
+    public var sink:           SinkOf<ReactiveCocoa.Event<Event, NSError>>
 
-    init() {
+    public init() {
         self._blogs = []
         self.blogs  = []
         self.state  = .Init
@@ -54,7 +54,7 @@ class BlogLoader {
         }
     }
 
-    func fetchBlogs() {
+    public func fetchBlogs() {
         switch state {
         case .Init:             fetchAllBlogs().start(next: {}, error: {e in}, completed: {})
         case .FetchingAllBlogs: break

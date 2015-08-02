@@ -12,7 +12,7 @@ import SwiftyJSON
 import ReactiveCocoa
 import XCDYouTubeKit
 import SDWebImage
-
+import MusicFeeder
 
 class TrackTableViewController: UITableViewController {
     let tableCellReuseIdentifier = "trackTableViewCell"
@@ -105,7 +105,7 @@ class TrackTableViewController: UITableViewController {
     func favPlaylist() {
         if let currentPlaylist = playlist {
             Logger.sendUIActionEvent(self, action: "favPlaylist", label: "")
-            showSelectPlaylistViewController(currentPlaylist.tracks)
+            showSelectPlaylistViewController(currentPlaylist.getTracks())
         }
     }
 
@@ -179,7 +179,7 @@ class TrackTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(self.tableCellReuseIdentifier, forIndexPath: indexPath) as! TrackTableViewCell
         if let p = playlist {
-            let track = p.tracks[indexPath.item]
+            let track = p.getTracks()[indexPath.item]
             switch track.status {
             case .Loading:
                 cell.trackNameLabel.text = "Loading...".localize()
@@ -221,7 +221,7 @@ class TrackTableViewController: UITableViewController {
         let copy = UITableViewRowAction(style: .Default, title: "Fav　　".localize()) {
             (action, indexPath) in
             Logger.sendUIActionEvent(self, action: "FavTrackAtIndex", label: "\(indexPath.item)")
-            let track = self.playlist!.tracks[indexPath.item]
+            let track = self.playlist!.getTracks()[indexPath.item]
             self.showSelectPlaylistViewController([track])
         }
         copy.backgroundColor = UIColor.green

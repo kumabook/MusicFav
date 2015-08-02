@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import MusicFeeder
 
 class SelectPlaylistTableViewController: UITableViewController {
     let tableCellReuseIdentifier = "selectPlaylistTableViewCell"

@@ -10,6 +10,7 @@ import UIKit
 import MCSwipeTableViewCell
 import Snap
 import FeedlyKit
+import MusicFeeder
 
 class EntryStreamTableViewCell: MCSwipeTableViewCell {
     let padding:       CGFloat   = 5.0

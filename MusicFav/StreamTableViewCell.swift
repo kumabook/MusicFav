@@ -8,6 +8,7 @@
 
 import UIKit
 import FeedlyKit
+import MusicFeeder
 
 class StreamTableViewCell: UITableViewCell {
 

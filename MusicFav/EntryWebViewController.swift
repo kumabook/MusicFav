@@ -10,6 +10,7 @@ import UIKit
 import WebKit
 import SwiftyJSON
 import FeedlyKit
+import MusicFeeder
 import MBProgressHUD
 
 class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler {
@@ -168,7 +169,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
     func favEntry() {
         Logger.sendUIActionEvent(self, action: "favEntry", label: "")
         let feedlyClient = CloudAPIClient.sharedInstance
-        if feedlyClient.isLoggedIn {
+        if CloudAPIClient.isLoggedIn {
             MBProgressHUD.showHUDAddedTo(view, animated: true)
             feedlyClient.markEntriesAsSaved([entry.id], completionHandler: { (req, res, error) -> Void in
                 MBProgressHUD.hideHUDForView(self.view, animated:false)

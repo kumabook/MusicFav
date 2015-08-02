@@ -9,6 +9,7 @@
 import UIKit
 import ReactiveCocoa
 import FeedlyKit
+import MusicFeeder
 import RATreeView
 import MBProgressHUD
 

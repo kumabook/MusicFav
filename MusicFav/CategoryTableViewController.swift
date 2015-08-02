@@ -9,6 +9,7 @@
 import UIKit
 import ReactiveCocoa
 import FeedlyKit
+import MusicFeeder
 import MBProgressHUD
 
 class CategoryTableViewController: UITableViewController {
@@ -100,18 +101,8 @@ class CategoryTableViewController: UITableViewController {
     }
 
     func _subscribeTo(category: FeedlyKit.Category) -> SignalProducer<[Subscription], NSError> {
-        var subscriptions: [Subscription] = subscribables.map({
-            switch $0 {
-            case Subscribable.ToFeed(let feed):
-                return Subscription(feed: feed, categories: [category])
-            case .ToBlog(let blog):
-                return Subscription(id: blog.feedId,
-                                 title: blog.siteName,
-                            categories: [category])
-            }
-        })
-        return subscriptions.reduce(SignalProducer(value: [])) {
-            combineLatest($0, streamListLoader.subscribeTo($1)) |> map {
+        return subscribables.reduce(SignalProducer(value: [])) {
+            combineLatest($0, streamListLoader.subscribeTo($1, categories: [category])) |> map {
                 var list = $0.0; list.append($0.1); return list
             }
         }
