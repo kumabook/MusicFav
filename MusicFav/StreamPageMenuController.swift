@@ -83,6 +83,6 @@ class StreamPageMenuController: UIViewController {
 
     func showPlaylist() {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        appDelegate.miniPlayerViewController?.mainViewController.showRightPanelAnimated(true)
+        appDelegate.mainViewController?.showRightPanelAnimated(true)
     }
 }

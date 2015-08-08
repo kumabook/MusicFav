@@ -142,12 +142,12 @@ class EntryStreamViewController: UITableViewController {
 
         tableView?.reloadData()
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        appDelegate.miniPlayerViewController?.mainViewController.showCenterPanelAnimated(true)
+        appDelegate.mainViewController?.showCenterPanelAnimated(true)
     }
 
     func showPlaylist() {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        appDelegate.miniPlayerViewController?.mainViewController.showRightPanelAnimated(true)
+        appDelegate.mainViewController?.showRightPanelAnimated(true)
     }
 
     func fetchEntries() {

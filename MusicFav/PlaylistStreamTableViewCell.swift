@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import Snap
+import SnapKit
 import ReactiveCocoa
 import MusicFeeder
 

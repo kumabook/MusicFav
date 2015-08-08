@@ -195,16 +195,16 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
 
         tableView?.reloadData()
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        appDelegate.miniPlayerViewController?.mainViewController.showCenterPanelAnimated(true)
+        appDelegate.mainViewController?.showCenterPanelAnimated(true)
     }
 
     func showPlaylist(playlist: Playlist?) {
         let vc = appDelegate.miniPlayerViewController
         if let _playlist = playlist {
             appDelegate.selectedPlaylist = _playlist
-            appDelegate.miniPlayerViewController?.playlistTableViewController.updateNavbar()
-            appDelegate.miniPlayerViewController?.playlistTableViewController.tableView.reloadData()
-            vc?.mainViewController.showRightPanelAnimated(true, completion: {
+            vc?.playlistTableViewController.updateNavbar()
+            vc?.playlistTableViewController.tableView.reloadData()
+            appDelegate.mainViewController?.showRightPanelAnimated(true, completion: {
                 vc?.playlistTableViewController.showPlaylist(_playlist)
                 return
             })
@@ -274,14 +274,14 @@ class PlaylistStreamViewController: UITableViewController, PlaylistStreamTableVi
 
     func playPlaylist(playlist: PlayerKitPlaylist?) {
         if let p = playlist as? Playlist {
-            appDelegate.miniPlayerViewController?.select(0, playlist: p, playlists: streamLoader.playlists)
+            appDelegate.player?.select(0, playlist: p, playlists: streamLoader.playlists)
         }
     }
 
     // MARK: - PlaylistStreamTableViewDelegate
 
     func trackSelectedAt(index: Int, track: Track, playlist: Playlist) {
-        appDelegate.miniPlayerViewController?.select(index, playlist: playlist, playlists: streamLoader.playlists)
+        appDelegate.player?.select(index, playlist: playlist, playlists: streamLoader.playlists)
         tableView.reloadData()
     }
 

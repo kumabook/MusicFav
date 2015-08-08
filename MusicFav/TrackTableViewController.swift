@@ -11,7 +11,7 @@ import AVFoundation
 import SwiftyJSON
 import ReactiveCocoa
 import XCDYouTubeKit
-import SDWebImage
+import WebImage
 import MusicFeeder
 
 class TrackTableViewController: UITableViewController {
@@ -246,7 +246,7 @@ class TrackTableViewController: UITableViewController {
         if let p = playlist {
             let track = p.tracks[indexPath.item]
             if track.streamUrl != nil {
-                appDelegate.miniPlayerViewController?.select(indexPath.item, playlist: p, playlists: [p])
+                appDelegate.player?.select(indexPath.item, playlist: p, playlists: [p])
             } else {
                 tableView.deselectRowAtIndexPath(indexPath, animated: true)
             }

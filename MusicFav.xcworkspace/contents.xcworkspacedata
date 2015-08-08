@@ -10,4 +10,7 @@
    <FileRef
       location = "group:Carthage/Checkouts/MusicFeeder/MusicFeeder.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/PlayerKit/PlayerKit.xcodeproj">
+   </FileRef>
 </Workspace>

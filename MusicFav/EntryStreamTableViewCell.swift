@@ -8,7 +8,7 @@
 
 import UIKit
 import MCSwipeTableViewCell
-import Snap
+import SnapKit
 import FeedlyKit
 import MusicFeeder
 
@@ -50,7 +50,7 @@ class EntryStreamTableViewCell: MCSwipeTableViewCell {
         view.addSubview(imageView)
 
         label.snp_makeConstraints { make in
-            make.right.equalTo(imageView.snp_left).with.offset(-self.padding)
+            make.right.equalTo(imageView.snp_left).offset(-self.padding)
             make.centerY.equalTo(view.snp_centerY)
         }
         imageView.snp_makeConstraints { make in

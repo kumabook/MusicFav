@@ -16,6 +16,7 @@ import Fabric
 import Crashlytics
 import XCDYouTubeKit
 import PlayerKit
+import JASidePanels
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -34,8 +35,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var playerViewController:     PlayerViewController? {
         get { return coverViewController?.coverViewController as? PlayerViewController }
     }
-    var leftVisibleWidth:  CGFloat? { get { return miniPlayerViewController?.mainViewController.leftVisibleWidth } }
-    var rightVisibleWidth: CGFloat? { get { return miniPlayerViewController?.mainViewController.rightVisibleWidth } }
+    var mainViewController: JASidePanelController? { return miniPlayerViewController?.mainViewController as? JASidePanelController }
+    var leftVisibleWidth:   CGFloat? { return mainViewController?.leftVisibleWidth }
+    var rightVisibleWidth:  CGFloat? { return mainViewController?.rightVisibleWidth }
 
     var userDefaults:          NSUserDefaults { return NSUserDefaults.standardUserDefaults() }
     var isFirstLaunch:         Bool           { return self.userDefaults.boolForKey("firstLaunch") }
@@ -56,8 +58,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         appearanceManager           = AppearanceManager()
         appearanceManager?.apply()
         window                      = UIWindow(frame: UIScreen.mainScreen().bounds)
-        miniPlayerViewController    = MiniPlayerViewController()
-        coverViewController         = DraggableCoverViewController(coverViewController: PlayerViewController(),
+        miniPlayerViewController    = MiniPlayerViewController(player: player!)
+        coverViewController         = DraggableCoverViewController(coverViewController: PlayerViewController(player: player!),
             floorViewController: miniPlayerViewController!)
         window?.rootViewController  = self.coverViewController
     }

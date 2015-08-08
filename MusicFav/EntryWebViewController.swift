@@ -153,7 +153,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
     
     func showPlaylist() {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        appDelegate.miniPlayerViewController?.mainViewController.showRightPanelAnimated(true)
+        appDelegate.mainViewController?.showRightPanelAnimated(true)
     }
 
     func historyBack() {
