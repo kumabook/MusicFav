@@ -19,6 +19,7 @@ enum Target: String {
         case .Sandbox:    return "MusicFav/feedly.json.sandbox"
         }
     }
+    var youtubeConfig:    String { return "MusicFav/youtube.json.production" }
     var soundCloudConfig: String { return "MusicFav/soundcloud.json.production" }
     var fabricConfig:     String { return "MusicFav/fabric.json.production" }
     var gaConfig:         String {
@@ -29,17 +30,20 @@ enum Target: String {
     }
 
     var feedlyConfigDst:     String { return "MusicFav/feedly.json" }
+    var youtubeConfigDst:    String { return "MusicFav/youtube.json" }
     var soundCloudConfigDst: String { return "MusicFav/soundcloud.json" }
     var fabricConfigDst:     String { return "MusicFav/fabric.json" }
     var gaConfigDst:         String { return "MusicFav/google_analytics.json" }
     func prepare() {
         run("cp \(feedlyConfig) \(feedlyConfigDst)")
+        run("cp \(youtubeConfig) \(youtubeConfigDst)")
         run("cp \(soundCloudConfig) \(soundCloudConfigDst)")
         run("cp \(fabricConfig) \(fabricConfigDst)")
         run("cp \(gaConfig) \(gaConfigDst)")
     }
     func clean() {
         run("git checkout HEAD \(feedlyConfigDst)")
+        run("git checkout HEAD \(youtubeConfigDst)")
         run("git checkout HEAD \(soundCloudConfigDst)")
         run("git checkout HEAD \(fabricConfigDst)")
         run("git checkout HEAD \(gaConfigDst)")
@@ -63,6 +67,7 @@ func run(command: String) {
 }
 
 let feedlyConfig     = "MusicFav/feedly.json"
+let youtubeConfig    = "MusicFav/youtube.json"
 let soundCloudConfig = "MusicFav/soundcloud.json"
 let fabricConfig     = "MusicFav/fabric.json"
 let gaConfig         = "MusicFav/google_analytics.json"

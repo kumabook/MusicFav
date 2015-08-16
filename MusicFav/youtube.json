@@ -1,0 +1,5 @@
+{
+          "api_key": "your youtube api key",
+        "client_id": "your youtube api client id",
+    "client_secret": "your youtube api client secret"
+}

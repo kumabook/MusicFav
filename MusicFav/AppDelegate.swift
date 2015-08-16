@@ -76,6 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func setupAPIClient() {
         FeedlyAPI.setup()
         SoundCloudAPIClient.loadConfig()
+        YouTubeAPIClient.setup()
     }
 
     func startTutorial() {
