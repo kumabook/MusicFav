@@ -30,6 +30,26 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             case .UncategorizedSubscription(let subscription): return subscription.streamTitle
             }
         }
+        func setThumbImage(view: UIImageView?) {
+            switch self {
+            case .GlobalResource(let stream):
+                switch stream.streamTitle {
+                case "All":
+                    view?.image = UIImage(named: "home")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+                case "Saved":
+                    view?.image = UIImage(named: "fav_entry")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+                case "Read":
+                    view?.image = UIImage(named: "checkmark")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+                default: break
+                }
+            case .Pocket: break
+            case .Twitter: break
+            case .FeedlyCategory(let category):
+                view?.image = UIImage(named: "folder")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+            case .UncategorizedSubscription(let subscription):
+                view?.sd_setImageWithURL(subscription.thumbnailURL, placeholderImage: UIImage(named: "default_thumb"))
+            }
+        }
         func child(streamListDic: [FeedlyKit.Category:[Stream]], index: Int) -> AnyObject {
             switch self {
             case .GlobalResource: return []
@@ -106,7 +126,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         treeView?.backgroundColor = UIColor.whiteColor()
         treeView?.delegate = self
         treeView?.dataSource = self
-        treeView?.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
+        treeView?.registerClass(StreamTreeViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
         view.addSubview(self.treeView!)
 
         refreshControl = UIRefreshControl()
@@ -141,8 +161,8 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
     }
 
     func addStream() {
-        let stvc = AddStreamTableViewController(streamListLoader: streamListLoader)
-        root?.presentViewController(UINavigationController(rootViewController:stvc), animated: true, completion: nil)
+        let admvc = AddStreamMenuViewController(streamListLoader: streamListLoader)
+        root?.presentViewController(UINavigationController(rootViewController:admvc), animated: true, completion: nil)
     }
 
     func showStream(#section: Section) {
@@ -173,9 +193,15 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
                 })
                 self.sections  = self.defaultSections()
                 self.sections.extend(categories.map({ Section.FeedlyCategory($0) }))
-                self.sections.extend(self.streamListLoader.uncategorizedStreams.map({
-                    Section.UncategorizedSubscription($0 as! Subscription)
-                }))
+                self.sections.extend(self.streamListLoader.uncategorizedStreams.map {
+                    if let subscription = $0 as? Subscription {
+                        return Section.UncategorizedSubscription(subscription)
+                    } else if let feed = $0 as? Feed {
+                        return Section.UncategorizedSubscription(Subscription(feed: feed, categories: []))
+                    } else {
+                        return Section.UncategorizedSubscription(Subscription(id: "Unknown", title: "Unknown", categories: []) )
+                    }
+                })
                 self.refreshControl?.endRefreshing()
                 self.treeView?.reloadData()
             case .FailToLoad(let e):
@@ -254,21 +280,38 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         }
         return 0
     }
-    
+
+    func treeView(treeView: RATreeView!, indentationLevelForRowForItem item: AnyObject!) -> Int {
+        if let stream = item as? Stream {
+            return 1
+        } else {
+            return 0
+        }
+    }
+
+    func treeView(treeView: RATreeView!, shouldIndentWhileEditingRowForItem item: AnyObject!) -> Bool {
+        return true
+    }
+
     func treeView(treeView: RATreeView!, cellForItem item: AnyObject!) -> UITableViewCell! {
-        let cell = treeView.dequeueReusableCellWithIdentifier("reuseIdentifier") as! UITableViewCell
+        let cell = treeView.dequeueReusableCellWithIdentifier("reuseIdentifier") as! StreamTreeViewCell
+        if let i = self.treeView?.levelForCellForItem(item) { cell.indent = i }
         if item == nil {
             cell.textLabel?.text = "Nothing"
         } else if let index = item as? Int {
             let section = sections[index]
-            let num     = section.numOfChild(streamListLoader.streamListOfCategory)
+            section.setThumbImage(cell.imageView)
+            let num = section.numOfChild(streamListLoader.streamListOfCategory)
             if num > 0 {
                 cell.textLabel?.text = "\(section.title) (\(section.numOfChild(streamListLoader.streamListOfCategory)))"
             } else {
                 cell.textLabel?.text = "\(section.title)"
             }
         } else if let stream = item as? Stream {
-            cell.textLabel?.text = "     " + stream.streamTitle
+            cell.textLabel?.text = stream.streamTitle
+            if let subscription = stream as? Subscription {
+                cell.imageView?.sd_setImageWithURL(subscription.thumbnailURL, placeholderImage: UIImage(named: "default_thumb"))
+            }
         }
         return cell
     }

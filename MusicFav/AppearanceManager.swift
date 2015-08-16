@@ -12,5 +12,6 @@ class AppearanceManager {
     func apply() {
         UIBarButtonItem.appearance().tintColor = UIColor.theme
         UINavigationBar.appearance().tintColor = UIColor.theme
+            UIImageView.appearance().tintColor = UIColor.theme
     }
 }
