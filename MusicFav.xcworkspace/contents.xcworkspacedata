@@ -13,4 +13,7 @@
    <FileRef
       location = "group:Carthage/Checkouts/PlayerKit/PlayerKit.xcodeproj">
    </FileRef>
+   <FileRef
+      location = "group:Carthage/Checkouts/FeedlyKit/FeedlyKit.xcodeproj">
+   </FileRef>
 </Workspace>
