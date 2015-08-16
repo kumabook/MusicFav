@@ -9,7 +9,7 @@
 import UIKit
 import EAIntroView
 
-class TutorialViewController: UIViewController, TutorialViewDelegate, FeedlyOAuthViewDelegate {
+class TutorialViewController: UIViewController, TutorialViewDelegate, OAuthViewDelegate {
     var appDelegate: AppDelegate { return UIApplication.sharedApplication().delegate as! AppDelegate }
     var tutorialView: TutorialView!
 
