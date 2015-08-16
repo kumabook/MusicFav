@@ -38,6 +38,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var mainViewController: JASidePanelController? { return miniPlayerViewController?.mainViewController as? JASidePanelController }
     var leftVisibleWidth:   CGFloat? { return mainViewController?.leftVisibleWidth }
     var rightVisibleWidth:  CGFloat? { return mainViewController?.rightVisibleWidth }
+    var streamListLoader: StreamListLoader? {
+        return miniPlayerViewController?.streamTreeViewController?.streamListLoader
+    }
 
     var userDefaults:          NSUserDefaults { return NSUserDefaults.standardUserDefaults() }
     var isFirstLaunch:         Bool           { return self.userDefaults.boolForKey("firstLaunch") }
@@ -168,12 +171,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func showStreamSelectViewController() {
-        weak var mini = miniPlayerViewController
-        if let streamListLoader = mini?.streamTreeViewController?.streamListLoader {
-            let stvc = AddStreamTableViewController(streamListLoader: streamListLoader)
+        if let loader = streamListLoader {
+            let stvc = AddStreamMenuViewController(streamListLoader: loader)
             let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.3 * Double(NSEC_PER_SEC)))
             dispatch_after(delayTime, dispatch_get_main_queue()) {
-                mini?.presentViewController(UINavigationController(rootViewController:stvc), animated: true, completion: nil)
+               self.miniPlayerViewController?.presentViewController(UINavigationController(rootViewController:stvc), animated: true, completion: nil)
                 return
             }
         }
