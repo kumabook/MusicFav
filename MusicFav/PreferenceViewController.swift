@@ -58,13 +58,23 @@ class PreferenceViewController: UITableViewController {
     }
 
     enum AccountRow: Int {
-        case LoginOrLogout = 0
-        static let count   = 1
+        case Feedly      = 0
+        case YouTube     = 1
+        static let count = 2
         var title: String {
-            if CloudAPIClient.isLoggedIn {
-                return "Logout".localize()
-            } else {
-                return "Login".localize()
+            switch self {
+            case Feedly:
+                if CloudAPIClient.isLoggedIn {
+                    return "Logout".localize()
+                } else {
+                    return "Login".localize()
+                }
+            case YouTube:
+                if YouTubeAPIClient.isLoggedIn {
+                    return "Disconnect with YouTube"
+                } else {
+                    return "Connect with YouTube"
+                }
             }
         }
     }
@@ -190,14 +200,24 @@ class PreferenceViewController: UITableViewController {
         let oauthvc = FeedlyOAuthViewController()
         navigationController?.pushViewController(oauthvc, animated: true)
     }
-    
-    func showLogoutDialog() {
-        let ac = UIAlertController(title: "Logout".localize(),
-                                 message: "Are you sure you want to logout?".localize(),
-                          preferredStyle: UIAlertControllerStyle.Alert)
-        let okAction = UIAlertAction(title: "OK".localize(), style: UIAlertActionStyle.Default) { (action) in
-            self.logout()
-        }
+
+    func showYouTubeLoginController() {
+        let vc = OAuthViewController(clientId: YouTubeAPIClient.clientId,
+                                 clientSecret: YouTubeAPIClient.clientSecret,
+                                     scopeUrl: YouTubeAPIClient.scopeUrl,
+                                      authUrl: YouTubeAPIClient.authUrl,
+                                     tokenUrl: YouTubeAPIClient.tokenUrl,
+                                  redirectUrl: YouTubeAPIClient.redirectUrl,
+                                  accountType: YouTubeAPIClient.accountType,
+                                keyChainGroup: YouTubeAPIClient.keyChainGroup)
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
+    func showConfirmDialog(title: String, message: String, action: ((UIAlertAction!) -> Void)) {
+        let ac = UIAlertController(title: title.localize(),
+            message: message.localize(),
+            preferredStyle: UIAlertControllerStyle.Alert)
+        let okAction = UIAlertAction(title: "OK".localize(), style: UIAlertActionStyle.Default, handler: action)
         let cancelAction = UIAlertAction(title: "Cancel".localize(), style: UIAlertActionStyle.Cancel) { (action) in
         }
         ac.addAction(okAction)
@@ -205,6 +225,18 @@ class PreferenceViewController: UITableViewController {
         presentViewController(ac, animated: true, completion: nil)
     }
 
+    func showLogoutDialog() {
+        showConfirmDialog("Logout", message: "Are you sure you want to logout?") { (action) in
+            self.logout()
+        }
+    }
+
+    func showDisonnectYouTubeDialog() {
+        showConfirmDialog("Disconnect with YouTube", message: "Are you sure you want to disconnect with YouTube?") { (action) in
+            YouTubeAPIClient.clearAllAccount()
+            self.tableView?.reloadData()
+        }
+    }
 
     // MARK: - Table view data source
 
@@ -244,11 +276,17 @@ class PreferenceViewController: UITableViewController {
         switch section {
         case .Account:
             switch AccountRow(rawValue: indexPath.row)! {
-            case .LoginOrLogout:
+            case .Feedly:
                 if CloudAPIClient.isLoggedIn {
                     showLogoutDialog()
                 } else {
                     showLoginViewController()
+                }
+            case .YouTube:
+                if YouTubeAPIClient.isLoggedIn {
+                    showDisonnectYouTubeDialog()
+                } else {
+                    showYouTubeLoginController()
                 }
             }
         case .Behavior:
