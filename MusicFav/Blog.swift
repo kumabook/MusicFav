@@ -76,7 +76,7 @@ public class Blog: Stream {
         })
     }
 
-    public func toSubscription() -> Subscription {
-        return Subscription(id: feedId, title: siteName, categories: [])
+    public override var thumbnailURL: NSURL? {
+        return blogImageSmall.map { NSURL(string: $0) }.flatMap { $0 }
     }
 }
