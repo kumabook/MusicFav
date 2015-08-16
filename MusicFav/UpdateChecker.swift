@@ -63,7 +63,7 @@ class UpdateChecker {
                                                  unreadOnly: true)
                 |> map { $0.items }
         } else {
-            entriesSignal = StreamListLoader.sampleSubscriptions().map({ subscription in
+            entriesSignal = [StreamListLoader.defaultStream()].map({ subscription in
                 return self.apiClient.fetchEntries(streamId: subscription.streamId, newerThan: self.newerThan.timestamp, unreadOnly: true) |> map { $0.items }
             }).reduce(SignalProducer<[Entry], NSError>(value: [])) {
                 combineLatest($0, $1) |> map {
