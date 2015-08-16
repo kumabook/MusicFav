@@ -238,13 +238,15 @@ class EntryStreamViewController: UITableViewController {
             cell.originTitleLabel?.text  = originTitle
         }
         cell.dateLabel?.text  = entry.passedTime
-
         if let url = entry.thumbnailURL {
             cell.thumbImgView.sd_setImageWithURL(url, placeholderImage: UIImage(named: "default_thumb"))
+        } else if let url = streamLoader.playlistsOfEntry[entry]?.thumbnailUrl {
+            cell.thumbImgView.sd_setImageWithURL(url, placeholderImage: UIImage(named: "default_thumb"))
+        } else if let id = entry.origin?.streamId, s = appDelegate.streamListLoader?.getStream(id: id) as? Subscription {
+            cell.thumbImgView.sd_setImageWithURL(s.thumbnailURL, placeholderImage: UIImage(named: "default_thumb"))
         } else {
             cell.thumbImgView.image = UIImage(named: "default_thumb")
         }
-
         return cell
     }
 
