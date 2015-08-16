@@ -38,7 +38,9 @@ public class SiteInfo {
     }
 }
 
-public class Blog: Subscribable {
+public class Blog: Stream {
+    public override var streamId:    String { return "feed/\(syndUrl)" }
+    public override var streamTitle: String { return siteName }
     public let siteId:         Int64
     public let siteName:       String
     public let siteUrl:        String
@@ -65,10 +67,6 @@ public class Blog: Subscribable {
         self.region         = json["region"].string
         self.locStr         = json["loc_str"].string
         self.email          = json["email"].stringValue
-    }
-
-    public var feedId: String {
-        return "feed/\(syndUrl)"
     }
 
     public func fetchSiteInfo() -> SignalProducer<Blog, NSError> {

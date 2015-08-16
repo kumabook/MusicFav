@@ -15,7 +15,7 @@ import MBProgressHUD
 class CategoryTableViewController: UITableViewController {
     let client = CloudAPIClient.sharedInstance
 
-    var subscribables:    [Subscribable]
+    var subscribables:    [Stream]
     var streamListLoader: StreamListLoader!
     var observer:         Disposable?
 
@@ -26,7 +26,7 @@ class CategoryTableViewController: UITableViewController {
         return list
     }
 
-    init(subscribables: [Subscribable], streamListLoader: StreamListLoader) {
+    init(subscribables: [Stream], streamListLoader: StreamListLoader) {
         self.subscribables    = subscribables
         self.streamListLoader = streamListLoader
         super.init(nibName: nil, bundle: nil)
