@@ -1,5 +1,5 @@
 //
-//  AddSubscriptionTableViewController.swift
+//  AddStreamTableViewController.swift
 //  MusicFav
 //
 //  Created by Hiroki Kumamoto on 8/15/15.
@@ -12,7 +12,7 @@ import FeedlyKit
 import MusicFeeder
 import MBProgressHUD
 
-class AddSubscriptionTableViewController: UITableViewController {
+class AddStreamTableViewController: UITableViewController {
     let cellHeight:        CGFloat = 100
     let accessoryWidth:    CGFloat = 30
     var isLoggedIn: Bool { return FeedlyAPI.account != nil }

@@ -13,7 +13,7 @@ import FeedlyKit
 import PageMenu
 import MusicFeeder
 
-class ChannelTableViewController: AddSubscriptionTableViewController {
+class ChannelTableViewController: AddStreamTableViewController {
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     let cellReuseIdentifier = "ChannelTableViewCell"
 

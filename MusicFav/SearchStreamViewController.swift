@@ -11,7 +11,7 @@ import FeedlyKit
 import ReactiveCocoa
 import MusicFeeder
 
-class SearchStreamViewController: AddSubscriptionTableViewController, UISearchBarDelegate {
+class SearchStreamViewController: AddStreamTableViewController, UISearchBarDelegate {
     let SEARCH_BAR_HEIGHT: CGFloat = 40
     let reuseIdentifier = "StreamTableViewCell"
     var searchBar: UISearchBar!

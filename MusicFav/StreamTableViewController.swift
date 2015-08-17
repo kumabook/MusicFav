@@ -12,7 +12,7 @@ import FeedlyKit
 import MusicFeeder
 import MBProgressHUD
 
-class StreamTableViewController: AddSubscriptionTableViewController, UISearchBarDelegate {
+class StreamTableViewController: AddStreamTableViewController, UISearchBarDelegate {
     enum Type {
         case Recommend
         case Hypem

@@ -14,7 +14,7 @@ import PageMenu
 import MusicFeeder
 import MBProgressHUD
 
-class ChannelCategoryTableViewController: AddSubscriptionTableViewController {
+class ChannelCategoryTableViewController: AddStreamTableViewController {
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 
     enum Section: Int {

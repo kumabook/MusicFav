@@ -135,7 +135,7 @@
 		67E5DEE91AEC5E8A000E016F /* fabric_invalid.json in Resources */ = {isa = PBXBuildFile; fileRef = 67E5DEE81AEC5E8A000E016F /* fabric_invalid.json */; };
 		67E5DEEB1AEC5EA5000E016F /* fabric.json in Resources */ = {isa = PBXBuildFile; fileRef = 67E5DEEA1AEC5EA5000E016F /* fabric.json */; };
 		67E5DEED1AEC6079000E016F /* fabric_valid.json in Resources */ = {isa = PBXBuildFile; fileRef = 67E5DEEC1AEC6079000E016F /* fabric_valid.json */; };
-		67F530891B7F518500D8EEF1 /* AddSubscriptionTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F530881B7F518500D8EEF1 /* AddSubscriptionTableViewController.swift */; };
+		67F530891B7F518500D8EEF1 /* AddStreamTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F530881B7F518500D8EEF1 /* AddStreamTableViewController.swift */; };
 		67F5308C1B7F54E700D8EEF1 /* SearchStreamViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F5308B1B7F54E700D8EEF1 /* SearchStreamViewController.swift */; };
 		67F530901B7F815B00D8EEF1 /* StreamTreeViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F5308F1B7F815B00D8EEF1 /* StreamTreeViewCell.swift */; };
 		67F7D4901A625A4F00A5AE68 /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4881A625A4F00A5AE68 /* ReactiveCocoa.framework */; };
@@ -343,7 +343,7 @@
 		67E5DEE81AEC5E8A000E016F /* fabric_invalid.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = fabric_invalid.json; path = Fixtures/fabric_invalid.json; sourceTree = "<group>"; };
 		67E5DEEA1AEC5EA5000E016F /* fabric.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = fabric.json; sourceTree = "<group>"; };
 		67E5DEEC1AEC6079000E016F /* fabric_valid.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = fabric_valid.json; path = Fixtures/fabric_valid.json; sourceTree = "<group>"; };
-		67F530881B7F518500D8EEF1 /* AddSubscriptionTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddSubscriptionTableViewController.swift; sourceTree = "<group>"; };
+		67F530881B7F518500D8EEF1 /* AddStreamTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddStreamTableViewController.swift; sourceTree = "<group>"; };
 		67F5308B1B7F54E700D8EEF1 /* SearchStreamViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchStreamViewController.swift; sourceTree = "<group>"; };
 		67F5308F1B7F815B00D8EEF1 /* StreamTreeViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTreeViewCell.swift; sourceTree = "<group>"; };
 		67F7D4651A62458C00A5AE68 /* MusicFav.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = MusicFav.entitlements; sourceTree = "<group>"; };
@@ -687,7 +687,7 @@
 			isa = PBXGroup;
 			children = (
 				67C1A80B1B7CCAB0002A604C /* AddStreamMenuViewController.swift */,
-				67F530881B7F518500D8EEF1 /* AddSubscriptionTableViewController.swift */,
+				67F530881B7F518500D8EEF1 /* AddStreamTableViewController.swift */,
 				67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */,
 				67C1A8011B7B8728002A604C /* ChannelCategoryTableViewController.swift */,
 				67C1A8021B7B8728002A604C /* ChannelTableViewController.swift */,
@@ -1128,7 +1128,7 @@
 				675AB3411AD3E3DA0003824C /* StringExtension.swift in Sources */,
 				67B366DE1AE1CBA800E089B2 /* TutorialViewController.swift in Sources */,
 				67C1A8051B7B8728002A604C /* ChannelTableViewController.swift in Sources */,
-				67F530891B7F518500D8EEF1 /* AddSubscriptionTableViewController.swift in Sources */,
+				67F530891B7F518500D8EEF1 /* AddStreamTableViewController.swift in Sources */,
 				6727EDFE1A5AC1DE003C6A47 /* MiniPlayerViewController.swift in Sources */,
 				6728FA391A60580A00F693B3 /* PreferenceViewController.swift in Sources */,
 				67254C791A493A570064E5DF /* EntryStreamTableViewCell.swift in Sources */,
