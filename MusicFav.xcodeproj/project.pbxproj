@@ -68,6 +68,7 @@
 		673DCCA21AF54BC90043E51D /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673DCCA11AF54BC90043E51D /* Logger.swift */; };
 		67428D4A1B80C23F002FFA1A /* Breit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67428D491B80C23F002FFA1A /* Breit.framework */; };
 		67428D4C1B80E3A1002FFA1A /* youtube.json in Resources */ = {isa = PBXBuildFile; fileRef = 67428D4B1B80E3A1002FFA1A /* youtube.json */; };
+		67428D4D1B8174E7002FFA1A /* Breit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67428D491B80C23F002FFA1A /* Breit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		674AAC891B02D64E00C1FC18 /* UINotificationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */; };
 		67554F091A4F127400F7AE72 /* TrackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */; };
 		67554F0A1A4F127400F7AE72 /* TrackTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */; };
@@ -176,6 +177,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				67428D4D1B8174E7002FFA1A /* Breit.framework in Embed Frameworks */,
 				6725420C1B784E3300EDA2C3 /* MusicFeeder.framework in Embed Frameworks */,
 				6725420A1B784E2100EDA2C3 /* PlayerKit.framework in Embed Frameworks */,
 				67C0BC6A1B7749B800243AE8 /* SnapKit.framework in Embed Frameworks */,
@@ -976,6 +978,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Realm.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SnapKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/WebImage.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/Breit.framework",
 			);
 			name = "Carthage copy-frameworks";
 			outputPaths = (
