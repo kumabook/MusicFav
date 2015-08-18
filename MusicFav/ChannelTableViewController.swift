@@ -175,12 +175,10 @@ class ChannelTableViewController: AddStreamTableViewController {
         if let url = NSURL(string: channel.thumbnails["default"]!) {
             cell.thumbImageView.sd_setImageWithURL(url)
         }
-        cell.subtitle1Label.text = channel.description
-        if let date = channel.publishedAt {
-            cell.subtitle2Label.text = date
-        } else {
-            cell.subtitle2Label.text = ""
-        }
+        cell.subtitle1Label.text          = ""
+        cell.subtitle2Label.text          = channel.description
+        cell.subtitle2Label.numberOfLines = 2
+        cell.subtitle2Label.textAlignment = .Left
         return cell
     }
 }

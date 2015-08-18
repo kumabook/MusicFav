@@ -230,8 +230,10 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
                 if let url = NSURL(string: subscription.thumbnails["default"]!) {
                     cell.thumbImageView.sd_setImageWithURL(url)
                 }
-                cell.subtitle1Label.text = ""
-                cell.subtitle2Label.text = ""
+                cell.subtitle1Label.text          = ""
+                cell.subtitle2Label.text          = subscription.description
+                cell.subtitle2Label.numberOfLines = 2
+                cell.subtitle2Label.textAlignment = .Left
                 return cell
             } else {
                 let cell = tableView.dequeueReusableCellWithIdentifier(section.tableCellReuseIdentifier, forIndexPath: indexPath) as! UITableViewCell
