@@ -33,25 +33,42 @@ class ChannelLoader {
     var signal:         Signal<Event, NSError>
     var sink:           SinkOf<ReactiveCocoa.Event<Event, NSError>>
 
-    var subscriptions: [YouTubeSubscription]
-    var channels:      [Channel]
-    var categoriesPageToken: String?
+    var subscriptions:               [YouTubeSubscription]
+    var channels:                    [Channel]
+    var searchResults:               [Channel]
     var channelsPageTokenOfCategory: [GuideCategory: String]
+    var categoriesPageToken:   String?
     var subscriptionPageToken: String?
-    var channelPageToken: String?
+    var channelPageToken:      String?
+    var searchPageToken:       String?
+
+    var channelDisposableOfCategory: [GuideCategory: Disposable?]
+    var categoriesDisposable:        Disposable?
+    var subscriptionDisposable:      Disposable?
+    var searchDisposable:            Disposable?
 
     init() {
         categories                    = []
         channelsOfCategory            = [:]
         subscriptions                 = []
         channels                      = []
+        searchResults                 = []
         self.state                    = .Init
         let pipe                      = Signal<Event, NSError>.pipe()
         signal                        = pipe.0
         sink                          = pipe.1
         categoriesPageToken           = ""
         subscriptionPageToken         = ""
+        searchPageToken               = ""
         channelsPageTokenOfCategory   = [:]
+        channelDisposableOfCategory   = [:]
+    }
+
+    func clearSearch() {
+        searchResults   = []
+        searchPageToken = ""
+        state           = .Normal
+        searchDisposable?.dispose()
     }
 
     func channelsOf(category: GuideCategory) -> [Channel]? {
@@ -103,13 +120,13 @@ class ChannelLoader {
         }
     }
 
-    private func fetchChannelsByMusic() -> SignalProducer<Void, NSError> {
+    private func searchNextChannels(query: String) -> SignalProducer<Void, NSError> {
         state = State.Fetching
         sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.StartLoading)))
-        return YouTubeAPIClient.sharedInstance.searchChannel("music", pageToken: nil)
+        return YouTubeAPIClient.sharedInstance.searchChannel(query, pageToken: searchPageToken)
             |> map {
-                self.channels.extend($0.items)
-                self.channelPageToken = $0.nextPageToken
+                self.searchResults.extend($0.items)
+                self.searchPageToken = $0.nextPageToken
                 self.sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.CompleteLoading)))
                 self.state = State.Normal
             } |> mapError { e in
@@ -126,10 +143,10 @@ class ChannelLoader {
     func fetchCategories() {
         if !needFetchCategories() { return }
         switch state {
-        case .Init:     fetchNextGuideCategory().start()
+        case .Init:     categoriesDisposable = fetchNextGuideCategory().start()
         case .Fetching: break
-        case .Normal:   fetchNextGuideCategory().start()
-        case .Error:    fetchNextGuideCategory().start()
+        case .Normal:   categoriesDisposable = fetchNextGuideCategory().start()
+        case .Error:    categoriesDisposable = fetchNextGuideCategory().start()
         }
     }
 
@@ -140,10 +157,10 @@ class ChannelLoader {
     func fetchChannels(category: GuideCategory) {
         if !needFetchChannels(category) { return }
         switch state {
-        case .Init:     fetchNextChannels(category).start()
+        case .Init:     channelDisposableOfCategory[category] = fetchNextChannels(category).start()
         case .Fetching: break
-        case .Normal:   fetchNextChannels(category).start()
-        case .Error:    fetchNextChannels(category).start()
+        case .Normal:   channelDisposableOfCategory[category] = fetchNextChannels(category).start()
+        case .Error:    channelDisposableOfCategory[category] = fetchNextChannels(category).start()
         }
     }
 
@@ -154,20 +171,24 @@ class ChannelLoader {
     func fetchSubscriptions() {
         if !needFetchSubscriptions() { return }
         switch state {
-        case .Init:     fetchNextSubscriptions().start()
+        case .Init:     subscriptionDisposable = fetchNextSubscriptions().start()
         case .Fetching: break
-        case .Normal:   fetchNextSubscriptions().start()
-        case .Error:    fetchNextSubscriptions().start()
+        case .Normal:   subscriptionDisposable = fetchNextSubscriptions().start()
+        case .Error:    subscriptionDisposable = fetchNextSubscriptions().start()
         }
     }
 
-    func searchChannelsByMusic() {
-        if channels.count > 0 { return }
+    func needFetchSearchResults() -> Bool {
+        return searchPageToken != nil
+    }
+
+    func searchChannels(query: String) {
+        if query.isEmpty || !needFetchSearchResults() { return }
         switch state {
-        case .Init:     fetchChannelsByMusic().start()
+        case .Init:     searchDisposable = searchNextChannels(query).start()
         case .Fetching: break
-        case .Normal:   fetchChannelsByMusic().start()
-        case .Error:    fetchChannelsByMusic().start()
+        case .Normal:   searchDisposable = searchNextChannels(query).start()
+        case .Error:    searchDisposable = searchNextChannels(query).start()
         }
     }
 }
