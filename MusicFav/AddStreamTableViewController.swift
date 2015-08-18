@@ -11,6 +11,7 @@ import ReactiveCocoa
 import FeedlyKit
 import MusicFeeder
 import MBProgressHUD
+import PageMenu
 
 class AddStreamTableViewController: UITableViewController {
     let cellHeight:        CGFloat = 100
@@ -64,6 +65,9 @@ class AddStreamTableViewController: UITableViewController {
             navigationItem.rightBarButtonItem?.enabled = count > 0
         } else {
             navigationItem.rightBarButtonItem?.enabled = false
+        }
+        if let p = parentViewController as? CAPSPageMenu, pp = p.parentViewController as? SearchStreamPageMenuController {
+            pp.updateAddButton()
         }
     }
 

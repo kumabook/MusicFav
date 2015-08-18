@@ -80,7 +80,7 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
         if YouTubeAPIClient.isLoggedIn {
             channelLoader.fetchSubscriptions()
         } else {
-            channelLoader.searchChannelsByMusic()
+            channelLoader.searchChannels("music")
         }
     }
 
@@ -132,7 +132,9 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
     // MARK: - UISearchBarDelegate
 
     func searchBarShouldBeginEditing(searchBar: UISearchBar) -> Bool {
-        let vc = SearchStreamViewController(streamListLoader: streamListLoader)
+        let vc = SearchStreamPageMenuController(streamListLoader: streamListLoader,
+                                                      blogLoader: blogLoader,
+                                                   channelLoader: channelLoader)
         vc.modalTransitionStyle = UIModalTransitionStyle.FlipHorizontal
         presentViewController(UINavigationController(rootViewController: vc), animated: true, completion: {})
         return false
@@ -161,7 +163,7 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
                 if YouTubeAPIClient.isLoggedIn {
                     urls = channelLoader.subscriptions.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
                 } else {
-                    urls = channelLoader.channels.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
+                    urls = channelLoader.searchResults.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
                 }
                 if urls.count > 0 {
                     cell.setThumbnailImages(urls)
@@ -181,9 +183,7 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
             switch menu {
             case .Recommend:
                 let vc = StreamTableViewController(streamListLoader: streamListLoader,
-                                                                  type: .Recommend,
-                                                            blogLoader: blogLoader,
-                                                        recommendFeeds: recommendFeeds)
+                                                               type: .Recommend(recommendFeeds))
                 navigationController?.pushViewController(vc, animated: true)
             case .YouTube:
                 let vc = ChannelCategoryTableViewController(streamListLoader: streamListLoader, channelLoader: channelLoader)
@@ -191,9 +191,7 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
                 vc.showYouTubeLoginViewController()
             case .Hypem:
                 let vc = StreamTableViewController(streamListLoader: streamListLoader,
-                                                                  type: .Hypem,
-                                                            blogLoader: blogLoader,
-                                                        recommendFeeds: recommendFeeds)
+                                                               type: .Hypem(blogLoader))
                 navigationController?.pushViewController(vc, animated: true)
             }
         }

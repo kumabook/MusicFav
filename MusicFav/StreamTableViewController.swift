@@ -14,50 +14,61 @@ import MBProgressHUD
 
 class StreamTableViewController: AddStreamTableViewController, UISearchBarDelegate {
     enum Type {
-        case Recommend
-        case Hypem
-        var title: String? {
-            switch self {
-            case .Recommend:    return "MusicFav Recommend"
-            case .Hypem:        return "Music Blogs (from Hypemachine)"
-            }
-        }
+        case Search(String)
+        case Recommend([Feed])
+        case Hypem(BlogLoader)
     }
 
     var indicator: UIActivityIndicatorView!
 
     let client = CloudAPIClient.sharedInstance
-    var recommendFeeds:   [Feed]
-    let blogLoader:       BlogLoader
-    var observer:         Disposable?
+    var _streams: [Stream]
+    var observer: Disposable?
+    var disposable: Disposable?
+
+    var streams: [Stream] {
+        switch type {
+        case .Recommend:             return _streams
+        case .Hypem(let blogLoader): return blogLoader.blogs
+        case .Search(let query):     return _streams
+        }
+    }
 
     let streamTableViewCellReuseIdentifier = "StreamTableViewCell"
-    let type: Type
+    var type: Type
 
-    init(streamListLoader: StreamListLoader, type: Type, blogLoader: BlogLoader, recommendFeeds: [Feed]) {
-        self.type             = type
-        self.blogLoader       = blogLoader
-        self.recommendFeeds   = recommendFeeds
+    init(streamListLoader: StreamListLoader, type: Type) {
+        self.type     = type
+        self._streams = []
         super.init(streamListLoader: streamListLoader)
     }
 
     required init(coder aDecoder: NSCoder) {
-        type             = .Recommend
-        blogLoader       = BlogLoader()
-        recommendFeeds   = []
+        type     = .Recommend([])
+        _streams = []
         super.init(coder: aDecoder)
     }
 
     deinit {}
+
+    func refresh(type: Type) {
+        self.type = type
+        _streams  = []
+        reloadData(keepSelection: false)
+        observeBlogs()
+        fetchNext()
+    }
 
     override func getSubscribables() -> [Stream] {
         if let indexPaths = tableView.indexPathsForSelectedRows() {
             return indexPaths.map({
                 switch self.type {
                 case .Recommend:
-                    return self.recommendFeeds[$0.item]
-                case .Hypem:
-                    return self.blogLoader.blogs[$0.item]
+                    return self.streams[$0.item]
+                case .Hypem(let blogLoader):
+                    return blogLoader.blogs[$0.item]
+                case .Search(let query):
+                    return self.streams[$0.item]
                 }
             })
         } else {
@@ -77,13 +88,7 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
                              height: indicator.bounds.height * 3)
         indicator.hidesWhenStopped = true
         indicator.stopAnimating()
-        switch (type) {
-            case .Recommend:
-                fetchRecommendFeeds()
-            case .Hypem:
-                observeBlogs()
-                fetchBlogs()
-        }
+        refresh(type)
     }
 
     override func didReceiveMemoryWarning() {
@@ -94,14 +99,16 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
         super.viewWillAppear(animated)
         Logger.sendScreenView(self)
         switch (type) {
-        case .Recommend:    break
-        case .Hypem:        observeBlogs()
+        case .Recommend: break
+        case .Hypem:     observeBlogs()
+        case .Search:    break
         }
     }
 
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         observer?.dispose()
+        disposable?.dispose()
     }
 
     func showIndicator() {
@@ -114,40 +121,80 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
         self.tableView.tableFooterView = nil
     }
 
+    func fetchNext() {
+        switch type {
+        case .Recommend:
+            fetchRecommendFeeds()
+        case .Hypem(let blogLoader):
+            blogLoader.fetchBlogs()
+        case .Search(let query):
+            searchFeeds(query)
+        }
+    }
+
     func fetchRecommendFeeds() {
-        CloudAPIClient.sharedInstance.fetchFeedsByIds(RecommendFeed.ids).start(
+        if let d = disposable {
+            if !d.disposed { d.dispose() }
+        }
+        disposable = CloudAPIClient.sharedInstance.fetchFeedsByIds(RecommendFeed.ids).start(
             next: { feeds in
-                self.recommendFeeds = feeds
+                self._streams = feeds
             }, error: { error in
             }, completed: {
                 self.reloadData(keepSelection: true)
         })
     }
 
-    func observeBlogs() {
-        observer?.dispose()
-        observer = blogLoader.signal.observe(next: { event in
-            switch event {
-            case .StartLoading:
-                self.showIndicator()
-            case .CompleteLoading:
-                self.hideIndicator()
-                self.reloadData(keepSelection: true)
-            case .FailToLoad:
-                self.hideIndicator()
-            }
-        })
+    func searchFeeds(query: String) {
+        if let d = disposable {
+            if !d.disposed { d.dispose() }
+        }
+        if query.isEmpty || !_streams.isEmpty { return }
+        let query = SearchQueryOfFeed(query: query)
+        query.count = 20
+        Logger.sendUIActionEvent(self, action: "searchFeeds", label: "")
+        disposable = CloudAPIClient.sharedInstance.searchFeeds(query)
+            |> startOn(UIScheduler())
+            |> start(
+                next: { feeds in
+                    self._streams = feeds
+                },
+                error: { error in
+                    let ac = CloudAPIClient.alertController(error: error, handler: { (action) in })
+                    self.presentViewController(ac, animated: true, completion: nil)
+                },
+                completed: {
+                    self.reloadData(keepSelection: true)
+            })
     }
 
-    func fetchBlogs() {
-        blogLoader.fetchBlogs()
+    func observeBlogs() {
+        observer?.dispose()
+        switch type {
+        case .Recommend:
+            break
+        case .Hypem(let blogLoader):
+            observer = blogLoader.signal.observe(next: { event in
+                switch event {
+                case .StartLoading:
+                    self.showIndicator()
+                case .CompleteLoading:
+                    self.hideIndicator()
+                    self.reloadData(keepSelection: true)
+                case .FailToLoad:
+                    self.hideIndicator()
+                }
+            })
+        case .Search(let query):
+            break
+        }
     }
 
     // MARK: - UIScrollView delegate
 
     override func scrollViewDidScroll(scrollView: UIScrollView) {
         if tableView.contentOffset.y >= tableView.contentSize.height - tableView.bounds.size.height {
-            blogLoader.fetchBlogs()
+            fetchNext()
         }
     }
 
@@ -157,28 +204,21 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
         return 1
     }
 
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return type.title
-    }
-
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch (type) {
-        case .Recommend:
-            return recommendFeeds.count
-        case .Hypem:
-            return blogLoader.blogs.count
-        }
+        return streams.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(streamTableViewCellReuseIdentifier, forIndexPath: indexPath) as! StreamTableViewCell
         setAccessoryView(cell, indexPath: indexPath)
-        switch type {
-        case .Recommend:
-            cell.updateView(feed: recommendFeeds[indexPath.item])
+        switch streams[indexPath.item] {
+        case let feed as Feed:
+            cell.updateView(feed: feed)
             return cell
-        case .Hypem:
-            cell.updateView(blog: blogLoader.blogs[indexPath.item])
+        case let blog as Blog:
+            cell.updateView(blog: blog)
+            return cell
+        default:
             return cell
         }
     }
