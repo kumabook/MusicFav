@@ -17,29 +17,46 @@ class ChannelTableViewController: AddStreamTableViewController {
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     let cellReuseIdentifier = "ChannelTableViewCell"
 
+    enum Type {
+        case Category(GuideCategory)
+        case Search(String)
+    }
+
     var observer:            Disposable?
-    let category:            GuideCategory!
+    var type:                Type
     let channelLoader:       ChannelLoader!
     var indicator:           UIActivityIndicatorView!
     var reloadButton:        UIButton!
     var channels:            [Channel] {
-        if let list = channelLoader.channelsOf(category) {
-            return list
-        } else {
+        switch type {
+        case .Category(let category):
+            if let list = channelLoader.channelsOf(category) { return list }
+            else                                             { return [] }
+        case .Search(let query):
+            return channelLoader.searchResults
+        default:
             return []
         }
     }
 
-    init(streamListLoader: StreamListLoader, category: GuideCategory, channelLoader: ChannelLoader) {
-        self.category      = category
+    init(streamListLoader: StreamListLoader, channelLoader: ChannelLoader, type: Type) {
         self.channelLoader = channelLoader
+        self.type          = type
         super.init(streamListLoader: streamListLoader)
     }
 
     required init(coder aDecoder: NSCoder) {
-        self.category      = nil
+        self.type          = .Search("music")
         self.channelLoader = nil
         super.init(coder: aDecoder)
+    }
+
+    func refresh(type: Type) {
+        self.type = type
+        channelLoader.clearSearch()
+        reloadData(keepSelection: false)
+        observeChannelLoader()
+        fetchNext()
     }
 
     override func getSubscribables() -> [Stream] {
@@ -57,29 +74,19 @@ class ChannelTableViewController: AddStreamTableViewController {
 
         indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         indicator.bounds = CGRect(x: 0,
-            y: 0,
-            width: indicator.bounds.width,
-            height: indicator.bounds.height * 3)
+                                  y: 0,
+                              width: indicator.bounds.width,
+                             height: indicator.bounds.height * 3)
         indicator.hidesWhenStopped = true
         indicator.stopAnimating()
 
         reloadButton = UIButton()
         reloadButton.setImage(UIImage(named: "network_error"), forState: UIControlState.Normal)
         reloadButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        reloadButton.addTarget(self, action:"refresh", forControlEvents:UIControlEvents.TouchUpInside)
+        reloadButton.addTarget(self, action:"fetchNext", forControlEvents:UIControlEvents.TouchUpInside)
         reloadButton.setTitle("Sorry, network error occured.".localize(), forState:UIControlState.Normal)
         reloadButton.frame = CGRectMake(0, 0, tableView.frame.size.width, 44);
-
-        refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action:"refresh", forControlEvents:UIControlEvents.ValueChanged)
-
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(1)), dispatch_get_main_queue()) {
-            if let pageMenu = self.parentViewController as? CAPSPageMenu {
-                let f = self.view.frame
-                self.view.frame = CGRect(x: f.origin.x, y: f.origin.y, width: f.width, height: f.height - pageMenu.menuHeight)
-            }
-            return
-        }
+        refresh(type)
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -101,12 +108,11 @@ class ChannelTableViewController: AddStreamTableViewController {
                 self.showIndicator()
             case .CompleteLoading:
                 self.hideIndicator()
-                self.tableView.reloadData()
+                self.reloadData(keepSelection: true)
             case .FailToLoad:
                 self.showReloadButton()
             }
         })
-        tableView?.reloadData()
     }
 
     override func didReceiveMemoryWarning() {
@@ -115,7 +121,7 @@ class ChannelTableViewController: AddStreamTableViewController {
 
     override func scrollViewDidScroll(scrollView: UIScrollView) {
         if tableView.contentOffset.y >= tableView.contentSize.height - tableView.bounds.size.height {
-            refresh()
+            fetchNext()
         }
     }
 
@@ -137,8 +143,15 @@ class ChannelTableViewController: AddStreamTableViewController {
         self.tableView.tableFooterView = nil
     }
 
-    func refresh() {
-        channelLoader.fetchChannels(category)
+    func fetchNext() {
+        switch type {
+        case .Category(let category):
+            channelLoader.fetchChannels(category)
+        case .Search(let query):
+            channelLoader.searchChannels(query)
+        default:
+            break
+        }
     }
 
     // MARK: - Table view data source
@@ -162,8 +175,12 @@ class ChannelTableViewController: AddStreamTableViewController {
         if let url = NSURL(string: channel.thumbnails["default"]!) {
             cell.thumbImageView.sd_setImageWithURL(url)
         }
-        cell.subtitle1Label.text = ""
-        cell.subtitle2Label.text = ""
+        cell.subtitle1Label.text = channel.description
+        if let date = channel.publishedAt {
+            cell.subtitle2Label.text = date
+        } else {
+            cell.subtitle2Label.text = ""
+        }
         return cell
     }
 }

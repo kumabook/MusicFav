@@ -145,12 +145,12 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
                 self.showIndicator()
             case .CompleteLoading:
                 self.hideIndicator()
-                self.tableView.reloadData()
+                self.reloadData(keepSelection: true)
             case .FailToLoad:
                 self.showReloadButton()
             }
         })
-        tableView?.reloadData()
+        reloadData(keepSelection: true)
     }
 
     override func scrollViewDidScroll(scrollView: UIScrollView) {
@@ -256,9 +256,10 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
             }
         case .GuideCategory:
             let vc = ChannelTableViewController(streamListLoader: streamListLoader,
-                                                        category: channelLoader.categories[indexPath.item],
-                                                   channelLoader: channelLoader)
+                                                   channelLoader: channelLoader,
+                                                            type: .Category(channelLoader.categories[indexPath.item]))
             navigationController?.pushViewController(vc, animated: true)
+            tableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
     }
 }
