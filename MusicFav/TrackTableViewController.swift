@@ -17,23 +17,26 @@ import MusicFeeder
 class TrackTableViewController: UITableViewController {
     let tableCellReuseIdentifier = "trackTableViewCell"
     let cellHeight: CGFloat      = 80
-    
-    var playlist: Playlist! = nil
+
+    var playlist: Playlist!
     var playlistLoader: PlaylistLoader!
     var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as! AppDelegate }}
+
+    var tracks: [Track] {
+        return playlist.getTracks()
+    }
+
     var isSelectedPlaylist: Bool {
-        get {
-            if playlist != nil && appDelegate.selectedPlaylist != nil {
-                return playlist!.id == appDelegate.selectedPlaylist!.id
-            }
+        if appDelegate.selectedPlaylist != nil {
+            return playlist.id == appDelegate.selectedPlaylist!.id
+        } else {
             return false
         }
     }
     var isPlayingPlaying: Bool {
-        get {
-            if playlist != nil && appDelegate.selectedPlaylist != nil {
-                return playlist!.id == appDelegate.selectedPlaylist!.id
-            }
+        if appDelegate.selectedPlaylist != nil {
+            return playlist.id == appDelegate.selectedPlaylist!.id
+        } else {
             return false
         }
     }
@@ -103,10 +106,8 @@ class TrackTableViewController: UITableViewController {
     }
     
     func favPlaylist() {
-        if let currentPlaylist = playlist {
-            Logger.sendUIActionEvent(self, action: "favPlaylist", label: "")
-            showSelectPlaylistViewController(currentPlaylist.getTracks())
-        }
+        Logger.sendUIActionEvent(self, action: "favPlaylist", label: "")
+        showSelectPlaylistViewController(playlist.getTracks())
     }
 
     func showSelectPlaylistViewController(tracks: [Track]) {
@@ -139,9 +140,6 @@ class TrackTableViewController: UITableViewController {
     }
     
     func fetchTrackDetails() {
-        if playlist == nil {
-            return
-        }
         weak var _self = self
         playlistLoader.fetchTracks().start(
             next: { (index, track) in
@@ -149,7 +147,7 @@ class TrackTableViewController: UITableViewController {
                     if let __self = _self {
                         __self.tableView?.reloadRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)],
                             withRowAnimation: UITableViewRowAnimation.None)
-                        Playlist.notifyChange(.Updated(__self.playlist!))
+                        Playlist.notifyChange(.Updated(__self.playlist))
                     }
                 }
                 return
@@ -165,55 +163,46 @@ class TrackTableViewController: UITableViewController {
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         return 1
     }
-    
+
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if let _playlist = playlist {
-            return _playlist.tracks.count
-        }
-        return 0
+        return tracks.count
     }
-    
+
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
         return self.cellHeight
     }
+
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(self.tableCellReuseIdentifier, forIndexPath: indexPath) as! TrackTableViewCell
-        if let p = playlist {
-            let track = p.getTracks()[indexPath.item]
-            switch track.status {
-            case .Loading:
-                cell.trackNameLabel.text = "Loading...".localize()
-            case .Unavailable:
-                cell.trackNameLabel.text = "Unavailable".localize()
-            default:
-                if let title = track.title {
-                    cell.trackNameLabel.text = title
-                } else {
-                    cell.trackNameLabel.text = ""
-                }
-            }
-            let minutes = Int(floor(track.duration / 60))
-            let seconds = Int(round(track.duration - Double(minutes) * 60))
-            cell.durationLabel.text = String(format: "%.2d:%.2d", minutes, seconds)
-            if let thumbnailUrl = track.thumbnailUrl {
-                cell.thumbImgView.sd_setImageWithURL(thumbnailUrl)
+        let track = tracks[indexPath.item]
+        switch track.status {
+        case .Loading:
+            cell.trackNameLabel.text = "Loading...".localize()
+        case .Unavailable:
+            cell.trackNameLabel.text = "Unavailable".localize()
+        default:
+            if let title = track.title {
+                cell.trackNameLabel.text = title
             } else {
-                cell.thumbImgView.image = UIImage(named: "default_thumb")
+                cell.trackNameLabel.text = ""
             }
-            return cell
-        } else {
-            cell.trackNameLabel.text = ""
-            cell.durationLabel.text  = ""
-            cell.thumbImgView.image = UIImage(named: "default_thumb")
-            return cell
         }
+        let minutes = Int(floor(track.duration / 60))
+        let seconds = Int(round(track.duration - Double(minutes) * 60))
+        cell.durationLabel.text = String(format: "%.2d:%.2d", minutes, seconds)
+        if let thumbnailUrl = track.thumbnailUrl {
+            cell.thumbImgView.sd_setImageWithURL(thumbnailUrl)
+        } else {
+            cell.thumbImgView.image = UIImage(named: "default_thumb")
+        }
+        return cell
     }
 
     override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
         let remove = UITableViewRowAction(style: .Default, title: "Remove".localize()) {
             (action, indexPath) in
             Logger.sendUIActionEvent(self, action: "removeTrack", label: "\(indexPath.item)")
-            self.playlist?.removeTrackAtIndex(UInt(indexPath.item))
+            self.playlist.removeTrackAtIndex(UInt(indexPath.item))
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
 
@@ -221,7 +210,7 @@ class TrackTableViewController: UITableViewController {
         let copy = UITableViewRowAction(style: .Default, title: "Fav　　".localize()) {
             (action, indexPath) in
             Logger.sendUIActionEvent(self, action: "FavTrackAtIndex", label: "\(indexPath.item)")
-            let track = self.playlist!.getTracks()[indexPath.item]
+            let track = self.playlist.getTracks()[indexPath.item]
             self.showSelectPlaylistViewController([track])
         }
         copy.backgroundColor = UIColor.green
@@ -239,17 +228,14 @@ class TrackTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
     }
 
-    
     // MARK: UITableViewDelegate
-    
+
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let p = playlist {
-            let track = p.tracks[indexPath.item]
-            if track.streamUrl != nil {
-                appDelegate.player?.select(indexPath.item, playlist: p, playlists: [p])
-            } else {
-                tableView.deselectRowAtIndexPath(indexPath, animated: true)
-            }
+        let track = playlist.tracks[indexPath.item]
+        if track.streamUrl != nil {
+            appDelegate.player?.select(indexPath.item, playlist: playlist, playlists: [playlist])
+        } else {
+            tableView.deselectRowAtIndexPath(indexPath, animated: true)
         }
     }
 }
