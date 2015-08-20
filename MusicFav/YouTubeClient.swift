@@ -265,9 +265,17 @@ public class YouTubeAPIClient {
     }
     func fetchPlaylists(pageToken: String?) -> SignalProducer<(items: [YouTubePlaylist], nextPageToken: String?), NSError> {
         if let token = pageToken {
-            return fetch(["pageToken":token])
+            return fetch(["pageToken": token, "mine": "true"])
         } else {
-            return fetch([:])
+            return fetch(["mine": "true"])
+        }
+    }
+
+    func fetchPlaylistItems(playlist: YouTubePlaylist, pageToken: String?) -> SignalProducer<(items: [YouTubePlaylistItem], nextPageToken: String?), NSError> {
+        if let token = pageToken {
+            return fetch(["pageToken": token, "playlistId": playlist.id, "part": "snippet, contentDetails"])
+        } else {
+            return fetch(["playlistId": playlist.id, "part": "snippet, contentDetails"])
         }
     }
 }
