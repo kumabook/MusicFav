@@ -15,34 +15,40 @@ import WebImage
 import MusicFeeder
 
 class TrackTableViewController: UITableViewController {
+    var appDelegate: AppDelegate { return UIApplication.sharedApplication().delegate as! AppDelegate }
     let tableCellReuseIdentifier = "trackTableViewCell"
     let cellHeight: CGFloat      = 80
 
-    var playlist: Playlist!
+    enum PlaylistType {
+        case Favorite
+        case Selected
+        case Playing
+        case ThirdParty
+    }
+
+    var playlistType: PlaylistType {
+        if let p = appDelegate.selectedPlaylist {
+            if p.id == playlist.id { return .Selected }
+        } else if let p = appDelegate.selectedPlaylist {
+            if p.id == playlist.id { return .Playing }
+        }
+        return .Favorite
+    }
+
+    var _playlist: Playlist!
     var playlistLoader: PlaylistLoader!
-    var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as! AppDelegate }}
+    var indicator:  UIActivityIndicatorView!
+
+    var playlist: Playlist {
+        return _playlist
+    }
 
     var tracks: [Track] {
         return playlist.getTracks()
     }
 
-    var isSelectedPlaylist: Bool {
-        if appDelegate.selectedPlaylist != nil {
-            return playlist.id == appDelegate.selectedPlaylist!.id
-        } else {
-            return false
-        }
-    }
-    var isPlayingPlaying: Bool {
-        if appDelegate.selectedPlaylist != nil {
-            return playlist.id == appDelegate.selectedPlaylist!.id
-        } else {
-            return false
-        }
-    }
-
     init(playlist: Playlist) {
-        self.playlist  = playlist
+        self._playlist  = playlist
         playlistLoader = PlaylistLoader(playlist: playlist)
         super.init(nibName: nil, bundle: nil)
     }
@@ -63,7 +69,16 @@ class TrackTableViewController: UITableViewController {
         let nib = UINib(nibName: "TrackTableViewCell", bundle: nil)
         tableView?.registerNib(nib, forCellReuseIdentifier:self.tableCellReuseIdentifier)
         updateNavbar()
-        fetchTrackDetails()
+        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        indicator.bounds = CGRect(x: 0,
+                                  y: 0,
+                              width: indicator.bounds.width,
+                             height: indicator.bounds.height * 3)
+        indicator.hidesWhenStopped = true
+        indicator.stopAnimating()
+        updateNavbar()
+
+        fetchTracks()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -82,7 +97,7 @@ class TrackTableViewController: UITableViewController {
                                                        action: "favPlaylist")
 
         navigationItem.rightBarButtonItems  = [showFavListButton]
-        if isSelectedPlaylist {
+        if playlistType != .Playing {
             navigationItem.rightBarButtonItems?.append(favPlaylistButton)
         }
     }
@@ -91,8 +106,19 @@ class TrackTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+
+    func showIndicator() {
+        self.tableView.tableFooterView = indicator
+        indicator?.startAnimating()
+    }
+
+    func hideIndicator() {
+        indicator?.stopAnimating()
+        self.tableView.tableFooterView = nil
+    }
+
     func showFavoritePlaylist() {
-        navigationController?.popToRootViewControllerAnimated(true)
+        navigationController?.popViewControllerAnimated(true)
     }
     
     func showPlayingPlaylist() {
@@ -138,7 +164,11 @@ class TrackTableViewController: UITableViewController {
         let nvc = UINavigationController(rootViewController: ptc)
         self.navigationController?.presentViewController(nvc, animated: true, completion: nil)
     }
-    
+
+    func fetchTracks() {
+        fetchTrackDetails()
+    }
+
     func fetchTrackDetails() {
         weak var _self = self
         playlistLoader.fetchTracks().start(
@@ -214,10 +244,10 @@ class TrackTableViewController: UITableViewController {
             self.showSelectPlaylistViewController([track])
         }
         copy.backgroundColor = UIColor.green
-        if isSelectedPlaylist {
-            return [copy]
-        } else {
+        if playlistType == .Favorite {
             return [copy, remove]
+        } else {
+            return [copy]
         }
     }
 
