@@ -16,16 +16,14 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     enum Section: Int {
         case Playing     = 0
         case Selected    = 1
-        case Favorites   = 2
-        static let count = 3
+        case YouTube     = 2
+        case Favorites   = 3
+        static let count = 4
         var title: String? {
-            get {
-                switch self {
-                case .Favorites:
-                    return " "
-                default:
-                    return nil
-                }
+            switch self {
+            case .YouTube:   return " "
+            case .Favorites: return " "
+            default:         return nil
             }
         }
     }
@@ -114,6 +112,12 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     func showSelectedPlaylist() {
         Logger.sendUIActionEvent(self, action: "showSelectedPlaylist", label: "")
         if let playlist = appDelegate.selectedPlaylist { showPlaylist(playlist) }
+    }
+
+    func showYouTubePlaylists() {
+        Logger.sendUIActionEvent(self, action: "showYouTubePlaylists", label: "")
+        let vc = YouTubePlaylistTableViewController()
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     override func didReceiveMemoryWarning() {
@@ -225,6 +229,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         switch (Section(rawValue: section)!) {
         case .Playing:   return 1
         case .Selected:  return 1
+        case .YouTube:   return 1
         case .Favorites: return playlists.count
         }
     }
@@ -254,6 +259,11 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         case .Favorites:
             playlist = playlists[indexPath.item]
             cell.titleLabel.text = playlists[indexPath.item].title
+        case .YouTube:
+            cell.titleLabel.text = "YouTube Playlists"
+            cell.thumbImageView.image = UIImage(named: "youtube")
+            cell.trackNumLabel.text = ""
+            return cell
         }
         if let p = playlist, thumbnailUrl = p.thumbnailUrl {
             cell.thumbImageView.sd_setImageWithURL(thumbnailUrl)
@@ -304,6 +314,20 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             showPlayingPlaylist()
         case .Selected:
             showSelectedPlaylist()
+        case .YouTube:
+            if YouTubeAPIClient.isLoggedIn {
+                showYouTubePlaylists()
+            } else {
+                let vc = OAuthViewController(clientId: YouTubeAPIClient.clientId,
+                                         clientSecret: YouTubeAPIClient.clientSecret,
+                                             scopeUrl: YouTubeAPIClient.scopeUrl,
+                                              authUrl: YouTubeAPIClient.authUrl,
+                                             tokenUrl: YouTubeAPIClient.tokenUrl,
+                                          redirectUrl: YouTubeAPIClient.redirectUrl,
+                                          accountType: YouTubeAPIClient.accountType,
+                                        keyChainGroup: YouTubeAPIClient.keyChainGroup)
+                presentViewController(UINavigationController(rootViewController: vc), animated: true, completion: {})
+            }
         case .Favorites:
             showPlaylist(playlists[indexPath.item])
         }
