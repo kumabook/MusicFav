@@ -70,6 +70,10 @@
 		67428D4C1B80E3A1002FFA1A /* youtube.json in Resources */ = {isa = PBXBuildFile; fileRef = 67428D4B1B80E3A1002FFA1A /* youtube.json */; };
 		67428D4D1B8174E7002FFA1A /* Breit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67428D491B80C23F002FFA1A /* Breit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		67428D511B817980002FFA1A /* SearchStreamPageMenuController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67428D501B817980002FFA1A /* SearchStreamPageMenuController.swift */; };
+		67428D531B83641F002FFA1A /* YouTubePlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67428D521B83641F002FFA1A /* YouTubePlaylist.swift */; };
+		67428D551B836430002FFA1A /* YouTubePlaylistLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67428D541B836430002FFA1A /* YouTubePlaylistLoader.swift */; };
+		67428D571B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67428D561B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift */; };
+		67428D591B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67428D581B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift */; };
 		674AAC891B02D64E00C1FC18 /* UINotificationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */; };
 		67554F091A4F127400F7AE72 /* TrackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */; };
 		67554F0A1A4F127400F7AE72 /* TrackTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */; };
@@ -287,6 +291,10 @@
 		67428D491B80C23F002FFA1A /* Breit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Breit.framework; path = Carthage/Build/iOS/Breit.framework; sourceTree = "<group>"; };
 		67428D4B1B80E3A1002FFA1A /* youtube.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = youtube.json; sourceTree = "<group>"; };
 		67428D501B817980002FFA1A /* SearchStreamPageMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchStreamPageMenuController.swift; sourceTree = "<group>"; };
+		67428D521B83641F002FFA1A /* YouTubePlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubePlaylist.swift; sourceTree = "<group>"; };
+		67428D541B836430002FFA1A /* YouTubePlaylistLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubePlaylistLoader.swift; sourceTree = "<group>"; };
+		67428D561B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubePlaylistTableViewController.swift; sourceTree = "<group>"; };
+		67428D581B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubePlaylistItemTableViewController.swift; sourceTree = "<group>"; };
 		674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINotificationExtension.swift; sourceTree = "<group>"; };
 		67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewCell.swift; sourceTree = "<group>"; };
 		67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrackTableViewCell.xib; sourceTree = "<group>"; };
@@ -445,6 +453,8 @@
 				670505B41B6E2348006EAA84 /* Blog.swift */,
 				670505B51B6E2348006EAA84 /* BlogLoader.swift */,
 				67FBBDF81B6CD46B00B567CB /* UpdateChecker.swift */,
+				67428D521B83641F002FFA1A /* YouTubePlaylist.swift */,
+				67428D541B836430002FFA1A /* YouTubePlaylistLoader.swift */,
 			);
 			name = Model;
 			path = ..;
@@ -612,6 +622,8 @@
 				6728FA3D1A60B9FD00F693B3 /* TrackTableViewController.swift */,
 				67DA46591A8651CA0048B29C /* PlaylistTableViewController.swift */,
 				67DA46611A87B3AB0048B29C /* SelectPlaylistTableViewController.swift */,
+				67428D561B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift */,
+				67428D581B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift */,
 			);
 			name = Right;
 			sourceTree = "<group>";
@@ -1154,18 +1166,22 @@
 				670505B71B6E2348006EAA84 /* BlogLoader.swift in Sources */,
 				67DA465B1A8651CA0048B29C /* PlaylistTableViewController.swift in Sources */,
 				6724E1C91A9CA19800D8E0FA /* AppearanceManager.swift in Sources */,
+				67428D531B83641F002FFA1A /* YouTubePlaylist.swift in Sources */,
 				670505BB1B6E28E8006EAA84 /* FeedlyAPI.swift in Sources */,
 				67254C7C1A4968F50064E5DF /* EntryWebViewController.swift in Sources */,
 				6724E1C51A9C9E9900D8E0FA /* UIColorExtenstion.swift in Sources */,
 				67DA46621A87B3AB0048B29C /* SelectPlaylistTableViewController.swift in Sources */,
 				67E5DEE31AEC4CEA000E016F /* FabricConfig.swift in Sources */,
+				67428D551B836430002FFA1A /* YouTubePlaylistLoader.swift in Sources */,
 				67428D511B817980002FFA1A /* SearchStreamPageMenuController.swift in Sources */,
+				67428D571B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift in Sources */,
 				67F530901B7F815B00D8EEF1 /* StreamTreeViewCell.swift in Sources */,
 				67F9A2911AD03C0D0078EC3C /* PlaylistStreamViewController.swift in Sources */,
 				679F453D1AF104F7008D1B7F /* OnpuRefreshControl.swift in Sources */,
 				67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */,
 				67277CE01A46F4BC002FD3E0 /* StreamTreeViewController.swift in Sources */,
 				673DCCA21AF54BC90043E51D /* Logger.swift in Sources */,
+				67428D591B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift in Sources */,
 				6731BC9E1AD82321004F488D /* UIAlertControllerExtension.swift in Sources */,
 				67C1A8041B7B8728002A604C /* ChannelCategoryTableViewController.swift in Sources */,
 				67F9A2951AD0558C0078EC3C /* PlaylistStreamTableViewCell.swift in Sources */,
