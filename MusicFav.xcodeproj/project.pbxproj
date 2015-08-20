@@ -991,6 +991,8 @@
 				"$(SRCROOT)/Carthage/Build/iOS/SnapKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/WebImage.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Breit.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/MusicFeeder.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/PlayerKit.framework",
 			);
 			name = "Carthage copy-frameworks";
 			outputPaths = (
