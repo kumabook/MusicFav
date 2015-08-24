@@ -204,7 +204,7 @@ class PreferenceViewController: UITableViewController {
     func showYouTubeLoginController() {
         let vc = OAuthViewController(clientId: YouTubeAPIClient.clientId,
                                  clientSecret: YouTubeAPIClient.clientSecret,
-                                     scopeUrl: YouTubeAPIClient.scopeUrl,
+                                        scope: YouTubeAPIClient.scope,
                                       authUrl: YouTubeAPIClient.authUrl,
                                      tokenUrl: YouTubeAPIClient.tokenUrl,
                                   redirectUrl: YouTubeAPIClient.redirectUrl,

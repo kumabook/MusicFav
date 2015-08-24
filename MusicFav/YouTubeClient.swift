@@ -40,7 +40,7 @@ public class YouTubeAPIClient {
     static var baseUrl        = "https://accounts.google.com"
     static var authUrl        = "\(baseUrl)/o/oauth2/auth"
     static var tokenUrl       = "\(baseUrl)/o/oauth2/token"
-    static var scopeUrl       = "https://gdata.youtube.com"
+    static var scope          = Set(["https://gdata.youtube.com"])
     static var redirectUrl    = "http://localhost/"
     static var accountType    = "YouTube"
     static var keyChainGroup  = "YouTube"

@@ -8,6 +8,7 @@
 
 import UIKit
 import EAIntroView
+import NXOAuth2Client
 
 class TutorialViewController: UIViewController, TutorialViewDelegate, OAuthViewDelegate {
     var appDelegate: AppDelegate { return UIApplication.sharedApplication().delegate as! AppDelegate }
@@ -57,7 +58,7 @@ class TutorialViewController: UIViewController, TutorialViewDelegate, OAuthViewD
 
     // MARK: - FeedlyOAuthViewDelegate
 
-    func onLoggedIn() {
+    func onLoggedIn(account: NXOAuth2Account) {
         Logger.sendUIActionEvent(self, action: "onLoggedIn", label: "")
         close()
     }

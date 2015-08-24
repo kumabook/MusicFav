@@ -12,17 +12,13 @@ import MusicFeeder
 import ReactiveCocoa
 import NXOAuth2Client
 
-protocol FeedlyOAuthViewDelegate: class {
-    func onLoggedIn()
-}
-
 class FeedlyOAuthViewController: OAuthViewController {
     var feedlyClient: CloudAPIClient { return CloudAPIClient.sharedInstance }
 
     init() {
         super.init(clientId: CloudAPIClient.clientId,
                clientSecret: CloudAPIClient.clientSecret,
-                   scopeUrl: CloudAPIClient.scopeUrl,
+                      scope: CloudAPIClient.scope,
                     authUrl: CloudAPIClient.sharedInstance.authUrl,
                    tokenUrl: CloudAPIClient.sharedInstance.tokenUrl,
                 redirectUrl: CloudAPIClient.redirectUrl,
@@ -53,7 +49,7 @@ class FeedlyOAuthViewController: OAuthViewController {
                 },
                 completed: {
                     self.dismissViewControllerAnimated(true, completion: nil)
-                    self.delegate?.onLoggedIn()
+                    self.delegate?.onLoggedIn(account)
                     self.appDelegate.didLogin()
             })
     }

@@ -13,7 +13,7 @@ import ReactiveCocoa
 import NXOAuth2Client
 
 protocol OAuthViewDelegate: class {
-    func onLoggedIn()
+    func onLoggedIn(account: NXOAuth2Account)
 }
 
 class OAuthViewController: UIViewController, UIWebViewDelegate {
@@ -25,17 +25,17 @@ class OAuthViewController: UIViewController, UIWebViewDelegate {
 
     let clientId:      String!
     let clientSecret:  String!
-    let scopeUrl:      String!
+    let scope:         Set<String>!
     let authUrl:       String!
     let tokenUrl:      String!
     let redirectUrl:   String!
     let accountType:   String!
     let keyChainGroup: String!
 
-    init(clientId: String, clientSecret: String, scopeUrl: String, authUrl: String, tokenUrl: String, redirectUrl: String, accountType: String, keyChainGroup: String) {
+    init(clientId: String, clientSecret: String, scope: Set<String>, authUrl: String, tokenUrl: String, redirectUrl: String, accountType: String, keyChainGroup: String) {
         self.clientId      = clientId
         self.clientSecret  = clientSecret
-        self.scopeUrl      = scopeUrl
+        self.scope         = scope
         self.authUrl       = authUrl
         self.tokenUrl      = tokenUrl
         self.redirectUrl   = redirectUrl
@@ -48,7 +48,7 @@ class OAuthViewController: UIViewController, UIWebViewDelegate {
     required init(coder aDecoder: NSCoder) {
         self.clientId      = nil
         self.clientSecret  = nil
-        self.scopeUrl      = nil
+        self.scope         = nil
         self.authUrl       = nil
         self.tokenUrl      = nil
         self.redirectUrl   = nil
@@ -97,9 +97,10 @@ class OAuthViewController: UIViewController, UIWebViewDelegate {
     }
 
     func setupOAuth2AccountStore() {
+        NXOAuth2AccountStore.sharedStore()
         NXOAuth2AccountStore.sharedStore().setClientID(clientId,
                                                secret: clientSecret,
-                                                scope: Set([scopeUrl]),
+                                                scope: scope,
                                      authorizationURL: NSURL(string: authUrl),
                                              tokenURL: NSURL(string: tokenUrl),
                                           redirectURL: NSURL(string: redirectUrl),
@@ -140,6 +141,7 @@ class OAuthViewController: UIViewController, UIWebViewDelegate {
     }
 
     func onLoggedIn(account: NXOAuth2Account) {
+        delegate?.onLoggedIn(account)
         close()
     }
 
