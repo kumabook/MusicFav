@@ -129,6 +129,11 @@
 		67CC023A1AF328EE005F5F3F /* GAIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67CC02391AF328EE005F5F3F /* GAIConfig.swift */; };
 		67CC023C1AF33AFC005F5F3F /* google_analytics.json in Resources */ = {isa = PBXBuildFile; fileRef = 67CC023B1AF33AFC005F5F3F /* google_analytics.json */; };
 		67CC023E1AF33B58005F5F3F /* GAIConfigSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67CC023D1AF33B58005F5F3F /* GAIConfigSpec.swift */; };
+		67D41CFF1B876AF90082454F /* SoundCloudAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D41CFE1B876AF90082454F /* SoundCloudAPIClient.swift */; };
+		67D41D011B87812E0082454F /* SoundCloudOAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D41D001B87812E0082454F /* SoundCloudOAuthViewController.swift */; };
+		67D41D031B878D120082454F /* SoundCloudPlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D41D021B878D120082454F /* SoundCloudPlaylistTableViewController.swift */; };
+		67D41D051B878DCB0082454F /* SoundCloudPlaylistLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D41D041B878DCB0082454F /* SoundCloudPlaylistLoader.swift */; };
+		67D41D071B88BEF30082454F /* SoundCloudTrackTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D41D061B88BEF30082454F /* SoundCloudTrackTableViewController.swift */; };
 		67DA465B1A8651CA0048B29C /* PlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DA46591A8651CA0048B29C /* PlaylistTableViewController.swift */; };
 		67DA465F1A8656A90048B29C /* PlaylistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DA465D1A8656A90048B29C /* PlaylistTableViewCell.swift */; };
 		67DA46601A8656A90048B29C /* PlaylistTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67DA465E1A8656A90048B29C /* PlaylistTableViewCell.xib */; };
@@ -341,6 +346,11 @@
 		67CC02391AF328EE005F5F3F /* GAIConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GAIConfig.swift; sourceTree = "<group>"; };
 		67CC023B1AF33AFC005F5F3F /* google_analytics.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = google_analytics.json; sourceTree = "<group>"; };
 		67CC023D1AF33B58005F5F3F /* GAIConfigSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GAIConfigSpec.swift; sourceTree = "<group>"; };
+		67D41CFE1B876AF90082454F /* SoundCloudAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundCloudAPIClient.swift; sourceTree = "<group>"; };
+		67D41D001B87812E0082454F /* SoundCloudOAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundCloudOAuthViewController.swift; sourceTree = "<group>"; };
+		67D41D021B878D120082454F /* SoundCloudPlaylistTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundCloudPlaylistTableViewController.swift; sourceTree = "<group>"; };
+		67D41D041B878DCB0082454F /* SoundCloudPlaylistLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SoundCloudPlaylistLoader.swift; path = MusicFav/SoundCloudPlaylistLoader.swift; sourceTree = "<group>"; };
+		67D41D061B88BEF30082454F /* SoundCloudTrackTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundCloudTrackTableViewController.swift; sourceTree = "<group>"; };
 		67DA46591A8651CA0048B29C /* PlaylistTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewController.swift; sourceTree = "<group>"; };
 		67DA465D1A8656A90048B29C /* PlaylistTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewCell.swift; sourceTree = "<group>"; };
 		67DA465E1A8656A90048B29C /* PlaylistTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaylistTableViewCell.xib; sourceTree = "<group>"; };
@@ -455,6 +465,7 @@
 				670505B41B6E2348006EAA84 /* Blog.swift */,
 				670505B51B6E2348006EAA84 /* BlogLoader.swift */,
 				67FBBDF81B6CD46B00B567CB /* UpdateChecker.swift */,
+				67D41D041B878DCB0082454F /* SoundCloudPlaylistLoader.swift */,
 			);
 			name = Model;
 			path = ..;
@@ -466,6 +477,7 @@
 				67C1A8071B7B874A002A604C /* YouTubeClient.swift */,
 				670505B81B6E23E5006EAA84 /* HypemAPIClient.swift */,
 				670505BA1B6E28E8006EAA84 /* FeedlyAPI.swift */,
+				67D41CFE1B876AF90082454F /* SoundCloudAPIClient.swift */,
 			);
 			name = Net;
 			sourceTree = "<group>";
@@ -624,6 +636,8 @@
 				67DA46611A87B3AB0048B29C /* SelectPlaylistTableViewController.swift */,
 				67428D561B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift */,
 				67428D581B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift */,
+				67D41D021B878D120082454F /* SoundCloudPlaylistTableViewController.swift */,
+				67D41D061B88BEF30082454F /* SoundCloudTrackTableViewController.swift */,
 			);
 			name = Right;
 			sourceTree = "<group>";
@@ -636,6 +650,7 @@
 				6727EDFC1A5AC1DE003C6A47 /* MiniPlayerViewController.swift */,
 				67B366DD1AE1CBA800E089B2 /* TutorialViewController.swift */,
 				67C1A7FB1B7B83A5002A604C /* PlayerViewController.swift */,
+				67D41D001B87812E0082454F /* SoundCloudOAuthViewController.swift */,
 			);
 			name = Global;
 			sourceTree = "<group>";
@@ -1145,6 +1160,8 @@
 				67B366DE1AE1CBA800E089B2 /* TutorialViewController.swift in Sources */,
 				67C1A8051B7B8728002A604C /* ChannelTableViewController.swift in Sources */,
 				67F530891B7F518500D8EEF1 /* AddStreamTableViewController.swift in Sources */,
+				67D41D071B88BEF30082454F /* SoundCloudTrackTableViewController.swift in Sources */,
+				67D41D011B87812E0082454F /* SoundCloudOAuthViewController.swift in Sources */,
 				6727EDFE1A5AC1DE003C6A47 /* MiniPlayerViewController.swift in Sources */,
 				6728FA391A60580A00F693B3 /* PreferenceViewController.swift in Sources */,
 				67254C791A493A570064E5DF /* EntryStreamTableViewCell.swift in Sources */,
@@ -1160,10 +1177,13 @@
 				67DA465F1A8656A90048B29C /* PlaylistTableViewCell.swift in Sources */,
 				6731BCA01AD8F069004F488D /* JASidePanelControllerExtension.swift in Sources */,
 				6701D4AD1A95048C006BFEC6 /* HUDExtension.swift in Sources */,
+				67D41D051B878DCB0082454F /* SoundCloudPlaylistLoader.swift in Sources */,
 				67277CAE1A434304002FD3E0 /* AppDelegate.swift in Sources */,
 				6767AE541ADAC70500A92497 /* IASKAppSettingsViewControllerExtension.swift in Sources */,
 				670505B91B6E23E5006EAA84 /* HypemAPIClient.swift in Sources */,
 				6701D4A81A93A3D5006BFEC6 /* CategoryTableViewController.swift in Sources */,
+				67D41D031B878D120082454F /* SoundCloudPlaylistTableViewController.swift in Sources */,
+				67D41CFF1B876AF90082454F /* SoundCloudAPIClient.swift in Sources */,
 				67277CB11A434304002FD3E0 /* MusicFav.xcdatamodeld in Sources */,
 				6767AE5D1ADBECCC00A92497 /* StreamTableViewCell.swift in Sources */,
 				67C1A8001B7B8712002A604C /* ChannelLoader.swift in Sources */,

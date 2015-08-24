@@ -16,9 +16,6 @@
 [submodule "Carthage/Checkouts/Quick"]
 	path = Carthage/Checkouts/Quick
 	url = ssh://git@github.com/Quick/Quick.git
-[submodule "Carthage/Checkouts/SDWebImage"]
-	path = Carthage/Checkouts/SDWebImage
-	url = ssh://git@github.com/rs/SDWebImage.git
 [submodule "Carthage/Checkouts/SnapKit"]
 	path = Carthage/Checkouts/SnapKit
 	url = ssh://git@github.com/SnapKit/SnapKit.git
@@ -46,3 +43,5 @@
 [submodule "Carthage/Checkouts/MusicFeeder"]
 	path = Carthage/Checkouts/MusicFeeder
 	url = ssh://git@github.com/kumabook/MusicFeeder.git
+[submodule "Carthage/Checkouts/SDWebImage"]
+	url = ssh://git@github.com/rs/SDWebImage.git
