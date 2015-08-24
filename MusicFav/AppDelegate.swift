@@ -17,6 +17,7 @@ import Crashlytics
 import XCDYouTubeKit
 import PlayerKit
 import JASidePanels
+import SoundCloudKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -75,7 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func setupAPIClient() {
         FeedlyAPI.setup()
-        SoundCloudAPIClient.loadConfig()
+        SoundCloudKit.APIClient.setup()
         YouTubeAPIClient.setup()
     }
 
