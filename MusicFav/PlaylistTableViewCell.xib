@@ -18,7 +18,6 @@
                         <rect key="frame" x="36" y="4" width="80" height="71"/>
                         <constraints>
                             <constraint firstAttribute="width" constant="80" id="99S-Vd-OS6"/>
-                            <constraint firstAttribute="height" constant="71" id="K2H-rg-sfh"/>
                         </constraints>
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="N songs" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p1w-yb-fbN">
