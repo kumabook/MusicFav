@@ -12,6 +12,7 @@ import FeedlyKit
 import MusicFeeder
 import RMDateSelectionViewController
 import XCDYouTubeKit
+import SoundCloudKit
 import StoreKit
 import MBProgressHUD
 
@@ -60,7 +61,8 @@ class PreferenceViewController: UITableViewController {
     enum AccountRow: Int {
         case Feedly      = 0
         case YouTube     = 1
-        static let count = 2
+        case SoundCloud  = 2
+        static let count = 3
         var title: String {
             switch self {
             case Feedly:
@@ -74,6 +76,12 @@ class PreferenceViewController: UITableViewController {
                     return "Disconnect with YouTube"
                 } else {
                     return "Connect with YouTube"
+                }
+            case SoundCloud:
+                if SoundCloudKit.APIClient.isLoggedIn {
+                    return "Disconnect with SoundCloud"
+                } else {
+                    return "Connect with SoundCloud"
                 }
             }
         }
@@ -213,6 +221,11 @@ class PreferenceViewController: UITableViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
 
+    func showSoundCloudLoginController() {
+        let vc = SoundCloudOAuthViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+
     func showConfirmDialog(title: String, message: String, action: ((UIAlertAction!) -> Void)) {
         let ac = UIAlertController(title: title.localize(),
             message: message.localize(),
@@ -234,6 +247,13 @@ class PreferenceViewController: UITableViewController {
     func showDisonnectYouTubeDialog() {
         showConfirmDialog("Disconnect with YouTube", message: "Are you sure you want to disconnect with YouTube?") { (action) in
             YouTubeAPIClient.clearAllAccount()
+            self.tableView?.reloadData()
+        }
+    }
+
+    func showDisonnectSoundCloudDialog() {
+        showConfirmDialog("Disconnect with SoundCloud", message: "Are you sure you want to disconnect with SoundCloud?") { (action) in
+            SoundCloudKit.APIClient.clearAllAccount()
             self.tableView?.reloadData()
         }
     }
@@ -287,6 +307,12 @@ class PreferenceViewController: UITableViewController {
                     showDisonnectYouTubeDialog()
                 } else {
                     showYouTubeLoginController()
+                }
+            case .SoundCloud:
+                if SoundCloudKit.APIClient.isLoggedIn {
+                    showDisonnectSoundCloudDialog()
+                } else {
+                    showSoundCloudLoginController()
                 }
             }
         case .Behavior:
