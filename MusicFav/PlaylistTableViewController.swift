@@ -9,6 +9,7 @@
 import UIKit
 import ReactiveCocoa
 import MusicFeeder
+import SoundCloudKit
 
 class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     let NEW_PLAYLIST_INDEX = -1
@@ -17,8 +18,9 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         case Playing     = 0
         case Selected    = 1
         case YouTube     = 2
-        case Favorites   = 3
-        static let count = 4
+        case SoundCloud  = 3
+        case Favorites   = 4
+        static let count = 5
         var title: String? {
             switch self {
             case .YouTube:   return " "
@@ -118,6 +120,14 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         Logger.sendUIActionEvent(self, action: "showYouTubePlaylists", label: "")
         let vc = YouTubePlaylistTableViewController()
         navigationController?.pushViewController(vc, animated: true)
+    }
+
+    func showSoundCloudPlaylists() {
+        Logger.sendUIActionEvent(self, action: "showSoundCloudPlaylists", label: "")
+        if let me = SoundCloudKit.APIClient.me {
+            let vc = SoundCloudPlaylistTableViewController(user: me)
+            navigationController?.pushViewController(vc, animated: true)
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -227,10 +237,11 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch (Section(rawValue: section)!) {
-        case .Playing:   return 1
-        case .Selected:  return 1
-        case .YouTube:   return 1
-        case .Favorites: return playlists.count
+        case .Playing:    return 1
+        case .Selected:   return 1
+        case .YouTube:    return 1
+        case .SoundCloud: return 1
+        case .Favorites:  return playlists.count
         }
     }
 
@@ -240,7 +251,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(self.tableCellReuseIdentifier, forIndexPath: indexPath) as! PlaylistTableViewCell
-        var playlist: Playlist?
+        var playlist: MusicFeeder.Playlist?
         switch (Section(rawValue: indexPath.section)!) {
         case .Playing:
             playlist = appDelegate.playingPlaylist
@@ -262,6 +273,11 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         case .YouTube:
             cell.titleLabel.text = "YouTube Playlists"
             cell.thumbImageView.image = UIImage(named: "youtube")
+            cell.trackNumLabel.text = ""
+            return cell
+        case .SoundCloud:
+            cell.titleLabel.text = "SoundCloud Playlists"
+            cell.thumbImageView.image = UIImage(named: "soundcloud")
             cell.trackNumLabel.text = ""
             return cell
         }
@@ -320,12 +336,19 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             } else {
                 let vc = OAuthViewController(clientId: YouTubeAPIClient.clientId,
                                          clientSecret: YouTubeAPIClient.clientSecret,
-                                             scopeUrl: YouTubeAPIClient.scopeUrl,
+                                                scope: YouTubeAPIClient.scope,
                                               authUrl: YouTubeAPIClient.authUrl,
                                              tokenUrl: YouTubeAPIClient.tokenUrl,
                                           redirectUrl: YouTubeAPIClient.redirectUrl,
                                           accountType: YouTubeAPIClient.accountType,
                                         keyChainGroup: YouTubeAPIClient.keyChainGroup)
+                presentViewController(UINavigationController(rootViewController: vc), animated: true, completion: {})
+            }
+        case .SoundCloud:
+            if SoundCloudKit.APIClient.isLoggedIn {
+                showSoundCloudPlaylists()
+            } else {
+                let vc = SoundCloudOAuthViewController()
                 presentViewController(UINavigationController(rootViewController: vc), animated: true, completion: {})
             }
         case .Favorites:
