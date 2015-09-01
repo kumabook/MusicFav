@@ -20,8 +20,7 @@ class YouTubePlaylistItemTableViewController: TrackTableViewController {
     }
 
     override var playlist: Playlist {
-        return Playlist(title: youtubePlaylist.title,
-                       tracks: tracks)
+        return Playlist(id: youtubePlaylist.id, title: youtubePlaylist.title, tracks: tracks)
     }
 
     override var tracks: [Track] {
@@ -31,8 +30,7 @@ class YouTubePlaylistItemTableViewController: TrackTableViewController {
     init(playlist: YouTubePlaylist, playlistLoader: YouTubePlaylistLoader) {
         self.youtubePlaylist       = playlist
         self.youtubePlaylistLoader = playlistLoader
-        super.init(playlist: Playlist(title: youtubePlaylist.title,
-                                     tracks: []))
+        super.init(playlist: Playlist(id: youtubePlaylist.id, title: youtubePlaylist.title, tracks: []))
     }
 
     override init(style: UITableViewStyle) {
