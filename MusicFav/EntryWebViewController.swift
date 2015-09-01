@@ -91,22 +91,20 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         Logger.sendScreenView(self)
-        webView!.navigationDelegate = self
-        webView!.configuration.userContentController.removeScriptMessageHandlerForName("MusicFav")
-        webView!.configuration.userContentController.addScriptMessageHandler(self, name: "MusicFav")
+        webView?.navigationDelegate = self
+        webView?.configuration.userContentController.removeScriptMessageHandlerForName("MusicFav")
+        webView?.configuration.userContentController.addScriptMessageHandler(self, name: "MusicFav")
     }
 
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
-        webView!.navigationDelegate = nil
-        webView!.configuration.userContentController.removeScriptMessageHandlerForName("MusicFav")
+        webView?.navigationDelegate = nil
+        webView?.configuration.userContentController.removeScriptMessageHandlerForName("MusicFav")
     }
 
     func loadURL(url: NSURL) {
         currentURL = url
-        if let _webView = webView {
-            _webView.loadRequest(NSURLRequest(URL: url))
-        }
+        webView?.loadRequest(NSURLRequest(URL: url))
     }
 
     override func didReceiveMemoryWarning() {
