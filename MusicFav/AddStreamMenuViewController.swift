@@ -10,6 +10,7 @@ import UIKit
 import ReactiveCocoa
 import MusicFeeder
 import FeedlyKit
+import SoundCloudKit
 
 class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
     let reuseIdentifier = "reuseIdentifier"
@@ -19,16 +20,39 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
     enum Menu: Int {
         case Recommend
         case YouTube
+        case SoundCloud
         case Hypem
-        static let count = 3
+        static let count = 4
         var title: String? {
             switch self {
             case .Recommend:
                 return "MusicFav Recommend"
             case .YouTube:
                 return "YouTube"
+            case .SoundCloud:
+                return "SoundCloud"
             case .Hypem:
                 return "Hype machine featured"
+            }
+        }
+        func thumbnailUrls(vc: AddStreamMenuViewController) -> [NSURL] {
+            switch self {
+            case .Recommend:
+                return vc.recommendFeeds.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
+            case .YouTube:
+                if YouTubeAPIClient.isLoggedIn {
+                    return vc.channelLoader.subscriptions.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
+                } else {
+                    return vc.channelLoader.searchResults.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
+                }
+            case .SoundCloud:
+                if SoundCloudKit.APIClient.isLoggedIn {
+                    return vc.userLoader.followings.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
+                } else {
+                    return vc.userLoader.searchResults.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
+                }
+            case .Hypem:
+                return vc.blogLoader.blogs.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
             }
         }
     }
@@ -42,11 +66,14 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
     var blogObserver:     Disposable?
     var channelLoader:    ChannelLoader!
     var channelObserver:  Disposable?
+    var userLoader:       SoundCloudUserLoader!
+    var userObserver:     Disposable?
 
     init(streamListLoader: StreamListLoader) {
         self.streamListLoader = streamListLoader
         self.blogLoader       = BlogLoader()
         self.channelLoader    = ChannelLoader()
+        self.userLoader       = SoundCloudUserLoader()
         self.recommendFeeds   = []
         super.init(nibName: nil, bundle: nil)
     }
@@ -75,6 +102,7 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
 
         observeBlogLoader()
         observeChannelLoader()
+        observeUserLoader()
         fetchRecommendFeeds()
         fetchBlogs()
         if YouTubeAPIClient.isLoggedIn {
@@ -82,10 +110,22 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
         } else {
             channelLoader.searchChannels("music")
         }
+        if SoundCloudKit.APIClient.isLoggedIn {
+            userLoader.fetchFollowings()
+        } else {
+            userLoader.searchUsers("")
+        }
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        blogObserver?.dispose()
+        channelObserver?.dispose()
+        userObserver?.dispose()
     }
 
     func close() {
@@ -125,6 +165,18 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
         })
     }
 
+    func observeUserLoader() {
+        userObserver?.dispose()
+        userObserver = userLoader.signal.observe(next: { event in
+            switch event {
+            case .StartLoading: break
+            case .CompleteLoading:
+                self.tableView.reloadData()
+            case .FailToLoad: break
+            }
+        })
+    }
+
     func fetchBlogs() {
         blogLoader.fetchBlogs()
     }
@@ -153,27 +205,8 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath) as! AddStreamMenuTableViewCell
         if let menu = Menu(rawValue: indexPath.item) {
-            switch menu {
-            case .Recommend:
-                cell.nameLabel?.text = "MusicFav Recommend"
-                cell.setThumbnailImages(recommendFeeds.flatMap { $0.thumbnailURL.map { [$0] } ?? [] })
-            case .YouTube:
-                cell.nameLabel?.text = "YouTube"
-                var urls: [NSURL]
-                if YouTubeAPIClient.isLoggedIn {
-                    urls = channelLoader.subscriptions.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
-                } else {
-                    urls = channelLoader.searchResults.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
-                }
-                if urls.count > 0 {
-                    cell.setThumbnailImages(urls)
-                } else {
-                    cell.setMessageLabel("")
-                }
-            case .Hypem:
-                cell.nameLabel?.text = "Hype machine featured"
-                cell.setThumbnailImages(blogLoader.blogs.flatMap { $0.thumbnailURL.map { [$0] } ?? [] })
-            }
+            cell.nameLabel?.text = menu.title!
+            cell.setThumbnailImages(menu.thumbnailUrls(self))
         }
         return cell
     }
@@ -189,6 +222,12 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
                 let vc = ChannelCategoryTableViewController(streamListLoader: streamListLoader, channelLoader: channelLoader)
                 navigationController?.pushViewController(vc, animated: true)
                 vc.showYouTubeLoginViewController()
+            case .SoundCloud:
+                let vc = SoundCloudUserTableViewController(streamListLoader: streamListLoader,
+                                                                 userLoader: SoundCloudUserLoader(),
+                                                                       type: .Followings)
+                navigationController?.pushViewController(vc, animated: true)
+                vc.showSoundCloudLoginViewController()
             case .Hypem:
                 let vc = StreamTableViewController(streamListLoader: streamListLoader,
                                                                type: .Hypem(blogLoader))

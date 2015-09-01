@@ -197,6 +197,10 @@ extension APIClient {
         }
     }
 
+    func fetchUsers(query: String) -> SignalProducer<[User], NSError> {
+        return fetchItems(Router.Users(query))
+    }
+
     func fetchMe() -> SignalProducer<User, NSError> {
         return fetchItem(Router.Me)
     }
@@ -223,5 +227,17 @@ extension APIClient {
 
     func fetchFavoritesOf(user: User) -> SignalProducer<[Track], NSError> {
         return self.fetchItems(Router.FavoritesOfUser(user))
+    }
+
+    func fetchActivities() -> SignalProducer<ActivityList, NSError> {
+        return self.fetchItem(Router.Activities)
+    }
+
+    func fetchNextActivities(nextHref: String) -> SignalProducer<ActivityList, NSError> {
+        return self.fetchItem(Router.NextActivities(nextHref))
+    }
+
+    func fetchLatestActivities(futureHref: String) -> SignalProducer<ActivityList, NSError> {
+        return self.fetchItem(Router.FutureActivities(futureHref))
     }
 }

@@ -15,10 +15,29 @@ import Breit
 
 extension SoundCloudKit.Track {
     var thumbnailURLString: String {
-        if let url = artworkUrl {
-            return url
-        }
-        return user.avatarUrl
+        if let url = artworkUrl { return url }
+        else                    { return user.avatarUrl }
+    }
+    func toTrack() -> MusicFeeder.Track {
+        let track = MusicFeeder.Track(provider: .SoundCloud,
+                                           url: uri,
+                                    identifier: "\(id)",
+                                         title: title)
+        track.updateProperties(self)
+        return track
+    }
+    func toPlaylist() -> MusicFeeder.Playlist {
+        return MusicFeeder.Playlist(id: "soundcloud-track-\(id)",
+                                 title: title,
+                                tracks: [toTrack()])
+    }
+}
+
+extension SoundCloudKit.Playlist {
+    func toPlaylist() -> MusicFeeder.Playlist {
+        return MusicFeeder.Playlist(id: "soundcloud-playlist-\(id)",
+                                 title: title,
+                                tracks: tracks.map { $0.toTrack() })
     }
 }
 
