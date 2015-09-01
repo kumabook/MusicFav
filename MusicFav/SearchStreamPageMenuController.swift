@@ -18,6 +18,7 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
          var pageMenu:       CAPSPageMenu!
     weak var feedlyStreamViewController: StreamTableViewController?
     weak var channelTableViewController: ChannelTableViewController?
+    weak var userTableViewController:    SoundCloudUserTableViewController?
 
     var streamListLoader: StreamListLoader
     var blogLoader:       BlogLoader
@@ -60,12 +61,14 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
         Logger.sendUIActionEvent(self, action: "searchFeeds", label: "")
         let feedlyStreamVC = StreamTableViewController(streamListLoader: streamListLoader, type: .Search(""))
         let channelVC      = ChannelTableViewController(streamListLoader: streamListLoader, channelLoader: channelLoader, type: .Search(""))
+        let userVC         = SoundCloudUserTableViewController(streamListLoader: streamListLoader, userLoader: SoundCloudUserLoader(), type: .Search(""))
 
         channelLoader.searchResults = []
 
         feedlyStreamVC.title = "Feedly"
         channelVC.title      = "YouTube"
-        var controllerArray: [UIViewController] = [feedlyStreamVC, channelVC]
+        userVC.title         = "SoundCloud"
+        var controllerArray: [UIViewController] = [feedlyStreamVC, channelVC, userVC]
         var parameters: [CAPSPageMenuOption] = [
             .MenuItemSeparatorWidth(0.0),
             .UseMenuLikeSegmentedControl(true),
@@ -89,6 +92,7 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
         updateAddButton()
         feedlyStreamViewController = feedlyStreamVC
         channelTableViewController = channelVC
+        userTableViewController    = userVC
     }
 
     override func didReceiveMemoryWarning() {
@@ -99,6 +103,7 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
         var subscribables: [Stream] = []
         subscribables.extend(feedlyStreamViewController?.getSubscribables() ?? [] )
         subscribables.extend(channelTableViewController?.getSubscribables() ?? [] )
+        subscribables.extend(userTableViewController?.getSubscribables() ?? [] )
         return subscribables
     }
 
@@ -153,6 +158,7 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
     func searchFeeds(query: String) {
         feedlyStreamViewController?.refresh(.Search(query))
         channelTableViewController?.refresh(.Search(query))
+        userTableViewController?.refresh(.Search(query))
         updateAddButton()
     }
 
