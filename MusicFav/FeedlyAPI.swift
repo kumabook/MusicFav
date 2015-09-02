@@ -14,6 +14,7 @@ import NXOAuth2Client
 
 public struct FeedlyAPI {
     private static let userDefaults = NSUserDefaults.standardUserDefaults()
+    private static var oauth2clientDelegate = FeedlyOAuth2ClientDelegate()
     private static var _account:                    NXOAuth2Account?
     private static var _profile:                    Profile?
     private static var _notificationDateComponents: NSDateComponents?
@@ -54,7 +55,36 @@ public struct FeedlyAPI {
             return nil
         }
     }
-    
+
+    public static var isExpired: Bool {
+        if let expiresAt = account?.accessToken.expiresAt {
+            return NSDate().compare(expiresAt) != NSComparisonResult.OrderedAscending
+        }
+        return false
+    }
+
+    public static func refreshAccessToken(account: NXOAuth2Account) {
+        typealias C = CloudAPIClient
+        let oauth2client = NXOAuth2Client(clientID: C.clientId,
+                                      clientSecret: C.clientSecret,
+                                      authorizeURL: NSURL(string: C.sharedInstance.authUrl)!,
+                                          tokenURL: NSURL(string: C.sharedInstance.tokenUrl)!,
+                                       accessToken: account.accessToken,
+                                     keyChainGroup: C.keyChainGroup,
+                                        persistent: true,
+                                          delegate: FeedlyAPI.oauth2clientDelegate)
+        oauth2client.refreshAccessToken()
+    }
+
+    static func refreshAccount(account: NXOAuth2Account) {
+        clearAllAccount()
+        let store = NXOAuth2AccountStore.sharedStore() as! NXOAuth2AccountStore
+        store.addAccount(account)
+        if let p = profile, token = account.accessToken.accessToken {
+            CloudAPIClient.login(p, token: token)
+        }
+    }
+
     public static var notificationDateComponents: NSDateComponents? {
         get {
             if let components = _notificationDateComponents {
@@ -132,8 +162,11 @@ public struct FeedlyAPI {
 
     public static func setup() {
         loadConfig()
-        if let p = profile, token = account?.accessToken.accessToken {
+        if let p = profile, a = account, token = a.accessToken.accessToken {
             CloudAPIClient.login(p, token: token)
+            if isExpired {
+                refreshAccessToken(a)
+            }
         } else {
             profile = nil
             clearAllAccount()
@@ -143,8 +176,27 @@ public struct FeedlyAPI {
             case .Login(let profile):
                 self.profile = profile
             case .Logout:
-                self.clearAllAccount()
+                if self.isExpired {
+                    self.refreshAccessToken(self.account!)
+                } else {
+                    self.clearAllAccount()
+                }
             }
         })
+    }
+}
+
+public class FeedlyOAuth2ClientDelegate: NSObject, NXOAuth2ClientDelegate {
+    public override init() {
+    }
+    public func oauthClientNeedsAuthentication(client: NXOAuth2Client!) {}
+    public func oauthClientDidGetAccessToken(client: NXOAuth2Client!) {}
+    public func oauthClient(client: NXOAuth2Client!, didFailToGetAccessTokenWithError error: NSError!) {
+    }
+    public func oauthClientDidLoseAccessToken(client: NXOAuth2Client!) {
+    }
+    public func oauthClientDidRefreshAccessToken(client: NXOAuth2Client!) {
+        FeedlyAPI.refreshAccount(NXOAuth2Account(accountWithAccessToken: client.accessToken,
+            accountType: CloudAPIClient.accountType))
     }
 }
