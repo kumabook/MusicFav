@@ -129,6 +129,7 @@ extension APIClient {
         clearAllAccount()
         let store = NXOAuth2AccountStore.sharedStore() as! NXOAuth2AccountStore
         store.addAccount(account)
+        SoundCloudKit.APIClient.accessToken = account.accessToken.accessToken
     }
 
     public class func setup() {
