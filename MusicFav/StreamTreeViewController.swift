@@ -93,16 +93,16 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
     var refreshControl: UIRefreshControl?
 
     func defaultSections() -> [Section] {
+        var sections: [Section] = []
         if let userId = FeedlyAPI.profile?.id {
-            var sections: [Section] = [.GlobalResource(FeedlyKit.Category.All(userId)),
-                                       .GlobalResource(FeedlyKit.Tag.Saved(userId)),
-                                       .GlobalResource(FeedlyKit.Tag.Read(userId))]
-            if SoundCloudKit.APIClient.isLoggedIn { sections.append(.SoundCloud) }
-            return sections
+            sections.append(.GlobalResource(FeedlyKit.Category.All(userId)))
+            sections.append(.GlobalResource(FeedlyKit.Tag.Saved(userId)))
+            sections.append(.GlobalResource(FeedlyKit.Tag.Read(userId)))
         }
-        else {
-            return []
+        if SoundCloudKit.APIClient.isLoggedIn {
+            sections.append(.SoundCloud)
         }
+        return sections
     }
 
     init() {
