@@ -48,9 +48,12 @@ class MiniPlayerViewController: PlayerKit.MiniPlayerViewController {
     }
 
     func setStreamPageMenu(stream: Stream) {
+        setCenterViewController(StreamPageMenuController(stream: stream))
+    }
+
+    func setCenterViewController(viewController: UIViewController) {
         if let vc = mainViewController as? JASidePanelController {
-            streamPageMenuController = StreamPageMenuController(stream: stream)
-            vc.centerPanel = UINavigationController(rootViewController: streamPageMenuController)
+            vc.centerPanel = UINavigationController(rootViewController: viewController)
             vc.showCenterPanelAnimated(true)
         }
     }

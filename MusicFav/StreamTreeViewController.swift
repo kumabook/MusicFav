@@ -12,18 +12,21 @@ import FeedlyKit
 import MusicFeeder
 import RATreeView
 import MBProgressHUD
+import SoundCloudKit
 
 class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeViewDataSource {
     enum Section {
         case GlobalResource(Stream)
         case FeedlyCategory(FeedlyKit.Category)
         case UncategorizedSubscription(Subscription)
+        case SoundCloud
         case Pocket
         case Twitter
 
         var title: String {
             switch self {
             case .GlobalResource(let stream):                  return stream.streamTitle.localize()
+            case .SoundCloud:                                  return "SoundCloud"
             case .Pocket:                                      return "Pocket"
             case .Twitter:                                     return "Twitter"
             case .FeedlyCategory(let category):                return category.label
@@ -42,6 +45,8 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
                     view?.image = UIImage(named: "checkmark")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
                 default: break
                 }
+            case .SoundCloud:
+                view?.image = UIImage(named: "soundcloud_icon")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
             case .Pocket: break
             case .Twitter: break
             case .FeedlyCategory(let category):
@@ -53,6 +58,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         func child(streamListDic: [FeedlyKit.Category:[Stream]], index: Int) -> AnyObject {
             switch self {
             case .GlobalResource: return []
+            case .SoundCloud:     return []
             case .Pocket:         return []
             case .Twitter:        return []
             case .FeedlyCategory(let category):
@@ -64,6 +70,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         func numOfChild(streamListDic: [FeedlyKit.Category:[Stream]]) -> Int {
             switch self {
             case .GlobalResource: return 0
+            case .SoundCloud:     return 0
             case .Pocket:         return 0
             case .Twitter:        return 0
             case .FeedlyCategory(let category):
@@ -87,9 +94,11 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
 
     func defaultSections() -> [Section] {
         if let userId = FeedlyAPI.profile?.id {
-            return [.GlobalResource(FeedlyKit.Category.All(userId)),
-                    .GlobalResource(FeedlyKit.Tag.Saved(userId)),
-                    .GlobalResource(FeedlyKit.Tag.Read(userId))]
+            var sections: [Section] = [.GlobalResource(FeedlyKit.Category.All(userId)),
+                                       .GlobalResource(FeedlyKit.Tag.Saved(userId)),
+                                       .GlobalResource(FeedlyKit.Tag.Read(userId))]
+            if SoundCloudKit.APIClient.isLoggedIn { sections.append(.SoundCloud) }
+            return sections
         }
         else {
             return []
@@ -169,6 +178,8 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         switch section {
         case .GlobalResource(let stream):
             showStream(stream: stream)
+        case .SoundCloud:
+            showSoundCloudActivities()
         case .Pocket:  return
         case .Twitter: return
         case .FeedlyCategory(let category): return
@@ -179,6 +190,11 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
 
     func showStream(#stream: Stream) {
         appDelegate.miniPlayerViewController?.setStreamPageMenu(stream)
+    }
+
+    func showSoundCloudActivities() {
+        let vc = SoundCloudActivityTableViewController()
+        appDelegate.miniPlayerViewController?.setCenterViewController(vc)
     }
 
     func observeStreamList() {
