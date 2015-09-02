@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x"
+      "scale" : "1x",
+      "filename" : "sc_gradient_240x120.png"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "thumb.png"
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",

@@ -19,4 +19,5 @@ extension UIColor {
     class var blue:        UIColor { return build(r: 100/255, g: 149/255, b: 237/255, a: 1.0) }
     class var transparent: UIColor { return build(r:       0, g:       0, b:       0, a:   0) }
     class var lightGray:   UIColor { return build(r: 214/255, g: 214/255, b: 214/255, a: 1.0) }
+    class var slateGray:   UIColor { return build(r:       0, g:  51/255, b: 102/255, a: 0.5) }
 }
