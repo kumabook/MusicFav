@@ -119,8 +119,18 @@ public class SoundCloudActivityLoader {
         producer |> startOn(UIScheduler())
             |> start(
                 next: { activityList in
-                    self.activities.extend(activityList.collection)
-                    self.playlists.extend(activityList.collection.map { $0.toPlaylist() })
+                    for i in 0..<activityList.collection.count {
+                        let activity = activityList.collection[i]
+                        self.activities.append(activity)
+                        self.playlists.append(activity.toPlaylist())
+                        self.fetchPlaylist(activity).start(
+                            next: { playlist in
+                                self.playlists[i] = playlist.toPlaylist()
+                                return
+                            }, error: { e in
+                            }, completed: {
+                            })
+                    }
                     self.nextHref   = activityList.nextHref
                     self.futureHref = activityList.futureHref
                     self.sink.put(.Next(Box(.CompleteLoadingNext))) // First reload tableView,
@@ -137,5 +147,14 @@ public class SoundCloudActivityLoader {
                 },
                 completed: {
             })
+    }
+
+    public func fetchPlaylist(activity: Activity) -> SignalProducer<SoundCloudKit.Playlist, NSError> {
+        switch activity.origin {
+        case .Playlist(let playlist):
+            return APIClient.sharedInstance.fetchPlaylist(playlist.id)
+        case .Track:
+            return SignalProducer.empty
+        }
     }
 }

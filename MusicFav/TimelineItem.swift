@@ -24,7 +24,7 @@ enum TimelineItem {
 
     var playlist: MusicFeeder.Playlist? {
         switch self {
-        case .Entry(let entry, let playlist): return playlist
+        case .Entry(let entry, let playlist):       return playlist
         case .Activity(let activity, let playlist): return playlist
         }
     }
@@ -35,8 +35,8 @@ enum TimelineItem {
             return entry.title ?? playlist?.title
         case .Activity(let activity, let playlist):
             switch activity.origin {
-            case .Playlist(let playlist): return playlist.title
-            case .Track(let track):       return track.title
+            case .Playlist:         return playlist?.title ?? ""
+            case .Track(let track): return track.title
             }
         }
     }
@@ -82,8 +82,8 @@ enum TimelineItem {
             }
         case .Activity(let activity, let playlist):
             switch activity.origin {
-            case .Playlist(let playlist): return playlist.tracks.count
-            case .Track(let track):       return 1
+            case .Playlist: return playlist?.tracks.count ?? 0
+            case .Track:    return 1
             }
         }
     }

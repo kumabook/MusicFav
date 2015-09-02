@@ -241,4 +241,8 @@ extension APIClient {
     func fetchLatestActivities(futureHref: String) -> SignalProducer<ActivityList, NSError> {
         return self.fetchItem(Router.FutureActivities(futureHref))
     }
+
+    func fetchPlaylist(id: Int) -> SignalProducer<Playlist, NSError> {
+        return self.fetchItem(Router.Playlist("\(id)"))
+    }
 }
