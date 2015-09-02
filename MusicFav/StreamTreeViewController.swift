@@ -189,7 +189,8 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
     }
 
     func showStream(#stream: Stream) {
-        appDelegate.miniPlayerViewController?.setStreamPageMenu(stream)
+        let vc = StreamTimelineTableViewController(streamLoader: StreamLoader(stream: stream))
+        appDelegate.miniPlayerViewController?.setCenterViewController(vc)
     }
 
     func showSoundCloudActivities() {
