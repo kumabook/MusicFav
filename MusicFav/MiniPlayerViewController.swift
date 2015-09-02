@@ -16,7 +16,6 @@ import MusicFeeder
 import PlayerKit
 
 class MiniPlayerViewController: PlayerKit.MiniPlayerViewController {
-    var streamPageMenuController:    StreamPageMenuController!
     var playlistTableViewController: PlaylistTableViewController!
     var streamTreeViewController:    StreamTreeViewController!
     var currentPlaylist:             MusicFeeder.Playlist? { get { return player?.currentPlaylist as? MusicFeeder.Playlist }}
@@ -45,10 +44,6 @@ class MiniPlayerViewController: PlayerKit.MiniPlayerViewController {
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-    }
-
-    func setStreamPageMenu(stream: Stream) {
-        setCenterViewController(StreamPageMenuController(stream: stream))
     }
 
     func setCenterViewController(viewController: UIViewController) {
