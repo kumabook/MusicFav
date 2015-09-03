@@ -103,7 +103,7 @@ class TimelineTableViewCell: UITableViewCell {
         }
         let count        = CGFloat(playlist.tracks.count)
         let widthPerPage = thumbListContainer.frame.width
-        let pageNum      = Int(thumbnailWidth * count / widthPerPage) + 1
+        let pageNum      = Int((thumbnailWidth + padding) * count / widthPerPage) + 1
         let contentWidth = widthPerPage * CGFloat(pageNum)
         let marginView   = UIView(frame: CGRect(x: count * tw, y: 0.0, width: contentWidth - count * tw, height: tw))
         marginView.addGestureRecognizer(UITapGestureRecognizer(target:self, action:"trackScrollViewMarginTouched:"))
