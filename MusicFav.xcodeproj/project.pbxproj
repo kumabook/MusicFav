@@ -93,6 +93,7 @@
 		6767AE5D1ADBECCC00A92497 /* StreamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6767AE5B1ADBECCC00A92497 /* StreamTableViewCell.swift */; };
 		6767AE5E1ADBECCC00A92497 /* StreamTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6767AE5C1ADBECCC00A92497 /* StreamTableViewCell.xib */; };
 		6783057F1B95DDC000A83F52 /* StreamTimelineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6783057E1B95DDC000A83F52 /* StreamTimelineTableViewController.swift */; };
+		678305871B9AA24C00A83F52 /* YouTubeActivityLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678305861B9AA24C00A83F52 /* YouTubeActivityLoader.swift */; };
 		67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */; };
 		6794E7EA1AE241AC0054B3DB /* tutorial.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6794E7E91AE241AC0054B3DB /* tutorial.xcassets */; };
 		6794E7ED1AE256300054B3DB /* Tutorial.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6794E7EF1AE256300054B3DB /* Tutorial.strings */; };
@@ -142,6 +143,8 @@
 		67D41D191B8F2DB50082454F /* SoundCloudActivityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D41D181B8F2DB50082454F /* SoundCloudActivityTableViewController.swift */; };
 		67D41D1C1B8F33020082454F /* TimelineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D41D1A1B8F33020082454F /* TimelineTableViewCell.swift */; };
 		67D41D1D1B8F33020082454F /* TimelineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67D41D1B1B8F33020082454F /* TimelineTableViewCell.xib */; };
+		67D8371B1B9AEFF30025B14B /* YouTubeActivityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D8371A1B9AEFF30025B14B /* YouTubeActivityTableViewController.swift */; };
+		67D8371D1B9B3A510025B14B /* YouTubeOAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D8371C1B9B3A510025B14B /* YouTubeOAuthViewController.swift */; };
 		67DA465B1A8651CA0048B29C /* PlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DA46591A8651CA0048B29C /* PlaylistTableViewController.swift */; };
 		67DA465F1A8656A90048B29C /* PlaylistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DA465D1A8656A90048B29C /* PlaylistTableViewCell.swift */; };
 		67DA46601A8656A90048B29C /* PlaylistTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67DA465E1A8656A90048B29C /* PlaylistTableViewCell.xib */; };
@@ -323,6 +326,7 @@
 		6767AE5C1ADBECCC00A92497 /* StreamTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StreamTableViewCell.xib; sourceTree = "<group>"; };
 		677933A8B0BDDEAED4C720D5 /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		6783057E1B95DDC000A83F52 /* StreamTimelineTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTimelineTableViewController.swift; sourceTree = "<group>"; };
+		678305861B9AA24C00A83F52 /* YouTubeActivityLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = YouTubeActivityLoader.swift; path = MusicFav/YouTubeActivityLoader.swift; sourceTree = "<group>"; };
 		67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTableViewController.swift; sourceTree = "<group>"; };
 		6794E7E91AE241AC0054B3DB /* tutorial.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = tutorial.xcassets; sourceTree = "<group>"; };
 		6794E7EE1AE256300054B3DB /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Tutorial.strings; sourceTree = "<group>"; };
@@ -367,6 +371,8 @@
 		67D41D181B8F2DB50082454F /* SoundCloudActivityTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundCloudActivityTableViewController.swift; sourceTree = "<group>"; };
 		67D41D1A1B8F33020082454F /* TimelineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineTableViewCell.swift; sourceTree = "<group>"; };
 		67D41D1B1B8F33020082454F /* TimelineTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TimelineTableViewCell.xib; sourceTree = "<group>"; };
+		67D8371A1B9AEFF30025B14B /* YouTubeActivityTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubeActivityTableViewController.swift; sourceTree = "<group>"; };
+		67D8371C1B9B3A510025B14B /* YouTubeOAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubeOAuthViewController.swift; sourceTree = "<group>"; };
 		67DA46591A8651CA0048B29C /* PlaylistTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewController.swift; sourceTree = "<group>"; };
 		67DA465D1A8656A90048B29C /* PlaylistTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewCell.swift; sourceTree = "<group>"; };
 		67DA465E1A8656A90048B29C /* PlaylistTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaylistTableViewCell.xib; sourceTree = "<group>"; };
@@ -477,6 +483,7 @@
 			children = (
 				6736D00B1B86341000CCDD80 /* YouTubePlaylist.swift */,
 				6736D00C1B86341000CCDD80 /* YouTubePlaylistLoader.swift */,
+				678305861B9AA24C00A83F52 /* YouTubeActivityLoader.swift */,
 				67C1A7FD1B7B8712002A604C /* Channel.swift */,
 				67C1A7FE1B7B8712002A604C /* ChannelLoader.swift */,
 				670505B41B6E2348006EAA84 /* Blog.swift */,
@@ -631,9 +638,10 @@
 			isa = PBXGroup;
 			children = (
 				67254C7B1A4968F50064E5DF /* EntryWebViewController.swift */,
-				67D41D181B8F2DB50082454F /* SoundCloudActivityTableViewController.swift */,
 				67EFB1521B9328FF008A84DF /* TimelineTableViewController.swift */,
 				6783057E1B95DDC000A83F52 /* StreamTimelineTableViewController.swift */,
+				67D8371A1B9AEFF30025B14B /* YouTubeActivityTableViewController.swift */,
+				67D41D181B8F2DB50082454F /* SoundCloudActivityTableViewController.swift */,
 			);
 			name = Center;
 			sourceTree = "<group>";
@@ -669,10 +677,11 @@
 			children = (
 				67C1A8091B7B876A002A604C /* OAuthViewController.swift */,
 				67277CD91A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift */,
+				67D41D001B87812E0082454F /* SoundCloudOAuthViewController.swift */,
+				67D8371C1B9B3A510025B14B /* YouTubeOAuthViewController.swift */,
 				6727EDFC1A5AC1DE003C6A47 /* MiniPlayerViewController.swift */,
 				67B366DD1AE1CBA800E089B2 /* TutorialViewController.swift */,
 				67C1A7FB1B7B83A5002A604C /* PlayerViewController.swift */,
-				67D41D001B87812E0082454F /* SoundCloudOAuthViewController.swift */,
 			);
 			name = Global;
 			sourceTree = "<group>";
@@ -1226,8 +1235,10 @@
 				67DA46621A87B3AB0048B29C /* SelectPlaylistTableViewController.swift in Sources */,
 				67E5DEE31AEC4CEA000E016F /* FabricConfig.swift in Sources */,
 				67428D511B817980002FFA1A /* SearchStreamPageMenuController.swift in Sources */,
+				67D8371D1B9B3A510025B14B /* YouTubeOAuthViewController.swift in Sources */,
 				67428D571B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift in Sources */,
 				67F530901B7F815B00D8EEF1 /* StreamTreeViewCell.swift in Sources */,
+				67D8371B1B9AEFF30025B14B /* YouTubeActivityTableViewController.swift in Sources */,
 				67EFB1531B9328FF008A84DF /* TimelineTableViewController.swift in Sources */,
 				679F453D1AF104F7008D1B7F /* OnpuRefreshControl.swift in Sources */,
 				67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */,
@@ -1236,6 +1247,7 @@
 				67428D591B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift in Sources */,
 				67EFB1551B933B46008A84DF /* TimelineItem.swift in Sources */,
 				6731BC9E1AD82321004F488D /* UIAlertControllerExtension.swift in Sources */,
+				678305871B9AA24C00A83F52 /* YouTubeActivityLoader.swift in Sources */,
 				67C1A8041B7B8728002A604C /* ChannelCategoryTableViewController.swift in Sources */,
 				67F9A2951AD0558C0078EC3C /* PlaylistStreamTableViewCell.swift in Sources */,
 			);
