@@ -94,7 +94,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         tableView.registerNib(nib, forCellReuseIdentifier: reuseIdentifier)
         clearsSelectionOnViewWillAppear = true
 
-        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.White)
+        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         indicator.bounds = CGRect(x: 0,
                                   y: 0,
                               width: indicator.bounds.width,
@@ -113,18 +113,20 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         onpuRefreshControl = OnpuRefreshControl(frame: controlFrame)
         onpuRefreshControl.addTarget(self, action: "fetchLatest", forControlEvents:UIControlEvents.ValueChanged)
         tableView.addSubview(onpuRefreshControl)
+        observer?.dispose()
+        observer = observeTimelineLoader()
         fetchNext()
     }
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         Logger.sendScreenView(self)
+        observer?.dispose()
+        observer = observeTimelineLoader()
     }
 
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        observer?.dispose()
-        observer = observeTimelineLoader()
         if playerObserver != nil {
             player?.removeObserver(playerObserver)
         }
