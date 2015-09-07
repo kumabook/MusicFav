@@ -31,11 +31,14 @@ class SoundCloudOAuthViewController: OAuthViewController {
     
     override func showAlert() {
         UIAlertController.show(self, title: "Notice".localize(), message: "Login failed.", handler: { (action) -> Void in
-            CloudAPIClient.logout()
+            SoundCloudKit.APIClient.accessToken = nil
+            SoundCloudKit.APIClient.me = nil
+            SoundCloudKit.APIClient.clearAllAccount()
         })
     }
     
     override func onLoggedIn(account: NXOAuth2Account) {
+        super.onLoggedIn(account)
         SoundCloudKit.APIClient.accessToken = account.accessToken.accessToken
         SoundCloudKit.APIClient.sharedInstance.fetchMe().start(
             error: { error in
@@ -44,6 +47,7 @@ class SoundCloudOAuthViewController: OAuthViewController {
                 SoundCloudKit.APIClient.me = user
                 self.dismissViewControllerAnimated(true, completion: nil)
                 super.onLoggedIn(account)
+                self.appDelegate.reload()
         })
     }
 }

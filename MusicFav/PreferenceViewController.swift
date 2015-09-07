@@ -214,8 +214,7 @@ class PreferenceViewController: UITableViewController {
     }
 
     func showSoundCloudLoginController() {
-        let vc = SoundCloudOAuthViewController()
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(SoundCloudOAuthViewController(), animated: true)
     }
 
     func showConfirmDialog(title: String, message: String, action: ((UIAlertAction!) -> Void)) {
@@ -240,6 +239,7 @@ class PreferenceViewController: UITableViewController {
         showConfirmDialog("Disconnect with YouTube", message: "Are you sure you want to disconnect with YouTube?") { (action) in
             YouTubeAPIClient.clearAllAccount()
             self.tableView?.reloadData()
+            self.appDelegate.reload()
         }
     }
 
@@ -247,6 +247,7 @@ class PreferenceViewController: UITableViewController {
         showConfirmDialog("Disconnect with SoundCloud", message: "Are you sure you want to disconnect with SoundCloud?") { (action) in
             SoundCloudKit.APIClient.clearAllAccount()
             self.tableView?.reloadData()
+            self.appDelegate.reload()
         }
     }
 
