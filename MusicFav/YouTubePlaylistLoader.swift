@@ -110,7 +110,6 @@ class YouTubePlaylistLoader {
         return YouTubeAPIClient.sharedInstance.fetchPlaylistItems(playlist, pageToken: pageToken) |> map {
             self.itemsOfPlaylist[playlist]?.extend($0.items)
             self.itemsPageTokenOfPlaylist[playlist] = $0.nextPageToken
-            println(            self.itemsPageTokenOfPlaylist[playlist])
             self.sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.CompleteLoading)))
             self.state = State.Normal
         }
