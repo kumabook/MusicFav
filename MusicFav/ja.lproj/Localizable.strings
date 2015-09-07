@@ -45,6 +45,13 @@
 "Purchase"      = "購入";
 "Restore"       = "復元";
 
+"favorites"     = "お気に入り";
+"watchHistory"  = "履歴";
+"uploads"       = "アップロード";
+"watchLater"    = "あとで見る";
+"likes"         = "いいね";
+
+
 "Please Rate MusicFav"              = "MusicFavを評価";
 "Network error"                     = "通信エラー";
 "Import Feed"                       = "フィードをインポート";

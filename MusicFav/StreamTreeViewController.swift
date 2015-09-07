@@ -19,6 +19,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         case GlobalResource(Stream)
         case FeedlyCategory(FeedlyKit.Category)
         case UncategorizedSubscription(Subscription)
+        case YouTube
         case SoundCloud
         case Pocket
         case Twitter
@@ -26,6 +27,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         var title: String {
             switch self {
             case .GlobalResource(let stream):                  return stream.streamTitle.localize()
+            case .YouTube:                                     return "YouTube"
             case .SoundCloud:                                  return "SoundCloud"
             case .Pocket:                                      return "Pocket"
             case .Twitter:                                     return "Twitter"
@@ -45,8 +47,10 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
                     view?.image = UIImage(named: "checkmark")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
                 default: break
                 }
+            case .YouTube:
+                view?.image = UIImage(named: "youtube")
             case .SoundCloud:
-                view?.image = UIImage(named: "soundcloud_icon")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+                view?.image = UIImage(named: "soundcloud_icon")
             case .Pocket: break
             case .Twitter: break
             case .FeedlyCategory(let category):
@@ -55,36 +59,46 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
                 view?.sd_setImageWithURL(subscription.thumbnailURL, placeholderImage: UIImage(named: "default_thumb"))
             }
         }
-        func child(streamListDic: [FeedlyKit.Category:[Stream]], index: Int) -> AnyObject {
+        func child(vc: StreamTreeViewController, index: Int) -> AnyObject {
             switch self {
             case .GlobalResource: return []
+            case .YouTube:        return vc.youtubeActivityLoader.itemsOfPlaylist.keys.array[index]
             case .SoundCloud:     return []
             case .Pocket:         return []
             case .Twitter:        return []
             case .FeedlyCategory(let category):
-                if let streams = streamListDic[category] { return streams[index] }
-                else                                     { return [] }
+                if let streams = vc.streamListLoader.streamListOfCategory[category] {
+                    return streams[index]
+                } else {
+                    return []
+                }
             case .UncategorizedSubscription(let subscription): return []
             }
         }
-        func numOfChild(streamListDic: [FeedlyKit.Category:[Stream]]) -> Int {
+        func numOfChild(vc: StreamTreeViewController) -> Int {
             switch self {
             case .GlobalResource: return 0
+            case .YouTube:        return vc.youtubeActivityLoader.itemsOfPlaylist.count
             case .SoundCloud:     return 0
             case .Pocket:         return 0
             case .Twitter:        return 0
             case .FeedlyCategory(let category):
-                if let streams = streamListDic[category] { return streams.count }
-                else                                     { return 0 }
+                if let streams = vc.streamListLoader.streamListOfCategory[category] {
+                    return streams.count
+                } else {
+                    return 0
+                }
             case .UncategorizedSubscription(let subscription): return 0
             }
         }
     }
 
-    var treeView:         RATreeView?
-    var sections:         [Section]
-    var streamListLoader: StreamListLoader
-    var observer:         Disposable?
+    var treeView:              RATreeView?
+    var sections:              [Section]
+    var streamListLoader:      StreamListLoader
+    var observer:              Disposable?
+    var youtubeActivityLoader: YouTubeActivityLoader
+    var youtubeObserver:       Disposable?
 
     var apiClient:   CloudAPIClient    { return CloudAPIClient.sharedInstance }
     var appDelegate: AppDelegate       { return UIApplication.sharedApplication().delegate as! AppDelegate }
@@ -99,21 +113,22 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             sections.append(.GlobalResource(FeedlyKit.Tag.Saved(userId)))
             sections.append(.GlobalResource(FeedlyKit.Tag.Read(userId)))
         }
-        if SoundCloudKit.APIClient.isLoggedIn {
-            sections.append(.SoundCloud)
-        }
+        sections.append(.YouTube)
+        sections.append(.SoundCloud)
         return sections
     }
 
     init() {
-        sections         = []
-        streamListLoader = StreamListLoader()
+        sections              = []
+        streamListLoader      = StreamListLoader()
+        youtubeActivityLoader = YouTubeActivityLoader()
         super.init(nibName: nil, bundle: nil)
     }
 
     required init(coder aDecoder: NSCoder) {
-        sections         = []
-        streamListLoader = StreamListLoader()
+        sections              = []
+        streamListLoader      = StreamListLoader()
+        youtubeActivityLoader = YouTubeActivityLoader()
         super.init(coder: aDecoder)
     }
 
@@ -162,6 +177,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         observer?.dispose()
+        youtubeObserver?.dispose()
     }
 
     func showPreference() {
@@ -179,7 +195,19 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         case .GlobalResource(let stream):
             showStream(stream: stream)
         case .SoundCloud:
-            showSoundCloudActivities()
+            if SoundCloudKit.APIClient.isLoggedIn {
+                showSoundCloudActivities()
+            } else {
+                let vc = UINavigationController(rootViewController: SoundCloudOAuthViewController())
+                presentViewController(vc, animated: true, completion: {})
+            }
+        case .YouTube:
+            if YouTubeAPIClient.isLoggedIn {
+                return
+            } else {
+                let vc = UINavigationController(rootViewController: YouTubeOAuthViewController())
+                presentViewController(vc, animated: true, completion: {})
+            }
         case .Pocket:  return
         case .Twitter: return
         case .FeedlyCategory(let category): return
@@ -190,6 +218,11 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
 
     func showStream(#stream: Stream) {
         let vc = StreamTimelineTableViewController(streamLoader: StreamLoader(stream: stream))
+        appDelegate.miniPlayerViewController?.setCenterViewController(vc)
+    }
+
+    func showYouTubeActivities(playlist: YouTubePlaylist) {
+        let vc = YouTubeActivityTableViewController(activityLoader: youtubeActivityLoader, playlist: playlist)
         appDelegate.miniPlayerViewController?.setCenterViewController(vc)
     }
 
@@ -252,6 +285,17 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         })
     }
 
+    func observeYouTubeActivityLoader() {
+        youtubeObserver?.dispose()
+        youtubeObserver = youtubeActivityLoader.signal.observe(next: { event in
+            switch event {
+            case .StartLoading:    self.treeView?.reloadData()
+            case .CompleteLoading: self.treeView?.reloadData()
+            case .FailToLoad:      self.treeView?.reloadData()
+            }
+        })
+    }
+
     func indexOfCategory(category: FeedlyKit.Category) -> Int {
         var i = 0
         for section in sections {
@@ -280,6 +324,11 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         observer?.dispose()
         observeStreamList()
         streamListLoader.refresh()
+        youtubeObserver?.dispose()
+        observeYouTubeActivityLoader()
+        youtubeActivityLoader.clear()
+        youtubeActivityLoader.fetchChannels()
+        treeView?.reloadData()
     }
 
     func unsubscribeTo(subscription: Subscription, index: Int, category: FeedlyKit.Category) {
@@ -293,7 +342,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             return sections.count
         }
         if let index = item as? Int {
-            return sections[index].numOfChild(streamListLoader.streamListOfCategory)
+            return sections[index].numOfChild(self)
         }
         return 0
     }
@@ -318,9 +367,9 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         } else if let index = item as? Int {
             let section = sections[index]
             section.setThumbImage(cell.imageView)
-            let num = section.numOfChild(streamListLoader.streamListOfCategory)
+            let num = section.numOfChild(self)
             if num > 0 {
-                cell.textLabel?.text = "\(section.title) (\(section.numOfChild(streamListLoader.streamListOfCategory)))"
+                cell.textLabel?.text = "\(section.title) (\(num))"
             } else {
                 cell.textLabel?.text = "\(section.title)"
             }
@@ -329,6 +378,9 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             if let subscription = stream as? Subscription {
                 cell.imageView?.sd_setImageWithURL(subscription.thumbnailURL, placeholderImage: UIImage(named: "default_thumb"))
             }
+        } else if let playlist = item as? YouTubePlaylist {
+            cell.textLabel?.text = playlist.title.localize()
+            cell.imageView?.sd_setImageWithURL(playlist.thumbnailURL, placeholderImage: UIImage(named: "default_thumb"))
         }
         return cell
     }
@@ -338,7 +390,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             return index
         }
         if let sectionIndex = item as? Int {
-            return sections[sectionIndex].child(streamListLoader.streamListOfCategory, index: index)
+            return sections[sectionIndex].child(self, index: index)
         }
         return "Nothing"
     }
@@ -350,6 +402,8 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             showStream(section:sections[index])
         } else if let stream = item as? Stream {
             showStream(stream:stream)
+        } else if let playlist = item as? YouTubePlaylist {
+            showYouTubeActivities(playlist)
         }
     }
 
