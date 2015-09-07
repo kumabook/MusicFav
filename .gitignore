@@ -1,3 +1,5 @@
+*~
+archives/
 # Xcode
 #
 build/
@@ -29,7 +31,9 @@ Pods/
 Carthage/Build
 
 # Config
-MusicFav/feedly.json.sandbox
-MusicFav/feedly.json.production
-MusicFav/soundcloud.json.sandbox
-MusicFav/soundcloud.json.production
+MusicFav/feedly.json.*
+MusicFav/soundcloud.json.*
+MusicFav/google_analytics.json.*
+MusicFav/fabric.json.*
+MusicFav/youtube.json.*
+
