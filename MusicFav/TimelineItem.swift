@@ -14,18 +14,21 @@ import SoundCloudKit
 enum TimelineItem {
     case Entry(FeedlyKit.Entry, MusicFeeder.Playlist?)
     case Activity(SoundCloudKit.Activity, MusicFeeder.Playlist?)
+    case YouTubePlaylist(YouTubePlaylistItem, MusicFeeder.Playlist?)
 
     var entry: FeedlyKit.Entry? {
         switch self {
         case .Entry(let entry, let playlist):       return entry
         case .Activity(let activity, let playlist): return nil
+        case .YouTubePlaylist(let playlistItem):    return nil
         }
     }
 
     var playlist: MusicFeeder.Playlist? {
         switch self {
-        case .Entry(let entry, let playlist):       return playlist
-        case .Activity(let activity, let playlist): return playlist
+        case .Entry(let _, let playlist):           return playlist
+        case .Activity(let _, let playlist):        return playlist
+        case .YouTubePlaylist(let _, let playlist): return playlist
         }
     }
 
@@ -38,6 +41,7 @@ enum TimelineItem {
             case .Playlist:         return playlist?.title ?? ""
             case .Track(let track): return track.title
             }
+        case .YouTubePlaylist(let playlistItem, let _): return playlistItem.title
         }
     }
     var thumbnailURL: NSURL?  {
@@ -49,6 +53,7 @@ enum TimelineItem {
             case .Playlist(let playlist): return playlist.thumbnailURL
             case .Track(let track):       return track.thumbnailURL
             }
+        case .YouTubePlaylist(let playlistItem, let _): return playlistItem.thumbnailURL
         }
     }
     var description:  String? {
@@ -60,6 +65,8 @@ enum TimelineItem {
             case .Playlist(let playlist): return playlist.user.username
             case .Track(let track):       return track.user.username
             }
+        case .YouTubePlaylist(let playlistItem, let _):
+            return playlistItem.description
         }
     }
 
@@ -69,6 +76,8 @@ enum TimelineItem {
             return entry.passedTime
         case .Activity(let activity, let playlist):
             return activity.createdAt.toDate()!.elapsedTime
+        case .YouTubePlaylist(let playlistItem, let _):
+            return playlistItem.publishedAt?.toDate()?.elapsedTime
         }
     }
 
@@ -85,6 +94,8 @@ enum TimelineItem {
             case .Playlist: return playlist?.tracks.count ?? 0
             case .Track:    return 1
             }
+        case .YouTubePlaylist(let playlistItem):
+            return 1
         }
     }
 }
