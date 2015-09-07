@@ -190,6 +190,14 @@ public class YouTubeAPIClient {
         }
     }
 
+    func fetchMyChannels(pageToken: String?) -> SignalProducer<(items: [MyChannel], nextPageToken: String?), NSError> {
+        if let token = pageToken {
+            return fetch(["part": "snippet, contentDetails", "mine": "true", "pageToken": token])
+        } else {
+            return fetch(["part": "snippet, contentDetails", "mine": "true"])
+        }
+    }
+
     func fetchChannels(category: GuideCategory, pageToken: String?) -> SignalProducer<(items: [Channel], nextPageToken: String?), NSError> {
         if let token = pageToken {
             return fetch(["categoryId": category.id, "pageToken": token])
@@ -271,12 +279,16 @@ public class YouTubeAPIClient {
         }
     }
 
-    func fetchPlaylistItems(playlist: YouTubePlaylist, pageToken: String?) -> SignalProducer<(items: [YouTubePlaylistItem], nextPageToken: String?), NSError> {
+    func fetchPlaylistItems(id: String, pageToken: String?) -> SignalProducer<(items: [YouTubePlaylistItem], nextPageToken: String?), NSError> {
         if let token = pageToken {
-            return fetch(["pageToken": token, "playlistId": playlist.id, "part": "snippet, contentDetails"])
+            return fetch(["pageToken": token, "playlistId": id, "part": "snippet, contentDetails"])
         } else {
-            return fetch(["playlistId": playlist.id, "part": "snippet, contentDetails"])
+            return fetch(["playlistId": id, "part": "snippet, contentDetails"])
         }
+    }
+
+    func fetchPlaylistItems(playlist: YouTubePlaylist, pageToken: String?) -> SignalProducer<(items: [YouTubePlaylistItem], nextPageToken: String?), NSError> {
+        return fetchPlaylistItems(playlist.id, pageToken: pageToken)
     }
 }
 
