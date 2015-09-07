@@ -130,3 +130,19 @@ public class YouTubeSubscription: ChannelResource, YouTubeResource {
     public class var url: String { return "https://www.googleapis.com/youtube/v3/subscriptions" }
     public class var params: [String:String] { return ["mine": "true"] }
 }
+
+public class MyChannel: Channel {
+    var relatedPlaylists: [String: String]
+
+    public required init(json: JSON) {
+        self.relatedPlaylists = [:]
+        super.init(json: json)
+        if let contentDetails = json["contentDetails"].dictionary {
+            if let relatedPlaylists = contentDetails["relatedPlaylists"]?.dictionary {
+                for key in relatedPlaylists.keys {
+                    self.relatedPlaylists[key] = relatedPlaylists[key]!.stringValue
+                }
+            }
+        }
+    }
+}
