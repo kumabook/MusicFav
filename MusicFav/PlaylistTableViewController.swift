@@ -334,15 +334,8 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             if YouTubeAPIClient.isLoggedIn {
                 showYouTubePlaylists()
             } else {
-                let vc = OAuthViewController(clientId: YouTubeAPIClient.clientId,
-                                         clientSecret: YouTubeAPIClient.clientSecret,
-                                                scope: YouTubeAPIClient.scope,
-                                              authUrl: YouTubeAPIClient.authUrl,
-                                             tokenUrl: YouTubeAPIClient.tokenUrl,
-                                          redirectUrl: YouTubeAPIClient.redirectUrl,
-                                          accountType: YouTubeAPIClient.accountType,
-                                        keyChainGroup: YouTubeAPIClient.keyChainGroup)
-                presentViewController(UINavigationController(rootViewController: vc), animated: true, completion: {})
+                let vc = UINavigationController(rootViewController: YouTubeOAuthViewController())
+                presentViewController(vc, animated: true, completion: {})
             }
         case .SoundCloud:
             if SoundCloudKit.APIClient.isLoggedIn {

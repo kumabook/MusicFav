@@ -179,14 +179,7 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
 
     func showYouTubeLoginViewController() {
         if !YouTubeAPIClient.isLoggedIn {
-            let vc = OAuthViewController(clientId: YouTubeAPIClient.clientId,
-                                     clientSecret: YouTubeAPIClient.clientSecret,
-                                            scope: YouTubeAPIClient.scope,
-                                          authUrl: YouTubeAPIClient.authUrl,
-                                         tokenUrl: YouTubeAPIClient.tokenUrl,
-                                      redirectUrl: YouTubeAPIClient.redirectUrl,
-                                      accountType: YouTubeAPIClient.accountType,
-                                    keyChainGroup: YouTubeAPIClient.keyChainGroup)
+            let vc = YouTubeOAuthViewController()
             navigationController?.pushViewController(vc, animated: true)
         }
     }

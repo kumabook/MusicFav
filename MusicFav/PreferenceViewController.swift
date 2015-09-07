@@ -210,15 +210,7 @@ class PreferenceViewController: UITableViewController {
     }
 
     func showYouTubeLoginController() {
-        let vc = OAuthViewController(clientId: YouTubeAPIClient.clientId,
-                                 clientSecret: YouTubeAPIClient.clientSecret,
-                                        scope: YouTubeAPIClient.scope,
-                                      authUrl: YouTubeAPIClient.authUrl,
-                                     tokenUrl: YouTubeAPIClient.tokenUrl,
-                                  redirectUrl: YouTubeAPIClient.redirectUrl,
-                                  accountType: YouTubeAPIClient.accountType,
-                                keyChainGroup: YouTubeAPIClient.keyChainGroup)
-        navigationController?.pushViewController(vc, animated: true)
+        navigationController?.pushViewController(YouTubeOAuthViewController(), animated: true)
     }
 
     func showSoundCloudLoginController() {
