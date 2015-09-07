@@ -34,6 +34,18 @@ public class YouTubePlaylist: YouTubeResource, Hashable, Equatable {
         thumbnails  = ChannelResource.thumbnails(snippet)
         resourceId  = ChannelResource.resourceId(snippet)
     }
+
+    public init(id: String, title: String) {
+        self.etag        = id
+        self.id          = id
+        self.kind        = "playlistItem"
+        self.title       = title
+        self.description = title
+        self.publishedAt = nil
+        self.thumbnails  = [:]
+        self.resourceId  = [:]
+    }
+
     public var thumbnailURL: NSURL? {
         if let url = thumbnails["default"] { return NSURL(string: url) }
         else if let url = thumbnails["medium"]  { return NSURL(string: url) }
@@ -98,5 +110,11 @@ public class YouTubePlaylistItem: YouTubeResource {
         else if let url = thumbnails["medium"] { return NSURL(string: url) }
         else if let url = thumbnails["high"]   { return NSURL(string: url) }
         else                                   { return nil }
+    }
+
+    func toPlaylist() -> MusicFeeder.Playlist {
+        return MusicFeeder.Playlist(id: "youtube-track-\(id)",
+                                 title: title,
+                                tracks: [track])
     }
 }
