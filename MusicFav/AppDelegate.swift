@@ -166,14 +166,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func didLogout() { reload() }
 
     func reload() {
-        let vc               = miniPlayerViewController?.streamTreeViewController
-        vc?.streamListLoader = StreamListLoader()
-        vc?.showStream(stream: StreamListLoader.defaultStream())
+        let vc = miniPlayerViewController?.streamTreeViewController
+        vc?.showStream(stream: RecommendFeed.defaultStream())
         vc?.refresh()
     }
 
-    func showStreamSelectViewController() {
+    func showAddStreamMenuViewController() {
         if let loader = streamListLoader {
+            loader.subscribeTo(RecommendFeed.defaultStream(), categories: [])
             let stvc = AddStreamMenuViewController(streamListLoader: loader)
             let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.3 * Double(NSEC_PER_SEC)))
             dispatch_after(delayTime, dispatch_get_main_queue()) {

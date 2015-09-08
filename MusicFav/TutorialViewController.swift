@@ -43,7 +43,7 @@ class TutorialViewController: UIViewController, TutorialViewDelegate, OAuthViewD
     func close() {
         appDelegate.finishTutorial()
         if !appDelegate.didFinishSelectStream {
-            appDelegate.showStreamSelectViewController()
+            appDelegate.showAddStreamMenuViewController()
         }
         if let nav = navigationController {
             nav.popViewControllerAnimated(true)
