@@ -121,6 +121,11 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
         super.didReceiveMemoryWarning()
     }
 
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        tableView.reloadData()
+    }
+
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         blogObserver?.dispose()
