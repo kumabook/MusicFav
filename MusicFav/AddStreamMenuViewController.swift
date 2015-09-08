@@ -20,9 +20,9 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
     enum Menu: Int {
         case Recommend
         case YouTube
-        case SoundCloud
         case Hypem
-        static let count = 4
+        case SoundCloud
+        static let count = 3
         var title: String? {
             switch self {
             case .Recommend:
@@ -113,7 +113,7 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
         if SoundCloudKit.APIClient.isLoggedIn {
             userLoader.fetchFollowings()
         } else {
-            userLoader.searchUsers("")
+            userLoader.searchUsers("rock")
         }
     }
 
@@ -223,11 +223,18 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
                 navigationController?.pushViewController(vc, animated: true)
                 vc.showYouTubeLoginViewController()
             case .SoundCloud:
-                let vc = SoundCloudUserTableViewController(streamListLoader: streamListLoader,
-                                                                 userLoader: SoundCloudUserLoader(),
-                                                                       type: .Followings)
-                navigationController?.pushViewController(vc, animated: true)
-                vc.showSoundCloudLoginViewController()
+                if SoundCloudKit.APIClient.isLoggedIn {
+                    let vc = SoundCloudUserTableViewController(streamListLoader: streamListLoader,
+                                                                     userLoader: SoundCloudUserLoader(),
+                                                                           type: .Followings)
+                    navigationController?.pushViewController(vc, animated: true)
+                } else {
+                    let vc = SoundCloudUserTableViewController(streamListLoader: streamListLoader,
+                                                                     userLoader: SoundCloudUserLoader(),
+                                                                           type: .Search("rock"))
+                    navigationController?.pushViewController(vc, animated: true)
+                    vc.showSoundCloudLoginViewController()
+                }
             case .Hypem:
                 let vc = StreamTableViewController(streamListLoader: streamListLoader,
                                                                type: .Hypem(blogLoader))

@@ -61,14 +61,14 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
         Logger.sendUIActionEvent(self, action: "searchFeeds", label: "")
         let feedlyStreamVC = StreamTableViewController(streamListLoader: streamListLoader, type: .Search(""))
         let channelVC      = ChannelTableViewController(streamListLoader: streamListLoader, channelLoader: channelLoader, type: .Search(""))
-        let userVC         = SoundCloudUserTableViewController(streamListLoader: streamListLoader, userLoader: SoundCloudUserLoader(), type: .Search(""))
+//        let userVC         = SoundCloudUserTableViewController(streamListLoader: streamListLoader, userLoader: SoundCloudUserLoader(), type: .Search(""))
 
         channelLoader.searchResults = []
 
         feedlyStreamVC.title = "Feedly"
         channelVC.title      = "YouTube"
-        userVC.title         = "SoundCloud"
-        var controllerArray: [UIViewController] = [feedlyStreamVC, channelVC, userVC]
+//        userVC.title         = "SoundCloud"
+        var controllerArray: [UIViewController] = [feedlyStreamVC, channelVC]//, userVC]
         var parameters: [CAPSPageMenuOption] = [
             .MenuItemSeparatorWidth(0.0),
             .UseMenuLikeSegmentedControl(true),
@@ -92,7 +92,7 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
         updateAddButton()
         feedlyStreamViewController = feedlyStreamVC
         channelTableViewController = channelVC
-        userTableViewController    = userVC
+//        userTableViewController    = userVC
     }
 
     override func didReceiveMemoryWarning() {
