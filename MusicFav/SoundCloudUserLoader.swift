@@ -104,6 +104,7 @@ class SoundCloudUserLoader {
     }
 
     func searchUsers(query: String) {
+        if state == State.Fetching { return }
         state = State.Fetching
         sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.StartLoading)))
         APIClient.sharedInstance.fetchUsers(query).start(
