@@ -135,7 +135,11 @@ extension APIClient {
     public class func setup() {
         APIClient.oauth2clientDelegate = OAuth2ClientDelegate()
         loadConfig()
-        SoundCloudKit.APIClient.accessToken = account?.accessToken.accessToken
+        if let _ = SoundCloudKit.APIClient.me {
+            SoundCloudKit.APIClient.accessToken = account?.accessToken.accessToken
+        } else {
+            SoundCloudKit.APIClient.clearAllAccount()
+        }
     }
 
     public class func loadConfig() {
