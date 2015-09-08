@@ -74,9 +74,9 @@ class SoundCloudUserTableViewController: AddStreamTableViewController {
 
         indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         indicator.bounds = CGRect(x: 0,
-            y: 0,
-            width: indicator.bounds.width,
-            height: indicator.bounds.height * 3)
+                                  y: 0,
+                              width: indicator.bounds.width,
+                             height: indicator.bounds.height * 3)
         indicator.hidesWhenStopped = true
         indicator.stopAnimating()
 
@@ -156,15 +156,7 @@ class SoundCloudUserTableViewController: AddStreamTableViewController {
 
     func showSoundCloudLoginViewController() {
         if !SoundCloudKit.APIClient.isLoggedIn {
-            let vc = OAuthViewController(clientId: SoundCloudKit.APIClient.clientId,
-                                     clientSecret: SoundCloudKit.APIClient.clientSecret,
-                                            scope: SoundCloudKit.APIClient.scope,
-                                          authUrl: SoundCloudKit.APIClient.authUrl,
-                                         tokenUrl: SoundCloudKit.APIClient.tokenUrl,
-                                      redirectUrl: SoundCloudKit.APIClient.redirectUrl,
-                                      accountType: SoundCloudKit.APIClient.accountType,
-                                    keyChainGroup: SoundCloudKit.APIClient.keyChainGroup)
-            navigationController?.pushViewController(vc, animated: true)
+            navigationController?.pushViewController(SoundCloudOAuthViewController(), animated: true)
         }
     }
 
