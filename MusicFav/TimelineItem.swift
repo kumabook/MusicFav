@@ -81,17 +81,21 @@ enum TimelineItem {
         }
     }
 
-    var trackCount:   Int {
+    var trackNumString: String {
+        if let c = trackCount {
+            return "\(c) tracks"
+        } else {
+            return "? tracks"
+        }
+    }
+
+    var trackCount:   Int? {
         switch self {
         case .Entry(let entry, let playlist):
-            if let count = playlist?.tracks.count {
-                return count
-            } else {
-                return 0
-            }
+            return playlist?.tracks.count
         case .Activity(let activity, let playlist):
             switch activity.origin {
-            case .Playlist: return playlist?.tracks.count ?? 0
+            case .Playlist: return playlist?.tracks.count
             case .Track:    return 1
             }
         case .YouTubePlaylist(let playlistItem):

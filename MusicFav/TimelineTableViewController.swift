@@ -325,7 +325,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         cell.dateLabel.text        = item.dateString
         cell.playButton.hidden     = item.playlist?.tracks.count <= 0
         cell.articleButton.hidden  = item.entry == nil
-        cell.trackNumLabel.text    = "\(item.trackCount) tracks"
+        cell.trackNumLabel.text    = item.trackNumString
         if let playlist = item.playlist {
             cell.delegate = self
             cell.loadThumbnails(playlist)
