@@ -225,18 +225,28 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         tableView.reloadData()
     }
 
+    func getSection(originalSectionIndex: Int) -> Section? {
+        if appDelegate.selectedPlaylist == nil && originalSectionIndex > 0 {
+            return Section(rawValue: originalSectionIndex + 1)
+        }
+        return Section(rawValue: originalSectionIndex)
+    }
+
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        if appDelegate.selectedPlaylist == nil {
+            return Section.count - 1
+        }
         return Section.count
     }
 
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return Section(rawValue: section)?.title
+        return getSection(section)?.title
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch (Section(rawValue: section)!) {
+        switch (getSection(section)!) {
         case .Playing:    return 1
         case .Selected:   return 1
         case .YouTube:    return 1
@@ -252,7 +262,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(self.tableCellReuseIdentifier, forIndexPath: indexPath) as! PlaylistTableViewCell
         var playlist: MusicFeeder.Playlist?
-        switch (Section(rawValue: indexPath.section)!) {
+        switch (getSection(indexPath.section)!) {
         case .Playing:
             playlist = appDelegate.playingPlaylist
             if let p = playlist {
@@ -295,7 +305,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
         let edit = UITableViewRowAction(style: .Default, title: "Edit title".localize()) {
             (action, indexPath) in
-            switch (Section(rawValue: indexPath.section)!) {
+            switch (self.getSection(indexPath.section)!) {
             case .Favorites:
                 self.showTitleEditAlertViewAtIndex(indexPath.item)
             default:
@@ -325,7 +335,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        switch (Section(rawValue: indexPath.section)!) {
+        switch (getSection(indexPath.section)!) {
         case .Playing:
             showPlayingPlaylist()
         case .Selected:
