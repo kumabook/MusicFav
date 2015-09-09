@@ -16,8 +16,32 @@ import MusicFeeder
 
 class TrackTableViewController: UITableViewController {
     var appDelegate: AppDelegate { return UIApplication.sharedApplication().delegate as! AppDelegate }
+    var player:     Player<PlayerObserver>? { get { return appDelegate.player }}
     let tableCellReuseIdentifier = "trackTableViewCell"
     let cellHeight: CGFloat      = 80
+
+    class TrackTableViewPlayerObserver: PlayerObserver {
+        let vc: TrackTableViewController
+        init(viewController: TrackTableViewController) {
+            vc = viewController
+            super.init()
+        }
+        override func timeUpdated()      {}
+        override func didPlayToEndTime() {}
+        override func statusChanged() {
+            vc.updateSelection()
+        }
+        override func nextPlaylistRequested() {
+        }
+        override func previousPlaylistRequested() {
+        }
+        override func trackSelected(track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist) {
+            vc.updateSelection()
+        }
+        override func trackUnselected(track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist) {
+            vc.updateSelection()
+        }
+    }
 
     enum PlaylistType {
         case Favorite
@@ -38,6 +62,7 @@ class TrackTableViewController: UITableViewController {
     var _playlist: Playlist!
     var playlistLoader: PlaylistLoader!
     var indicator:  UIActivityIndicatorView!
+    var playerObserver: TrackTableViewPlayerObserver!
 
     var playlist: Playlist {
         return _playlist
@@ -65,7 +90,6 @@ class TrackTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        clearsSelectionOnViewWillAppear = true
         let nib = UINib(nibName: "TrackTableViewCell", bundle: nil)
         tableView?.registerNib(nib, forCellReuseIdentifier:self.tableCellReuseIdentifier)
         updateNavbar()
@@ -81,9 +105,22 @@ class TrackTableViewController: UITableViewController {
         fetchTracks()
     }
 
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        observePlayer()
+    }
+
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         Logger.sendScreenView(self)
+    }
+
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        if playerObserver != nil {
+            player?.removeObserver(playerObserver)
+        }
+        playerObserver = nil
     }
 
     func updateNavbar() {
@@ -105,6 +142,50 @@ class TrackTableViewController: UITableViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+
+    func observePlayer() {
+        if playerObserver != nil {
+            player?.removeObserver(playerObserver)
+        }
+        playerObserver = TrackTableViewPlayerObserver(viewController: self)
+        player?.addObserver(playerObserver)
+        updateSelection()
+    }
+
+    func isPlaylistPlaying() -> Bool {
+        if let p = appDelegate.player {
+            if _playlist == p.currentPlaylist as? Playlist {
+                return true
+            }
+        }
+        return false
+    }
+
+    func isTrackPlaying(track: Track) -> Bool {
+        if isPlaylistPlaying() {
+            if let p = appDelegate.player, t = p.currentTrack as? Track {
+                return t == track
+            }
+        }
+        return false
+    }
+
+    func updateSelection() {
+        if !isPlaylistPlaying() {
+            if let i = tableView.indexPathForSelectedRow() {
+                tableView.deselectRowAtIndexPath(i, animated: true)
+            }
+        } else {
+            if let p = appDelegate.player {
+                if _playlist != p.currentPlaylist as? Playlist {
+                } else if let track = p.currentTrack as? Track {
+                    if let index = find(_playlist.getTracks(), track) {
+                        tableView.selectRowAtIndexPath(NSIndexPath(forRow: index, inSection: 0), animated: true, scrollPosition: UITableViewScrollPosition.None)
+                    }
+                }
+            }
+        }
     }
 
     func showIndicator() {
@@ -224,6 +305,9 @@ class TrackTableViewController: UITableViewController {
             cell.thumbImgView.sd_setImageWithURL(thumbnailUrl)
         } else {
             cell.thumbImgView.image = UIImage(named: "default_thumb")
+        }
+        if isTrackPlaying(track) {
+            tableView.selectRowAtIndexPath(indexPath, animated: false, scrollPosition: UITableViewScrollPosition.None)
         }
         return cell
     }
