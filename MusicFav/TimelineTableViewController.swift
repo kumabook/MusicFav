@@ -34,7 +34,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         override func timeUpdated()      {}
         override func didPlayToEndTime() {}
         override func statusChanged() {
-            vc.updateSelection(UITableViewScrollPosition.Middle)
+            vc.updateSelection(UITableViewScrollPosition.None)
             vc.updateCurrentTrack()
         }
         override func nextPlaylistRequested() {
