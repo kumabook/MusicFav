@@ -279,7 +279,8 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
                 }
             }
             appDelegate.player?.select(0, playlist: playlist, playlists: getPlaylists())
-            tableView.reloadData()
+            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+            showPlaylist(playlist)
         }
     }
 
@@ -348,15 +349,6 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
 
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         return false
-    }
-
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let item = getItems()[indexPath.row]
-        if let playlist = item.playlist {
-            Logger.sendUIActionEvent(self, action: "didSelectRowAtIndexPath", label: String(indexPath.row))
-            showPlaylist(playlist)
-        }
-        updateSelection(UITableViewScrollPosition.None)
     }
 
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
