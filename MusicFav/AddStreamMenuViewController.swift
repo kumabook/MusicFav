@@ -26,13 +26,13 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
         var title: String? {
             switch self {
             case .Recommend:
-                return "MusicFav Recommend"
+                return "MusicFav Recommend".localize()
             case .YouTube:
                 return "YouTube"
             case .SoundCloud:
                 return "SoundCloud"
             case .Hypem:
-                return "Hype machine featured"
+                return "Hype machine featured".localize()
             }
         }
         func thumbnailUrls(vc: AddStreamMenuViewController) -> [NSURL] {

@@ -73,15 +73,15 @@ class PreferenceViewController: UITableViewController {
                 }
             case YouTube:
                 if YouTubeAPIClient.isLoggedIn {
-                    return "Disconnect with YouTube"
+                    return "Disconnect with YouTube".localize()
                 } else {
-                    return "Connect with YouTube"
+                    return "Connect with YouTube".localize()
                 }
             case SoundCloud:
                 if SoundCloudKit.APIClient.isLoggedIn {
-                    return "Disconnect with SoundCloud"
+                    return "Disconnect with SoundCloud".localize()
                 } else {
-                    return "Connect with SoundCloud"
+                    return "Connect with SoundCloud".localize()
                 }
             }
         }

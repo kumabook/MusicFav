@@ -71,6 +71,12 @@
 "Medium 360"                        = "中 360";
 "HD 720"                            = "高 720";
 "Unknown"                           = "不明";
+"Connect with YouTube"              = "YouTubeと連携";
+"Connect with SoundCloud"           = "SoundCLoudと連携";
+"Disconnect with YouTube"           = "YouTubeとの連携を解除";
+"Disconnect with SoundCloud"        = "SoundCloudとの連携を解除";
+"MusicFav Recommend"                = "MusicFavのおすすめ";
+"Hype machine featured"             = "Hype machine featured";
 
 "Sorry. Failed to purchase \"%@\"."               = "申し訳ございません。「%@」の購入ができませんでした。";
 "Sorry. In-App Purchase is restricted"            = "申し訳ございません。アプリ内課金が制限されています。";
