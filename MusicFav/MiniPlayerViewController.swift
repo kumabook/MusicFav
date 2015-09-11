@@ -40,6 +40,9 @@ class MiniPlayerViewController: PlayerKit.MiniPlayerViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let vc = mainViewController as? JASidePanelController {
+            vc.centerPanelContainer.backgroundColor = UIColor.whiteColor()
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -48,6 +51,7 @@ class MiniPlayerViewController: PlayerKit.MiniPlayerViewController {
 
     func setCenterViewController(viewController: UIViewController) {
         if let vc = mainViewController as? JASidePanelController {
+            vc.centerPanelContainer.backgroundColor = UIColor.transparent
             vc.centerPanel = UINavigationController(rootViewController: viewController)
             vc.showCenterPanelAnimated(true)
         }
