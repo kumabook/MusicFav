@@ -97,6 +97,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
     var sections:              [Section]
     var streamListLoader:      StreamListLoader
     var observer:              Disposable?
+    var refreshDisposable:     Disposable?
     var youtubeActivityLoader: YouTubeActivityLoader
     var youtubeObserver:       Disposable?
 
@@ -188,6 +189,19 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
     func addStream() {
         let admvc = AddStreamMenuViewController(streamListLoader: streamListLoader)
         root?.presentViewController(UINavigationController(rootViewController:admvc), animated: true, completion: nil)
+    }
+
+    func showDefaultStream() {
+        if let profile = CloudAPIClient.profile {
+            showStream(stream: FeedlyKit.Category.All(profile.id))
+        } else {
+            let streams: [Stream] = streamListLoader.streamListOfCategory.values.array.flatMap { $0 }
+            if streams.count > 0 {
+                showStream(stream: streams[Int(arc4random_uniform(UInt32(streams.count)))])
+            } else {
+                showStream(stream: RecommendFeed.sampleStream())
+            }
+        }
     }
 
     func showStream(#section: Section) {
@@ -323,12 +337,21 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
     func refresh() {
         observer?.dispose()
         observeStreamList()
-        streamListLoader.refresh()
         youtubeObserver?.dispose()
         observeYouTubeActivityLoader()
         youtubeActivityLoader.clear()
         youtubeActivityLoader.fetchChannels()
         treeView?.reloadData()
+        refreshDisposable?.dispose()
+        refreshDisposable = streamListLoader.refresh().start(
+            next: {
+                if let miniPlayerVC = self.appDelegate.miniPlayerViewController {
+                    if !miniPlayerVC.hasCenterViewController() {
+                        self.showDefaultStream()
+                    }
+                }
+            }
+        )
     }
 
     func unsubscribeTo(subscription: Subscription, index: Int, category: FeedlyKit.Category) {

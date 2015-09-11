@@ -22,14 +22,10 @@ public class RecommendFeed {
         return Static.ids
     }
 
-    public class func defaultStream() -> Stream {
-        if let profile = CloudAPIClient.profile {
-            return FeedlyKit.Category.All(profile.id)
-        } else {
-            return Subscription(id: "feed/http://spincoaster.com/feed",
-                             title: "Spincoaster (sample)",
-                         visualUrl: nil,
-                        categories: [])
-        }
+    public class func sampleStream() -> Stream {
+        return Subscription(id: "feed/http://spincoaster.com/feed",
+                         title: "Spincoaster (sample)",
+                     visualUrl: nil,
+                    categories: [])
     }
 }

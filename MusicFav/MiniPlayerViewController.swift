@@ -53,6 +53,13 @@ class MiniPlayerViewController: PlayerKit.MiniPlayerViewController {
         }
     }
 
+    func hasCenterViewController() -> Bool {
+        if let vc = mainViewController as? JASidePanelController {
+            return vc.centerPanel != nil
+        }
+        return false
+    }
+
     func showMenu() {
         if let vc = mainViewController as? JASidePanelController {
             vc.showLeftPanelAnimated(true)
