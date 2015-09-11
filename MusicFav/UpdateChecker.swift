@@ -63,13 +63,18 @@ class UpdateChecker {
                                                  unreadOnly: true)
                 |> map { $0.items }
         } else {
-            entriesSignal = [RecommendFeed.defaultStream()].map({ subscription in
-                return self.apiClient.fetchEntries(streamId: subscription.streamId, newerThan: self.newerThan.timestamp, unreadOnly: true) |> map { $0.items }
-            }).reduce(SignalProducer<[Entry], NSError>(value: [])) {
-                combineLatest($0, $1) |> map {
-                    var list = $0.0; list.extend($0.1); return list
-                }
-            }
+            entriesSignal = StreamListLoader().fetchLocalSubscrptions()
+                |> map { (table: [FeedlyKit.Category: [Stream]]) -> [Stream] in
+                    return table.values.array.flatMap { $0 }
+                } |> map { streams in
+                    return streams.map { stream in
+                        return self.apiClient.fetchEntries(streamId: stream.streamId, newerThan: self.newerThan.timestamp, unreadOnly: true) |> map { $0.items }
+                        }.reduce(SignalProducer<[Entry], NSError>(value: [])) {
+                            combineLatest($0, $1) |> map {
+                                var list = $0.0; list.extend($0.1); return list
+                            }
+                    }
+            } |> flatten(FlattenStrategy.Concat)
         }
         return entriesSignal |> map { entries in
             entries.reduce(SignalProducer<[Track], NSError>(value: [])) {
