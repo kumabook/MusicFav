@@ -14,6 +14,7 @@ import WebImage
 import FeedlyKit
 import MusicFeeder
 import PlayerKit
+import MarqueeLabel
 
 class MiniPlayerViewController: PlayerKit.MiniPlayerViewController {
     var playlistTableViewController: PlaylistTableViewController!
@@ -22,6 +23,8 @@ class MiniPlayerViewController: PlayerKit.MiniPlayerViewController {
     var currentTrack:                MusicFeeder.Track?    { get { return player?.currentTrack as? MusicFeeder.Track }}
     var app:                         UIApplication { get { return UIApplication.sharedApplication() }}
     var appDelegate:                 AppDelegate   { get { return app.delegate as! AppDelegate }}
+
+    var marqueeTitleLabel: MarqueeLabel!
 
     override init(player: Player<PlayerObserver>) {
         super.init(player: player)
@@ -43,10 +46,25 @@ class MiniPlayerViewController: PlayerKit.MiniPlayerViewController {
         if let vc = mainViewController as? JASidePanelController {
             vc.centerPanelContainer.backgroundColor = UIColor.whiteColor()
         }
+        let w = view.frame.width
+        let h = view.frame.height - miniPlayerHeight
+        miniPlayerView = MiniPlayerView(frame: CGRectMake(0, h, w, miniPlayerHeight))
+        miniPlayerView.delegate = self
+        view.addSubview(miniPlayerView)
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+
+    override func updateViews() {
+        super.updateViews()
+        if let track = player?.currentTrack {
+            marqueeTitleLabel?.text = track.title
+        } else {
+            marqueeTitleLabel?.text = ""
+        }
+
     }
 
     func setCenterViewController(viewController: UIViewController) {

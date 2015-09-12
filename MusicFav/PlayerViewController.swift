@@ -13,4 +13,8 @@ class PlayerViewController: PlayerKit.PlayerViewController {
     override var thumbImage: UIImage {
         return UIImage(named: "note")!
     }
+    override func createSubviews() {
+        super.createSubviews()
+        controlPanel = ControlPanel()
+    }
 }
