@@ -6,20 +6,23 @@
   Copyright (c) 2015 Hiroki Kumamoto. All rights reserved.
 */
 
-"first_page_title"    = "MusicFav\nA Music RSS Reader";
-"first_page_desc"     = "Follows the music blogs,\n make your favorite playlists.";
+"first_page_title"    = "MusicFav\nA Music Aggregator";
+"first_page_desc"     = "Get the favorite music,\n and make the playlists.";
 
 "stream_page_title"   = "Follow your favorite blogs";
-"stream_page_desc"    = "・Add blog from \"+\" menu・Mark as read with Swipe\n・Save article with Star button";
+"stream_page_desc"    = "・Blog・RSS Feeds\n・YouTube Channels\n・Podcast\n・SoundCloud Timeline";
 
 "playlist_page_title" = "Play&Make playlists";
-"playlist_page_desc"  = "・Automatically playlist from an article\n・You can also create a custom playlist.";
+"playlist_page_desc"  = "・Automatically playlist from an article\n・You can also create a custom playlist.\nSupport YouTube・SoundCloud playlists";
 
 "player_page_title"   = "Mini and Full-screen Player";
 "player_page_desc"    = "・Switch mini/full with tap or drag.\n・Support background play and air-play";
 
 "menu_page_title"     = "Sync with Feedly";
 "menu_page_desc"      = "・Subscribe feeds via feedly\n・Add/Remove \n・Search feed url and word";
+
+"menu_page_title"     = "Cloud cooperation";
+"menu_page_desc"      = "・Sync feeds with Feedly \n・Play YouTube Playlists\n・Play SoundCloud Playlists and Timeline";
 
 "last_page_title"     = "Enjoy MusicFav!";
 "last_page_desc"      = "※You can login from setting menu";
