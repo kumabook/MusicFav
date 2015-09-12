@@ -145,6 +145,8 @@
 		67D41D1D1B8F33020082454F /* TimelineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67D41D1B1B8F33020082454F /* TimelineTableViewCell.xib */; };
 		67D8371B1B9AEFF30025B14B /* YouTubeActivityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D8371A1B9AEFF30025B14B /* YouTubeActivityTableViewController.swift */; };
 		67D8371D1B9B3A510025B14B /* YouTubeOAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D8371C1B9B3A510025B14B /* YouTubeOAuthViewController.swift */; };
+		67D8371F1B9F1BAD0025B14B /* RecommendFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D8371E1B9F1BAD0025B14B /* RecommendFeed.swift */; };
+		67D837201BA06A2F0025B14B /* PlayerKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 672542091B784E2100EDA2C3 /* PlayerKit.framework */; };
 		67DA465B1A8651CA0048B29C /* PlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DA46591A8651CA0048B29C /* PlaylistTableViewController.swift */; };
 		67DA465F1A8656A90048B29C /* PlaylistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DA465D1A8656A90048B29C /* PlaylistTableViewCell.swift */; };
 		67DA46601A8656A90048B29C /* PlaylistTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67DA465E1A8656A90048B29C /* PlaylistTableViewCell.xib */; };
@@ -164,6 +166,8 @@
 		67F7D4911A625A4F00A5AE68 /* ReactiveCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4881A625A4F00A5AE68 /* ReactiveCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		67F7D4921A625A4F00A5AE68 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */; };
 		67F7D4931A625A4F00A5AE68 /* SwiftyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		67F846691BA46DB60005E78A /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F846681BA46DB60005E78A /* MiniPlayerView.swift */; };
+		67F8466F1BA47B720005E78A /* ControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F8466E1BA47B720005E78A /* ControlPanel.swift */; };
 		67F9A2951AD0558C0078EC3C /* PlaylistStreamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F9A2931AD0558C0078EC3C /* PlaylistStreamTableViewCell.swift */; };
 		67F9A2961AD0558C0078EC3C /* PlaylistStreamTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67F9A2941AD0558C0078EC3C /* PlaylistStreamTableViewCell.xib */; };
 		67FA09671AF8CA570086AA45 /* AccessibilityLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FA09661AF8CA570086AA45 /* AccessibilityLabel.swift */; };
@@ -373,6 +377,7 @@
 		67D41D1B1B8F33020082454F /* TimelineTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TimelineTableViewCell.xib; sourceTree = "<group>"; };
 		67D8371A1B9AEFF30025B14B /* YouTubeActivityTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubeActivityTableViewController.swift; sourceTree = "<group>"; };
 		67D8371C1B9B3A510025B14B /* YouTubeOAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubeOAuthViewController.swift; sourceTree = "<group>"; };
+		67D8371E1B9F1BAD0025B14B /* RecommendFeed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RecommendFeed.swift; path = MusicFav/RecommendFeed.swift; sourceTree = "<group>"; };
 		67DA46591A8651CA0048B29C /* PlaylistTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewController.swift; sourceTree = "<group>"; };
 		67DA465D1A8656A90048B29C /* PlaylistTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewCell.swift; sourceTree = "<group>"; };
 		67DA465E1A8656A90048B29C /* PlaylistTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaylistTableViewCell.xib; sourceTree = "<group>"; };
@@ -393,6 +398,8 @@
 		67F7D4871A625A4F00A5AE68 /* Quick.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quick.framework; path = Carthage/Build/iOS/Quick.framework; sourceTree = "<group>"; };
 		67F7D4881A625A4F00A5AE68 /* ReactiveCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveCocoa.framework; path = Carthage/Build/iOS/ReactiveCocoa.framework; sourceTree = "<group>"; };
 		67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/iOS/SwiftyJSON.framework; sourceTree = "<group>"; };
+		67F846681BA46DB60005E78A /* MiniPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
+		67F8466E1BA47B720005E78A /* ControlPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlPanel.swift; sourceTree = "<group>"; };
 		67F9A2931AD0558C0078EC3C /* PlaylistStreamTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistStreamTableViewCell.swift; sourceTree = "<group>"; };
 		67F9A2941AD0558C0078EC3C /* PlaylistStreamTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaylistStreamTableViewCell.xib; sourceTree = "<group>"; };
 		67FA09661AF8CA570086AA45 /* AccessibilityLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessibilityLabel.swift; sourceTree = "<group>"; };
@@ -406,6 +413,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				67D837201BA06A2F0025B14B /* PlayerKit.framework in Frameworks */,
 				671D07181B9477F500DC99A5 /* SoundCloudKit.framework in Frameworks */,
 				67428D4A1B80C23F002FFA1A /* Breit.framework in Frameworks */,
 				67C0BC681B7741A400243AE8 /* SnapKit.framework in Frameworks */,
@@ -493,6 +501,7 @@
 				67D41D101B8B48960082454F /* SoundCloudUserLoader.swift */,
 				67D41D161B8DD76A0082454F /* SoundCloudActivityLoader.swift */,
 				67EFB1541B933B46008A84DF /* TimelineItem.swift */,
+				67D8371E1B9F1BAD0025B14B /* RecommendFeed.swift */,
 			);
 			name = Model;
 			path = ..;
@@ -630,6 +639,8 @@
 				67F5308F1B7F815B00D8EEF1 /* StreamTreeViewCell.swift */,
 				67D41D1A1B8F33020082454F /* TimelineTableViewCell.swift */,
 				67D41D1B1B8F33020082454F /* TimelineTableViewCell.xib */,
+				67F846681BA46DB60005E78A /* MiniPlayerView.swift */,
+				67F8466E1BA47B720005E78A /* ControlPanel.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -1186,6 +1197,7 @@
 				67DA46651A87B49C0048B29C /* SelectPlaylistTableViewCell.swift in Sources */,
 				67D41D111B8B48960082454F /* SoundCloudUserLoader.swift in Sources */,
 				6728FA3E1A60B9FD00F693B3 /* TrackTableViewController.swift in Sources */,
+				67F8466F1BA47B720005E78A /* ControlPanel.swift in Sources */,
 				6736D00D1B86341000CCDD80 /* YouTubePlaylist.swift in Sources */,
 				67FBBDF91B6CD46B00B567CB /* UpdateChecker.swift in Sources */,
 				67C1A80A1B7B876A002A604C /* OAuthViewController.swift in Sources */,
@@ -1203,6 +1215,7 @@
 				67BE4F371AE7D95800E40E98 /* DeviceType.swift in Sources */,
 				67D41D171B8DD76A0082454F /* SoundCloudActivityLoader.swift in Sources */,
 				67C1A7FC1B7B83A5002A604C /* PlayerViewController.swift in Sources */,
+				67D8371F1B9F1BAD0025B14B /* RecommendFeed.swift in Sources */,
 				679F405C1B0574DD0070602D /* PaymentManager.swift in Sources */,
 				6794E7F51AE318720054B3DB /* TutorialView.swift in Sources */,
 				67C1A80C1B7CCAB0002A604C /* AddStreamMenuViewController.swift in Sources */,
@@ -1239,6 +1252,7 @@
 				67428D571B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift in Sources */,
 				67F530901B7F815B00D8EEF1 /* StreamTreeViewCell.swift in Sources */,
 				67D8371B1B9AEFF30025B14B /* YouTubeActivityTableViewController.swift in Sources */,
+				67F846691BA46DB60005E78A /* MiniPlayerView.swift in Sources */,
 				67EFB1531B9328FF008A84DF /* TimelineTableViewController.swift in Sources */,
 				679F453D1AF104F7008D1B7F /* OnpuRefreshControl.swift in Sources */,
 				67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */,
