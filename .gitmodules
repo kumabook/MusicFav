@@ -43,15 +43,9 @@
 [submodule "Carthage/Checkouts/FeedlyKit"]
 	path = Carthage/Checkouts/FeedlyKit
 	url = ssh://git@github.com/kumabook/FeedlyKit.git
-[submodule "Carthage/Checkouts/MusicFeeder"]
-	path = Carthage/Checkouts/MusicFeeder
-	url = ssh://git@github.com/kumabook/MusicFeeder.git
-[submodule "Carthage/Checkouts/SDWebImage"]
-	path = Carthage/Checkouts/SDWebImage
-	url = ssh://git@github.com/rs/SDWebImage.git
 [submodule "Carthage/Checkouts/SoundCloudKit"]
 	path = Carthage/Checkouts/SoundCloudKit
 	url = ssh://git@github.com/Spincoaster/SoundCloudKit.git
 [submodule "Carthage/Checkouts/MusicFeeder"]
-	path = Carthage/Checkouts/MusicFeeder
 	url = ssh://git@github.com/kumabook/MusicFeeder.git
+	path = Carthage/Checkouts/MusicFeeder
