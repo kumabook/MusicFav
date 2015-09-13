@@ -121,7 +121,7 @@ class CategoryTableViewController: UITableViewController {
             },
             completed: {
                 MBProgressHUD.showCompletedHUDForView(self.navigationController!.view, animated: true, duration: 1.0, after: {
-                    self.streamListLoader.refresh()
+                    self.streamListLoader.refresh().start()
                     self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
                 })
             },
