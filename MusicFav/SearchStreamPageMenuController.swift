@@ -117,34 +117,8 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
     }
 
     func add() {
-        if CloudAPIClient.isLoggedIn {
-            let ctc = CategoryTableViewController(subscribables: getSubscribables(), streamListLoader: streamListLoader)
-            navigationController?.pushViewController(ctc, animated: true)
-        } else {
-            MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
-            getSubscribables().reduce(SignalProducer<[Subscription], NSError>(value: [])) {
-                combineLatest($0, self.streamListLoader.subscribeTo($1, categories: [])) |> map {
-                    var list = $0.0; list.append($0.1); return list
-                }
-            } |> start(
-                next: { subscriptions in
-                    if let view = self.navigationController?.view {
-                        MBProgressHUD.hideHUDForView(view, animated:false)
-                    }
-                }, error: { e in
-                    if let view = self.navigationController?.view {
-                        MBProgressHUD.hideHUDForView(view, animated:false)
-                    }
-                    let ac = CloudAPIClient.alertController(error: e, handler: { (action) in })
-                }, completed: {
-                    if let view = self.navigationController?.view {
-                        MBProgressHUD.showCompletedHUDForView(view, animated: true, duration: 1.0) {
-                            self.streamListLoader.refresh()
-                            self.close()
-                        }
-                    }
-            })
-        }
+        let ctc = CategoryTableViewController(subscribables: getSubscribables(), streamListLoader: streamListLoader)
+        navigationController?.pushViewController(ctc, animated: true)
     }
 
     func updateAddButton() {
