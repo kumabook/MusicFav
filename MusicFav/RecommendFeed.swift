@@ -11,13 +11,15 @@ import FeedlyKit
 public class RecommendFeed {
     public class var ids: [String] {
         struct Static {
-            static let ids: [String] = ["feed/http://spincoaster.com/feed",
-                                        "feed/http://matome.naver.jp/feed/topic/1Hinb",
+            static let ids: [String] = ["feed/http://matome.naver.jp/feed/topic/1Hinb",
+                                        "feed/http://spincoaster.com/feed",
                                         "feed/http://basement-times.com/feed/",
                                         "feed/http://uncannyzine.com/feed",
+                                        "feed/http://bilingualnews.libsyn.com//rss",
                                         "feed/http://nichemusic.info/feed/",
                                         "feed/http://makebelievemelodies.com/?feed=rss2",
-                                        "feed/http://andithereport.com/feed/"]
+                                        "feed/http://andithereport.com/feed/",
+                                        "feed/https://www.youtube.com/feeds/videos.xml?channel_id=UCFleWgo1LPbSzsf_V7i8Nhw"]
         }
         return Static.ids
     }
