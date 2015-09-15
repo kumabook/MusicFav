@@ -7,16 +7,4 @@
    <FileRef
       location = "group:Pods/Pods.xcodeproj">
    </FileRef>
-   <FileRef
-      location = "group:Carthage/Checkouts/MusicFeeder/MusicFeeder.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:Carthage/Checkouts/PlayerKit/PlayerKit.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:Carthage/Checkouts/FeedlyKit/FeedlyKit.xcodeproj">
-   </FileRef>
-   <FileRef
-      location = "group:Carthage/Checkouts/SoundCloudKit/SoundCloudKit.xcodeproj">
-   </FileRef>
 </Workspace>
