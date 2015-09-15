@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3B60EB4AE86559AFBCA121AD /* Pods_AcceptanceTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 66A5D818C7EED670D332FC22 /* Pods_AcceptanceTests.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		6701D4A81A93A3D5006BFEC6 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6701D4A71A93A3D5006BFEC6 /* CategoryTableViewController.swift */; };
 		6701D4AD1A95048C006BFEC6 /* HUDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6701D4AC1A95048C006BFEC6 /* HUDExtension.swift */; };
 		670505B61B6E2348006EAA84 /* Blog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670505B41B6E2348006EAA84 /* Blog.swift */; };
@@ -76,6 +75,7 @@
 		67428D571B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67428D561B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift */; };
 		67428D591B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67428D581B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift */; };
 		674AAC891B02D64E00C1FC18 /* UINotificationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */; };
+		6751509D1BA8542C00035DE6 /* SpecHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6751509C1BA8542C00035DE6 /* SpecHelper.swift */; };
 		67554F091A4F127400F7AE72 /* TrackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */; };
 		67554F0A1A4F127400F7AE72 /* TrackTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */; };
 		675AB3341AD3903B0003824C /* XCDYouTubeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 675AB3331AD3903B0003824C /* XCDYouTubeKit.framework */; };
@@ -102,12 +102,6 @@
 		679F405C1B0574DD0070602D /* PaymentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679F405B1B0574DD0070602D /* PaymentManager.swift */; };
 		679F453D1AF104F7008D1B7F /* OnpuRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679F453C1AF104F7008D1B7F /* OnpuRefreshControl.swift */; };
 		67AF8E231A922AB80043DF33 /* FeedlyKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671664271A738E2A005FE005 /* FeedlyKit.framework */; };
-		67B1D6031AF8A8C800290AFF /* PlaylistTableViewControllerSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B1D6021AF8A8C800290AFF /* PlaylistTableViewControllerSpec.swift */; };
-		67B1D60D1AF8A9FC00290AFF /* QuickSpecExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B1D60C1AF8A9FC00290AFF /* QuickSpecExtension.swift */; };
-		67B1D60E1AF8AD9C00290AFF /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4861A625A4F00A5AE68 /* Nimble.framework */; };
-		67B1D60F1AF8AD9C00290AFF /* Quick.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4871A625A4F00A5AE68 /* Quick.framework */; };
-		67B1D6131AF8AF2D00290AFF /* Nimble.framework in Copy Carthage frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4861A625A4F00A5AE68 /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		67B1D6141AF8AF2D00290AFF /* Quick.framework in Copy Carthage frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4871A625A4F00A5AE68 /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		67B366DC1AE168E200E089B2 /* soundcloud.json in Resources */ = {isa = PBXBuildFile; fileRef = 67B366DB1AE168E200E089B2 /* soundcloud.json */; };
 		67B366DE1AE1CBA800E089B2 /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B366DD1AE1CBA800E089B2 /* TutorialViewController.swift */; };
 		67B777A61B6E3CBC001B777B /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 676629B61A85AA3100F3FD33 /* Realm.framework */; };
@@ -171,7 +165,6 @@
 		67F9A2951AD0558C0078EC3C /* PlaylistStreamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F9A2931AD0558C0078EC3C /* PlaylistStreamTableViewCell.swift */; };
 		67F9A2961AD0558C0078EC3C /* PlaylistStreamTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67F9A2941AD0558C0078EC3C /* PlaylistStreamTableViewCell.xib */; };
 		67FA09671AF8CA570086AA45 /* AccessibilityLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FA09661AF8CA570086AA45 /* AccessibilityLabel.swift */; };
-		67FA09681AF8CA570086AA45 /* AccessibilityLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FA09661AF8CA570086AA45 /* AccessibilityLabel.swift */; };
 		67FBBDF91B6CD46B00B567CB /* UpdateChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FBBDF81B6CD46B00B567CB /* UpdateChecker.swift */; };
 		76DBFB24E45726C28C7E6397 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C231C8D483ACF959FE482B6 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		D787A5DFEC93A957B280A77A /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C231C8D483ACF959FE482B6 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -179,13 +172,6 @@
 
 /* Begin PBXContainerItemProxy section */
 		67277CC11A434304002FD3E0 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 67277CA01A434304002FD3E0 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 67277CA71A434304002FD3E0;
-			remoteInfo = MusicFav;
-		};
-		67AD3DA31AECF31B0059AB3E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 67277CA01A434304002FD3E0 /* Project object */;
 			proxyType = 1;
@@ -230,18 +216,6 @@
 				675BEC061AEAF84600BD853D /* SwiftyJSON.framework in Copy carthage Frameworks */,
 			);
 			name = "Copy carthage Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		67B1D6101AF8ADBA00290AFF /* Copy Carthage frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				67B1D6131AF8AF2D00290AFF /* Nimble.framework in Copy Carthage frameworks */,
-				67B1D6141AF8AF2D00290AFF /* Quick.framework in Copy Carthage frameworks */,
-			);
-			name = "Copy Carthage frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
@@ -317,6 +291,7 @@
 		67428D561B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubePlaylistTableViewController.swift; sourceTree = "<group>"; };
 		67428D581B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubePlaylistItemTableViewController.swift; sourceTree = "<group>"; };
 		674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINotificationExtension.swift; sourceTree = "<group>"; };
+		6751509C1BA8542C00035DE6 /* SpecHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecHelper.swift; sourceTree = "<group>"; };
 		67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewCell.swift; sourceTree = "<group>"; };
 		67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrackTableViewCell.xib; sourceTree = "<group>"; };
 		675AB3331AD3903B0003824C /* XCDYouTubeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCDYouTubeKit.framework; path = Carthage/Build/iOS/XCDYouTubeKit.framework; sourceTree = "<group>"; };
@@ -339,10 +314,6 @@
 		679F40591B05091D0070602D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		679F405B1B0574DD0070602D /* PaymentManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentManager.swift; sourceTree = "<group>"; };
 		679F453C1AF104F7008D1B7F /* OnpuRefreshControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnpuRefreshControl.swift; sourceTree = "<group>"; };
-		67AD3D9D1AECF31B0059AB3E /* AcceptanceTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AcceptanceTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		67AD3DA01AECF31B0059AB3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		67B1D6021AF8A8C800290AFF /* PlaylistTableViewControllerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewControllerSpec.swift; sourceTree = "<group>"; };
-		67B1D60C1AF8A9FC00290AFF /* QuickSpecExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuickSpecExtension.swift; sourceTree = "<group>"; };
 		67B366DB1AE168E200E089B2 /* soundcloud.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = soundcloud.json; path = ../config/soundcloud.json; sourceTree = "<group>"; };
 		67B366DD1AE1CBA800E089B2 /* TutorialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialViewController.swift; sourceTree = "<group>"; };
 		67B777A71B6E3CE0001B777B /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
@@ -452,16 +423,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		67AD3D9A1AECF31B0059AB3E /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				67B1D60E1AF8AD9C00290AFF /* Nimble.framework in Frameworks */,
-				67B1D60F1AF8AD9C00290AFF /* Quick.framework in Frameworks */,
-				3B60EB4AE86559AFBCA121AD /* Pods_AcceptanceTests.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -532,7 +493,6 @@
 			children = (
 				67277CAA1A434304002FD3E0 /* MusicFav */,
 				67277CC31A434304002FD3E0 /* UnitTests */,
-				67AD3D9E1AECF31B0059AB3E /* AcceptanceTests */,
 				67277CA91A434304002FD3E0 /* Products */,
 				9A52DBCB7D2C4AFF4A3A63A4 /* Pods */,
 				7472929E5548D8618A0DE458 /* Frameworks */,
@@ -544,7 +504,6 @@
 			children = (
 				67277CA81A434304002FD3E0 /* MusicFav.app */,
 				67277CC01A434304002FD3E0 /* UnitTests.xctest */,
-				67AD3D9D1AECF31B0059AB3E /* AcceptanceTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -700,6 +659,7 @@
 		675BEBE11AEAF1F300BD853D /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				6751509C1BA8542C00035DE6 /* SpecHelper.swift */,
 				67E5DEE61AEC4F4F000E016F /* FabricConfigSpec.swift */,
 				67CC023D1AF33B58005F5F3F /* GAIConfigSpec.swift */,
 			);
@@ -732,24 +692,6 @@
 				673DCC811AF5304B0043E51D /* GAITracker.h */,
 			);
 			name = GAI;
-			sourceTree = "<group>";
-		};
-		67AD3D9E1AECF31B0059AB3E /* AcceptanceTests */ = {
-			isa = PBXGroup;
-			children = (
-				67AD3D9F1AECF31B0059AB3E /* Supporting Files */,
-				67B1D6021AF8A8C800290AFF /* PlaylistTableViewControllerSpec.swift */,
-				67B1D60C1AF8A9FC00290AFF /* QuickSpecExtension.swift */,
-			);
-			path = AcceptanceTests;
-			sourceTree = "<group>";
-		};
-		67AD3D9F1AECF31B0059AB3E /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				67AD3DA01AECF31B0059AB3E /* Info.plist */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 		67F5308A1B7F52E200D8EEF1 /* AddSubscription */ = {
@@ -884,27 +826,6 @@
 			productReference = 67277CC01A434304002FD3E0 /* UnitTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		67AD3D9C1AECF31B0059AB3E /* AcceptanceTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 67AD3DA71AECF31B0059AB3E /* Build configuration list for PBXNativeTarget "AcceptanceTests" */;
-			buildPhases = (
-				886AFB4B4E08EF1A4983B647 /* Check Pods Manifest.lock */,
-				67AD3D991AECF31B0059AB3E /* Sources */,
-				67AD3D9A1AECF31B0059AB3E /* Frameworks */,
-				67AD3D9B1AECF31B0059AB3E /* Resources */,
-				D6C4890D6F4DDADF57C259A8 /* Copy Pods Resources */,
-				67B1D6101AF8ADBA00290AFF /* Copy Carthage frameworks */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				67AD3DA41AECF31B0059AB3E /* PBXTargetDependency */,
-			);
-			name = AcceptanceTests;
-			productName = AcceptanceTests;
-			productReference = 67AD3D9D1AECF31B0059AB3E /* AcceptanceTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -927,10 +848,6 @@
 						CreatedOnToolsVersion = 6.1.1;
 						TestTargetID = 67277CA71A434304002FD3E0;
 					};
-					67AD3D9C1AECF31B0059AB3E = {
-						CreatedOnToolsVersion = 6.3.1;
-						TestTargetID = 67277CA71A434304002FD3E0;
-					};
 				};
 			};
 			buildConfigurationList = 67277CA31A434304002FD3E0 /* Build configuration list for PBXProject "MusicFav" */;
@@ -949,7 +866,6 @@
 			targets = (
 				67277CA71A434304002FD3E0 /* MusicFav */,
 				67277CBF1A434304002FD3E0 /* UnitTests */,
-				67AD3D9C1AECF31B0059AB3E /* AcceptanceTests */,
 			);
 		};
 /* End PBXProject section */
@@ -992,13 +908,6 @@
 				673DCCA01AF53B860043E51D /* google_analytics.json in Resources */,
 				67E5DEE91AEC5E8A000E016F /* fabric_invalid.json in Resources */,
 				67E5DEED1AEC6079000E016F /* fabric_valid.json in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		67AD3D9B1AECF31B0059AB3E /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1076,21 +985,6 @@
 			shellPath = /bin/sh;
 			shellScript = "if [ -e config/fabric.json ]; then\n    ruby scripts/fabric.rb\nelse\n    echo \"Running config/fabric.json is not found, do nothing.\"\nfi\n";
 		};
-		886AFB4B4E08EF1A4983B647 /* Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Check Pods Manifest.lock";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
 		AB552B6E71CD4410AB4381B5 /* Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1119,21 +1013,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		D6C4890D6F4DDADF57C259A8 /* Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AcceptanceTests/Pods-AcceptanceTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E2928A6EB267485F295D2A93 /* Copy Pods Resources */ = {
@@ -1272,17 +1151,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				67E5DEE71AEC4F4F000E016F /* FabricConfigSpec.swift in Sources */,
+				6751509D1BA8542C00035DE6 /* SpecHelper.swift in Sources */,
 				67CC023E1AF33B58005F5F3F /* GAIConfigSpec.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		67AD3D991AECF31B0059AB3E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				67B1D60D1AF8A9FC00290AFF /* QuickSpecExtension.swift in Sources */,
-				67B1D6031AF8A8C800290AFF /* PlaylistTableViewControllerSpec.swift in Sources */,
-				67FA09681AF8CA570086AA45 /* AccessibilityLabel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1293,11 +1163,6 @@
 			isa = PBXTargetDependency;
 			target = 67277CA71A434304002FD3E0 /* MusicFav */;
 			targetProxy = 67277CC11A434304002FD3E0 /* PBXContainerItemProxy */;
-		};
-		67AD3DA41AECF31B0059AB3E /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 67277CA71A434304002FD3E0 /* MusicFav */;
-			targetProxy = 67AD3DA31AECF31B0059AB3E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1425,9 +1290,6 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/Carthage/Checkouts/PlayerKit/build/Debug-iphoneos",
-					"$(PROJECT_DIR)/Carthage/Checkouts/MusicFeeder/build/Debug-iphoneos",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/MusicFav-dqzbpqjokazzligypyxgmxrxkzvs/Build/Products/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = MusicFav/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1456,9 +1318,6 @@
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/Carthage/Checkouts/PlayerKit/build/Debug-iphoneos",
-					"$(PROJECT_DIR)/Carthage/Checkouts/MusicFeeder/build/Debug-iphoneos",
-					"$(USER_LIBRARY_DIR)/Developer/Xcode/DerivedData/MusicFav-dqzbpqjokazzligypyxgmxrxkzvs/Build/Products/Debug-iphoneos",
 				);
 				INFOPLIST_FILE = MusicFav/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1542,53 +1401,6 @@
 			};
 			name = Release;
 		};
-		67AD3DA51AECF31B0059AB3E /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = E1F69932D7EEA3B14641A175 /* Pods-AcceptanceTests.debug.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-					"$(PROJECT_DIR)/build/Debug-iphoneos/Pods-AcceptanceTests",
-				);
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = AcceptanceTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MusicFav.app/MusicFav";
-			};
-			name = Debug;
-		};
-		67AD3DA61AECF31B0059AB3E /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5348EB6713923F35B3B0F09C /* Pods-AcceptanceTests.release.xcconfig */;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				COPY_PHASE_STRIP = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Build/iOS",
-					"$(PROJECT_DIR)/build/Debug-iphoneos/Pods-AcceptanceTests",
-				);
-				GCC_NO_COMMON_BLOCKS = YES;
-				INFOPLIST_FILE = AcceptanceTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.3;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MusicFav.app/MusicFav";
-			};
-			name = Release;
-		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1615,15 +1427,6 @@
 			buildConfigurations = (
 				67277CCE1A434304002FD3E0 /* Debug */,
 				67277CCF1A434304002FD3E0 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		67AD3DA71AECF31B0059AB3E /* Build configuration list for PBXNativeTarget "AcceptanceTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				67AD3DA51AECF31B0059AB3E /* Debug */,
-				67AD3DA61AECF31B0059AB3E /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
