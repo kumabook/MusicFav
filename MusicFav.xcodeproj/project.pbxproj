@@ -1074,7 +1074,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ -e config/fabric.json ]; then\n    ruby ./fabric.rb\nelse\n    echo \"Running config/fabric.json is not found, do nothing.\"\nfi\n";
+			shellScript = "if [ -e config/fabric.json ]; then\n    ruby scripts/fabric.rb\nelse\n    echo \"Running config/fabric.json is not found, do nothing.\"\nfi\n";
 		};
 		886AFB4B4E08EF1A4983B647 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
