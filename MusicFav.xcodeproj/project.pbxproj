@@ -312,7 +312,7 @@
 		673DCC9F1AF53B860043E51D /* google_analytics.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = google_analytics.json; path = Fixtures/google_analytics.json; sourceTree = "<group>"; };
 		673DCCA11AF54BC90043E51D /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		67428D491B80C23F002FFA1A /* Breit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Breit.framework; path = Carthage/Build/iOS/Breit.framework; sourceTree = "<group>"; };
-		67428D4B1B80E3A1002FFA1A /* youtube.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = youtube.json; sourceTree = "<group>"; };
+		67428D4B1B80E3A1002FFA1A /* youtube.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = youtube.json; path = ../config/youtube.json; sourceTree = "<group>"; };
 		67428D501B817980002FFA1A /* SearchStreamPageMenuController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchStreamPageMenuController.swift; sourceTree = "<group>"; };
 		67428D561B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubePlaylistTableViewController.swift; sourceTree = "<group>"; };
 		67428D581B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubePlaylistItemTableViewController.swift; sourceTree = "<group>"; };
@@ -320,7 +320,7 @@
 		67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewCell.swift; sourceTree = "<group>"; };
 		67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrackTableViewCell.xib; sourceTree = "<group>"; };
 		675AB3331AD3903B0003824C /* XCDYouTubeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCDYouTubeKit.framework; path = Carthage/Build/iOS/XCDYouTubeKit.framework; sourceTree = "<group>"; };
-		675AB33A1AD3D80A0003824C /* feedly.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = feedly.json; sourceTree = "<group>"; };
+		675AB33A1AD3D80A0003824C /* feedly.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = feedly.json; path = ../config/feedly.json; sourceTree = "<group>"; };
 		675AB3401AD3E3DA0003824C /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		675AB3511AD4334D0003824C /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		675F055F1AF3502C001CD799 /* Objective-C-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Objective-C-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -343,7 +343,7 @@
 		67AD3DA01AECF31B0059AB3E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		67B1D6021AF8A8C800290AFF /* PlaylistTableViewControllerSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewControllerSpec.swift; sourceTree = "<group>"; };
 		67B1D60C1AF8A9FC00290AFF /* QuickSpecExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuickSpecExtension.swift; sourceTree = "<group>"; };
-		67B366DB1AE168E200E089B2 /* soundcloud.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = soundcloud.json; sourceTree = "<group>"; };
+		67B366DB1AE168E200E089B2 /* soundcloud.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = soundcloud.json; path = ../config/soundcloud.json; sourceTree = "<group>"; };
 		67B366DD1AE1CBA800E089B2 /* TutorialViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TutorialViewController.swift; sourceTree = "<group>"; };
 		67B777A71B6E3CE0001B777B /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
 		67BE4F361AE7D95800E40E98 /* DeviceType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceType.swift; sourceTree = "<group>"; };
@@ -362,7 +362,7 @@
 		67CB43EF1A4ECD470010465E /* playlistify-userscript.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "playlistify-userscript.js"; path = "UserScript/playlistify-userscript.js"; sourceTree = "<group>"; };
 		67CB43F11A4ED6D50010465E /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = main.js; path = UserScript/main.js; sourceTree = "<group>"; };
 		67CC02391AF328EE005F5F3F /* GAIConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GAIConfig.swift; sourceTree = "<group>"; };
-		67CC023B1AF33AFC005F5F3F /* google_analytics.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = google_analytics.json; sourceTree = "<group>"; };
+		67CC023B1AF33AFC005F5F3F /* google_analytics.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = google_analytics.json; path = ../config/google_analytics.json; sourceTree = "<group>"; };
 		67CC023D1AF33B58005F5F3F /* GAIConfigSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GAIConfigSpec.swift; sourceTree = "<group>"; };
 		67D41CFE1B876AF90082454F /* SoundCloudAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundCloudAPIClient.swift; sourceTree = "<group>"; };
 		67D41D001B87812E0082454F /* SoundCloudOAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundCloudOAuthViewController.swift; sourceTree = "<group>"; };
@@ -387,7 +387,7 @@
 		67E5DEE21AEC4CEA000E016F /* FabricConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FabricConfig.swift; sourceTree = "<group>"; };
 		67E5DEE61AEC4F4F000E016F /* FabricConfigSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FabricConfigSpec.swift; sourceTree = "<group>"; };
 		67E5DEE81AEC5E8A000E016F /* fabric_invalid.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = fabric_invalid.json; path = Fixtures/fabric_invalid.json; sourceTree = "<group>"; };
-		67E5DEEA1AEC5EA5000E016F /* fabric.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = fabric.json; sourceTree = "<group>"; };
+		67E5DEEA1AEC5EA5000E016F /* fabric.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = fabric.json; path = ../config/fabric.json; sourceTree = "<group>"; };
 		67E5DEEC1AEC6079000E016F /* fabric_valid.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = fabric_valid.json; path = Fixtures/fabric_valid.json; sourceTree = "<group>"; };
 		67EFB1521B9328FF008A84DF /* TimelineTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineTableViewController.swift; sourceTree = "<group>"; };
 		67EFB1541B933B46008A84DF /* TimelineItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = TimelineItem.swift; path = MusicFav/TimelineItem.swift; sourceTree = "<group>"; };
@@ -1074,7 +1074,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ -e MusicFav/fabric.json ]; then\n    ruby ./fabric.rb\nelse\n    echo \"Running MusicFav/fabric.json is not found, do nothing.\"\nfi\n";
+			shellScript = "if [ -e config/fabric.json ]; then\n    ruby ./fabric.rb\nelse\n    echo \"Running config/fabric.json is not found, do nothing.\"\nfi\n";
 		};
 		886AFB4B4E08EF1A4983B647 /* Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;

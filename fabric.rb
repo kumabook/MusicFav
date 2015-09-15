@@ -1,7 +1,7 @@
 require 'json'
 
 config = ""
-open("MusicFav/fabric.json") do |io|
+open("config/fabric.json") do |io|
   config = JSON.load(io)
 end
 

@@ -15,25 +15,25 @@ enum Target: String {
     case Sandbox    = "sandbox"
     var feedlyConfig: String {
         switch self {
-        case .Production: return "MusicFav/feedly.json.production"
-        case .Sandbox:    return "MusicFav/feedly.json.sandbox"
+        case .Production: return "config/feedly.json.production"
+        case .Sandbox:    return "config/feedly.json.sandbox"
         }
     }
-    var youtubeConfig:    String { return "MusicFav/youtube.json.production" }
-    var soundCloudConfig: String { return "MusicFav/soundcloud.json.production" }
-    var fabricConfig:     String { return "MusicFav/fabric.json.production" }
+    var youtubeConfig:    String { return "config/youtube.json.production" }
+    var soundCloudConfig: String { return "config/soundcloud.json.production" }
+    var fabricConfig:     String { return "config/fabric.json.production" }
     var gaConfig:         String {
         switch self {
-        case .Production: return "MusicFav/google_analytics.json.production"
-        case .Sandbox:    return "MusicFav/google_analytics.json.sandbox"
+        case .Production: return "config/google_analytics.json.production"
+        case .Sandbox:    return "config/google_analytics.json.sandbox"
         }
     }
 
-    var feedlyConfigDst:     String { return "MusicFav/feedly.json" }
-    var youtubeConfigDst:    String { return "MusicFav/youtube.json" }
-    var soundCloudConfigDst: String { return "MusicFav/soundcloud.json" }
-    var fabricConfigDst:     String { return "MusicFav/fabric.json" }
-    var gaConfigDst:         String { return "MusicFav/google_analytics.json" }
+    var feedlyConfigDst:     String { return "config/feedly.json" }
+    var youtubeConfigDst:    String { return "config/youtube.json" }
+    var soundCloudConfigDst: String { return "config/soundcloud.json" }
+    var fabricConfigDst:     String { return "config/fabric.json" }
+    var gaConfigDst:         String { return "config/google_analytics.json" }
     func prepare() {
         run("cp \(feedlyConfig) \(feedlyConfigDst)")
         run("cp \(youtubeConfig) \(youtubeConfigDst)")
@@ -66,11 +66,11 @@ func run(command: String) {
     system(command)
 }
 
-let feedlyConfig     = "MusicFav/feedly.json"
-let youtubeConfig    = "MusicFav/youtube.json"
-let soundCloudConfig = "MusicFav/soundcloud.json"
-let fabricConfig     = "MusicFav/fabric.json"
-let gaConfig         = "MusicFav/google_analytics.json"
+let feedlyConfig     = "config/feedly.json"
+let youtubeConfig    = "config/youtube.json"
+let soundCloudConfig = "config/soundcloud.json"
+let fabricConfig     = "config/fabric.json"
+let gaConfig         = "config/google_analytics.json"
 
 
 let args = NSProcessInfo.processInfo().arguments as! [String]

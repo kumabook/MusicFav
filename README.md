@@ -24,11 +24,11 @@ but is available via TestFlight Beta Testing.
   git submodule update
   ```
 - Edit config files for third party api
-    - MusicFav/feedly.json
+    - config/feedly.json
       - You can get sandbox api key at [Feedly Cloud API][]
-    - MusicFav/soundcloud.json
+    - config/soundcloud.json
       - Put your [SoundCloud API][] app Client ID
-    - MusicFav/fabric.json (not necessary)
+    - config/fabric.json (not necessary)
       - Put your [Fabric][] api key and build secret
 - Open and build MusicFav.xcworkspace with xcode
 
