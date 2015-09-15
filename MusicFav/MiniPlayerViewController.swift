@@ -46,11 +46,6 @@ class MiniPlayerViewController: PlayerKit.MiniPlayerViewController {
         if let vc = mainViewController as? JASidePanelController {
             vc.centerPanelContainer.backgroundColor = UIColor.whiteColor()
         }
-        let w = view.frame.width
-        let h = view.frame.height - miniPlayerHeight
-        miniPlayerView = MiniPlayerView(frame: CGRectMake(0, h, w, miniPlayerHeight))
-        miniPlayerView.delegate = self
-        view.addSubview(miniPlayerView)
     }
 
     override func didReceiveMemoryWarning() {
