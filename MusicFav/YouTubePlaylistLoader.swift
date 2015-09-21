@@ -9,7 +9,6 @@
 import Foundation
 import ReactiveCocoa
 import Result
-import Box
 
 class YouTubePlaylistLoader {
     enum State {
@@ -30,7 +29,7 @@ class YouTubePlaylistLoader {
 
     var state:          State
     var signal:         Signal<Event, NSError>
-    var sink:           SinkOf<ReactiveCocoa.Event<Event, NSError>>
+    var sink:           Signal<Event, NSError>.Observer
 
     var playlistsPageToken:  String?
     var playlistsDisposable: Disposable?
@@ -90,27 +89,27 @@ class YouTubePlaylistLoader {
 
     private func fetchNextPlaylists() -> SignalProducer<Void, NSError> {
         state = State.Fetching
-        sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.StartLoading)))
-        return YouTubeAPIClient.sharedInstance.fetchPlaylists(playlistsPageToken) |> map {
-            self.playlists.extend($0.items)
+        sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
+        return YouTubeAPIClient.sharedInstance.fetchPlaylists(playlistsPageToken).map {
+            self.playlists.appendContentsOf($0.items)
             self.playlistsPageToken = $0.nextPageToken
             for i in $0.items {
                 self.itemsOfPlaylist[i]          = []
                 self.itemsPageTokenOfPlaylist[i] = ""
             }
-            self.sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.CompleteLoading)))
+            self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.CompleteLoading))
             self.state = State.Normal
         }
     }
 
     private func fetchNextPlaylistItems(playlist: YouTubePlaylist) -> SignalProducer<Void, NSError> {
         state = State.Fetching
-        sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.StartLoading)))
+        sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
         let pageToken = itemsPageTokenOfPlaylist[playlist]!
-        return YouTubeAPIClient.sharedInstance.fetchPlaylistItems(playlist, pageToken: pageToken) |> map {
-            self.itemsOfPlaylist[playlist]?.extend($0.items)
+        return YouTubeAPIClient.sharedInstance.fetchPlaylistItems(playlist, pageToken: pageToken).map {
+            self.itemsOfPlaylist[playlist]?.appendContentsOf($0.items)
             self.itemsPageTokenOfPlaylist[playlist] = $0.nextPageToken
-            self.sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.CompleteLoading)))
+            self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.CompleteLoading))
             self.state = State.Normal
         }
     }

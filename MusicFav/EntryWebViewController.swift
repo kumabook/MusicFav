@@ -31,7 +31,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
@@ -40,7 +40,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
     override func viewDidLoad() {
         super.viewDidLoad()
         webView = createWebView()
-        webView!.setTranslatesAutoresizingMaskIntoConstraints(false)
+        webView!.translatesAutoresizingMaskIntoConstraints = false
         view.insertSubview(webView!, atIndex:0)
         view.addConstraints([
             NSLayoutConstraint(item: webView!,
@@ -114,8 +114,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
     func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
         if let body = message.body as? String {
             if message.name == "MusicFav" {
-                let error: NSError? = nil
-                let json: AnyObject? = NSJSONSerialization.JSONObjectWithData(body.dataUsingEncoding(NSUTF8StringEncoding)!, options: NSJSONReadingOptions.AllowFragments, error: nil)
+                let json: AnyObject? = try? NSJSONSerialization.JSONObjectWithData(body.dataUsingEncoding(NSUTF8StringEncoding)!, options: NSJSONReadingOptions.AllowFragments)
                 
                 let p = Playlist(json: JSON(json!))
                 if p.tracks.count > 0 {
@@ -141,7 +140,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         let bundle                  = NSBundle.mainBundle()
         let playlistifyPath: String = bundle.pathForResource("playlistify-userscript", ofType: "js")!
         let mainPath:        String = bundle.pathForResource("main", ofType: "js")!
-        return String(contentsOfFile: playlistifyPath)! + String(contentsOfFile: mainPath)!
+        return (try! String(contentsOfFile: playlistifyPath)) + (try! String(contentsOfFile: mainPath))
     }
     
     func updateViews() {
@@ -169,9 +168,9 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         let feedlyClient = CloudAPIClient.sharedInstance
         if CloudAPIClient.isLoggedIn {
             MBProgressHUD.showHUDAddedTo(view, animated: true)
-            feedlyClient.markEntriesAsSaved([entry.id], completionHandler: { (req, res, error) -> Void in
+            feedlyClient.markEntriesAsSaved([entry.id], completionHandler: { (req, res, result) -> Void in
                 MBProgressHUD.hideHUDForView(self.view, animated:false)
-                if let e = error {
+                if let e = result.error {
                     let ac = CloudAPIClient.alertController(error: e, handler: { (action) in })
                     self.presentViewController(ac, animated: true, completion: nil)
                 } else {

@@ -37,7 +37,7 @@ class SoundCloudTrackTableViewController: TrackTableViewController {
         super.init(style: style)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         sctracks = []
         super.init(coder: aDecoder)
     }

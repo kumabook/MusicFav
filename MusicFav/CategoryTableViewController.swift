@@ -20,9 +20,9 @@ class CategoryTableViewController: UITableViewController {
     var observer:         Disposable?
 
     var categories: [FeedlyKit.Category] {
-        var _categories   = streamListLoader.streamListOfCategory.keys.array
+        let _categories   = streamListLoader.streamListOfCategory.keys
         var list          = [streamListLoader.uncategorized]
-        list.extend(_categories.filter({$0 != self.streamListLoader.uncategorized }))
+        list.appendContentsOf(_categories.filter({$0 != self.streamListLoader.uncategorized }))
         return list
     }
 
@@ -32,7 +32,7 @@ class CategoryTableViewController: UITableViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         self.subscribables = []
         super.init(coder: aDecoder)
     }
@@ -66,17 +66,15 @@ class CategoryTableViewController: UITableViewController {
 
     func observeStreamList() {
         observer?.dispose()
-        observer = streamListLoader.signal.observe(next: { event in
+        observer = streamListLoader.signal.observeNext({ event in
             switch event {
             case .StartLoading: break
             case .CompleteLoading:
                 self.tableView.reloadData()
-            case .FailToLoad(let e):             break
-            case .StartUpdating:                 break
-            case .FailToUpdate(let e):           break
-            case .StartUpdating:                 break
-            case .FailToUpdate(let e):           break
-            case .RemoveAt(let i, let s, let c): break
+            case .FailToLoad:    break
+            case .StartUpdating: break
+            case .FailToUpdate:  break
+            case .RemoveAt:      break
             }
         })
     }
@@ -88,21 +86,21 @@ class CategoryTableViewController: UITableViewController {
             Logger.sendUIActionEvent(self, action: "Cancel", label: "")
         }))
         ac.addAction(UIAlertAction(title: "OK".localize(), style: UIAlertActionStyle.Default, handler: { (action) -> Void in
-            if let textField = ac.textFields?.first as? UITextField {
+            if let text = ac.textFields?.first?.text {
                 Logger.sendUIActionEvent(self, action: "OK", label: "")
-                if let category = self.streamListLoader.createCategory(textField.text) {
+                if let category = self.streamListLoader.createCategory(text) {
                     self.subscribeTo(category)
                 }
             }
         }))
-        ac.addTextFieldWithConfigurationHandler({(text:UITextField!) -> Void in
+        ac.addTextFieldWithConfigurationHandler({(text:UITextField) -> Void in
         })
         presentViewController(ac, animated: true, completion: nil)
     }
 
     func _subscribeTo(category: FeedlyKit.Category) -> SignalProducer<[Subscription], NSError> {
         return subscribables.reduce(SignalProducer(value: [])) {
-            combineLatest($0, streamListLoader.subscribeTo($1, categories: [category])) |> map {
+            combineLatest($0, streamListLoader.subscribeTo($1, categories: [category])).map {
                 var list = $0.0; list.append($0.1); return list
             }
         }
@@ -110,7 +108,7 @@ class CategoryTableViewController: UITableViewController {
 
     func subscribeTo(category: FeedlyKit.Category) {
         MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
-        _subscribeTo(category) |> start(
+        _subscribeTo(category).on(
             next: {subscriptions in
                 MBProgressHUD.hideHUDForView(self.navigationController!.view, animated:false)
             },
@@ -126,7 +124,7 @@ class CategoryTableViewController: UITableViewController {
                 })
             },
             interrupted: {}
-        )
+        ).start()
     }
 
     // MARK: - Table view data source
@@ -140,7 +138,7 @@ class CategoryTableViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath) as! UITableViewCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
         if categories[indexPath.item] == streamListLoader.uncategorized {
             cell.textLabel?.text = categories[indexPath.item].label.localize()
         } else {

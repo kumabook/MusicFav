@@ -70,7 +70,7 @@ public class Blog: Stream {
     }
 
     public func fetchSiteInfo() -> SignalProducer<Blog, NSError> {
-        return HypemAPIClient.sharedInstance.getSiteInfo(siteId) |> map({
+        return HypemAPIClient.sharedInstance.getSiteInfo(siteId).map({
             self.siteInfo = $0
             return self
         })

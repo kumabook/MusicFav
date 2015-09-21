@@ -43,25 +43,24 @@ class AddStreamTableViewController: UITableViewController {
         tableView.allowsMultipleSelection = true
     }
 
-    func reloadData(#keepSelection: Bool) {
-        let indexPaths = tableView.indexPathsForSelectedRows()
+    func reloadData(keepSelection keepSelection: Bool) {
         tableView.reloadData()
-        if keepSelection, let indexes = indexPaths as? [NSIndexPath] {
+        if keepSelection, let indexes = tableView.indexPathsForSelectedRows {
             for index in indexes {
                 tableView.selectRowAtIndexPath(index, animated: false, scrollPosition: UITableViewScrollPosition.None)
             }
         }
     }
 
-    func isSelected(#indexPath: NSIndexPath) -> Bool {
-        if let indexPaths = tableView.indexPathsForSelectedRows() as? [NSIndexPath] {
-            return contains(indexPaths, { $0 == indexPath})
+    func isSelected(indexPath indexPath: NSIndexPath) -> Bool {
+        if let indexPaths = tableView.indexPathsForSelectedRows {
+            return indexPaths.contains({ $0 == indexPath})
         }
         return false
     }
 
     func updateAddButton() {
-        if let count = tableView.indexPathsForSelectedRows()?.count {
+        if let count = tableView.indexPathsForSelectedRows?.count {
             navigationItem.rightBarButtonItem?.enabled = count > 0
         } else {
             navigationItem.rightBarButtonItem?.enabled = false
@@ -104,11 +103,9 @@ class AddStreamTableViewController: UITableViewController {
     }
 
     func add() {
-        if let indexPaths = tableView.indexPathsForSelectedRows() {
-            let subscribables: [Stream] = getSubscribables()
-            Logger.sendUIActionEvent(self, action: "add", label: "")
-            let ctc = CategoryTableViewController(subscribables: subscribables, streamListLoader: streamListLoader)
-            navigationController?.pushViewController(ctc, animated: true)
-        }
+        let subscribables: [Stream] = getSubscribables()
+        Logger.sendUIActionEvent(self, action: "add", label: "")
+        let ctc = CategoryTableViewController(subscribables: subscribables, streamListLoader: streamListLoader)
+        navigationController?.pushViewController(ctc, animated: true)
     }
 }

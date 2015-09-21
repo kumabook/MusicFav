@@ -9,7 +9,6 @@
 import Foundation
 import SoundCloudKit
 import ReactiveCocoa
-import Box
 import MusicFeeder
 import Breit
 
@@ -62,7 +61,7 @@ class SoundCloudPlaylistLoader {
     
     var state:          State
     var signal:         Signal<Event, NSError>
-    var sink:           SinkOf<ReactiveCocoa.Event<Event, NSError>>
+    var sink:           Signal<Event, NSError>.Observer
     
     var playlistsDisposable: Disposable?
     var hasNextPlaylists:    Bool
@@ -86,15 +85,15 @@ class SoundCloudPlaylistLoader {
 
     private func fetchNextPlaylists() -> SignalProducer<Void, NSError> {
         state = State.Fetching
-        sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.StartLoading)))
-        return APIClient.sharedInstance.fetchPlaylistsOf(user) |> map {
+        sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
+        return APIClient.sharedInstance.fetchPlaylistsOf(user).map {
             self.hasNextPlaylists = false
-            self.playlists.extend($0)
-            self.sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.CompleteLoading)))
+            self.playlists.appendContentsOf($0)
+            self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.CompleteLoading))
             self.state = State.Normal
-        } |> mapError {
+        }.mapError {
             self.hasNextPlaylists = true
-            self.sink.put(ReactiveCocoa.Event<Event, NSError>.Error(Box($0)))
+            self.sink(ReactiveCocoa.Event<Event, NSError>.Error($0))
             self.state = State.Error
             return $0
         }
@@ -116,17 +115,17 @@ class SoundCloudPlaylistLoader {
 
     private func fetchNextFavorites() -> SignalProducer<Void, NSError> {
         state = State.Fetching
-        sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.StartLoading)))
+        sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
         return APIClient.sharedInstance.fetchFavoritesOf(user)
-            |> map {
+            .map {
                 self.hasNextFavorites = false
-                self.favorites.extend($0)
-                self.sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.CompleteLoading)))
+                self.favorites.appendContentsOf($0)
+                self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.CompleteLoading))
                 self.state = State.Normal
                 self.fetchPlaylists()
-            } |> mapError {
+            }.mapError {
                 self.hasNextFavorites = true
-                self.sink.put(ReactiveCocoa.Event<Event, NSError>.Error(Box($0)))
+                self.sink(ReactiveCocoa.Event<Event, NSError>.Error($0))
                 self.state = State.Error
                 return $0
         }

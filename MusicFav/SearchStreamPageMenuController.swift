@@ -31,7 +31,7 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         streamListLoader = StreamListLoader()
         blogLoader       = BlogLoader()
         channelLoader    = ChannelLoader()
@@ -68,8 +68,8 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
         feedlyStreamVC.title = "Feedly"
         channelVC.title      = "YouTube"
 //        userVC.title         = "SoundCloud"
-        var controllerArray: [UIViewController] = [feedlyStreamVC, channelVC]//, userVC]
-        var parameters: [CAPSPageMenuOption] = [
+        let controllerArray: [UIViewController] = [feedlyStreamVC, channelVC]//, userVC]
+        let parameters: [CAPSPageMenuOption] = [
             .MenuItemSeparatorWidth(0.0),
             .UseMenuLikeSegmentedControl(true),
             .MenuItemSeparatorPercentageHeight(0.0),
@@ -101,9 +101,9 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
 
     func getSubscribables() -> [Stream] {
         var subscribables: [Stream] = []
-        subscribables.extend(feedlyStreamViewController?.getSubscribables() ?? [] )
-        subscribables.extend(channelTableViewController?.getSubscribables() ?? [] )
-        subscribables.extend(userTableViewController?.getSubscribables() ?? [] )
+        subscribables.appendContentsOf(feedlyStreamViewController?.getSubscribables() ?? [] )
+        subscribables.appendContentsOf(channelTableViewController?.getSubscribables() ?? [] )
+        subscribables.appendContentsOf(userTableViewController?.getSubscribables() ?? [] )
         return subscribables
     }
 
@@ -139,10 +139,10 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
     // MARK: - UISearchBar delegate
 
     func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
-        searchFeeds(searchBar.text)
+        searchFeeds(searchBar.text!)
     }
 
     func searchBarCancelButtonClicked(searchBar: UISearchBar) {
-        searchFeeds(searchBar.text)
+        searchFeeds(searchBar.text!)
     }
 }

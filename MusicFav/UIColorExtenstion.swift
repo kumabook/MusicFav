@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIColor {
-    private class func build(#r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat) -> UIColor {
+    private class func build(r r: CGFloat, g: CGFloat, b: CGFloat, a: CGFloat) -> UIColor {
         return UIColor(red: r, green: g, blue: b, alpha: a)
     }
     class var theme:       UIColor { return build(r: 240/255, g: 139/255, b:  51/255, a: 1.0) }

@@ -26,7 +26,7 @@ class FeedlyOAuthViewController: OAuthViewController {
               keyChainGroup: CloudAPIClient.keyChainGroup)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
@@ -39,8 +39,8 @@ class FeedlyOAuthViewController: OAuthViewController {
     override func onLoggedIn(account: NXOAuth2Account) {
         feedlyClient.setAccessToken(account.accessToken.accessToken)
         feedlyClient.fetchProfile()
-            |> startOn(UIScheduler())
-            |> start(
+            .startOn(UIScheduler())
+            .on(
                 next: {profile in
                     CloudAPIClient.login(profile, token: account.accessToken.accessToken)
                 },
@@ -51,6 +51,6 @@ class FeedlyOAuthViewController: OAuthViewController {
                     self.dismissViewControllerAnimated(true, completion: nil)
                     self.delegate?.onLoggedIn(account)
                     self.appDelegate.didLogin()
-            })
+            }).start()
     }
 }

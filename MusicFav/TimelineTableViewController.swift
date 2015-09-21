@@ -11,11 +11,10 @@ import ReactiveCocoa
 import SwiftyJSON
 import FeedlyKit
 import MusicFeeder
-import Box
 
 class TimelineTableViewController: UITableViewController, TimelineTableViewCellDelegate {
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-    var player:     Player<PlayerObserver>? { get { return appDelegate.player }}
+    var player:     Player? { get { return appDelegate.player }}
     let cellHeight: CGFloat = 200
     let reuseIdentifier = "TimelineTableViewCell"
 
@@ -61,7 +60,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         super.init(style: style)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder:aDecoder)
     }
 
@@ -171,7 +170,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
 
     func updateTrack(track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist, playerState: PlayerState) {
         if let p = playlist as? Playlist, indexPath = indexPathOfPlaylist(p) {
-            getItems()[indexPath.item].playlist?.sink.put(.Next(Box(PlaylistEvent.ChangePlayState(index: index, playerState: playerState))))
+            getItems()[indexPath.item].playlist?.sink(.Next(PlaylistEvent.ChangePlayState(index: index, playerState: playerState)))
         }
     }
 
@@ -247,7 +246,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
 
     func playPlaylist(playlist: PlayerKitPlaylist?) {
         if let p = playlist as? Playlist {
-            appDelegate.player?.select(0, playlist: p, playlists: getPlaylists())
+            appDelegate.select(0, playlist: p, playlists: getPlaylists())
         }
     }
 
@@ -259,13 +258,13 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
     // MARK: - PlaylistStreamTableViewDelegate
 
     func trackSelected(sender: TimelineTableViewCell, index: Int, track: Track, playlist: Playlist) {
-        appDelegate.player?.select(index, playlist: playlist, playlists: getPlaylists())
+        appDelegate.select(index, playlist: playlist, playlists: getPlaylists())
         tableView.reloadData()
     }
 
     func trackScrollViewMarginTouched(sender: TimelineTableViewCell, playlist: Playlist?) {
         if let _playlist = playlist {
-            showPlaylist(playlist)
+            showPlaylist(_playlist)
         }
     }
 
@@ -273,12 +272,12 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         if let indexPath = tableView.indexPathForCell(sender), playlist = getItems()[indexPath.item].playlist {
             if let current = appDelegate.player?.currentPlaylist {
                 if playlist.id == current.id {
-                    appDelegate.player?.toggle()
+                    appDelegate.toggle()
                     tableView.reloadData()
                     return
                 }
             }
-            appDelegate.player?.select(0, playlist: playlist, playlists: getPlaylists())
+            appDelegate.select(0, playlist: playlist, playlists: getPlaylists())
             tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
             showPlaylist(playlist)
         }
@@ -326,8 +325,8 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         cell.playButton.hidden     = item.playlist?.tracks.count <= 0
         cell.articleButton.hidden  = item.entry == nil
         cell.trackNumLabel.text    = item.trackNumString
+        cell.delegate              = self
         if let playlist = item.playlist {
-            cell.delegate = self
             cell.loadThumbnails(playlist)
             if let p = self.player, cp = p.currentPlaylist as? Playlist, i = p.currentTrackIndex {
                 if cp == playlist {
@@ -341,7 +340,6 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
             }
             cell.observePlaylist(playlist)
         } else {
-            cell.delegate = nil
             cell.clearThumbnails()
         }
         return cell

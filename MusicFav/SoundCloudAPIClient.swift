@@ -11,11 +11,10 @@ import SoundCloudKit
 import SwiftyJSON
 import NXOAuth2Client
 import ReactiveCocoa
-import Box
 import Alamofire
 
 public class OAuth2ClientDelegate: NSObject, NXOAuth2ClientDelegate {
-    public typealias RequestCallback = (NSURLRequest, NSHTTPURLResponse?, AnyObject?, NSError?) -> Void
+    public typealias RequestCallback = (NSURLRequest?, NSHTTPURLResponse?, Result<AnyObject>) -> Void
     public var pendingRequests: [(APIClient.Router, RequestCallback)]
     public override init() {
         pendingRequests = []
@@ -25,7 +24,7 @@ public class OAuth2ClientDelegate: NSObject, NXOAuth2ClientDelegate {
     }
     func restartPendingRequests() {
         for req in pendingRequests {
-            APIClient.sharedInstance.manager.request(req.0).responseJSON(options: .allZeros, completionHandler: req.1)
+            APIClient.sharedInstance.manager.request(req.0).responseJSON(options: [], completionHandler: req.1)
         }
         pendingRequests = []
     }
@@ -57,7 +56,7 @@ extension APIClient {
     private static let userDefaults = NSUserDefaults.standardUserDefaults()
     public static var sharedInstance = APIClient()
     static func newManager() -> Manager {
-        var m = Alamofire.Manager()
+        let m = Alamofire.Manager()
         if let token = APIClient.accessToken {
             m.session.configuration.HTTPAdditionalHeaders = ["Authorization": "Bearer \(token)"]
         }
@@ -100,13 +99,13 @@ extension APIClient {
         get {
             if let m = _me { return m }
             if let data: NSData = userDefaults.objectForKey("soundcloud_me") as? NSData {
-                return User(json: JSON(data: data, options: .allZeros, error: nil))
+                return User(json: JSON(data: data, options: [], error: nil))
             }
             return nil
         }
         set(me) {
             if let m = me {
-                userDefaults.setObject(m.toJSON().rawData(options: .allZeros, error: nil)!, forKey: "soundcloud_me")
+                userDefaults.setObject(try! m.toJSON().rawData(options: []), forKey: "soundcloud_me")
             } else {
                 userDefaults.removeObjectForKey("soundcloud_me")
             }
@@ -146,9 +145,8 @@ extension APIClient {
         let bundle = NSBundle.mainBundle()
         if let path = bundle.pathForResource("soundcloud", ofType: "json") {
             let data     = NSData(contentsOfFile: path)
-            let jsonObject: AnyObject? = NSJSONSerialization.JSONObjectWithData(data!,
-                options: NSJSONReadingOptions.MutableContainers,
-                error: nil)
+            let jsonObject: AnyObject? = try? NSJSONSerialization.JSONObjectWithData(data!,
+                options: NSJSONReadingOptions.MutableContainers)
             if let obj: AnyObject = jsonObject {
                 let json = JSON(obj)
                 if let clientId = json["client_id"].string {
@@ -162,26 +160,26 @@ extension APIClient {
     }
 
     func fetch(route: Router, callback: OAuth2ClientDelegate.RequestCallback) {
-        self.manager.request(route).validate(statusCode: 200..<300).responseJSON(options: .allZeros) {(req: NSURLRequest, res: NSHTTPURLResponse?, obj: AnyObject?, error: NSError?) -> Void in
-            if let e = error {
+        self.manager.request(route).validate(statusCode: 200..<300).responseJSON(options: .AllowFragments) {(req: NSURLRequest?, res: NSHTTPURLResponse?, result: Result<AnyObject>) -> Void in
+            if result.isFailure {
                 if let oauth2client = APIClient.createOauth2client(APIClient.oauth2clientDelegate) {
                     APIClient.oauth2clientDelegate.addPendingRequest(route, callback: callback)
                     oauth2client.refreshAccessToken()
                     return
                 }
             }
-            callback(req, res, obj, error)
+            callback(req, res, result)
         }
     }
 
     func fetchItem<T: JSONInitializable>(route: Router) -> SignalProducer<T, NSError> {
         return SignalProducer { sink, disposable in
-            let callback: OAuth2ClientDelegate.RequestCallback = {(req: NSURLRequest, res: NSHTTPURLResponse?, obj: AnyObject?, error: NSError?) -> Void in
-                if let e = error {
-                    sink.put(.Error(Box(e)))
-                } else {
-                    sink.put(.Next(Box(T(json: JSON(obj!)))))
-                    sink.put(.Completed)
+            let callback: OAuth2ClientDelegate.RequestCallback = {(req: NSURLRequest?, res: NSHTTPURLResponse?, result: Result<AnyObject>) -> Void in
+                if let e = result.error {
+                    sink(.Error(e as NSError))
+                } else if let obj = result.value {
+                    sink(.Next(T(json: JSON(obj))))
+                    sink(.Completed)
                 }
             }
             self.fetch(route, callback: callback)
@@ -190,12 +188,12 @@ extension APIClient {
 
     func fetchItems<T: JSONInitializable>(route: Router) -> SignalProducer<[T], NSError> {
         return SignalProducer { sink, disposable in
-            let callback: OAuth2ClientDelegate.RequestCallback = {(req: NSURLRequest, res: NSHTTPURLResponse?, obj: AnyObject?, error: NSError?) -> Void in
-                if let e = error {
-                    sink.put(.Error(Box(e)))
-                } else {
-                    sink.put(.Next(Box(JSON(obj!).arrayValue.map { T(json: $0) })))
-                    sink.put(.Completed)
+            let callback: OAuth2ClientDelegate.RequestCallback = {(req: NSURLRequest?, res: NSHTTPURLResponse?, result: Result<AnyObject>) -> Void in
+                if let e = result.error {
+                    sink(.Error(e as NSError))
+                } else if let obj = result.value {
+                    sink(.Next(JSON(obj).arrayValue.map { T(json: $0) }))
+                    sink(.Completed)
                 }
             }
             self.fetch(route, callback: callback)

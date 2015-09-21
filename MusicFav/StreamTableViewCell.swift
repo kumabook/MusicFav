@@ -28,7 +28,7 @@ class StreamTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
-    func updateView(#blog: Blog) {
+    func updateView(blog blog: Blog) {
         if let imageUrl = blog.blogImageSmall {
             thumbImageView.sd_setImageWithURL(NSURL(string: imageUrl))
         }
@@ -41,7 +41,7 @@ class StreamTableViewCell: UITableViewCell {
         }
     }
 
-    func updateView(#feed: Feed) {
+    func updateView(feed feed: Feed) {
         if let url = feed.thumbnailURL {
             thumbImageView.sd_setImageWithURL(url, placeholderImage: UIImage(named: "default_thumb"))
         }

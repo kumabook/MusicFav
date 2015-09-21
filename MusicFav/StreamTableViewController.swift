@@ -30,7 +30,7 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
         switch type {
         case .Recommend:             return _streams
         case .Hypem(let blogLoader): return blogLoader.blogs
-        case .Search(let query):     return _streams
+        case .Search:                return _streams
         }
     }
 
@@ -60,14 +60,14 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
     }
 
     override func getSubscribables() -> [Stream] {
-        if let indexPaths = tableView.indexPathsForSelectedRows() {
+        if let indexPaths = tableView.indexPathsForSelectedRows {
             return indexPaths.map({
                 switch self.type {
                 case .Recommend:
                     return self.streams[$0.item]
                 case .Hypem(let blogLoader):
                     return blogLoader.blogs[$0.item]
-                case .Search(let query):
+                case .Search:
                     return self.streams[$0.item]
                 }
             })
@@ -136,13 +136,13 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
         if let d = disposable {
             if !d.disposed { d.dispose() }
         }
-        disposable = CloudAPIClient.sharedInstance.fetchFeedsByIds(RecommendFeed.ids).start(
+        disposable = CloudAPIClient.sharedInstance.fetchFeedsByIds(RecommendFeed.ids).on(
             next: { feeds in
                 self._streams = feeds
             }, error: { error in
             }, completed: {
                 self.reloadData(keepSelection: true)
-        })
+        }).start()
     }
 
     func searchFeeds(query: String) {
@@ -154,8 +154,8 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
         query.count = 20
         Logger.sendUIActionEvent(self, action: "searchFeeds", label: "")
         disposable = CloudAPIClient.sharedInstance.searchFeeds(query)
-            |> startOn(UIScheduler())
-            |> start(
+            .startOn(UIScheduler())
+            .on(
                 next: { feeds in
                     self._streams = feeds
                 },
@@ -165,7 +165,7 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
                 },
                 completed: {
                     self.reloadData(keepSelection: true)
-            })
+            }).start()
     }
 
     func observeBlogs() {
@@ -174,7 +174,7 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
         case .Recommend:
             break
         case .Hypem(let blogLoader):
-            observer = blogLoader.signal.observe(next: { event in
+            observer = blogLoader.signal.observeNext({ event in
                 switch event {
                 case .StartLoading:
                     self.showIndicator()
@@ -185,7 +185,7 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
                     self.hideIndicator()
                 }
             })
-        case .Search(let query):
+        case .Search:
             break
         }
     }

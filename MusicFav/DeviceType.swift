@@ -28,7 +28,7 @@ enum DeviceType {
     case iPhone6Plus
     case iPad
     case Unknown
-    static func from(#device: UIDevice) -> DeviceType {
+    static func from(device device: UIDevice) -> DeviceType {
         switch device.userInterfaceIdiom {
         case .Phone:
             if ScreenSize.SCREEN_MAX_LENGTH < 568.0 {

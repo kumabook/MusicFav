@@ -37,7 +37,7 @@ class EntryStreamTableViewCell: MCSwipeTableViewCell {
         super.awakeFromNib()
     }
 
-    func imageView(#markAs: StreamLoader.RemoveMark) -> UIView {
+    func imageView(markAs markAs: StreamLoader.RemoveMark) -> UIView {
         let view              = UIView()
         let label             = UILabel()
         let imageView         = UIImageView(image: UIImage(named: "checkmark"))

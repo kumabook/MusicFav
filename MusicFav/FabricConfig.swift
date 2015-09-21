@@ -18,7 +18,7 @@ public class FabricConfig {
     }
     public init(filePath: String) {
         let data                   = NSData(contentsOfFile: filePath)
-        let jsonObject: AnyObject? = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+        let jsonObject: AnyObject? = try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
         let json                   = JSON(jsonObject!)
         apiKey                     = json["api_key"].stringValue
         buildSecret                = json["build_secret"].stringValue

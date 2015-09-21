@@ -26,7 +26,7 @@ class YouTubeActivityTableViewController: TimelineTableViewController {
         super.init(style: style)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         activityLoader = YouTubeActivityLoader()
         super.init(coder:aDecoder)
     }
@@ -55,7 +55,7 @@ class YouTubeActivityTableViewController: TimelineTableViewController {
     }
 
     override func observeTimelineLoader() -> Disposable? {
-        return activityLoader.signal.observe(next: { event in
+        return activityLoader.signal.observeNext({ event in
             switch event {
             case .StartLoading:
                 self.showIndicator()

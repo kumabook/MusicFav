@@ -25,7 +25,7 @@ class SoundCloudOAuthViewController: OAuthViewController {
               keyChainGroup: SoundCloudKit.APIClient.keyChainGroup)
     }
     
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
     
@@ -40,7 +40,7 @@ class SoundCloudOAuthViewController: OAuthViewController {
     override func onLoggedIn(account: NXOAuth2Account) {
         super.onLoggedIn(account)
         SoundCloudKit.APIClient.accessToken = account.accessToken.accessToken
-        SoundCloudKit.APIClient.sharedInstance.fetchMe().start(
+        SoundCloudKit.APIClient.sharedInstance.fetchMe().on(
             error: { error in
                 self.showAlert()
             }, next: { user in
@@ -48,6 +48,6 @@ class SoundCloudOAuthViewController: OAuthViewController {
                 self.dismissViewControllerAnimated(true, completion: nil)
                 super.onLoggedIn(account)
                 self.appDelegate.reload()
-        })
+        }).start()
     }
 }

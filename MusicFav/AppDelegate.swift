@@ -26,7 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window:                   UIWindow?
     var coverViewController:      DraggableCoverViewController?
     var miniPlayerViewController: MiniPlayerViewController?
-    var player:                   Player<PlayerObserver>?
+    var player:                   Player?
     var selectedPlaylist:         MusicFeeder.Playlist?
     var playingPlaylist:          MusicFeeder.Playlist? {
         get {
@@ -70,7 +70,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func setupAudioSession(application: UIApplication) {
         let audioSession = AVAudioSession()
-        audioSession.setCategory(AVAudioSessionCategoryPlayback, error: nil)
+        do {
+            try audioSession.setCategory(AVAudioSessionCategoryPlayback)
+        } catch _ {
+        }
         application.beginReceivingRemoteControlEvents()
     }
 
@@ -89,7 +92,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let mainBundle = NSBundle.mainBundle()
         let fabricConfig = FabricConfig(filePath: mainBundle.pathForResource("fabric", ofType: "json")!)
         if !fabricConfig.skip {
-            var crashlytics = Crashlytics.startWithAPIKey(fabricConfig.apiKey)
+            Crashlytics.startWithAPIKey(fabricConfig.apiKey)
         }
         TrackStore.migration()
         if let path = mainBundle.pathForResource("google_analytics", ofType: "json") {
@@ -142,10 +145,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didReceiveLocalNotification notification: UILocalNotification) {
     }
 
-    override func remoteControlReceivedWithEvent(event: UIEvent) {
-        if event.type == UIEventType.RemoteControl {
-            
-            switch event.subtype {
+    override func remoteControlReceivedWithEvent(event: UIEvent?) {
+        if let e = event where e.type == UIEventType.RemoteControl {
+            switch e.subtype {
             case UIEventSubtype.RemoteControlPlay:
                 self.miniPlayerViewController?.player?.toggle()
             case UIEventSubtype.RemoteControlPause:
@@ -180,6 +182,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 return
             }
         }
+    }
+
+    // Player control functions
+
+    func select(trackIndex: Int, playlist: MusicFeeder.Playlist, playlists: [MusicFeeder.Playlist]) {
+        player?.select(trackIndex, playlist: playlist, playlists: playlists.map { $0 as PlayerKit.Playlist})
+    }
+
+    func toggle() {
+        player?.toggle()
     }
 }
 

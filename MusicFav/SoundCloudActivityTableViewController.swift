@@ -24,7 +24,7 @@ class SoundCloudActivityTableViewController: TimelineTableViewController {
         super.init(style: style)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         activityLoader = SoundCloudActivityLoader()
         super.init(coder:aDecoder)
     }
@@ -47,7 +47,7 @@ class SoundCloudActivityTableViewController: TimelineTableViewController {
     }
 
     override func observeTimelineLoader() -> Disposable? {
-        return activityLoader.signal.observe(next: { event in
+        return activityLoader.signal.observeNext({ event in
             switch event {
             case .StartLoadingLatest:
                 self.onpuRefreshControl.beginRefreshing()

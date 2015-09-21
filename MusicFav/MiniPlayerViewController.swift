@@ -26,7 +26,7 @@ class MiniPlayerViewController: PlayerKit.MiniPlayerViewController {
 
     var marqueeTitleLabel: MarqueeLabel!
 
-    override init(player: Player<PlayerObserver>) {
+    override init(player: Player) {
         super.init(player: player)
         let vc                      = JASidePanelController()
         mainViewController          = vc
@@ -37,7 +37,7 @@ class MiniPlayerViewController: PlayerKit.MiniPlayerViewController {
         vc.prepare()
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 

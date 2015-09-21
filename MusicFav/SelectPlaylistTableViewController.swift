@@ -41,7 +41,6 @@ class SelectPlaylistTableViewController: UITableViewController {
                                                action: "newPlaylist")
         navigationItem.rightBarButtonItems = [newPlaylistButton]
 
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         navigationItem.leftBarButtonItems = [closeButton]
     }
 
@@ -52,8 +51,7 @@ class SelectPlaylistTableViewController: UITableViewController {
     func observePlaylists() {
         playlists = Playlist.shared.current
         tableView.reloadData()
-        Playlist.shared.signal.observe(
-            next: { event in
+        Playlist.shared.signal.observeNext({ event in
                 let section = 0
                 switch event {
                 case .Created(let playlist):
@@ -63,27 +61,24 @@ class SelectPlaylistTableViewController: UITableViewController {
                 case .Updated(let playlist):
                     self.updatePlaylist(playlist)
                 case .Removed(let playlist):
-                    if let index = find(self.playlists, playlist) {
+                    if let index = self.playlists.indexOf(playlist) {
                         self.playlists.removeAtIndex(index)
                         let indexPath = NSIndexPath(forItem: index, inSection: section)
                         self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                     }
-                case .TracksAdded(let playlist, let tracks):
+                case .TracksAdded(let playlist, _):
                     self.updatePlaylist(playlist)
-                case .TrackRemoved(let playlist, let Track, let index):
+                case .TrackRemoved(let playlist, _, _):
                     self.updatePlaylist(playlist)
-                case .TrackUpdated(let playlist, let track):
+                case .TrackUpdated(let playlist, _):
                     self.updatePlaylist(playlist)
                 }
-            },
-            error: { e in },
-            completed: {},
-            interrupted: {})
+            })
     }
 
     func updatePlaylist(playlist: Playlist) {
         let section = 0
-        if let index = find(self.playlists, playlist) {
+        if let index = self.playlists.indexOf(playlist) {
             let indexPath = NSIndexPath(forItem: index, inSection: section)
             self.playlists[index] = playlist
             self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
@@ -137,7 +132,7 @@ class SelectPlaylistTableViewController: UITableViewController {
         })
     }
 
-    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
+    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let edit = UITableViewRowAction(style: .Default, title: "Edit title".localize()) {
             (action, indexPath) in
             self.editPlaylist(indexPath.item)

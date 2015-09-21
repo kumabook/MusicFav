@@ -15,7 +15,7 @@ class FeedbackWebViewController: UIViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
@@ -27,7 +27,7 @@ class FeedbackWebViewController: UIViewController {
         view.addSubview(webView)
         let mainBundle = NSBundle.mainBundle()
         if let file = mainBundle.pathForResource("feedback_en".localize(), ofType:"html"), let data = NSData(contentsOfFile: file) {
-            webView.loadData(data, MIMEType: "text/html", textEncodingName: "UTF-8", baseURL: NSURL(fileURLWithPath: file)!)
+            webView.loadData(data, MIMEType: "text/html", textEncodingName: "UTF-8", baseURL: NSURL(fileURLWithPath: file))
         }
     }
 

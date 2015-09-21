@@ -23,7 +23,7 @@ class YouTubePlaylistTableViewController: UITableViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init!(coder aDecoder: NSCoder!) {
+    required init!(coder aDecoder: NSCoder) {
         playlistLoader = YouTubePlaylistLoader()
         super.init(coder: aDecoder)
     }
@@ -83,7 +83,7 @@ class YouTubePlaylistTableViewController: UITableViewController {
 
     func observePlaylistLoader() {
         observer?.dispose()
-        observer = playlistLoader.signal.observe(next: { event in
+        observer = playlistLoader.signal.observeNext({ event in
             switch event {
             case .StartLoading:
                 if self.playlistLoader.state == .Fetching {
@@ -115,7 +115,7 @@ class YouTubePlaylistTableViewController: UITableViewController {
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(self.tableCellReuseIdentifier, forIndexPath: indexPath) as! PlaylistTableViewCell
-        var playlist = playlistLoader.playlists[indexPath.item]
+        let playlist = playlistLoader.playlists[indexPath.item]
         cell.titleLabel.text    = playlist.title
         cell.trackNumLabel.text = playlist.description
         if let items = playlistLoader.itemsOfPlaylist[playlist] {
@@ -128,7 +128,7 @@ class YouTubePlaylistTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         observer?.dispose()
         observer = nil
-        var playlist = playlistLoader.playlists[indexPath.item]
+        let playlist = playlistLoader.playlists[indexPath.item]
         let vc = YouTubePlaylistItemTableViewController(playlist: playlist, playlistLoader: playlistLoader)
         navigationController?.pushViewController(vc, animated: true)
     }

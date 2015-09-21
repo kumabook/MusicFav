@@ -30,7 +30,7 @@ class SoundCloudPlaylistTableViewController: UITableViewController {
         super.init(nibName: nil, bundle: nil)
     }
 
-    required init!(coder aDecoder: NSCoder!) {
+    required init!(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
@@ -89,7 +89,7 @@ class SoundCloudPlaylistTableViewController: UITableViewController {
 
     func observePlaylistLoader() {
         observer?.dispose()
-        observer = playlistLoader.signal.observe(next: { event in
+        observer = playlistLoader.signal.observeNext({ event in
             switch event {
             case .StartLoading:
                 if self.playlistLoader.state == .Fetching {
@@ -130,7 +130,7 @@ class SoundCloudPlaylistTableViewController: UITableViewController {
             cell.trackNumLabel.text = ""
             cell.thumbImageView.image = UIImage(named: "soundcloud")
         case .Playlists:
-            var playlist = playlistLoader.playlists[indexPath.item]
+            let playlist = playlistLoader.playlists[indexPath.item]
             cell.titleLabel.text    = playlist.title
             cell.trackNumLabel.text = playlist.description
             if let url = playlist.artworkUrl?.toURL() {

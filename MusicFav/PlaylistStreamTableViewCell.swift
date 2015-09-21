@@ -78,7 +78,7 @@ class PlaylistStreamTableViewCell: UITableViewCell {
         let tw = thumbnailWidth
         clearThumbnails()
         self.playlist = playlist
-        for (i, track) in enumerate(playlist.getTracks()) {
+        for (i, track) in playlist.getTracks().enumerate() {
             let rect = CGRect(x: tw * CGFloat(i), y: 0.0, width: tw, height: tw)
             let imageView = UIImageView(frame: rect)
             imageView.userInteractionEnabled = true
@@ -155,7 +155,7 @@ class PlaylistStreamTableViewCell: UITableViewCell {
         if let playlist = self.playlist {
             if let delegate = self.delegate {
                 if let view = sender.view as? UIImageView {
-                    if let i = find(imageViews, view) {
+                    if let i = imageViews.indexOf(view) {
                         delegate.trackSelectedAt(i, track: playlist.getTracks()[i], playlist: playlist)
                     }
                 }
@@ -169,7 +169,7 @@ class PlaylistStreamTableViewCell: UITableViewCell {
 
     func observePlaylist(playlist: Playlist) {
         observer?.dispose()
-        observer = playlist.signal.observe(next: { event in
+        observer = playlist.signal.observeNext({ event in
             UIScheduler().schedule {
                 switch event {
                 case .Load(let index):

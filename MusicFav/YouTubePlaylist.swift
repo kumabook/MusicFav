@@ -47,7 +47,7 @@ public class YouTubePlaylist: YouTubeResource, Hashable, Equatable {
     }
 
     public var thumbnailURL: NSURL? {
-        if let url = thumbnails["default"] { return NSURL(string: url) }
+             if let url = thumbnails["default"] { return NSURL(string: url) }
         else if let url = thumbnails["medium"]  { return NSURL(string: url) }
         else if let url = thumbnails["high"]    { return NSURL(string: url) }
         else                                    { return nil }

@@ -37,13 +37,13 @@ class Logger {
     }
     static func sendScreenView(viewController: UIViewController) {
         if let tracker = GAI.sharedInstance().defaultTracker {
-            tracker.set(kGAIScreenName, value: reflect(viewController).summary)
+            tracker.set(kGAIScreenName, value: Mirror(reflecting: viewController).description)
             tracker.send(GAIDictionaryBuilder.createScreenView().build() as [NSObject:AnyObject])
         }
     }
     static func sendUIActionEvent(sender: UIViewController, action: String, label: String) {
         if let tracker = GAI.sharedInstance().defaultTracker {
-            let _action = "\(reflect(sender).summary)#\(action)"
+            let _action = "\(Mirror(reflecting: sender).description)#\(action)"
             let value   = CloudAPIClient.isLoggedIn ? 1 : 0
             let event = GAIDictionaryBuilder.createEventWithCategory("uiaction", action: _action, label: label, value: value)
             tracker.send(event.build() as [NSObject:AnyObject])

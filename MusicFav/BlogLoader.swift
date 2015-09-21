@@ -8,7 +8,6 @@
 
 import ReactiveCocoa
 import Result
-import Box
 import FeedlyKit
 
 public class BlogLoader {
@@ -33,7 +32,7 @@ public class BlogLoader {
     var perPage = 5
     public var state:          State
     public var signal:         Signal<Event, NSError>
-    public var sink:           SinkOf<ReactiveCocoa.Event<Event, NSError>>
+    public var sink:           Signal<Event, NSError>.Observer
 
     public init() {
         self._blogs = []
@@ -46,8 +45,8 @@ public class BlogLoader {
 
     private func fetchAllBlogs() -> SignalProducer<Void, NSError> {
         state = State.FetchingAllBlogs
-        sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.StartLoading)))
-        return HypemAPIClient.sharedInstance.getAllBlogs() |> map {
+        sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
+        return HypemAPIClient.sharedInstance.getAllBlogs().map {
             self._blogs = $0
             self.fetchNextDetails()
             return
@@ -56,7 +55,7 @@ public class BlogLoader {
 
     public func fetchBlogs() {
         switch state {
-        case .Init:             fetchAllBlogs().start(next: {}, error: {e in}, completed: {})
+        case .Init:             fetchAllBlogs().on(next: {}, error: {e in}, completed: {}).start()
         case .FetchingAllBlogs: break
         case .Normal:           fetchNextDetails()
         case .FetchingDetails:  break
@@ -67,13 +66,13 @@ public class BlogLoader {
 
     private func fetchNextDetails() {
         self.state  = State.FetchingDetails
-        sink.put(.Next(Box(.StartLoading)))
-        fetchDetails(start: offset, length: perPage).start(
+        sink(.Next(.StartLoading))
+        fetchDetails(start: offset, length: perPage).on(
             next: { blog in
                 self.offset += self.perPage
-                self.sink.put(.Next(Box(.CompleteLoading)))
+                self.sink(.Next(.CompleteLoading))
             }, error: { error in
-                self.sink.put(.Next(Box(.FailToLoad)))
+                self.sink(.Next(.FailToLoad))
             }, completed: {
                 if self.offset >= self._blogs.count {
                     self.state = .Complete
@@ -81,12 +80,12 @@ public class BlogLoader {
                     self.state = .Normal
                 }
                 return
-        })
+        }).start()
     }
 
-    private func fetchDetails(#start: Int, length: Int) -> SignalProducer<[Blog], NSError> {
+    private func fetchDetails(start start: Int, length: Int) -> SignalProducer<[Blog], NSError> {
         return (start..<start+length).map({$0}).reduce(SignalProducer(value: [])) {
-            combineLatest($0, self.fetchSiteInfo($1)) |> map {
+            combineLatest($0, self.fetchSiteInfo($1)).map {
                 var list = $0.0; list.append($0.1); return list
             }
         }
@@ -94,18 +93,18 @@ public class BlogLoader {
 
     private func fetchSiteInfo(index: Int) -> SignalProducer<Blog, NSError> {
         return SignalProducer<Blog, NSError> { (blogSink, disposable) in
-            self._blogs[index].fetchSiteInfo().start(
+            self._blogs[index].fetchSiteInfo().on(
                 next: { blog in
                     self.blogs.append(blog)
-                    blogSink.put(.Next(Box(blog)))
-                    blogSink.put(.Completed)
+                    blogSink(.Next(blog))
+                    blogSink(.Completed)
                 },
                 error: { error in
-                    blogSink.put(.Error(Box(error)))
+                    blogSink(.Error(error))
                     return
                 },
                 completed: {
-            })
+            }).start()
             return
         }
     }

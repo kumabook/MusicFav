@@ -28,12 +28,11 @@ class UpdateChecker {
         return nil
     }
     func check(application: UIApplication, completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
-        let apiClient = CloudAPIClient.sharedInstance
         if let fireDate = nextNotificationDate {
-            fetchNewTracks().start(
+            fetchNewTracks().on(
                 next: { tracks in
                     UIScheduler().schedule {
-                        var tracksInfo = UILocalNotification.buildNewTracksInfo(application, tracks: tracks)
+                        let tracksInfo = UILocalNotification.buildNewTracksInfo(application, tracks: tracks)
                         application.cancelAllLocalNotifications()
                         if tracksInfo.count > 0 {
                             let notification = UILocalNotification.newTracksNotification(tracksInfo, fireDate: fireDate)
@@ -49,7 +48,7 @@ class UpdateChecker {
                 }, completed: {
                 }, interrupted: {
                     UIScheduler().schedule { completionHandler?(UIBackgroundFetchResult.Failed) }
-            })
+            }).start()
         } else {
             application.cancelAllLocalNotifications()
             completionHandler?(UIBackgroundFetchResult.NoData)
@@ -61,28 +60,28 @@ class UpdateChecker {
             entriesSignal = apiClient.fetchEntries(streamId: FeedlyKit.Category.All(profile.id).streamId,
                                                   newerThan: newerThan.timestamp,
                                                  unreadOnly: true)
-                |> map { $0.items }
+                .map { $0.items }
         } else {
             entriesSignal = StreamListLoader().fetchLocalSubscrptions()
-                |> map { (table: [FeedlyKit.Category: [Stream]]) -> [Stream] in
-                    return table.values.array.flatMap { $0 }
-                } |> map { streams in
+                .map { (table: [FeedlyKit.Category: [Stream]]) -> [Stream] in
+                    return table.values.flatMap { $0 }
+                }.map { streams in
                     return streams.map { stream in
-                        return self.apiClient.fetchEntries(streamId: stream.streamId, newerThan: self.newerThan.timestamp, unreadOnly: true) |> map { $0.items }
+                        return self.apiClient.fetchEntries(streamId: stream.streamId, newerThan: self.newerThan.timestamp, unreadOnly: true).map { $0.items }
                         }.reduce(SignalProducer<[Entry], NSError>(value: [])) {
-                            combineLatest($0, $1) |> map {
-                                var list = $0.0; list.extend($0.1); return list
+                            combineLatest($0, $1).map {
+                                var list = $0.0; list.appendContentsOf($0.1); return list
                             }
                     }
-            } |> flatten(FlattenStrategy.Concat)
+            }.flatten(FlattenStrategy.Concat)
         }
-        return entriesSignal |> map { entries in
+        return entriesSignal.map { entries in
             entries.reduce(SignalProducer<[Track], NSError>(value: [])) {
-                combineLatest($0, self.fetchPlaylistOfEntry($1)) |> map {
-                    var list = $0.0; list.extend($0.1.getTracks()); return list
+                combineLatest($0, self.fetchPlaylistOfEntry($1)).map {
+                    var list = $0.0; list.appendContentsOf($0.1.getTracks()); return list
                 }
             }
-        } |> flatten(.Concat)
+        }.flatten(.Concat)
     }
 
     func fetchPlaylistOfEntry(entry: Entry) -> SignalProducer<Playlist, NSError> {

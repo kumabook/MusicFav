@@ -150,11 +150,11 @@ class PreferenceViewController: UITableViewController {
         super.init(style: UITableViewStyle.Grouped)
     }
 
-    override init!(nibName nibNameOrNil: String!, bundle nibBundleOrNil: NSBundle!) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
         super.init(nibName: nil, bundle:nil)
     }
 
-    required init(coder aDecoder: NSCoder!) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
@@ -311,17 +311,17 @@ class PreferenceViewController: UITableViewController {
         case .Behavior:
             switch BehaviorRow(rawValue: indexPath.row)! {
             case .YouTubeVideoQuality:
-                var actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+                let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
                 for action in YouTubeVideoQuality.buildAlertActions({ self.tableView.reloadData() }) {
                     actionSheet.addAction(action)
                 }
                 actionSheet.addAction(UIAlertAction(title: "Cancel".localize(), style: .Cancel, handler: { action in }))
                 presentViewController(actionSheet, animated: true, completion: {})
             case .NotificationTime:
-                var dateSelectionVC = RMDateSelectionViewController.dateSelectionController()
+                let dateSelectionVC = RMDateSelectionViewController.dateSelectionController()
                 dateSelectionVC.selectButtonAction = { (controller, date) in
                     let calendar = NSCalendar.currentCalendar()
-                    FeedlyAPI.notificationDateComponents = calendar.components(NSCalendarUnit.CalendarUnitHour|NSCalendarUnit.CalendarUnitMinute, fromDate: date)
+                    FeedlyAPI.notificationDateComponents = calendar.components([NSCalendarUnit.Hour, NSCalendarUnit.Minute], fromDate: date)
                     tableView.reloadData()
                     UpdateChecker().check(UIApplication.sharedApplication(), completionHandler: nil)
                 }

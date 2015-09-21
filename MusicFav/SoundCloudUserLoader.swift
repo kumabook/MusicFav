@@ -9,7 +9,6 @@
 import Foundation
 import SoundCloudKit
 import ReactiveCocoa
-import Box
 import MusicFeeder
 import Breit
 import FeedlyKit
@@ -43,7 +42,7 @@ class SoundCloudUserLoader {
 
     var state:          State
     var signal:         Signal<Event, NSError>
-    var sink:           SinkOf<ReactiveCocoa.Event<Event, NSError>>
+    var sink:           Signal<Event, NSError>.Observer
 
     var followingsDisposable: Disposable?
     var hasNextFollowings:    Bool
@@ -75,15 +74,15 @@ class SoundCloudUserLoader {
     private func fetchNextFollowings() -> SignalProducer<Void, NSError> {
         if user == nil { return SignalProducer.empty }
         state = State.Fetching
-        sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.StartLoading)))
-        return APIClient.sharedInstance.fetchFollowingsOf(user!) |> map {
+        sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
+        return APIClient.sharedInstance.fetchFollowingsOf(user!).map {
             self.hasNextFollowings = false
-            self.followings.extend($0)
-            self.sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.CompleteLoading)))
+            self.followings.appendContentsOf($0)
+            self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.CompleteLoading))
             self.state = State.Normal
-            } |> mapError {
+            }.mapError {
                 self.hasNextFollowings = true
-                self.sink.put(ReactiveCocoa.Event<Event, NSError>.Error(Box($0)))
+                self.sink(ReactiveCocoa.Event<Event, NSError>.Error($0))
                 self.state = State.Error
                 return $0
         }
@@ -106,17 +105,17 @@ class SoundCloudUserLoader {
     func searchUsers(query: String) {
         if state == State.Fetching { return }
         state = State.Fetching
-        sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.StartLoading)))
-        APIClient.sharedInstance.fetchUsers(query).start(
+        sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
+        APIClient.sharedInstance.fetchUsers(query).on(
             error: { e in
                 self.hasNextSearch = true
-                self.sink.put(ReactiveCocoa.Event<Event, NSError>.Error(Box(e)))
+                self.sink(ReactiveCocoa.Event<Event, NSError>.Error(e))
                 self.state = State.Error
             }, next: { users in
                 self.hasNextSearch = false
-                self.searchResults.extend(users)
-                self.sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.CompleteLoading)))
+                self.searchResults.appendContentsOf(users)
+                self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.CompleteLoading))
                 self.state = State.Normal
-        })
+        }).start()
     }
 }

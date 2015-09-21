@@ -16,7 +16,7 @@ import MusicFeeder
 
 class TrackTableViewController: UITableViewController {
     var appDelegate: AppDelegate { return UIApplication.sharedApplication().delegate as! AppDelegate }
-    var player:     Player<PlayerObserver>? { get { return appDelegate.player }}
+    var player:     Player? { get { return appDelegate.player }}
     let tableCellReuseIdentifier = "trackTableViewCell"
     let cellHeight: CGFloat      = 80
 
@@ -82,7 +82,7 @@ class TrackTableViewController: UITableViewController {
         super.init(style: style)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
@@ -173,14 +173,14 @@ class TrackTableViewController: UITableViewController {
 
     func updateSelection() {
         if !isPlaylistPlaying() {
-            if let i = tableView.indexPathForSelectedRow() {
+            if let i = tableView.indexPathForSelectedRow {
                 tableView.deselectRowAtIndexPath(i, animated: true)
             }
         } else {
             if let p = appDelegate.player {
                 if _playlist != p.currentPlaylist as? Playlist {
                 } else if let track = p.currentTrack as? Track {
-                    if let index = find(_playlist.getTracks(), track) {
+                    if let index = _playlist.getTracks().indexOf(track) {
                         tableView.selectRowAtIndexPath(NSIndexPath(forRow: index, inSection: 0), animated: true, scrollPosition: UITableViewScrollPosition.None)
                     }
                 }
@@ -232,7 +232,7 @@ class TrackTableViewController: UITableViewController {
                         self.tableView.insertRowsAtIndexPaths(indexes, withRowAnimation: UITableViewRowAnimation.Fade)
                     }
                 case .Failure:
-                    var message = "Failed to add tracks".localize()
+                    let message = "Failed to add tracks".localize()
                     UIAlertController.show(self, title: "MusicFav", message: message, handler: { action in })
                 case .ExceedLimit:
                     let message = String(format: "Track number of per playlist is limited to %d.".localize(), Playlist.trackNumberLimit) +
@@ -252,7 +252,7 @@ class TrackTableViewController: UITableViewController {
 
     func fetchTrackDetails() {
         weak var _self = self
-        playlistLoader.fetchTracks().start(
+        playlistLoader.fetchTracks().on(
             next: { (index, track) in
                 UIScheduler().schedule {
                     if let __self = _self {
@@ -266,7 +266,7 @@ class TrackTableViewController: UITableViewController {
                 self.tableView.reloadData()
             }, completed: {
                 self.tableView.reloadData()
-        })
+        }).start()
     }
 
     // MARK: UITableViewDataSource
@@ -312,7 +312,7 @@ class TrackTableViewController: UITableViewController {
         return cell
     }
 
-    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
+    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let remove = UITableViewRowAction(style: .Default, title: "Remove".localize()) {
             (action, indexPath) in
             Logger.sendUIActionEvent(self, action: "removeTrack", label: "\(indexPath.item)")
@@ -347,7 +347,7 @@ class TrackTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let track = playlist.tracks[indexPath.item]
         if track.streamUrl != nil {
-            appDelegate.player?.select(indexPath.item, playlist: playlist, playlists: [playlist])
+            appDelegate.select(indexPath.item, playlist: playlist, playlists: [playlist])
         } else {
             tableView.deselectRowAtIndexPath(indexPath, animated: true)
         }

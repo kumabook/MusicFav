@@ -30,7 +30,7 @@ class TutorialView: EAIntroView {
                                                desc: String.tutorialString("player_page_desc"),
                                             bgColor: UIColor.theme,
                                           imageName: "player_cap")
-        var pages: [EAIntroPage] = [firstPage(frame),
+        let pages: [EAIntroPage] = [firstPage(frame),
                                     streamPage,
                                     playlistPage,
                                     playerPage,

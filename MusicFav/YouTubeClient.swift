@@ -9,7 +9,6 @@
 import XCDYouTubeKit
 import ReactiveCocoa
 import Result
-import Box
 import Alamofire
 import SwiftyJSON
 import NXOAuth2Client
@@ -19,11 +18,12 @@ extension XCDYouTubeClient {
         return SignalProducer { (sink, disposable) in
             let operation = self.getVideoWithIdentifier(identifier, completionHandler: { (video, error) -> Void in
                 if let e = error {
-                    sink.put(.Error(Box(error)))
+                    sink(ReactiveCocoa.Event<XCDYouTubeVideo, NSError>.Error(e))
                     return
+                } else if let v = video {
+                    sink(ReactiveCocoa.Event<XCDYouTubeVideo, NSError>.Next(v))
+                    sink(.Completed)
                 }
-                sink.put(.Next(Box(video)))
-                sink.put(.Completed)
             })
             disposable.addDisposable {
                 operation.cancel()
@@ -47,6 +47,8 @@ public class YouTubeAPIClient {
     static var API_KEY        = ""
     var API_KEY: String { return YouTubeAPIClient.API_KEY }
     var oauth2clientDelegate: YouTubeOAuth2ClientDelegate
+
+    var manager: Alamofire.Manager!
 
     static var _account: NXOAuth2Account?
     static var account: NXOAuth2Account? {
@@ -94,9 +96,8 @@ public class YouTubeAPIClient {
         let bundle = NSBundle.mainBundle()
         if let path = bundle.pathForResource("youtube", ofType: "json") {
             let data = NSData(contentsOfFile: path)
-            let jsonObject: AnyObject? = NSJSONSerialization.JSONObjectWithData(data!,
-                options: NSJSONReadingOptions.MutableContainers,
-                error: nil)
+            let jsonObject: AnyObject? = try? NSJSONSerialization.JSONObjectWithData(data!,
+                options: NSJSONReadingOptions.MutableContainers)
             if let obj: AnyObject = jsonObject {
                 let json = JSON(obj)
                 if let apiKey = json["api_key"].string {
@@ -114,6 +115,7 @@ public class YouTubeAPIClient {
 
     public static func setup() {
         loadConfig()
+        sharedInstance.renewManager()
     }
 
     init() {
@@ -137,27 +139,34 @@ public class YouTubeAPIClient {
         }
     }
 
-    static func newManager() -> Manager {
-        var m = Alamofire.Manager()
+    func renewManager() {
+        manager = Alamofire.Manager()
+        let configuration = manager.session.configuration
+        var headers = configuration.HTTPAdditionalHeaders ?? [:]
         if let token = YouTubeAPIClient.accessToken {
-            m.session.configuration.HTTPAdditionalHeaders = ["Authorization": "Bearer \(token)"]
+            headers["Authorization"] = "Bearer \(token)"
+        } else {
+            headers.removeValueForKey("Authorization")
         }
-        return m
+        configuration.HTTPAdditionalHeaders = headers
+        manager = Alamofire.Manager(configuration: configuration)
     }
 
-    func request(method: Alamofire.Method, URLString: URLStringConvertible, parameters: [String : AnyObject]?, encoding: ParameterEncoding, callback: (NSURLRequest, NSHTTPURLResponse?, AnyObject?, NSError?) -> Void) -> Alamofire.Request {
-        let request = YouTubeAPIClient.newManager().request(method, URLString, parameters: parameters, encoding: encoding)
+    func request(method: Alamofire.Method, URLString: URLStringConvertible, parameters: [String : AnyObject]?, encoding: ParameterEncoding, callback: (NSURLRequest?, NSHTTPURLResponse?, Alamofire.Result<AnyObject>) -> Void) -> Alamofire.Request {
+        let request = manager.request(method, URLString, parameters: parameters, encoding: encoding)
             .validate(statusCode: 200..<300)
             .validate(contentType: ["application/json"])
-            .responseJSON(options: NSJSONReadingOptions.allZeros) { (req, res, obj, error) -> Void in
-                if let e = error {
-                    if let oauth2client = self.oauth2client {
-                        self.oauth2clientDelegate.addPendingRequest(req, callback: callback)
-                        oauth2client.refreshAccessToken()
-                        return
+            .responseJSON(options: .AllowFragments) { (req, res, result) -> Void in
+                if let r = req {
+                    if result.isFailure {
+                        if let oauth2client = self.oauth2client {
+                            self.oauth2clientDelegate.addPendingRequest(r, callback: callback)
+                            oauth2client.refreshAccessToken()
+                            return
+                        }
                     }
                 }
-                callback((req, res, obj, error))
+                callback(req, res, result)
         }
         return request
     }
@@ -172,16 +181,16 @@ public class YouTubeAPIClient {
                 params = ["key": self.API_KEY, "part": "snippet", "maxResults": 10, "regionCode": "JP"]
             }
 
-            let request = self.request(.GET, URLString: url, parameters: params, encoding: .URL) { (req, res, obj, error) in
-                if let e = error {
+            let request = self.request(.GET, URLString: url, parameters: params, encoding: .URL) { (req, res, result) in
+                if let e = result.error {
                     YouTubeAPIClient.clearAllAccount()
-                    sink.put(.Error(Box(e)))
-                } else {
-                    let json = JSON(obj!)
+                    sink(.Error(e as NSError))
+                } else if let obj = result.value {
+                    let json = JSON(obj)
                     let val  = (items: json["items"].arrayValue.map { GuideCategory(json: $0) },
                         nextPageToken: json["nextPageToken"].string)
-                    sink.put(.Next(Box(val)))
-                    sink.put(.Completed)
+                    sink(.Next(val))
+                    sink(.Completed)
                 }
             }
             disposable.addDisposable {
@@ -229,16 +238,16 @@ public class YouTubeAPIClient {
             if let q = query {
                 params["q"] = q
             }
-            let request = self.request(.GET, URLString: url, parameters: params, encoding: .URL) { (req, res, obj, error) in
-                if let e = error {
+            let request = self.request(.GET, URLString: url, parameters: params, encoding: .URL) { (req, res, result) in
+                if let e = result.error {
                     YouTubeAPIClient.clearAllAccount()
-                    sink.put(.Error(Box(e)))
-                } else {
-                    let json = JSON(obj!)
+                    sink(.Error(e as NSError))
+                } else if let obj = result.value {
+                    let json = JSON(obj)
                     let val  = (items: json["items"].arrayValue.map { Channel(json: $0) },
                         nextPageToken: json["nextPageToken"].string)
-                    sink.put(.Next(Box(val)))
-                    sink.put(.Completed)
+                    sink(.Next(val))
+                    sink(.Completed)
                 }
             }
             disposable.addDisposable {
@@ -255,15 +264,15 @@ public class YouTubeAPIClient {
             for k in params.keys {
                 _params[k] = params[k]
             }
-            let request = self.request(.GET, URLString: T.url, parameters: _params, encoding: .URL) { (req, res, obj, error) in
-                if let e = error {
-                    sink.put(.Error(Box(e)))
-                } else {
-                    let json = JSON(obj!)
+            let request = self.request(.GET, URLString: T.url, parameters: _params, encoding: .URL) { (req, res, result) in
+                if let e = result.error {
+                    sink(.Error(e as NSError))
+                } else if let obj = result.value {
+                    let json = JSON(obj)
                     let val  = (items: json["items"].arrayValue.map { T(json: $0) },
                         nextPageToken: json["nextPageToken"].string)
-                    sink.put(.Next(Box(val)))
-                    sink.put(.Completed)
+                    sink(.Next(val))
+                    sink(.Completed)
                 }
             }
             disposable.addDisposable {
@@ -293,7 +302,7 @@ public class YouTubeAPIClient {
 }
 
 public class YouTubeOAuth2ClientDelegate: NSObject, NXOAuth2ClientDelegate {
-    public typealias RequestCallback = (NSURLRequest, NSHTTPURLResponse?, AnyObject?, NSError?) -> Void
+    public typealias RequestCallback = (NSURLRequest?, NSHTTPURLResponse?, Alamofire.Result<AnyObject>) -> Void
     public var pendingRequests: [(NSURLRequest, RequestCallback)]
     public override init() {
         pendingRequests = []
@@ -302,10 +311,11 @@ public class YouTubeOAuth2ClientDelegate: NSObject, NXOAuth2ClientDelegate {
         pendingRequests.append((request, callback))
     }
     func restartPendingRequests() {
+        YouTubeAPIClient.sharedInstance.renewManager()
         for req in pendingRequests {
-            YouTubeAPIClient.newManager()
+            YouTubeAPIClient.sharedInstance.manager
                 .request(req.0)
-                .responseJSON(options: NSJSONReadingOptions.allZeros,
+                .responseJSON(options: .AllowFragments,
                     completionHandler: req.1)
         }
         pendingRequests = []

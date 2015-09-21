@@ -75,7 +75,7 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
     }
 
     override func getSubscribables() -> [Stream] {
-        if let indexPaths = tableView.indexPathsForSelectedRows() {
+        if let indexPaths = tableView.indexPathsForSelectedRows {
             return indexPaths.map { Channel(subscription: self.channelLoader.subscriptions[$0.item]) }
         } else {
             return []
@@ -139,7 +139,7 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
 
     func observeChannelLoader() {
         observer?.dispose()
-        observer = channelLoader.signal.observe(next: { event in
+        observer = channelLoader.signal.observeNext({ event in
             switch event {
             case .StartLoading:
                 self.showIndicator()
@@ -229,12 +229,12 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
                 cell.subtitle2Label.textAlignment = .Left
                 return cell
             } else {
-                let cell = tableView.dequeueReusableCellWithIdentifier(section.tableCellReuseIdentifier, forIndexPath: indexPath) as! UITableViewCell
+                let cell = tableView.dequeueReusableCellWithIdentifier(section.tableCellReuseIdentifier, forIndexPath: indexPath)
                 cell.textLabel?.text = "Connect with Your YouTube Account"
                 return cell
             }
         case .GuideCategory:
-            let cell = tableView.dequeueReusableCellWithIdentifier(section.tableCellReuseIdentifier, forIndexPath: indexPath) as! UITableViewCell
+            let cell = tableView.dequeueReusableCellWithIdentifier(section.tableCellReuseIdentifier, forIndexPath: indexPath)
             let category = channelLoader.categories[indexPath.item]
             cell.textLabel?.text = category.title
             return cell

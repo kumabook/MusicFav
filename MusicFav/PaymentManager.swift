@@ -49,7 +49,7 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
 
     func purchaseUnlockEverything() {
         if SKPaymentQueue.canMakePayments() {
-            var productsRequest = SKProductsRequest(productIdentifiers: [unlockEvnerythingIdentifier])
+            let productsRequest = SKProductsRequest(productIdentifiers: [unlockEvnerythingIdentifier])
             productsRequest.delegate = self
             productsRequest.start()
             if let view = viewController?.navigationController?.view {
@@ -87,7 +87,7 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
     }
 
     // MARK: - SKProductsRequestDelegate
-    func productsRequest(request: SKProductsRequest!, didReceiveResponse response: SKProductsResponse!) {
+    func productsRequest(request: SKProductsRequest, didReceiveResponse response: SKProductsResponse) {
         if response.invalidProductIdentifiers.count > 0 {
             if let vc = viewController {
                 UIAlertController.show(vc, title: "MusicFav", message: "Invalid item identifier", handler: { action in })
@@ -95,16 +95,14 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
             return
         }
 
-        var queue: SKPaymentQueue = SKPaymentQueue.defaultQueue()
-        if let products = response.products as? [SKProduct] {
-            for product in products {
-                productDic[product.productIdentifier] = product
-            }
+        let queue: SKPaymentQueue = SKPaymentQueue.defaultQueue()
+        for product in response.products {
+            productDic[product.productIdentifier] = product
         }
         if let unlockEverything = productDic[unlockEvnerythingIdentifier] {
-            var title = "Unlock Everything".localize()
-            var description = "・Unlimited number of playlists\n・Unlimited number of tracks of per playlist".localize()
-            var alert = UIAlertController(title: title,
+            let title = "Unlock Everything".localize()
+            let description = "・Unlimited number of playlists\n・Unlimited number of tracks of per playlist".localize()
+            let alert = UIAlertController(title: title,
                                         message: description,
                                  preferredStyle: .Alert)
             alert.addAction(UIAlertAction(title: "Purchase".localize(), style: UIAlertActionStyle.Default, handler: { action in
@@ -121,8 +119,8 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
         }
     }
     // MARK: - SKPaymentTransactionObserver
-    func paymentQueue(queue: SKPaymentQueue!, updatedTransactions transactions: [AnyObject]!) {
-        for transaction in transactions as! [SKPaymentTransaction] {
+    func paymentQueue(queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+        for transaction in transactions {
             let identifier = transaction.payment.productIdentifier
             switch transaction.transactionState {
             case .Purchasing:
@@ -141,10 +139,11 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
                 queue.finishTransaction(transaction)
                 if let vc = viewController, view = vc.navigationController?.view {
                     MBProgressHUD.hideAllHUDsForView(view, animated: true)
-                    if transaction.error.code != SKErrorPaymentCancelled {
-                        if let product = productDic[identifier], title = product.localizedTitle, desc = product.localizedDescription {
+                    if let code = transaction.error?.code where code != SKErrorPaymentCancelled {
+                        if let product = productDic[identifier] {
+                            let title = product.localizedTitle
                             let message = String(format: "Sorry. Failed to purchase \"%@\".".localize(), title)
-                            var alert = UIAlertController(title: "MusicFav", message: message, preferredStyle: .Alert)
+                            let alert = UIAlertController(title: "MusicFav", message: message, preferredStyle: .Alert)
                             alert.addAction(UIAlertAction(title: "OK".localize(), style: .Cancel, handler: {action in }))
                             vc.presentViewController(alert, animated: true, completion: {})
                         }
@@ -167,18 +166,18 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
     }
 
     // Sent when an error is encountered while adding transactions from the user's purchase history back to the queue.
-    func paymentQueue(queue: SKPaymentQueue!, restoreCompletedTransactionsFailedWithError error: NSError!) {
+    func paymentQueue(queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: NSError) {
         if let vc = viewController, view = vc.navigationController?.view {
             MBProgressHUD.hideAllHUDsForView(view, animated: true)
             let message = String(format: "Sorry. Failed to restore.".localize())
-            var alert = UIAlertController(title: "MusicFav", message: message, preferredStyle: .Alert)
+            let alert = UIAlertController(title: "MusicFav", message: message, preferredStyle: .Alert)
             alert.addAction(UIAlertAction(title: "OK".localize(), style: .Cancel, handler: {action in }))
             vc.presentViewController(alert, animated: true, completion: {})
         }
     }
 
     // Sent when all transactions from the user's purchase history have successfully been added back to the queue.
-    func paymentQueueRestoreCompletedTransactionsFinished(queue: SKPaymentQueue!) {
+    func paymentQueueRestoreCompletedTransactionsFinished(queue: SKPaymentQueue) {
         if let vc = viewController, view = vc.navigationController?.view {
             MBProgressHUD.hideAllHUDsForView(view, animated: true)
             vc.tableView.reloadData()

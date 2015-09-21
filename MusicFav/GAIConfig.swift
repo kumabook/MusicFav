@@ -27,13 +27,13 @@ public class GAIConfig {
         }
     }
     public class func setup(filePath: String) {
-        var gai                     = GAI.sharedInstance()
+        let gai                     = GAI.sharedInstance()
         let data                    = NSData(contentsOfFile: filePath)
-        let jsonObject: AnyObject?  = NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers, error: nil)
+        let jsonObject: AnyObject?  = try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
         let json                    = JSON(jsonObject!)
         
         if let trackerId = json["tracker_id"].string {
-            if trackerId.rangeOfString("UA-", options: NSStringCompareOptions.allZeros, range: nil, locale: NSLocale.autoupdatingCurrentLocale()) == nil {
+            if trackerId.rangeOfString("UA-", options: NSStringCompareOptions(), range: nil, locale: NSLocale.autoupdatingCurrentLocale()) == nil {
                 return
             } else {
                 gai.trackerWithTrackingId(trackerId)

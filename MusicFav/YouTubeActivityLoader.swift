@@ -9,7 +9,6 @@
 import Foundation
 import ReactiveCocoa
 import Result
-import Box
 import MusicFeeder
 
 class YouTubeActivityLoader {
@@ -32,7 +31,7 @@ class YouTubeActivityLoader {
 
     var state:          State
     var signal:         Signal<Event, NSError>
-    var sink:           SinkOf<ReactiveCocoa.Event<Event, NSError>>
+    var sink:           Signal<Event, NSError>.Observer
 
     var itemsPageTokenOfPlaylist:  [YouTubePlaylist: String]
     var itemsDisposableOfPlaylist: [YouTubePlaylist: Disposable?]
@@ -91,9 +90,9 @@ class YouTubeActivityLoader {
 
     private func fetchNextChannels() -> SignalProducer<Void, NSError> {
         state = State.Fetching
-        sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.StartLoading)))
-        return YouTubeAPIClient.sharedInstance.fetchMyChannels(channelsPageToken) |> map {
-            self.channels.extend($0.items)
+        sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
+        return YouTubeAPIClient.sharedInstance.fetchMyChannels(channelsPageToken).map {
+            self.channels.appendContentsOf($0.items)
             self.channelsPageToken = $0.nextPageToken
             if self.channels.count > 0 {
                 for key in self.channels[0].relatedPlaylists.keys {
@@ -105,7 +104,7 @@ class YouTubeActivityLoader {
                     self.fetchNextPlaylistItems(playlist).start()
                 }
             }
-            self.sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.CompleteLoading)))
+            self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.CompleteLoading))
             self.state = State.Normal
         }
     }
@@ -126,23 +125,16 @@ class YouTubeActivityLoader {
 
     private func fetchNextPlaylistItems(playlist: YouTubePlaylist) -> SignalProducer<Void, NSError> {
         state = State.Fetching
-        sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.StartLoading)))
+        sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
         let pageToken = itemsPageTokenOfPlaylist[playlist]
-        return YouTubeAPIClient.sharedInstance.fetchPlaylistItems(playlist.id, pageToken: pageToken) |> map {
+        return YouTubeAPIClient.sharedInstance.fetchPlaylistItems(playlist.id, pageToken: pageToken).map {
             self.itemsPageTokenOfPlaylist[playlist] = $0.nextPageToken
             for item in $0.items {
                 self.itemsOfPlaylist[playlist]!.append(item)
                 self.playlistsOfYouTubePlaylist[playlist]!.append(item.toPlaylist())
-                item.track.fetchTrackDetail(false).start(
-                    next: { (track: Track?) in
-                        if let t = track {
-                        }
-                        return
-                    }, error: { error in
-                    }, completed: {
-                })
+                item.track.fetchTrackDetail(false).start()
             }
-            self.sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.CompleteLoading)))
+            self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.CompleteLoading))
             self.state = State.Normal
         }
     }

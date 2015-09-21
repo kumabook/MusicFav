@@ -28,11 +28,7 @@ extension UILocalNotification {
     static var updateCheckInterval:               NSTimeInterval { return NSTimeInterval(60 * notificationTimeMinutesInterval * 2) }
     static var defaultNotificationDateComponents: NSDateComponents {
         let calendar = NSCalendar.currentCalendar()
-        var components = calendar.components(NSCalendarUnit.CalendarUnitYear  |
-                                             NSCalendarUnit.CalendarUnitMonth |
-                                             NSCalendarUnit.CalendarUnitDay   |
-                                             NSCalendarUnit.CalendarUnitHour  |
-                                             NSCalendarUnit.CalendarUnitMinute, fromDate: NSDate())
+        let components = calendar.components([NSCalendarUnit.Year, NSCalendarUnit.Month, NSCalendarUnit.Day, NSCalendarUnit.Hour, NSCalendarUnit.Minute], fromDate: NSDate())
         components.hour   = 8
         components.minute = 0
         components.second = 0
@@ -45,24 +41,26 @@ extension UILocalNotification {
         application.registerUserNotificationSettings(UIUserNotificationSettings(forTypes: .Sound, categories: nil))
     }
     static func buildNewTracksInfo(application: UIApplication, tracks: [Track]) -> [String] {
-        let notifications = application.scheduledLocalNotifications as! [UILocalNotification]
-        var tracksInfo: Set<String> = Set(tracks.map { "\($0.provider)/\($0.identifier)" })
-        for n in notifications {
-            if let userInfo = n.userInfo, type = NotificationType(userInfo: userInfo) {
-                switch type {
-                case .NewTracks:
-                    if let ts = userInfo["tracks"] as? [String] {
-                        tracksInfo = tracksInfo.union(ts)
+        if let notifications = application.scheduledLocalNotifications {
+            var tracksInfo: Set<String> = Set(tracks.map { "\($0.provider)/\($0.identifier)" })
+            for n in notifications {
+                if let userInfo = n.userInfo, type = NotificationType(userInfo: userInfo) {
+                    switch type {
+                    case .NewTracks:
+                        if let ts = userInfo["tracks"] as? [String] {
+                            tracksInfo = tracksInfo.union(ts)
+                        }
+                    case .RecommendLogin:
+                        break
                     }
-                case .RecommendLogin:
-                    break
                 }
             }
+            return Array(tracksInfo)
         }
-        return Array(tracksInfo)
+        return []
     }
     static func newTracksNotification(tracksInfo: [String], fireDate: NSDate) -> UILocalNotification {
-        var notification = UILocalNotification()
+        let notification = UILocalNotification()
         notification.alertAction = "OK"
         notification.alertBody   = String(format:"New %d tracks are added.".localize(), tracksInfo.count)
         notification.applicationIconBadgeNumber = 1

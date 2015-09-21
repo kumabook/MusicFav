@@ -32,10 +32,8 @@ class SoundCloudUserTableViewController: AddStreamTableViewController {
         switch type {
         case .Followings:
             return userLoader.followings
-        case .Search(let query):
+        case .Search:
             return userLoader.searchResults
-        default:
-            return []
         }
     }
 
@@ -60,7 +58,7 @@ class SoundCloudUserTableViewController: AddStreamTableViewController {
     }
 
     override func getSubscribables() -> [Stream] {
-        if let indexPaths = tableView.indexPathsForSelectedRows() {
+        if let indexPaths = tableView.indexPathsForSelectedRows {
             return indexPaths.map { return self.users[$0.item].toSubscription() as Stream }
         } else {
             return []
@@ -102,7 +100,7 @@ class SoundCloudUserTableViewController: AddStreamTableViewController {
 
     func observeUserLoader() {
         observer?.dispose()
-        observer = userLoader.signal.observe(next: { event in
+        observer = userLoader.signal.observeNext({ event in
             switch event {
             case .StartLoading:
                 self.showIndicator()
@@ -149,8 +147,6 @@ class SoundCloudUserTableViewController: AddStreamTableViewController {
             userLoader.fetchFollowings()
         case .Search(let query):
             userLoader.searchUsers(query)
-        default:
-            break
         }
     }
 

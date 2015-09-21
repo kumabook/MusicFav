@@ -37,7 +37,7 @@ class YouTubePlaylistItemTableViewController: TrackTableViewController {
         super.init(style: style)
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
@@ -59,7 +59,7 @@ class YouTubePlaylistItemTableViewController: TrackTableViewController {
 
     func observePlaylistLoader() {
         observer?.dispose()
-        observer = youtubePlaylistLoader.signal.observe(next: { event in
+        observer = youtubePlaylistLoader.signal.observeNext({ event in
             switch event {
             case .StartLoading:
                 self.showIndicator()
@@ -80,10 +80,10 @@ class YouTubePlaylistItemTableViewController: TrackTableViewController {
 
     override func fetchTrackDetails() {
         for track in tracks {
-            track.fetchTrackDetail(false).start(
+            track.fetchTrackDetail(false).on(
                 next: { (track: Track?) in
                     if let t = track {
-                        if let index = find(self.tracks, t) {
+                        if let index = self.tracks.indexOf(t) {
                             self.tableView?.reloadRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)],
                                 withRowAnimation: UITableViewRowAnimation.None)
                         }
@@ -93,7 +93,7 @@ class YouTubePlaylistItemTableViewController: TrackTableViewController {
                     self.tableView.reloadData()
                 }, completed: {
                     self.tableView.reloadData()
-            })
+            }).start()
         }
     }
 }

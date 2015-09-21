@@ -138,18 +138,18 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
     }
 
     func fetchRecommendFeeds() {
-        CloudAPIClient.sharedInstance.fetchFeedsByIds(RecommendFeed.ids).start(
+        CloudAPIClient.sharedInstance.fetchFeedsByIds(RecommendFeed.ids).on(
             next: { feeds in
                 self.recommendFeeds = feeds
             }, error: { error in
             }, completed: {
                 self.tableView?.reloadData()
-        })
+        }).start()
     }
 
     func observeBlogLoader() {
         blogObserver?.dispose()
-        blogObserver = blogLoader.signal.observe(next: { event in
+        blogObserver = blogLoader.signal.observeNext({ event in
             switch event {
             case .StartLoading:    break
             case .CompleteLoading: self.tableView?.reloadData()
@@ -160,7 +160,7 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
 
     func observeChannelLoader() {
         channelObserver?.dispose()
-        channelObserver = channelLoader.signal.observe(next: { event in
+        channelObserver = channelLoader.signal.observeNext({ event in
             switch event {
             case .StartLoading: break
             case .CompleteLoading:
@@ -172,7 +172,7 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
 
     func observeUserLoader() {
         userObserver?.dispose()
-        userObserver = userLoader.signal.observe(next: { event in
+        userObserver = userLoader.signal.observeNext({ event in
             switch event {
             case .StartLoading: break
             case .CompleteLoading:

@@ -142,8 +142,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     func observePlaylists() {
         playlists = Playlist.shared.current
         tableView.reloadData()
-        playlistsObserver = Playlist.shared.signal.observe(
-            next: { event in
+        playlistsObserver = Playlist.shared.signal.observeNext({ event in
                 let section = Section.Favorites.rawValue
                 switch event {
                 case .Created(let playlist):
@@ -153,16 +152,16 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
                 case .Updated(let playlist):
                     self.updatePlaylist(playlist)
                 case .Removed(let playlist):
-                    if let index = find(self.playlists, playlist) {
-                        let playlist = self.playlists.removeAtIndex(index)
+                    if let index = self.playlists.indexOf(playlist) {
+                        _ = self.playlists.removeAtIndex(index)
                         let indexPath = NSIndexPath(forItem: index, inSection: section)
                         self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
                     }
-                case .TracksAdded(let playlist, let tracks):
+                case .TracksAdded(let playlist, _):
                     self.updatePlaylist(playlist)
-                case .TrackRemoved(let playlist, let Track, let index):
+                case .TrackRemoved(let playlist, _, _):
                     self.updatePlaylist(playlist)
-                case .TrackUpdated(let playlist, let track):
+                case .TrackUpdated(let playlist, _):
                     self.updatePlaylist(playlist)
                 }
                 return
@@ -178,7 +177,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             let indexPath = NSIndexPath(forItem: 0, inSection: Section.Selected.rawValue)
             self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
-        if let index = find(self.playlists, playlist) {
+        if let index = self.playlists.indexOf(playlist) {
             let indexPath = NSIndexPath(forItem: index, inSection: section)
             self.playlists[index] = playlist
             self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
@@ -206,7 +205,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
         if (buttonIndex == alertView.cancelButtonIndex) { tableView.reloadData(); return }
         let index = alertView.tag
-        let newTitle = alertView.textFieldAtIndex(0)!.text
+        let newTitle = alertView.textFieldAtIndex(0)!.text!
         if index >= 0 {
             playlists[index].title = newTitle
             playlists[index].save()
@@ -302,7 +301,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         return cell
     }
 
-    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [AnyObject]? {
+    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let edit = UITableViewRowAction(style: .Default, title: "Edit title".localize()) {
             (action, indexPath) in
             switch (self.getSection(indexPath.section)!) {

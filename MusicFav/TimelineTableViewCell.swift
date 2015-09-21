@@ -43,7 +43,6 @@ class TimelineTableViewCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        let tw = thumbnailWidth
         playerIcon = UIImageView(frame: CGRect(x: 0,
                                                y: 0,
                                            width: iconWidth,
@@ -89,7 +88,7 @@ class TimelineTableViewCell: UITableViewCell {
         let tw = thumbnailWidth
         clearThumbnails()
         self.playlist = playlist
-        for (i, track) in enumerate(playlist.getTracks()) {
+        for (i, track) in playlist.getTracks().enumerate() {
             let rect = CGRect(x: margin + (tw + padding) * CGFloat(i),
                               y: margin,
                           width: tw,
@@ -170,7 +169,7 @@ class TimelineTableViewCell: UITableViewCell {
         if let playlist = self.playlist {
             if let delegate = self.delegate {
                 if let view = sender.view as? UIImageView {
-                    if let i = find(imageViews, view) {
+                    if let i = imageViews.indexOf(view) {
                         delegate.trackSelected(self, index: i, track: playlist.getTracks()[i], playlist: playlist)
                     }
                 }
@@ -192,7 +191,7 @@ class TimelineTableViewCell: UITableViewCell {
 
     func observePlaylist(playlist: Playlist) {
         observer?.dispose()
-        observer = playlist.signal.observe(next: { event in
+        observer = playlist.signal.observeNext({ event in
             UIScheduler().schedule {
                 switch event {
                 case .Load(let index):

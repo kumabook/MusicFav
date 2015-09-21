@@ -140,9 +140,8 @@ public struct FeedlyAPI {
         let bundle = NSBundle.mainBundle()
         if let path = bundle.pathForResource("feedly", ofType: "json") {
             let data     = NSData(contentsOfFile: path)
-            let jsonObject: AnyObject? = NSJSONSerialization.JSONObjectWithData(data!,
-                options: NSJSONReadingOptions.MutableContainers,
-                error: nil)
+            let jsonObject: AnyObject? = try? NSJSONSerialization.JSONObjectWithData(data!,
+                options: NSJSONReadingOptions.MutableContainers)
             if let obj: AnyObject = jsonObject {
                 let json = JSON(obj)
                 if json["target"].stringValue == "production" {
@@ -171,7 +170,7 @@ public struct FeedlyAPI {
             profile = nil
             clearAllAccount()
         }
-        CloudAPIClient.sharedPipe.0.observe(next: { event in
+        CloudAPIClient.sharedPipe.0.observeNext({ event in
             switch event {
             case .Login(let profile):
                 self.profile = profile

@@ -18,7 +18,7 @@ extension String {
     }
     func toDate() -> NSDate? {
         let dateFormatter = NSDateFormatter()
-        var formats = ["yyyy/MM/dd HH:mm:ssZ",
+        let formats = ["yyyy/MM/dd HH:mm:ssZ",
                        "yyyy-MM-dd'T'HH:mm:ss.sssZ"]
         for f in formats {
             dateFormatter.dateFormat = f

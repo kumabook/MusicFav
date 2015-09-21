@@ -45,7 +45,7 @@ class OAuthViewController: UIViewController, UIWebViewDelegate {
         observers = []
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         self.clientId      = nil
         self.clientSecret  = nil
         self.scope         = nil
@@ -116,8 +116,6 @@ class OAuthViewController: UIViewController, UIWebViewDelegate {
                 if notification.userInfo != nil {
                     let account = notification.userInfo![NXOAuth2AccountStoreNewAccountUserInfoKey] as! NXOAuth2Account
                     self.onLoggedIn(account)
-                } else {
-                    self.showAlert()
                 }
             })
         observers.append(dc.addObserverForName(NXOAuth2AccountStoreDidFailToRequestAccessNotification,

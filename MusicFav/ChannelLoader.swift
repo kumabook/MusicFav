@@ -8,7 +8,6 @@
 
 import ReactiveCocoa
 import Result
-import Box
 import FeedlyKit
 
 class ChannelLoader {
@@ -31,7 +30,7 @@ class ChannelLoader {
     var perPage = 5
     var state:          State
     var signal:         Signal<Event, NSError>
-    var sink:           SinkOf<ReactiveCocoa.Event<Event, NSError>>
+    var sink:           Signal<Event, NSError>.Observer
 
     var subscriptions:               [YouTubeSubscription]
     var channels:                    [Channel]
@@ -77,15 +76,15 @@ class ChannelLoader {
 
     private func fetchNextGuideCategory() -> SignalProducer<Void, NSError> {
         state = State.Fetching
-        sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.StartLoading)))
-        return YouTubeAPIClient.sharedInstance.fetchGuideCategories(categoriesPageToken) |> map {
-            self.categories.extend($0.items)
+        sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
+        return YouTubeAPIClient.sharedInstance.fetchGuideCategories(categoriesPageToken).map {
+            self.categories.appendContentsOf($0.items)
             self.categoriesPageToken = $0.nextPageToken
             for c in $0.items {
                 self.channelsOfCategory[c]          = []
                 self.channelsPageTokenOfCategory[c] = ""
             }
-            self.sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.CompleteLoading)))
+            self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.CompleteLoading))
             self.state = State.Normal
             if self.categoriesPageToken == nil {
                 self.state = .Normal
@@ -95,26 +94,26 @@ class ChannelLoader {
 
     private func fetchNextChannels(category: GuideCategory) -> SignalProducer<Void, NSError> {
         state = State.Fetching
-        sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.StartLoading)))
-        return YouTubeAPIClient.sharedInstance.fetchChannels(category, pageToken: channelsPageTokenOfCategory[category]) |> map {
-                self.channelsOfCategory[category]?.extend($0.items)
+        sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
+        return YouTubeAPIClient.sharedInstance.fetchChannels(category, pageToken: channelsPageTokenOfCategory[category]).map {
+                self.channelsOfCategory[category]?.appendContentsOf($0.items)
                 self.channelsPageTokenOfCategory[category] = $0.nextPageToken
-                self.sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.CompleteLoading)))
+                self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.CompleteLoading))
                 self.state = State.Normal
             }
     }
 
     private func fetchNextSubscriptions() -> SignalProducer<Void, NSError> {
         state = State.Fetching
-        sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.StartLoading)))
+        sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
         return YouTubeAPIClient.sharedInstance.fetchSubscriptions(subscriptionPageToken)
-            |> map {
-                self.subscriptions.extend($0.items)
+            .map {
+                self.subscriptions.appendContentsOf($0.items)
                 self.subscriptionPageToken = $0.nextPageToken
-                self.sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.CompleteLoading)))
+                self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.CompleteLoading))
                 self.state = State.Normal
-            } |> mapError { e in
-                self.sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.FailToLoad)))
+            }.mapError { e in
+                self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.FailToLoad))
                 self.state = State.Error
                 return e
         }
@@ -122,15 +121,15 @@ class ChannelLoader {
 
     private func searchNextChannels(query: String) -> SignalProducer<Void, NSError> {
         state = State.Fetching
-        sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.StartLoading)))
+        sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
         return YouTubeAPIClient.sharedInstance.searchChannel(query, pageToken: searchPageToken)
-            |> map {
-                self.searchResults.extend($0.items)
+            .map {
+                self.searchResults.appendContentsOf($0.items)
                 self.searchPageToken = $0.nextPageToken
-                self.sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.CompleteLoading)))
+                self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.CompleteLoading))
                 self.state = State.Normal
-            } |> mapError { e in
-                self.sink.put(ReactiveCocoa.Event<Event, NSError>.Next(Box(.FailToLoad)))
+            }.mapError { e in
+                self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.FailToLoad))
                 self.state = State.Error
                 return e
         }

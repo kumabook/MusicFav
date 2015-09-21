@@ -11,7 +11,6 @@ import ReactiveCocoa
 import SwiftyJSON
 import FeedlyKit
 import MusicFeeder
-import Box
 
 class StreamTimelineTableViewController: TimelineTableViewController {
     var streamLoader: StreamLoader!
@@ -21,7 +20,7 @@ class StreamTimelineTableViewController: TimelineTableViewController {
         super.init()
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         super.init(coder:aDecoder)
     }
 
@@ -44,7 +43,7 @@ class StreamTimelineTableViewController: TimelineTableViewController {
     }
 
     override func observeTimelineLoader() -> Disposable? {
-        return streamLoader.signal.observe(next: { event in
+        return streamLoader.signal.observeNext({ event in
             switch event {
             case .StartLoadingLatest:
                 self.onpuRefreshControl.beginRefreshing()
@@ -63,7 +62,7 @@ class StreamTimelineTableViewController: TimelineTableViewController {
                 self.updateSelection(UITableViewScrollPosition.None)
             case .FailToLoadNext:
                 self.showReloadButton()
-            case .CompleteLoadingPlaylist(let playlist, let entry):
+            case .CompleteLoadingPlaylist(_, let entry):
                 let items = self.getItems()
                 for i in 0..<items.count {
                     if entry == items[i].entry && i < self.tableView.numberOfRowsInSection(0) {

@@ -32,10 +32,8 @@ class ChannelTableViewController: AddStreamTableViewController {
         case .Category(let category):
             if let list = channelLoader.channelsOf(category) { return list }
             else                                             { return [] }
-        case .Search(let query):
+        case .Search:
             return channelLoader.searchResults
-        default:
-            return []
         }
     }
 
@@ -60,7 +58,7 @@ class ChannelTableViewController: AddStreamTableViewController {
     }
 
     override func getSubscribables() -> [Stream] {
-        if let indexPaths = tableView.indexPathsForSelectedRows() {
+        if let indexPaths = tableView.indexPathsForSelectedRows {
             return indexPaths.map { self.channels[$0.item] }
         } else {
             return []
@@ -102,7 +100,7 @@ class ChannelTableViewController: AddStreamTableViewController {
 
     func observeChannelLoader() {
         observer?.dispose()
-        observer = channelLoader.signal.observe(next: { event in
+        observer = channelLoader.signal.observeNext({ event in
             switch event {
             case .StartLoading:
                 self.showIndicator()
@@ -149,8 +147,6 @@ class ChannelTableViewController: AddStreamTableViewController {
             channelLoader.fetchChannels(category)
         case .Search(let query):
             channelLoader.searchChannels(query)
-        default:
-            break
         }
     }
 
