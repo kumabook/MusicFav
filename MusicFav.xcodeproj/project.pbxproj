@@ -19,7 +19,6 @@
 		6716642E1A738E3E005FE005 /* FeedlyKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 671664271A738E2A005FE005 /* FeedlyKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		671D07181B9477F500DC99A5 /* SoundCloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671D07171B9477F500DC99A5 /* SoundCloudKit.framework */; };
 		671D07191B94782500DC99A5 /* SoundCloudKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 671D07171B9477F500DC99A5 /* SoundCloudKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6720B9B61B27A08F000C4D3A /* Box.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6720B9B41B27A08F000C4D3A /* Box.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6720B9B71B27A08F000C4D3A /* Result.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6720B9B51B27A08F000C4D3A /* Result.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6724E1C51A9C9E9900D8E0FA /* UIColorExtenstion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6724E1C41A9C9E9900D8E0FA /* UIColorExtenstion.swift */; };
 		6724E1C91A9CA19800D8E0FA /* AppearanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6724E1C81A9CA19800D8E0FA /* AppearanceManager.swift */; };
@@ -194,7 +193,6 @@
 				67C0BC6A1B7749B800243AE8 /* SnapKit.framework in Embed Frameworks */,
 				67C0BC6B1B7749B800243AE8 /* WebImage.framework in Embed Frameworks */,
 				67B777A81B6E3CE0001B777B /* Realm.framework in Embed Frameworks */,
-				6720B9B61B27A08F000C4D3A /* Box.framework in Embed Frameworks */,
 				6720B9B71B27A08F000C4D3A /* Result.framework in Embed Frameworks */,
 				675AB3351AD390790003824C /* XCDYouTubeKit.framework in Embed Frameworks */,
 				67F7D4911A625A4F00A5AE68 /* ReactiveCocoa.framework in Embed Frameworks */,
@@ -832,7 +830,9 @@
 		67277CA01A434304002FD3E0 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastSwiftMigration = 0700;
+				LastSwiftUpdateCheck = 0700;
+				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Hiroki Kumamoto";
 				TargetAttributes = {
 					67277CA71A434304002FD3E0 = {
@@ -954,7 +954,6 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/FeedlyKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/XCDYouTubeKit.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/Box.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Result.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Realm.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SnapKit.framework",
@@ -1216,6 +1215,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: hiroki kumamoto (354XT663D2)";
 				COPY_PHASE_STRIP = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_OPTIMIZATION_LEVEL = 0;
@@ -1298,6 +1298,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/GoogleAnalytics-SDK-iOS",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.kumabook.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PUBLIC_HEADERS_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/PublicHeaders";
@@ -1326,6 +1327,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/GoogleAnalytics-SDK-iOS",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.kumabook.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				PUBLIC_HEADERS_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/PublicHeaders";
@@ -1363,6 +1365,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/GoogleAnalytics-SDK-iOS",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = "io.kumabook.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/MusicFav/Objective-C-Bridging-Header.h";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MusicFav.app/MusicFav";
@@ -1394,6 +1397,7 @@
 					"$(PROJECT_DIR)/GoogleAnalytics-SDK-iOS",
 				);
 				ONLY_ACTIVE_ARCH = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = "io.kumabook.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/MusicFav/Objective-C-Bridging-Header.h";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MusicFav.app/MusicFav";
