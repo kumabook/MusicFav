@@ -57,7 +57,13 @@ enum Target: String {
     }
     func install_lib() {
         run("pod install")
-        run("carthage bootstrap --use-submodules")
+        let options = "--use-submodules --use-ssh --platform iOS --no-use-binaries"
+        switch self {
+        case .Production:
+          run("carthage bootstrap \(options) --configuration Release")
+        case .Sandbox:
+          run("carthage bootstrap \(options) --configuration Debug")
+        }
     }
 }
 
