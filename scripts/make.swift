@@ -62,7 +62,7 @@ enum Target: String {
 }
 
 func run(command: String) {
-    println(command)
+    print(command)
     system(command)
 }
 
@@ -73,10 +73,10 @@ let fabricConfig     = "config/fabric.json"
 let gaConfig         = "config/google_analytics.json"
 
 
-let args = NSProcessInfo.processInfo().arguments as! [String]
+let args = NSProcessInfo.processInfo().arguments as [String]
 let _task   = args[args.count - 2]
 let _target = args[args.count - 1]
-println("------ setup config files for \(_target) --------")
+print("------ setup config files for \(_target) --------")
 
 if let task = Task(rawValue: _task), target = Target(rawValue:_target) {
     switch task {
@@ -86,10 +86,10 @@ if let task = Task(rawValue: _task), target = Target(rawValue:_target) {
     case .Clean:   target.clean()
     }
 } else {
-    println("Unknown task or target")
-    println("Usage: ./make task target")
-    println("  task   ... prepare|build|test|clean")
-    println("  target ... production|sandbox")
+    print("Unknown task or target")
+    print("Usage: ./make task target")
+    print("  task   ... prepare|build|test|clean")
+    print("  target ... production|sandbox")
 }
 
 //xctool -workspace MusicFav.xcworkspace -scheme MusicFav  archive -archivePath MusicFav.ipa
