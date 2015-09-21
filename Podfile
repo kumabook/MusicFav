@@ -1,6 +1,8 @@
 platform :ios, '8.0'
 use_frameworks!
 
+xcodeproj 'MusicFav.xcodeproj'
+
 pod 'NXOAuth2Client',       '>= 1.2.2'
 pod 'AFNetworking',         '>= 2.0'
 pod 'JASidePanels',         '>= 1.3'
@@ -16,6 +18,3 @@ pod "RMDateSelectionViewController", "~> 1.5.1"
 pod 'ISAlternativeRefreshControl'
 pod 'RATreeView',           :git => 'https://github.com/kumabook/RATreeView.git',
                             :branch => 'pull_to_refresh'
-target 'AcceptanceTests', :exclusive => true do
-  pod 'KIF', :configurations => ['Debug']
-end
