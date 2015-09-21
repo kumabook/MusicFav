@@ -4,9 +4,6 @@
 [submodule "Carthage/Checkouts/Alamofire"]
 	path = Carthage/Checkouts/Alamofire
 	url = ssh://git@github.com/Alamofire/Alamofire.git
-[submodule "Carthage/Checkouts/Box"]
-	path = Carthage/Checkouts/Box
-	url = ssh://git@github.com/robrix/Box.git
 [submodule "Carthage/Checkouts/Breit"]
 	path = Carthage/Checkouts/Breit
 	url = ssh://git@github.com/kumabook/Breit.git
