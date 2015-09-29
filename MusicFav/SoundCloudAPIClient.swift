@@ -54,7 +54,6 @@ extension APIClient {
     public static var keyChainGroup  = "SoundCloud"
 
     private static let userDefaults = NSUserDefaults.standardUserDefaults()
-    public static var sharedInstance = APIClient()
     static func newManager() -> Manager {
         let m = Alamofire.Manager()
         if let token = APIClient.accessToken {
