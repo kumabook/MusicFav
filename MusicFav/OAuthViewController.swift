@@ -82,6 +82,7 @@ class OAuthViewController: UIViewController, UIWebViewDelegate {
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         removeObservers()
+        cleanOAuth2AccountStore()
     }
 
     override func didReceiveMemoryWarning() {
@@ -97,7 +98,6 @@ class OAuthViewController: UIViewController, UIWebViewDelegate {
     }
 
     func setupOAuth2AccountStore() {
-        NXOAuth2AccountStore.sharedStore()
         NXOAuth2AccountStore.sharedStore().setClientID(clientId,
                                                secret: clientSecret,
                                                 scope: scope,
@@ -108,20 +108,33 @@ class OAuthViewController: UIViewController, UIWebViewDelegate {
                                        forAccountType: accountType)
     }
 
+    func cleanOAuth2AccountStore() {
+        NXOAuth2AccountStore.sharedStore().setClientID("",
+                                               secret: "",
+                                                scope: scope,
+                                     authorizationURL: NSURL(string: "http://dummy.com"),
+                                             tokenURL: NSURL(string: "http://dummy.com"),
+                                          redirectURL: NSURL(string: "http://dummy.com"),
+                                        keyChainGroup: "",
+                                       forAccountType: accountType)
+    }
+
     func addObservers() {
         let dc = NSNotificationCenter.defaultCenter()
         observers.append(dc.addObserverForName(NXOAuth2AccountStoreAccountsDidChangeNotification,
             object: NXOAuth2AccountStore.sharedStore(),
             queue: nil) { (notification) -> Void in
-                if notification.userInfo != nil {
-                    let account = notification.userInfo![NXOAuth2AccountStoreNewAccountUserInfoKey] as! NXOAuth2Account
-                    self.onLoggedIn(account)
+                if let account = notification.userInfo?[NXOAuth2AccountStoreNewAccountUserInfoKey] as? NXOAuth2Account
+                    where account.accountType == self.accountType {
+                        self.onLoggedIn(account)
                 }
             })
         observers.append(dc.addObserverForName(NXOAuth2AccountStoreDidFailToRequestAccessNotification,
             object: NXOAuth2AccountStore.sharedStore(),
             queue: nil) { (notification) -> Void in
-                self.showAlert()
+                if let type = notification.userInfo?[kNXOAuth2AccountStoreAccountType] as? String where type == self.accountType {
+                    self.showAlert()
+                }
             })
     }
 
