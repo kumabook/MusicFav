@@ -11,6 +11,7 @@ import UIKit
 import UIKit
 import ReactiveCocoa
 import NXOAuth2Client
+import MBProgressHUD
 
 protocol OAuthViewDelegate: class {
     func onLoggedIn(account: NXOAuth2Account)
@@ -170,5 +171,17 @@ class OAuthViewController: UIViewController, UIWebViewDelegate {
             return false
         }
         return true
+    }
+
+    func webViewDidStartLoad(webView: UIWebView) {
+        MBProgressHUD.showHUDAddedTo(view, animated: true)
+    }
+
+    func webViewDidFinishLoad(webView: UIWebView) {
+        MBProgressHUD.hideHUDForView(view, animated: true)
+    }
+
+    func webView(webView: UIWebView, didFailLoadWithError error: NSError?) {
+        MBProgressHUD.hideHUDForView(view, animated: true)
     }
 }
