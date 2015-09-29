@@ -56,7 +56,8 @@ enum Target: String {
         run("xctool -workspace MusicFav.xcworkspace -scheme UnitTests test")
     }
     func install_lib() {
-        run("pod install")
+        run("bundle install")
+        run("bundle pod install")
         let options = "--use-submodules --use-ssh --platform iOS --no-use-binaries"
         switch self {
         case .Production:
