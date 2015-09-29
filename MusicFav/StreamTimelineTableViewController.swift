@@ -34,6 +34,11 @@ class StreamTimelineTableViewController: TimelineTableViewController {
         return streamLoader.entries.map { TimelineItem.Entry($0, self.streamLoader.playlistsOfEntry[$0]) }
     }
 
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchTracks()
+    }
+
     override func fetchLatest() {
         streamLoader.fetchLatestEntries()
     }
@@ -76,5 +81,13 @@ class StreamTimelineTableViewController: TimelineTableViewController {
                 self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             }
         })
+    }
+
+    func fetchTracks() {
+        for item in self.getItems() {
+            if let playlist = item.playlist, let entry = item.entry {
+                streamLoader.fetchTracks(playlist, entry: entry)
+            }
+        }
     }
 }
