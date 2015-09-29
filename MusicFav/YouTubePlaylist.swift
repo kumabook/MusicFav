@@ -99,7 +99,7 @@ public class YouTubePlaylistItem: YouTubeResource {
         note               = contentDetails["note"]?.stringValue
         privacyStatus      = status["privacyStatus"]?.stringValue
 
-        track              = Track(provider: Provider.Youtube,
+        track              = Track(provider: Provider.YouTube,
                                         url: "https://www.youtube.com/watch?v=\(videoId)",
                                  identifier: videoId,
                                       title: title)
