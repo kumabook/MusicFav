@@ -178,10 +178,10 @@ class OAuthViewController: UIViewController, UIWebViewDelegate {
     }
 
     func webViewDidFinishLoad(webView: UIWebView) {
-        MBProgressHUD.hideHUDForView(view, animated: true)
+        MBProgressHUD.hideAllHUDsForView(view, animated: true)
     }
 
     func webView(webView: UIWebView, didFailLoadWithError error: NSError?) {
-        MBProgressHUD.hideHUDForView(view, animated: true)
+        MBProgressHUD.hideAllHUDsForView(view, animated: true)
     }
 }
