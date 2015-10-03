@@ -69,10 +69,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func setupAudioSession(application: UIApplication) {
-        let audioSession = AVAudioSession()
+        let audioSession = AVAudioSession.sharedInstance()
         do {
             try audioSession.setCategory(AVAudioSessionCategoryPlayback)
+            try audioSession.setActive(true)
         } catch _ {
+            Logger.error("failed to set")
         }
         application.beginReceivingRemoteControlEvents()
     }
@@ -119,11 +121,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillResignActive(application: UIApplication) {
         playerViewController?.disablePlayerView()
-        dispatch_async(dispatch_get_main_queue()) { player?.keepPlaying() }
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
-        dispatch_async(dispatch_get_main_queue()) { player?.keepPlaying() }
+        playerViewController?.disablePlayerView()
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
