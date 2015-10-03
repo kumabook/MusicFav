@@ -9,13 +9,13 @@ but is available via TestFlight Beta Testing.
 
 ## How to build
 
-- Use xcode 6.3
-- Install [Carthage][] and [CocoaPods][]
+- Use xcode 7.0
+- Install [CocoaPods][] via `bundle install`
+- Install [Carthage][] (0.7.5)
 - Install dependencies with below:
 
   ```shell
-  carthage bootstrap --use-submodule
-  pod install
+  scripts/make.swift install
   ```
 - Download [Google analytics iOS SDK][] as submobule
 
