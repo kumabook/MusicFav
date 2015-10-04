@@ -155,7 +155,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     @available(iOS 9.0, *)
     func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
         if let shortcut = Shortcut(fullType: shortcutItem.type) {
-            completionHandler(shortcut.handleShortCutItem())
+            if mainViewController?.centerPanel == nil {
+                let startTime = dispatch_time(DISPATCH_TIME_NOW, Int64(Shortcut.delaySec * Double(NSEC_PER_SEC)))
+                dispatch_after(startTime, dispatch_get_main_queue()) { () -> Void in
+                    completionHandler(shortcut.handleShortCutItem())
+                }
+            } else {
+                completionHandler(shortcut.handleShortCutItem())
+            }
         }
     }
 

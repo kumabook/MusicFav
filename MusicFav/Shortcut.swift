@@ -11,6 +11,7 @@ import UIKit
 import MusicFeeder
 
 enum Shortcut: String {
+    static let delaySec = 1.0
     static let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     case Play     = "Play"
     case Pause    = "Pause"
