@@ -38,7 +38,9 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         override func timeUpdated()      {}
         override func didPlayToEndTime() {}
         override func statusChanged()    {
-            vc.updatePlaylist(vc.appDelegate.playingPlaylist!)
+            if let playlist = vc.appDelegate.playingPlaylist {
+                vc.updatePlaylist(playlist)
+            }
         }
 
         override func trackSelected(track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist) {
