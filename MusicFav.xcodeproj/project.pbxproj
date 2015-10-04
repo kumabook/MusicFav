@@ -36,6 +36,7 @@
 		6727EDFE1A5AC1DE003C6A47 /* MiniPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6727EDFC1A5AC1DE003C6A47 /* MiniPlayerViewController.swift */; };
 		6728FA391A60580A00F693B3 /* PreferenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6728FA371A60580A00F693B3 /* PreferenceViewController.swift */; };
 		6728FA3E1A60B9FD00F693B3 /* TrackTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6728FA3D1A60B9FD00F693B3 /* TrackTableViewController.swift */; };
+		6729DE5E1BC160FD00543E84 /* Shortcut.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6729DE5D1BC160FD00543E84 /* Shortcut.swift */; settings = {ASSET_TAGS = (); }; };
 		67311E2E1AF61BAC00711DAC /* feedback_en.html in Resources */ = {isa = PBXBuildFile; fileRef = 67311E2D1AF61BAC00711DAC /* feedback_en.html */; };
 		67311E301AF63BD500711DAC /* FeedbackWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67311E2F1AF63BD500711DAC /* FeedbackWebViewController.swift */; };
 		67311E321AF7BBA800711DAC /* feedback_ja.html in Resources */ = {isa = PBXBuildFile; fileRef = 67311E311AF7BBA800711DAC /* feedback_ja.html */; };
@@ -258,6 +259,7 @@
 		6727EDFC1A5AC1DE003C6A47 /* MiniPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerViewController.swift; sourceTree = "<group>"; };
 		6728FA371A60580A00F693B3 /* PreferenceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferenceViewController.swift; sourceTree = "<group>"; };
 		6728FA3D1A60B9FD00F693B3 /* TrackTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewController.swift; sourceTree = "<group>"; };
+		6729DE5D1BC160FD00543E84 /* Shortcut.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shortcut.swift; sourceTree = "<group>"; };
 		67311E2D1AF61BAC00711DAC /* feedback_en.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = feedback_en.html; sourceTree = "<group>"; };
 		67311E2F1AF63BD500711DAC /* FeedbackWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackWebViewController.swift; sourceTree = "<group>"; };
 		67311E311AF7BBA800711DAC /* feedback_ja.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = feedback_ja.html; sourceTree = "<group>"; };
@@ -441,6 +443,7 @@
 				67FA09661AF8CA570086AA45 /* AccessibilityLabel.swift */,
 				674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */,
 				679F405B1B0574DD0070602D /* PaymentManager.swift */,
+				6729DE5D1BC160FD00543E84 /* Shortcut.swift */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -1076,6 +1079,7 @@
 				67D41D111B8B48960082454F /* SoundCloudUserLoader.swift in Sources */,
 				6728FA3E1A60B9FD00F693B3 /* TrackTableViewController.swift in Sources */,
 				67F8466F1BA47B720005E78A /* ControlPanel.swift in Sources */,
+				6729DE5E1BC160FD00543E84 /* Shortcut.swift in Sources */,
 				6736D00D1B86341000CCDD80 /* YouTubePlaylist.swift in Sources */,
 				67FBBDF91B6CD46B00B567CB /* UpdateChecker.swift in Sources */,
 				67C1A80A1B7B876A002A604C /* OAuthViewController.swift in Sources */,

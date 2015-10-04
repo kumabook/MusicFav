@@ -16,9 +16,14 @@
 "Add"           = "追加";
 "Article"       = "記事";
 "Playlist"      = "プレイリスト";
+"Play"          = "再生";
+"Pause"         = "一時停止";
 "Remove"        = "削除";
 "Copy"          = "コピー";
 "Fav　　"       = "お気に入り";
+"Favorite"      = "お気に入り";
+"No track"      = "No track";
+"No playlist"   = "No playlist";
 "Completed"     = "完了　　";
 "Loading..."    = "読み込み中...";
 "Unavailable"   = "視聴不可";
@@ -78,6 +83,7 @@
 "MusicFav Recommend"                = "MusicFavのおすすめ";
 "Hype machine featured"             = "Hype machine featured";
 "Login failed."                     = "ログインできませんでした。";
+"Save the track"                    = "トラックを登録";
 
 "Sorry. Failed to purchase \"%@\"."               = "申し訳ございません。「%@」の購入ができませんでした。";
 "Sorry. In-App Purchase is restricted"            = "申し訳ございません。アプリ内課金が制限されています。";

@@ -91,6 +91,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        if #available(iOS 9.0, *) {
+            Shortcut.updateShortcutItems(application)
+        }
+
         let mainBundle = NSBundle.mainBundle()
         let fabricConfig = FabricConfig(filePath: mainBundle.pathForResource("fabric", ofType: "json")!)
         if !fabricConfig.skip {
@@ -121,10 +125,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillResignActive(application: UIApplication) {
         playerViewController?.disablePlayerView()
+        Shortcut.updateShortcutItems(application)
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
         playerViewController?.disablePlayerView()
+        Shortcut.updateShortcutItems(application)
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
@@ -144,6 +150,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, didReceiveLocalNotification notification: UILocalNotification) {
+    }
+
+    @available(iOS 9.0, *)
+    func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
+        if let shortcut = Shortcut(fullType: shortcutItem.type) {
+            completionHandler(shortcut.handleShortCutItem())
+        }
     }
 
     override func remoteControlReceivedWithEvent(event: UIEvent?) {
