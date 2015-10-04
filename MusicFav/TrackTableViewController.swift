@@ -204,12 +204,12 @@ class TrackTableViewController: UITableViewController {
     
     func showPlayingPlaylist() {
         Logger.sendUIActionEvent(self, action: "showPlayingPlaylist", label: "")
-        appDelegate.miniPlayerViewController?.playlistTableViewController.showPlayingPlaylist()
+        appDelegate.miniPlayerViewController?.playlistTableViewController.showPlayingPlaylist(true)
     }
 
     func showSelectedPlaylist() {
         Logger.sendUIActionEvent(self, action: "showSelectedPlaylist", label: "")
-        appDelegate.miniPlayerViewController?.playlistTableViewController.showSelectedPlaylist()
+        appDelegate.miniPlayerViewController?.playlistTableViewController.showSelectedPlaylist(true)
     }
     
     func favPlaylist() {

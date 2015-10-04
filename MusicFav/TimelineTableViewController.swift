@@ -181,7 +181,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
             vc?.playlistTableViewController.updateNavbar()
             vc?.playlistTableViewController.tableView.reloadData()
             appDelegate.mainViewController?.showRightPanelAnimated(true, completion: {
-                vc?.playlistTableViewController.showPlaylist(_playlist)
+                vc?.playlistTableViewController.showPlaylist(_playlist, animated: true)
                 return
             })
         }

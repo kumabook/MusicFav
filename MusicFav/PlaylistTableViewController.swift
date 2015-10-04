@@ -99,21 +99,22 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         showTitleEditAlertViewAtIndex(NEW_PLAYLIST_INDEX)
     }
 
-    func showPlaylist(playlist: MusicFeeder.Playlist) {
+    func showPlaylist(playlist: MusicFeeder.Playlist, animated: Bool) -> TrackTableViewController {
         Logger.sendUIActionEvent(self, action: "showPlaylist", label: "")
         let ttc = TrackTableViewController(playlist: playlist)
-        navigationController?.popToRootViewControllerAnimated(true)
-        navigationController?.pushViewController(ttc, animated: true)
+        navigationController?.popToRootViewControllerAnimated(animated)
+        navigationController?.pushViewController(ttc, animated: animated)
+        return ttc
     }
 
-    func showPlayingPlaylist() {
+    func showPlayingPlaylist(animated: Bool) {
         Logger.sendUIActionEvent(self, action: "showPlayingPlaylist", label: "")
-        if let playlist = appDelegate.playingPlaylist { showPlaylist(playlist) }
+        if let playlist = appDelegate.playingPlaylist { showPlaylist(playlist, animated: animated) }
     }
 
-    func showSelectedPlaylist() {
+    func showSelectedPlaylist(animated: Bool) {
         Logger.sendUIActionEvent(self, action: "showSelectedPlaylist", label: "")
-        if let playlist = appDelegate.selectedPlaylist { showPlaylist(playlist) }
+        if let playlist = appDelegate.selectedPlaylist { showPlaylist(playlist, animated: animated) }
     }
 
     func showYouTubePlaylists() {
@@ -336,9 +337,9 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         switch (getSection(indexPath.section)!) {
         case .Playing:
-            showPlayingPlaylist()
+            showPlayingPlaylist(true)
         case .Selected:
-            showSelectedPlaylist()
+            showSelectedPlaylist(true)
         case .YouTube:
             if YouTubeAPIClient.isLoggedIn {
                 showYouTubePlaylists()
@@ -354,7 +355,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
                 presentViewController(UINavigationController(rootViewController: vc), animated: true, completion: {})
             }
         case .Favorites:
-            showPlaylist(playlists[indexPath.item])
+            showPlaylist(playlists[indexPath.item], animated: true)
         }
     }
 }
