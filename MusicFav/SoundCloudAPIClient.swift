@@ -24,7 +24,7 @@ public class OAuth2ClientDelegate: NSObject, NXOAuth2ClientDelegate {
     }
     func restartPendingRequests() {
         for req in pendingRequests {
-            APIClient.sharedInstance.manager.request(req.0).responseJSON(options: [], completionHandler: req.1)
+            APIClient.sharedInstance.manager.request(req.0).responseJSON(options: .AllowFragments, completionHandler: req.1)
         }
         pendingRequests = []
     }
@@ -33,9 +33,7 @@ public class OAuth2ClientDelegate: NSObject, NXOAuth2ClientDelegate {
     public func oauthClient(client: NXOAuth2Client!, didFailToGetAccessTokenWithError error: NSError!) {
         restartPendingRequests()
     }
-    public func oauthClientDidLoseAccessToken(client: NXOAuth2Client!) {
-        restartPendingRequests()
-    }
+    public func oauthClientDidLoseAccessToken(client: NXOAuth2Client!) {}
     public func oauthClientDidRefreshAccessToken(client: NXOAuth2Client!) {
         APIClient.refreshAccount(NXOAuth2Account(accountWithAccessToken: client.accessToken,
                                                             accountType: APIClient.accountType))
@@ -52,6 +50,8 @@ extension APIClient {
     public static var redirectUrl    = "http://localhost/"
     public static var accountType    = "SoundCloud"
     public static var keyChainGroup  = "SoundCloud"
+
+    static let errorResponseKey = "com.alamofire.serialization.response.error.response"
 
     private static let userDefaults = NSUserDefaults.standardUserDefaults()
     static func newManager() -> Manager {
@@ -158,6 +158,18 @@ extension APIClient {
         }
     }
 
+    public class func handleError(error error:ErrorType) {
+        let e = error as NSError
+        if let dic = e.userInfo as NSDictionary? {
+            if let response:NSHTTPURLResponse = dic[errorResponseKey] as? NSHTTPURLResponse {
+                if response.statusCode == 401 {
+                    if isLoggedIn { clearAllAccount() }
+                }
+            }
+        }
+    }
+
+
     func fetch(route: Router, callback: OAuth2ClientDelegate.RequestCallback) {
         self.manager.request(route).validate(statusCode: 200..<300).responseJSON(options: .AllowFragments) {(req: NSURLRequest?, res: NSHTTPURLResponse?, result: Result<AnyObject>) -> Void in
             if result.isFailure {
@@ -174,8 +186,12 @@ extension APIClient {
     func fetchItem<T: JSONInitializable>(route: Router) -> SignalProducer<T, NSError> {
         return SignalProducer { sink, disposable in
             let callback: OAuth2ClientDelegate.RequestCallback = {(req: NSURLRequest?, res: NSHTTPURLResponse?, result: Result<AnyObject>) -> Void in
-                if let e = result.error {
-                    sink(.Error(e as NSError))
+                if let e = result.error as NSError? {
+                    if let r = res {
+                        sink(.Error(NSError(domain: e.domain, code: e.code, userInfo: [APIClient.errorResponseKey:r])))
+                    } else {
+                        sink(.Error(e))
+                    }
                 } else if let obj = result.value {
                     sink(.Next(T(json: JSON(obj))))
                     sink(.Completed)
@@ -188,8 +204,12 @@ extension APIClient {
     func fetchItems<T: JSONInitializable>(route: Router) -> SignalProducer<[T], NSError> {
         return SignalProducer { sink, disposable in
             let callback: OAuth2ClientDelegate.RequestCallback = {(req: NSURLRequest?, res: NSHTTPURLResponse?, result: Result<AnyObject>) -> Void in
-                if let e = result.error {
-                    sink(.Error(e as NSError))
+                if let e = result.error as NSError? {
+                    if let r = res {
+                        sink(.Error(NSError(domain: e.domain, code: e.code, userInfo: [APIClient.errorResponseKey:r])))
+                    } else {
+                        sink(.Error(e))
+                    }
                 } else if let obj = result.value {
                     sink(.Next(JSON(obj).arrayValue.map { T(json: $0) }))
                     sink(.Completed)

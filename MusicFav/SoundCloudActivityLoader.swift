@@ -88,7 +88,7 @@ public class SoundCloudActivityLoader {
                     self.futureHref = activityList.futureHref
                 },
                 error: { error in
-                    CloudAPIClient.handleError(error: error)
+                    SoundCloudKit.APIClient.handleError(error: error)
                     self.state = State.Error
                     self.sink(.Next(.FailToLoadLatest))
                 },
@@ -142,7 +142,7 @@ public class SoundCloudActivityLoader {
                     }
                 },
                 error: {error in
-                    CloudAPIClient.handleError(error: error)
+                    SoundCloudKit.APIClient.handleError(error: error)
                     self.state = State.Error
                     self.sink(.Next(.FailToLoadNext))
                 },
