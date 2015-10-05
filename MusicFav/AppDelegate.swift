@@ -91,10 +91,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
-        if #available(iOS 9.0, *) {
-            Shortcut.updateShortcutItems(application)
-        }
-
         let mainBundle = NSBundle.mainBundle()
         let fabricConfig = FabricConfig(filePath: mainBundle.pathForResource("fabric", ofType: "json")!)
         if !fabricConfig.skip {
@@ -115,6 +111,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             markAsLaunched()
         }
         setupMainViewControllers()
+        if #available(iOS 9.0, *) {
+            if let p = player {
+                Shortcut.observePlayer(p)
+            }
+            Shortcut.updateShortcutItems(application)
+        }
         window?.makeKeyAndVisible()
         if !didFinishTutorial { startTutorial() }
         reload()
