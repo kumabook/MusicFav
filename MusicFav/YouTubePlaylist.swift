@@ -58,7 +58,7 @@ public func ==(lhs: YouTubePlaylist, rhs: YouTubePlaylist) -> Bool {
     return lhs.id == rhs.id
 }
 
-public class YouTubePlaylistItem: YouTubeResource {
+public class YouTubePlaylistItem: YouTubeResource, Hashable, Equatable {
     public class var url: String { return "https://www.googleapis.com/youtube/v3/playlistItems" }
     public class var params: [String:String] { return [:] }
     public let etag:        String
@@ -78,6 +78,8 @@ public class YouTubePlaylistItem: YouTubeResource {
     public let privacyStatus: String?
 
     public var track:         Track
+
+    public var hashValue: Int { return id.hashValue }
 
     public required init(json: JSON) {
         let snippet        = json["snippet"].dictionaryValue
@@ -117,4 +119,8 @@ public class YouTubePlaylistItem: YouTubeResource {
                                  title: title,
                                 tracks: [track])
     }
+}
+
+public func ==(lhs: YouTubePlaylistItem, rhs: YouTubePlaylistItem) -> Bool {
+    return lhs.id == rhs.id
 }
