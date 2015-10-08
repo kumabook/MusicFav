@@ -70,8 +70,6 @@ class YouTubeActivityLoader {
         itemsDisposableOfPlaylist[playlist]??.dispose()
         itemsDisposableOfPlaylist[playlist]  = nil
         itemsPageTokenOfPlaylist[playlist]   = ""
-        itemsOfPlaylist[playlist]            = []
-        playlistsOfYouTubePlaylist[playlist] = []
     }
 
     func needFetchChannels() -> Bool {
@@ -128,6 +126,10 @@ class YouTubeActivityLoader {
         sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
         let pageToken = itemsPageTokenOfPlaylist[playlist]
         return YouTubeAPIClient.sharedInstance.fetchPlaylistItems(playlist.id, pageToken: pageToken).map {
+            if self.itemsPageTokenOfPlaylist[playlist] == "" {
+                self.itemsOfPlaylist[playlist]            = []
+                self.playlistsOfYouTubePlaylist[playlist] = []
+            }
             self.itemsPageTokenOfPlaylist[playlist] = $0.nextPageToken
             for item in $0.items {
                 self.itemsOfPlaylist[playlist]!.append(item)
