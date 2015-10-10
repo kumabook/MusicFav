@@ -21,6 +21,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
     var indicator:    UIActivityIndicatorView!
     var reloadButton: UIButton!
     var observer:     Disposable?
+    var appObserver:  Disposable?
     var onpuRefreshControl:  OnpuRefreshControl!
     var playerObserver: TimelinePlayerObserver!
 
@@ -66,6 +67,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
 
     deinit {
         observer?.dispose()
+        appObserver?.dispose()
     }
 
     /** should be override in subclass */
@@ -82,6 +84,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        observeApp()
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "playlist"),
                                                             style: UIBarButtonItemStyle.Plain,
                                                            target: self,
@@ -137,10 +140,29 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         observer?.dispose()
+        appObserver?.dispose()
         if playerObserver != nil {
             player?.removeObserver(playerObserver)
         }
         playerObserver = nil
+    }
+
+    func observeApp() {
+        appObserver = appDelegate.signal?.observeNext({ event in
+            if event == AppDelegate.Event.WillEnterForeground {
+                self.restorePlayerIcon()
+            }
+        })
+    }
+
+    func restorePlayerIcon() {
+        for visibleCell in tableView.visibleCells {
+            if let cell = visibleCell as? TimelineTableViewCell, indexPath = tableView.indexPathForCell(visibleCell) {
+                if let playlist = getItems()[indexPath.item].playlist {
+                    updatePlayerIcon(cell, playlist: playlist)
+                }
+            }
+        }
     }
 
     func indexPathOfPlaylist(playlist: Playlist) -> NSIndexPath? {
@@ -293,6 +315,19 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         }
     }
 
+    func updatePlayerIcon(cell: TimelineTableViewCell, playlist: Playlist) {
+        if let p = self.player, cp = p.currentPlaylist as? Playlist, i = p.currentTrackIndex {
+            if cp == playlist {
+                cell.updatePlayerIcon(i, playerState: p.currentState)
+                updateSelection(UITableViewScrollPosition.None)
+            } else {
+                cell.updatePlayerIcon(0, playerState: PlayerState.Init)
+            }
+        } else {
+            cell.updatePlayerIcon(0, playerState: PlayerState.Init)
+        }
+    }
+
     // MARK: - Table view data source
 
     override func scrollViewDidScroll(scrollView: UIScrollView) {
@@ -328,16 +363,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         cell.delegate              = self
         if let playlist = item.playlist {
             cell.loadThumbnails(playlist)
-            if let p = self.player, cp = p.currentPlaylist as? Playlist, i = p.currentTrackIndex {
-                if cp == playlist {
-                    cell.updatePlayerIcon(i, playerState: p.currentState)
-                    updateSelection(UITableViewScrollPosition.None)
-                } else {
-                    cell.updatePlayerIcon(0, playerState: PlayerState.Init)
-                }
-            } else {
-                cell.updatePlayerIcon(0, playerState: PlayerState.Init)
-            }
+            updatePlayerIcon(cell, playlist: playlist)
             cell.observePlaylist(playlist)
         } else {
             cell.clearThumbnails()

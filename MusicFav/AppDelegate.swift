@@ -21,12 +21,21 @@ import SoundCloudKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    enum Event {
+        case WillResignActive
+        case DidEnterBackground
+        case WillEnterForeground
+        case DidBecomeActive
+        case WillTerminate
+    }
     var appearanceManager:        AppearanceManager?
     var paymentManager:           PaymentManager?
     var window:                   UIWindow?
     var coverViewController:      DraggableCoverViewController?
     var miniPlayerViewController: MiniPlayerViewController?
     var player:                   Player?
+    var signal:                   Signal<AppDelegate.Event, NSError>?
+    var sink:                     Signal<AppDelegate.Event, NSError>.Observer?
     var selectedPlaylist:         MusicFeeder.Playlist?
     var playingPlaylist:          MusicFeeder.Playlist? {
         get {
@@ -91,6 +100,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        let pipe = Signal<AppDelegate.Event, NSError>.pipe()
+        signal = pipe.0
+        sink   = pipe.1
         let mainBundle = NSBundle.mainBundle()
         let fabricConfig = FabricConfig(filePath: mainBundle.pathForResource("fabric", ofType: "json")!)
         if !fabricConfig.skip {
@@ -126,24 +138,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillResignActive(application: UIApplication) {
+        sink?(.Next(Event.WillResignActive))
         playerViewController?.disablePlayerView()
         Shortcut.updateShortcutItems(application)
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
+        sink?(.Next(Event.DidEnterBackground))
         playerViewController?.disablePlayerView()
         Shortcut.updateShortcutItems(application)
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
+        sink?(.Next(Event.WillEnterForeground))
+        mainViewController?.centerPanel
         playerViewController?.enablePlayerView()
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
+        sink?(.Next(Event.DidBecomeActive))
         application.applicationIconBadgeNumber = 0
     }
 
     func applicationWillTerminate(application: UIApplication) {
+        sink?(.Next(Event.WillTerminate))
         Logger.sendEndSession()
     }
 

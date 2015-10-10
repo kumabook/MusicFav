@@ -124,29 +124,27 @@ class TimelineTableViewCell: UITableViewCell {
         indicator.center = CGPoint(x: margin + (tw + padding) * CGFloat(index) + htw, y: htw + margin)
         thumbListContainer.bringSubviewToFront(playerIcon)
         thumbListContainer.bringSubviewToFront(indicator)
-        if self.playerState != playerState {
-            self.playerState = playerState
-            switch playerState {
-            case .Init:
-                playerIcon.hidden = true
-                indicator.stopAnimating()
-            case .Load:
-                playerIcon.hidden = true
-                indicator.hidden = false
-                indicator.startAnimating()
-            case .LoadToPlay:
-                playerIcon.hidden = true
-                indicator.hidden = false
-                indicator.startAnimating()
-            case .Play:
-                playerIcon.hidden = false
-                startPlayerIconAnimation()
-                indicator.stopAnimating()
-            case .Pause:
-                playerIcon.hidden = false
-                stopPlayerIconAnimation()
-                indicator.stopAnimating()
-            }
+        self.playerState = playerState
+        switch playerState {
+        case .Init:
+            playerIcon.hidden = true
+            indicator.stopAnimating()
+        case .Load:
+            playerIcon.hidden = true
+            indicator.hidden = false
+            indicator.startAnimating()
+        case .LoadToPlay:
+            playerIcon.hidden = true
+            indicator.hidden = false
+            indicator.startAnimating()
+        case .Play:
+            playerIcon.hidden = false
+            startPlayerIconAnimation()
+            indicator.stopAnimating()
+        case .Pause:
+            playerIcon.hidden = false
+            stopPlayerIconAnimation()
+            indicator.stopAnimating()
         }
     }
 
@@ -157,6 +155,7 @@ class TimelineTableViewCell: UITableViewCell {
         rotationAnimation.duration    = 1.0
         rotationAnimation.cumulative  = true
         rotationAnimation.repeatCount = Float.infinity
+        playerIcon.layer.removeAllAnimations()
         playerIcon.layer.addAnimation(rotationAnimation, forKey: "rotationAnimation")
     }
 
