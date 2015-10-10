@@ -11,19 +11,20 @@ import JASidePanels
 
 extension JASidePanelController {
     func prepare() {
-        self.view.backgroundColor = UIColor.whiteColor()
-        self.allowRightSwipe      = false
+        view.backgroundColor = UIColor.whiteColor()
+        allowLeftSwipe       = true
+        allowRightSwipe      = true
 
         switch UIDevice.currentDevice().userInterfaceIdiom {
         case .Phone:
-            self.leftGapPercentage    = 0.8
-            self.rightGapPercentage   = 0.8
+            leftGapPercentage    = 0.8
+            rightGapPercentage   = 0.8
         case .Pad:
-            self.leftGapPercentage    = 0.4
-            self.rightGapPercentage   = 0.4
+            leftGapPercentage    = 0.4
+            rightGapPercentage   = 0.4
         case .Unspecified:
-            self.leftGapPercentage    = 0.8
-            self.rightGapPercentage   = 0.8
+            leftGapPercentage    = 0.8
+            rightGapPercentage   = 0.8
         }
     }
     func showRightPanelAnimated(animated: Bool, completion: () -> Void) {
