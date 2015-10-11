@@ -14,20 +14,23 @@ import MusicFeeder
 import MBProgressHUD
 
 class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler {
+    let indicatorSize = 48
     var playlistButton:       UIBarButtonItem?
     var favEntryButton:       UIBarButtonItem?
     var historyForwardButton: UIBarButtonItem?
     var historyBackButton:    UIBarButtonItem?
 
     var currentURL: NSURL?
+    var indicator:  OnpuIndicatorView
     var webView:    WKWebView?
     var entry:      Entry
     var url:        NSURL = NSURL()
     var playlist:   Playlist?
 
     init(entry: Entry, playlist: Playlist?) {
-        self.entry    = entry
-        self.playlist = playlist
+        self.entry     = entry
+        self.playlist  = playlist
+        self.indicator = OnpuIndicatorView(frame: CGRect(x: 0, y: 0, width: indicatorSize, height: indicatorSize), animation: .ColorSwitch)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -127,6 +130,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
             }
         }
     }
+
     private func createWebView() -> WKWebView {
         let script = WKUserScript(source: getSource(), injectionTime: WKUserScriptInjectionTime.AtDocumentEnd, forMainFrameOnly: false)
         let userContentController = WKUserContentController()
@@ -135,19 +139,19 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         configuration.userContentController = userContentController;
         return WKWebView(frame: view.bounds, configuration: configuration)
     }
-    
+
     private func getSource() -> String {
         let bundle                  = NSBundle.mainBundle()
         let playlistifyPath: String = bundle.pathForResource("playlistify-userscript", ofType: "js")!
         let mainPath:        String = bundle.pathForResource("main", ofType: "js")!
         return (try! String(contentsOfFile: playlistifyPath)) + (try! String(contentsOfFile: mainPath))
     }
-    
+
     func updateViews() {
         historyForwardButton!.enabled = webView!.canGoForward
         historyBackButton!.enabled    = webView!.canGoBack
     }
-    
+
     func showPlaylist() {
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         appDelegate.mainViewController?.showRightPanelAnimated(true)
@@ -157,12 +161,12 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         Logger.sendUIActionEvent(self, action: "goBack", label: "")
         webView?.goBack()
     }
-    
+
     func historyForward() {
         Logger.sendUIActionEvent(self, action: "goForward", label: "")
         webView?.goForward()
     }
-    
+
     func favEntry() {
         Logger.sendUIActionEvent(self, action: "favEntry", label: "")
         let feedlyClient = CloudAPIClient.sharedInstance
@@ -186,13 +190,23 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
             UIAlertController.show(self, title: title, message: message, handler: { (action) in })
         }
     }
-    
+
     // MARK: - WKNavigationDelegate
-    
-    func webView(webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
+
+    func webView(webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        indicator.center = webView.center
+        view.addSubview(indicator)
+        indicator.startAnimating()
     }
-    
+
+    func webView(webView: WKWebView, didFailNavigation navigation: WKNavigation!, withError error: NSError) {
+        indicator.stopAnimating()
+        indicator.removeFromSuperview()
+    }
+
     func webView(webView: WKWebView, didFinishNavigation navigation: WKNavigation!) {
+        indicator.stopAnimating()
+        indicator.removeFromSuperview()
         updateViews()
     }
 }
