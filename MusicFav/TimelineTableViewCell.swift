@@ -34,8 +34,7 @@ class TimelineTableViewCell: UITableViewCell {
 
     weak var delegate: TimelineTableViewCellDelegate?
 
-    var playerIcon:  UIImageView!
-    var indicator:   UIActivityIndicatorView!
+    var indicator:   OnpuIndicatorView!
     var playerState: PlayerState!
     var observer: Disposable?
     var playlist: Playlist?
@@ -43,16 +42,13 @@ class TimelineTableViewCell: UITableViewCell {
 
     override func awakeFromNib() {
         super.awakeFromNib()
-        playerIcon = UIImageView(frame: CGRect(x: 0,
-                                               y: 0,
-                                           width: iconWidth,
-                                          height: iconWidth))
-        playerIcon.hidden = true
-        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
-        indicator.hidesWhenStopped = true
+        indicator = OnpuIndicatorView(frame: CGRect(x: 0,
+                                                    y: 0,
+                                                width: iconWidth,
+                                               height: iconWidth))
         indicator.hidden           = true
-        thumbListContainer.addSubview(playerIcon)
         thumbListContainer.addSubview(indicator)
+        indicator.userInteractionEnabled = true
         playButton.addTarget(self, action: "playButtonTouched", forControlEvents: UIControlEvents.TouchUpInside)
         articleButton.addTarget(self, action: "articleButtonTouched", forControlEvents: UIControlEvents.TouchUpInside)
         selectionStyle = UITableViewCellSelectionStyle.None
@@ -111,57 +107,31 @@ class TimelineTableViewCell: UITableViewCell {
     }
 
     func updatePlayerIcon(index: Int, playerState: PlayerState) {
-        let startTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.1 * Double(NSEC_PER_SEC)))
-        dispatch_after(startTime, dispatch_get_main_queue()) {
-            self._updatePlayerIcon(index, playerState: playerState)
-        }
-    }
-
-    func _updatePlayerIcon(index: Int, playerState: PlayerState) {
         let tw = thumbnailWidth
         let htw = thumbnailWidth * 0.5
-        playerIcon.center = CGPoint(x: margin + (tw + padding) * CGFloat(index) + htw, y: htw + margin)
         indicator.center = CGPoint(x: margin + (tw + padding) * CGFloat(index) + htw, y: htw + margin)
-        thumbListContainer.bringSubviewToFront(playerIcon)
         thumbListContainer.bringSubviewToFront(indicator)
         self.playerState = playerState
         switch playerState {
         case .Init:
-            playerIcon.hidden = true
+            indicator.hidden = true
             indicator.stopAnimating()
+            indicator.setColor(.Blue)
         case .Load:
-            playerIcon.hidden = true
             indicator.hidden = false
-            indicator.startAnimating()
+            indicator.startAnimating(.ColorSwitch)
         case .LoadToPlay:
-            playerIcon.hidden = true
             indicator.hidden = false
-            indicator.startAnimating()
+            indicator.startAnimating(.ColorSwitch)
         case .Play:
-            playerIcon.hidden = false
-            startPlayerIconAnimation()
-            indicator.stopAnimating()
+            indicator.hidden = false
+            indicator.setColor(.Normal)
+            indicator.startAnimating(.Rotate)
         case .Pause:
-            playerIcon.hidden = false
-            stopPlayerIconAnimation()
+            indicator.hidden = false
             indicator.stopAnimating()
+            indicator.setColor(.Blue)
         }
-    }
-
-    func startPlayerIconAnimation() {
-        playerIcon.image              = UIImage(named: "loading_icon")
-        let rotationAnimation         = CABasicAnimation(keyPath: "transform.rotation.z")
-        rotationAnimation.toValue     = NSNumber(float: Float(2.0 * M_PI))
-        rotationAnimation.duration    = 1.0
-        rotationAnimation.cumulative  = true
-        rotationAnimation.repeatCount = Float.infinity
-        playerIcon.layer.removeAllAnimations()
-        playerIcon.layer.addAnimation(rotationAnimation, forKey: "rotationAnimation")
-    }
-
-    func stopPlayerIconAnimation() {
-        playerIcon.layer.removeAllAnimations()
-        playerIcon.image = UIImage(named: "loading_icon_1")
     }
 
     func thumbImageTapped(sender: UITapGestureRecognizer) {
