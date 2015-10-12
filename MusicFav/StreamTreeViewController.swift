@@ -19,6 +19,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         case GlobalResource(Stream)
         case FeedlyCategory(FeedlyKit.Category)
         case UncategorizedSubscription(Subscription)
+        case Saved
         case YouTube
         case SoundCloud
         case Pocket
@@ -27,6 +28,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         var title: String {
             switch self {
             case .GlobalResource(let stream):                  return stream.streamTitle.localize()
+            case .Saved:                                       return "Saved"
             case .YouTube:                                     return "YouTube"
             case .SoundCloud:                                  return "SoundCloud"
             case .Pocket:                                      return "Pocket"
@@ -42,11 +44,15 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
                 case "All":
                     view?.image = UIImage(named: "home")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
                 case "Saved":
-                    view?.image = UIImage(named: "fav_entry")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+                    view?.image = UIImage(named: "saved")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
                 case "Read":
                     view?.image = UIImage(named: "checkmark")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
                 default: break
                 }
+            case History:
+                view?.image = UIImage(named: "history")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+            case Saved:
+                view?.image = UIImage(named: "saved")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
             case .YouTube:
                 view?.image = UIImage(named: "youtube")
             case .SoundCloud:
@@ -62,6 +68,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         func child(vc: StreamTreeViewController, index: Int) -> AnyObject {
             switch self {
             case .GlobalResource: return []
+            case .Saved:          return []
             case .YouTube:
                 let i = vc.youtubeActivityLoader.itemsOfPlaylist.startIndex.advancedBy(index)
                 return vc.youtubeActivityLoader.itemsOfPlaylist.keys[i]
@@ -80,6 +87,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         func numOfChild(vc: StreamTreeViewController) -> Int {
             switch self {
             case .GlobalResource: return 0
+            case .Saved:          return 0
             case .YouTube:
                 return vc.youtubeActivityLoader.itemsOfPlaylist.count
             case .SoundCloud:     return 0
@@ -117,6 +125,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             sections.append(.GlobalResource(FeedlyKit.Tag.Saved(userId)))
             sections.append(.GlobalResource(FeedlyKit.Tag.Read(userId)))
         }
+        sections.append(.Saved)
         sections.append(.YouTube)
         sections.append(.SoundCloud)
         return sections
@@ -211,6 +220,8 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         switch section {
         case .GlobalResource(let stream):
             showStream(stream: stream)
+        case .Saved:
+            showSavedStream()
         case .SoundCloud:
             if SoundCloudKit.APIClient.isLoggedIn {
                 showSoundCloudActivities()
@@ -235,6 +246,11 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
 
     func showStream(stream stream: Stream) {
         let vc = StreamTimelineTableViewController(streamLoader: StreamLoader(stream: stream))
+        appDelegate.miniPlayerViewController?.setCenterViewController(vc)
+    }
+
+    func showSavedStream() {
+        let vc = SavedStreamTimelineTableViewController(streamLoader: SavedStreamLoader())
         appDelegate.miniPlayerViewController?.setCenterViewController(vc)
     }
 

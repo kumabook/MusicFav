@@ -185,9 +185,15 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
                 }
             })
         } else {
-            let title   = "Notice".localize()
-            let message = "You can mark article as saved after login.".localize() +  "Please login from the menu of the top of left panel.".localize()
-            UIAlertController.show(self, title: title, message: message, handler: { (action) in })
+            if EntryStore.create(entry) {
+                MBProgressHUD.showCompletedHUDForView(self.navigationController!.view, animated: true, duration: 1.0) {
+                    self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
+                    return
+                }
+            } else {
+                let ac = Error.EntryAlreadyExists.alertController { (action) in }
+                self.presentViewController(ac, animated: true, completion: nil)
+            }
         }
     }
 
