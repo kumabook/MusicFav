@@ -24,8 +24,6 @@
 		6724E1C91A9CA19800D8E0FA /* AppearanceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6724E1C81A9CA19800D8E0FA /* AppearanceManager.swift */; };
 		6725420A1B784E2100EDA2C3 /* PlayerKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 672542091B784E2100EDA2C3 /* PlayerKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6725420C1B784E3300EDA2C3 /* MusicFeeder.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6725420B1B784E3300EDA2C3 /* MusicFeeder.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		67254C791A493A570064E5DF /* EntryStreamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67254C771A493A570064E5DF /* EntryStreamTableViewCell.swift */; };
-		67254C7A1A493A570064E5DF /* EntryStreamTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67254C781A493A570064E5DF /* EntryStreamTableViewCell.xib */; };
 		67254C7C1A4968F50064E5DF /* EntryWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67254C7B1A4968F50064E5DF /* EntryWebViewController.swift */; };
 		67277CAE1A434304002FD3E0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67277CAD1A434304002FD3E0 /* AppDelegate.swift */; };
 		67277CB11A434304002FD3E0 /* MusicFav.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 67277CAF1A434304002FD3E0 /* MusicFav.xcdatamodeld */; };
@@ -163,8 +161,6 @@
 		67F7D4931A625A4F00A5AE68 /* SwiftyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		67F846691BA46DB60005E78A /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F846681BA46DB60005E78A /* MiniPlayerView.swift */; };
 		67F8466F1BA47B720005E78A /* ControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F8466E1BA47B720005E78A /* ControlPanel.swift */; };
-		67F9A2951AD0558C0078EC3C /* PlaylistStreamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F9A2931AD0558C0078EC3C /* PlaylistStreamTableViewCell.swift */; };
-		67F9A2961AD0558C0078EC3C /* PlaylistStreamTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67F9A2941AD0558C0078EC3C /* PlaylistStreamTableViewCell.xib */; };
 		67FA09671AF8CA570086AA45 /* AccessibilityLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FA09661AF8CA570086AA45 /* AccessibilityLabel.swift */; };
 		67FBBDF91B6CD46B00B567CB /* UpdateChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FBBDF81B6CD46B00B567CB /* UpdateChecker.swift */; };
 		76DBFB24E45726C28C7E6397 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C231C8D483ACF959FE482B6 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
@@ -244,8 +240,6 @@
 		6724E1C81A9CA19800D8E0FA /* AppearanceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppearanceManager.swift; sourceTree = "<group>"; };
 		672542091B784E2100EDA2C3 /* PlayerKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PlayerKit.framework; path = Carthage/Build/iOS/PlayerKit.framework; sourceTree = "<group>"; };
 		6725420B1B784E3300EDA2C3 /* MusicFeeder.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MusicFeeder.framework; path = Carthage/Build/iOS/MusicFeeder.framework; sourceTree = "<group>"; };
-		67254C771A493A570064E5DF /* EntryStreamTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntryStreamTableViewCell.swift; sourceTree = "<group>"; };
-		67254C781A493A570064E5DF /* EntryStreamTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = EntryStreamTableViewCell.xib; sourceTree = "<group>"; };
 		67254C7B1A4968F50064E5DF /* EntryWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntryWebViewController.swift; sourceTree = "<group>"; };
 		67277CA81A434304002FD3E0 /* MusicFav.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicFav.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		67277CAC1A434304002FD3E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -373,8 +367,6 @@
 		67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = Carthage/Build/iOS/SwiftyJSON.framework; sourceTree = "<group>"; };
 		67F846681BA46DB60005E78A /* MiniPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
 		67F8466E1BA47B720005E78A /* ControlPanel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ControlPanel.swift; sourceTree = "<group>"; };
-		67F9A2931AD0558C0078EC3C /* PlaylistStreamTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistStreamTableViewCell.swift; sourceTree = "<group>"; };
-		67F9A2941AD0558C0078EC3C /* PlaylistStreamTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PlaylistStreamTableViewCell.xib; sourceTree = "<group>"; };
 		67FA09661AF8CA570086AA45 /* AccessibilityLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessibilityLabel.swift; sourceTree = "<group>"; };
 		67FBBDF81B6CD46B00B567CB /* UpdateChecker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UpdateChecker.swift; path = MusicFav/UpdateChecker.swift; sourceTree = "<group>"; };
 		AE64EB6BF4DC7B67771E836D /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
@@ -588,10 +580,6 @@
 				67DA465E1A8656A90048B29C /* PlaylistTableViewCell.xib */,
 				67DA46631A87B49C0048B29C /* SelectPlaylistTableViewCell.swift */,
 				67DA46641A87B49C0048B29C /* SelectPlaylistTableViewCell.xib */,
-				67254C771A493A570064E5DF /* EntryStreamTableViewCell.swift */,
-				67254C781A493A570064E5DF /* EntryStreamTableViewCell.xib */,
-				67F9A2931AD0558C0078EC3C /* PlaylistStreamTableViewCell.swift */,
-				67F9A2941AD0558C0078EC3C /* PlaylistStreamTableViewCell.xib */,
 				6767AE5B1ADBECCC00A92497 /* StreamTableViewCell.swift */,
 				6767AE5C1ADBECCC00A92497 /* StreamTableViewCell.xib */,
 				6794E7F41AE318720054B3DB /* TutorialView.swift */,
@@ -891,10 +879,8 @@
 				67428D4C1B80E3A1002FFA1A /* youtube.json in Resources */,
 				67B366DC1AE168E200E089B2 /* soundcloud.json in Resources */,
 				67CC023C1AF33AFC005F5F3F /* google_analytics.json in Resources */,
-				67F9A2961AD0558C0078EC3C /* PlaylistStreamTableViewCell.xib in Resources */,
 				6794E7EA1AE241AC0054B3DB /* tutorial.xcassets in Resources */,
 				67277CB81A434304002FD3E0 /* Images.xcassets in Resources */,
-				67254C7A1A493A570064E5DF /* EntryStreamTableViewCell.xib in Resources */,
 				6767AE5E1ADBECCC00A92497 /* StreamTableViewCell.xib in Resources */,
 				67554F0A1A4F127400F7AE72 /* TrackTableViewCell.xib in Resources */,
 				675AB3521AD4334D0003824C /* Localizable.strings in Resources */,
@@ -1096,7 +1082,6 @@
 				67D41D011B87812E0082454F /* SoundCloudOAuthViewController.swift in Sources */,
 				6727EDFE1A5AC1DE003C6A47 /* MiniPlayerViewController.swift in Sources */,
 				6728FA391A60580A00F693B3 /* PreferenceViewController.swift in Sources */,
-				67254C791A493A570064E5DF /* EntryStreamTableViewCell.swift in Sources */,
 				67BE4F371AE7D95800E40E98 /* DeviceType.swift in Sources */,
 				67D41D171B8DD76A0082454F /* SoundCloudActivityLoader.swift in Sources */,
 				67C1A7FC1B7B83A5002A604C /* PlayerViewController.swift in Sources */,
@@ -1149,7 +1134,6 @@
 				6731BC9E1AD82321004F488D /* UIAlertControllerExtension.swift in Sources */,
 				678305871B9AA24C00A83F52 /* YouTubeActivityLoader.swift in Sources */,
 				67C1A8041B7B8728002A604C /* ChannelCategoryTableViewController.swift in Sources */,
-				67F9A2951AD0558C0078EC3C /* PlaylistStreamTableViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
