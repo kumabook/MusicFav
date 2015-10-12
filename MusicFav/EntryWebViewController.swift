@@ -178,10 +178,10 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
                     let ac = CloudAPIClient.alertController(error: e, handler: { (action) in })
                     self.presentViewController(ac, animated: true, completion: nil)
                 } else {
-                    MBProgressHUD.showCompletedHUDForView(self.navigationController!.view, animated: true, duration: 1.0, after: {
+                    MBProgressHUD.showCompletedHUDForView(self.navigationController!.view, animated: true, duration: 1.0) {
                         self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
                         return
-                    })
+                    }
                 }
             })
         } else {
