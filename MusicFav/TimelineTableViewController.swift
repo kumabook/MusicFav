@@ -15,7 +15,7 @@ import MusicFeeder
 class TimelineTableViewController: UITableViewController, TimelineTableViewCellDelegate {
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
     var player:     Player? { get { return appDelegate.player }}
-    let cellHeight: CGFloat = 200
+    let cellHeight: CGFloat = 190
     let reuseIdentifier = "TimelineTableViewCell"
 
     var indicator:    UIActivityIndicatorView!
