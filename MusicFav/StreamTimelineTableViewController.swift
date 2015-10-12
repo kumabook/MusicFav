@@ -54,12 +54,9 @@ class StreamTimelineTableViewController: TimelineTableViewController {
             case .StartLoadingLatest:
                 self.onpuRefreshControl.beginRefreshing()
             case .CompleteLoadingLatest:
-                let startTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double(NSEC_PER_SEC)))
-                dispatch_after(startTime, dispatch_get_main_queue()) {
-                    self.tableView.reloadData()
-                    self.onpuRefreshControl.endRefreshing()
-                    self.updateSelection(UITableViewScrollPosition.None)
-                }
+                self.tableView.reloadData()
+                self.onpuRefreshControl.endRefreshing()
+                self.updateSelection(UITableViewScrollPosition.None)
             case .StartLoadingNext:
                 self.showIndicator()
             case .CompleteLoadingNext:
