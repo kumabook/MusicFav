@@ -360,7 +360,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         cell.playButton.hidden     = item.playlist?.tracks.count <= 0
         cell.articleButton.hidden  = item.entry == nil
         cell.trackNumLabel.text    = item.trackNumString
-        cell.delegate              = self
+        cell.timelineDelegate      = self
         if let playlist = item.playlist {
             cell.loadThumbnails(playlist)
             updatePlayerIcon(cell, playlist: playlist)
