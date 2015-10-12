@@ -9,6 +9,7 @@
 import UIKit
 import ReactiveCocoa
 import MusicFeeder
+import MCSwipeTableViewCell
 
 protocol TimelineTableViewCellDelegate: class {
     func trackSelected(sender: TimelineTableViewCell, index: Int, track: Track, playlist: Playlist)
@@ -17,11 +18,15 @@ protocol TimelineTableViewCellDelegate: class {
     func articleButtonTouched(sender: TimelineTableViewCell)
 }
 
-class TimelineTableViewCell: UITableViewCell {
+class TimelineTableViewCell: MCSwipeTableViewCell {
     let thumbnailWidth: CGFloat = 80.0
     let iconWidth:      CGFloat = 32.0
     let margin:         CGFloat = 7.0
     let padding:        CGFloat = 12.0
+
+    let swipeCellPadding:       CGFloat   = 5.0
+    let swipeCellLabelFontSize: CGFloat   = 20.0
+    var swipeCellBackgroundColor = UIColor(red: 227/255, green: 227/255, blue: 227/255, alpha: 1.0)
 
     @IBOutlet weak var titleLabel:          UILabel!
     @IBOutlet weak var descriptionLabel:    UILabel!
@@ -32,7 +37,7 @@ class TimelineTableViewCell: UITableViewCell {
     @IBOutlet weak var trackNumLabel:       UILabel!
     @IBOutlet weak var thumbListContainer:  UIScrollView!
 
-    weak var delegate: TimelineTableViewCellDelegate?
+    weak var timelineDelegate: TimelineTableViewCellDelegate?
 
     var indicator:   OnpuIndicatorView!
     var playerState: PlayerState!
@@ -136,10 +141,10 @@ class TimelineTableViewCell: UITableViewCell {
 
     func thumbImageTapped(sender: UITapGestureRecognizer) {
         if let playlist = self.playlist {
-            if let delegate = self.delegate {
+            if let d = timelineDelegate {
                 if let view = sender.view as? UIImageView {
                     if let i = imageViews.indexOf(view) {
-                        delegate.trackSelected(self, index: i, track: playlist.getTracks()[i], playlist: playlist)
+                        d.trackSelected(self, index: i, track: playlist.getTracks()[i], playlist: playlist)
                     }
                 }
             }
@@ -147,15 +152,15 @@ class TimelineTableViewCell: UITableViewCell {
     }
 
     func trackScrollViewMarginTouched(sender: UITapGestureRecognizer) {
-        delegate?.trackScrollViewMarginTouched(self, playlist: self.playlist)
+        timelineDelegate?.trackScrollViewMarginTouched(self, playlist: self.playlist)
     }
 
     func playButtonTouched() {
-        delegate?.playButtonTouched(self)
+        timelineDelegate?.playButtonTouched(self)
     }
 
     func articleButtonTouched() {
-        delegate?.articleButtonTouched(self)
+        timelineDelegate?.articleButtonTouched(self)
     }
 
     func observePlaylist(playlist: Playlist) {
@@ -172,4 +177,86 @@ class TimelineTableViewCell: UITableViewCell {
             return
         })
     }
+
+    func imageView(markAs markAs: StreamLoader.RemoveMark) -> UIView {
+        let view              = UIView()
+        let label             = UILabel()
+        let imageView         = UIImageView(image: UIImage(named: "checkmark"))
+        label.text            = cellText(markAs)
+        label.textColor       = UIColor.whiteColor()
+        label.font            = UIFont.boldSystemFontOfSize(swipeCellLabelFontSize)
+        imageView.contentMode = UIViewContentMode.Center
+
+        view.addSubview(label)
+        view.addSubview(imageView)
+        
+        label.snp_makeConstraints { make in
+            make.right.equalTo(imageView.snp_left).offset(-self.padding)
+            make.centerY.equalTo(view.snp_centerY)
+        }
+        imageView.snp_makeConstraints { make in
+            make.centerX.equalTo(view.snp_centerX)
+            make.centerY.equalTo(view.snp_centerY)
+        }
+        return view
+    }
+
+    func cellText(markAs: StreamLoader.RemoveMark) -> String {
+        switch markAs {
+        case .Read:   return "Mark as Read".localize()
+        case .Unread: return "Mark as Unread".localize()
+        case .Unsave: return "Mark as Unsaved".localize()
+        }
+    }
+
+    var markAsReadImageView:    UIView  { return imageView(markAs: .Read) }
+    var markAsUnreadImageView:  UIView  { return imageView(markAs: .Unread) }
+    var markAsUnsavedImageView: UIView  { return imageView(markAs: .Unsave) }
+    var markAsReadColor:        UIColor { return UIColor.red }
+    var markAsUnreadColor:      UIColor { return UIColor.green }
+    var markAsUnsavedColor:     UIColor { return UIColor.blue }
+
+    func prepareSwipeViews(markAs: StreamLoader.RemoveMark, onSwipe: (MCSwipeTableViewCell) -> Void) {
+        if respondsToSelector("setSeparatorInset:") {
+            separatorInset = UIEdgeInsetsZero
+        }
+        contentView.backgroundColor = UIColor.whiteColor()
+        defaultColor   = swipeCellBackgroundColor
+        switch markAs {
+        case .Read:
+            setSwipeGestureWithView(markAsReadImageView,
+                color: markAsReadColor,
+                mode: .Switch,
+                state: .State1) { (cell, state, mode) in }
+            setSwipeGestureWithView(markAsReadImageView,
+                color: markAsReadColor,
+                mode: MCSwipeTableViewCellMode.Exit,
+                state: MCSwipeTableViewCellState.State2) { (cell, state, mode) in
+                    onSwipe(cell)
+            }
+        case .Unread:
+            setSwipeGestureWithView(markAsUnreadImageView,
+                color: markAsUnreadColor,
+                mode: .Switch,
+                state: .State1) { (cell, state, mode) in }
+            setSwipeGestureWithView(markAsUnreadImageView,
+                color: markAsUnreadColor,
+                mode: MCSwipeTableViewCellMode.Exit,
+                state: MCSwipeTableViewCellState.State2) { (cell, state, mode) in
+                    onSwipe(cell)
+            }
+        case .Unsave:
+            setSwipeGestureWithView(markAsUnsavedImageView,
+                color: markAsUnsavedColor,
+                mode: .Switch,
+                state: .State1) { (cell, state, mode) in }
+            setSwipeGestureWithView(markAsUnsavedImageView,
+                color: markAsUnsavedColor,
+                mode: MCSwipeTableViewCellMode.Exit,
+                state: MCSwipeTableViewCellState.State2) { (cell, state, mode) in
+                    onSwipe(cell)
+            }
+        }
+    }
+
 }
