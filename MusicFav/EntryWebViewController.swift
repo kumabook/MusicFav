@@ -80,13 +80,13 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
                                                target: self,
                                                action: "historyBack")
 
-        self.navigationItem.rightBarButtonItems = [playlistButton!,
-                                                   favEntryButton!,
-                                                   historyForwardButton!,
-                                                   historyBackButton!]
+        navigationItem.rightBarButtonItems = [playlistButton!,
+                                              favEntryButton!,
+                                              historyForwardButton!,
+                                              historyBackButton!]
 
         if let url = entry.url {
-            self.loadURL(url)
+            loadURL(url)
         }
         updateViews()
     }
@@ -185,7 +185,13 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
                 }
             })
         } else {
-            if EntryStore.create(entry) {
+            var en: Entry
+            if let e = buildEntryWithCurrentPage() {
+                en = e
+            } else {
+                en = entry
+            }
+            if EntryStore.create(en) {
                 MBProgressHUD.showCompletedHUDForView(self.navigationController!.view, animated: true, duration: 1.0) {
                     self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
                     return
@@ -214,5 +220,28 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         indicator.stopAnimating()
         indicator.removeFromSuperview()
         updateViews()
+        if let currentURL = webView.URL, entryURL = entry.url {
+            if currentURL == entryURL {
+                EntryHistoryStore.add(entry)
+            } else {
+                if let en = buildEntryWithCurrentPage() {
+                    EntryHistoryStore.add(en)
+                }
+            }
+        }
+    }
+
+    func buildEntryWithCurrentPage() -> Entry? {
+        if let wv = webView, url = wv.URL {
+            let en       = Entry(id: url.absoluteString)
+            en.title     = wv.title
+            en.author    = entry.author
+            en.crawled   = NSDate().timestamp
+            en.recrawled = NSDate().timestamp
+            en.published = NSDate().timestamp
+            en.alternate = [Link(href: url.absoluteString, type: "text/html", length: 0)]
+            return en
+        }
+        return nil
     }
 }

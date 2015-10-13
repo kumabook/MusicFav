@@ -20,6 +20,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         case FeedlyCategory(FeedlyKit.Category)
         case UncategorizedSubscription(Subscription)
         case Saved
+        case History
         case YouTube
         case SoundCloud
         case Pocket
@@ -29,6 +30,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             switch self {
             case .GlobalResource(let stream):                  return stream.streamTitle.localize()
             case .Saved:                                       return "Saved"
+            case .History:                                     return "History"
             case .YouTube:                                     return "YouTube"
             case .SoundCloud:                                  return "SoundCloud"
             case .Pocket:                                      return "Pocket"
@@ -68,6 +70,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         func child(vc: StreamTreeViewController, index: Int) -> AnyObject {
             switch self {
             case .GlobalResource: return []
+            case .History:        return []
             case .Saved:          return []
             case .YouTube:
                 let i = vc.youtubeActivityLoader.itemsOfPlaylist.startIndex.advancedBy(index)
@@ -87,6 +90,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         func numOfChild(vc: StreamTreeViewController) -> Int {
             switch self {
             case .GlobalResource: return 0
+            case .History:        return 0
             case .Saved:          return 0
             case .YouTube:
                 return vc.youtubeActivityLoader.itemsOfPlaylist.count
@@ -126,6 +130,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             sections.append(.GlobalResource(FeedlyKit.Tag.Read(userId)))
         }
         sections.append(.Saved)
+        sections.append(.History)
         sections.append(.YouTube)
         sections.append(.SoundCloud)
         return sections
@@ -222,6 +227,8 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             showStream(stream: stream)
         case .Saved:
             showSavedStream()
+        case .History:
+            showHistory()
         case .SoundCloud:
             if SoundCloudKit.APIClient.isLoggedIn {
                 showSoundCloudActivities()
@@ -251,6 +258,11 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
 
     func showSavedStream() {
         let vc = SavedStreamTimelineTableViewController(streamLoader: SavedStreamLoader())
+        appDelegate.miniPlayerViewController?.setCenterViewController(vc)
+    }
+
+    func showHistory() {
+        let vc = EntryHistoryTableViewController(streamLoader: EntryHistoryLoader())
         appDelegate.miniPlayerViewController?.setCenterViewController(vc)
     }
 
