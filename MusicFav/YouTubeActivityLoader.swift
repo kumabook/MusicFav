@@ -133,8 +133,8 @@ class YouTubeActivityLoader {
             self.itemsPageTokenOfPlaylist[playlist] = $0.nextPageToken
             for item in $0.items {
                 let p = item.toPlaylist()
-                self.itemsOfPlaylist[playlist]!.append(item)
-                self.playlistsOfYouTubePlaylist[playlist]!.append(p)
+                self.itemsOfPlaylist[playlist]?.append(item)
+                self.playlistsOfYouTubePlaylist[playlist]?.append(p)
                 item.track.fetchTrackDetail(false)
                     .on(
                         next: { item in p.sink(.Next(PlaylistEvent.Load(index: 0)))},
