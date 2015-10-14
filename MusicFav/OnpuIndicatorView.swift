@@ -8,7 +8,9 @@
 
 import UIKit
 
-class OnpuIndicatorView: UIImageView {
+class OnpuIndicatorView: UIView {
+    let rotationKey = "rotationAnimation"
+    let crossfadeKey = "crossfadeAnimation"
     let duration = 1.2 as Double
     static let animationImages = [UIImage(named: Color.Normal.imageName)!,
                                   UIImage(named: Color.Blue.imageName)!,
@@ -25,7 +27,7 @@ class OnpuIndicatorView: UIImageView {
         case Blue        = 2
         case Green       = 3
         case Cyan        = 4
-        static let count = 5
+        static let count: UInt32 = 5
         var imageName: String {
             switch self {
             case Normal: return "loading_icon"
@@ -45,28 +47,45 @@ class OnpuIndicatorView: UIImageView {
         }
     }
 
-    var state:     State
-    var color:     Color
-    var animation: Animation
+    var state:            State
+    var color:            Color
+    var animation:        Animation
+    var imageView:        UIImageView
+    var subImageView:     UIImageView
+    var currentImageView: UIImageView
+    var isFadeIn: Bool = false
 
     override convenience init(frame: CGRect) {
         self.init(frame: frame, animation: .Rotate)
     }
 
-    init(frame: CGRect, animation: Animation) {
-        state          = .Pause
-        color          = .Normal
-        self.animation = animation
+    init(frame: CGRect, animation anim: Animation) {
+        state            = .Pause
+        color            = .Normal
+        animation        = anim
+        imageView        = UIImageView(image: UIImage(named: Color.Blue.imageName))
+        subImageView     = UIImageView(image: UIImage(named: Color.Green.imageName))
+        currentImageView = imageView
         super.init(frame: frame)
-        image          = UIImage(named: Color.Normal.imageName)!
         userInteractionEnabled = false
+
+        imageView.frame    = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
+        subImageView.frame = CGRect(x: 0, y: 0, width: frame.width, height: frame.height)
+
+        addSubview(imageView)
+        addSubview(subImageView)
     }
 
     required init?(coder aDecoder: NSCoder) {
-        state     = .Pause
-        color     = .Normal
-        animation = .ColorSwitch
+        state            = .Pause
+        color            = .Normal
+        animation        = .ColorSwitch
+        imageView        = UIImageView()
+        subImageView     = UIImageView()
+        currentImageView = imageView
         super.init(coder: aDecoder)
+        addSubview(imageView)
+        addSubview(subImageView)
     }
 
     override func hitTest(point: CGPoint, withEvent event: UIEvent?) -> UIView? {
@@ -77,45 +96,117 @@ class OnpuIndicatorView: UIImageView {
         return super.hitTest(point, withEvent: event)
     }
 
-    override func isAnimating() -> Bool {
+    func isAnimating() -> Bool {
         return state == .Animating
     }
 
-    override func startAnimating() {
-        startAnimating(self.animation)
+    func startAnimating() {
+        startAnimating(animation)
     }
 
-    func startAnimating(animation: Animation) {
-        self.animation                    = animation
-        state                             = .Animating
-        image                             = UIImage(named: color.imageName)
+    func startAnimating(anim: Animation) {
+        animation = anim
+        state     = .Animating
         switch animation {
         case .Rotate:
-            super.stopAnimating()
-            let rotationAnimation         = CABasicAnimation(keyPath: "transform.rotation.z")
-            rotationAnimation.toValue     = NSNumber(float: Float(2.0 * M_PI))
-            rotationAnimation.duration    = duration
-            rotationAnimation.cumulative  = true
-            rotationAnimation.repeatCount = Float.infinity
-            layer.addAnimation(rotationAnimation, forKey: "rotationAnimation")
+            if let _ = currentImageView.layer.animationForKey(rotationKey) {
+                return
+            }
+            rotate()
+            stopAnimatingCrossFade()
         case .ColorSwitch:
-            layer.removeAllAnimations()
-            animationDuration    = duration
-            animationRepeatCount = 0
-            animationImages      = OnpuIndicatorView.animationImages
-            super.startAnimating()
+            if let _ = currentImageView.layer.animationForKey(crossfadeKey) {
+                return
+            }
+            stopAnimatingRotate()
+            fadeIn()
         }
     }
 
-    override func stopAnimating() {
-        if !isAnimating() { return }
+    func stopAnimating() {
         state = .Pause
-        layer.removeAllAnimations()
-        super.stopAnimating()
+        stopAnimatingRotate()
+        stopAnimatingCrossFade()
     }
 
-    func setColor(color: Color) {
-        self.color = color
-        image = UIImage(named: color.imageName)
+    func stopAnimatingRotate() {
+        layer.removeAllAnimations()
+    }
+
+    func stopAnimatingCrossFade() {
+        imageView.layer.removeAllAnimations()
+        subImageView.layer.removeAllAnimations()
+        imageView.layer.opacity    = 1.0
+        subImageView.layer.opacity = 1.0
+    }
+
+    func setColor(c: Color) {
+        color = c
+        currentImageView.image = UIImage(named: color.imageName)
+    }
+
+    func changeColorAtRandom() {
+        if let color = Color(rawValue: Int(arc4random_uniform(Color.count))) {
+            setColor(color)
+        }
+    }
+
+    func replaceImageView() {
+        currentImageView = currentImageView == imageView ? subImageView : imageView
+    }
+
+    private func rotate() {
+        imageView.image               = UIImage(named: color.imageName)
+        subImageView.image            = UIImage(named: color.imageName)
+        let rotationAnimation         = CABasicAnimation(keyPath: "transform.rotation.z")
+        rotationAnimation.toValue     = NSNumber(float: Float(2.0 * M_PI))
+        rotationAnimation.duration    = duration
+        rotationAnimation.cumulative  = true
+        rotationAnimation.repeatCount = Float.infinity
+        layer.addAnimation(rotationAnimation, forKey: rotationKey)
+    }
+
+    private func fadeIn() {
+        if !isAnimating() { return }
+        changeColorAtRandom()
+        imageView.layer.opacity       = 0.0
+        subImageView.layer.opacity    = 0.0
+        let animation                 = CABasicAnimation(keyPath: "opacity")
+        animation.duration            = duration
+        animation.fromValue           = 0.0
+        animation.toValue             = 1.0
+        animation.removedOnCompletion = false
+        animation.fillMode            = kCAFillModeBoth
+        animation.delegate            = self
+        isFadeIn                      = true
+        currentImageView.layer.addAnimation(animation, forKey: crossfadeKey)
+    }
+
+    private func fadeOut() {
+        if !isAnimating() { return }
+        currentImageView.layer.opacity = 1.0
+        let animation                  = CABasicAnimation(keyPath: "opacity")
+        animation.duration             = duration
+        animation.fromValue            = 1.0
+        animation.toValue              = 0.0
+        animation.removedOnCompletion  = false
+        animation.fillMode             = kCAFillModeBoth
+        animation.delegate             = self
+        isFadeIn                       = false
+        currentImageView.layer.addAnimation(animation, forKey: crossfadeKey)
+    }
+
+    override func animationDidStart(anim: CAAnimation) {
+    }
+
+    override func animationDidStop(anim: CAAnimation, finished flag: Bool) {
+        if !flag || animation != .ColorSwitch || !isAnimating() {
+            return
+        }
+        if isFadeIn {
+            fadeOut()
+        } else {
+            fadeIn()
+        }
     }
 }

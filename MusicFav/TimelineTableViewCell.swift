@@ -130,7 +130,6 @@ class TimelineTableViewCell: MCSwipeTableViewCell {
             indicator.startAnimating(.ColorSwitch)
         case .Play:
             indicator.hidden = false
-            indicator.setColor(.Normal)
             indicator.startAnimating(.Rotate)
         case .Pause:
             indicator.hidden = false
