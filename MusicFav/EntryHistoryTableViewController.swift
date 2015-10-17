@@ -23,14 +23,17 @@ class EntryHistoryTableViewController: StreamTimelineTableViewController {
                 self.markAsUnsaved(tableView.indexPathForCell(cell)!)
                 return
             }
-            if let entry = getItems()[indexPath.item].entry, timestamp = entryHistoryLoader.timestampOfEntry[entry] {
-                timelineTableViewCell.dateLabel.text = timestamp.date.passedTime
-            }
+            let history = entryHistoryLoader.histories[indexPath.item]
+            timelineTableViewCell.dateLabel.text = history.timestamp.date.passedTime
         }
         return cell
     }
     
     func markAsUnsaved(indexPath: NSIndexPath) {
-        streamLoader.markAsUnsaved(indexPath.item)
+        let history = entryHistoryLoader.histories[indexPath.item]
+        EntryHistoryStore.remove(history.toStoreObject())
+        streamLoader.entries.removeAtIndex(indexPath.item)
+        entryHistoryLoader.histories.removeAtIndex(indexPath.item)
+        streamLoader.sink(.Next(.RemoveAt(indexPath.item)))
     }
 }
