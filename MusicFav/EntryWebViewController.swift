@@ -106,7 +106,6 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
     }
 
     func loadURL(url: NSURL) {
-        currentURL = url
         webView?.loadRequest(NSURLRequest(URL: url))
     }
 
@@ -206,6 +205,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
     // MARK: - WKNavigationDelegate
 
     func webView(webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        currentURL = webView.URL
         indicator.center = webView.center
         view.addSubview(indicator)
         indicator.startAnimating()
@@ -220,8 +220,8 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         indicator.stopAnimating()
         indicator.removeFromSuperview()
         updateViews()
-        if let currentURL = webView.URL, entryURL = entry.url {
-            if currentURL == entryURL {
+        if let url = currentURL, entryURL = entry.url {
+            if url == entryURL {
                 EntryHistoryStore.add(entry)
             } else {
                 if let en = buildEntryWithCurrentPage() {
@@ -232,7 +232,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
     }
 
     func buildEntryWithCurrentPage() -> Entry? {
-        if let wv = webView, url = wv.URL {
+        if let url = currentURL, wv = webView {
             let en       = Entry(id: url.absoluteString)
             en.title     = wv.title
             en.author    = entry.author
