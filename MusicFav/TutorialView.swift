@@ -92,7 +92,7 @@ class TutorialView: EAIntroView {
 
         let page                = EAIntroPage()
         page.title              = title
-        page.titlePositionY     = frame.height * 0.45
+        page.titlePositionY     = frame.height * 0.5
         page.bgColor            = bgColor
         let imageView           = UIImageView(image: UIImage(named: imageName))
         imageView.contentMode   = UIViewContentMode.ScaleAspectFit

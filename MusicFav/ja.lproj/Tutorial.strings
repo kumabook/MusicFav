@@ -9,17 +9,17 @@
 "first_page_title"    = "MusicFav\nA Music Aggregator";
 "first_page_desc"     = "Get the favorite music,\n and make the playlists.";
 
-"stream_page_title"   = "音楽フィードをフォロー";
+"stream_page_title"   = "音楽フィードをフォローすると曲が届きます";
 "stream_page_desc"    = "・Blog・RSSフィード\n・YouTube チャンネル\n・ポッドキャスト\n・SoundCloudタイムライン";
 
-"playlist_page_title" = "プレイリストを聞く、作る";
+"playlist_page_title" = "届いた曲からプレイリストを作ろう";
 "playlist_page_desc"  = "・フィードから自動でプレイリストを作成\n・お気に入りの曲からプレイリスト作成\n・YouTube・SoundCloudのプレイリストも再生可能";
 
-"player_page_title"   = "記事を見ながら または全画面で";
+"player_page_title"   = "記事を見ながらまたは全画面で音楽を楽しもう";
 "player_page_desc"    = "・タップまたはドラッグミニプレーヤ・フルスクリーンプレーヤを切り替え\n・バックグラウンド再生・Air-playに対応";
 
-"menu_page_title"     = "クラウド連携";
-"menu_page_desc"      = "・Feedlyアカウント連携でフィードを同期\n・YouTubeのプレイリストの再生\n・SoundCloudプレイリスト・タイムラインの再生";
+"menu_page_title"     = "他サービスと連携してより快適に";
+"menu_page_desc"      = "・Feedlyアカウント連携でフィードを同期\n・YouTubeの履歴・プレイリストの再生\n・SoundCloudプレイリスト・タイムラインの再生";
 
 "last_page_title"     = "Enjoy MusicFav!";
 "last_page_desc"      = "※設定メニューからも\nログインできます。";
