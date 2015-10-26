@@ -15,12 +15,14 @@ enum TimelineItem {
     case Entry(FeedlyKit.Entry, MusicFeeder.Playlist?)
     case Activity(SoundCloudKit.Activity, MusicFeeder.Playlist?)
     case YouTubePlaylist(YouTubePlaylistItem, MusicFeeder.Playlist?)
+    case TrackHistory(MusicFeeder.History, MusicFeeder.Playlist?)
 
     var entry: FeedlyKit.Entry? {
         switch self {
         case .Entry(let entry, _): return entry
         case .Activity(_, _):      return nil
         case .YouTubePlaylist(_):  return nil
+        case .TrackHistory(_):     return nil
         }
     }
 
@@ -29,6 +31,7 @@ enum TimelineItem {
         case .Entry(_, let playlist):           return playlist
         case .Activity(_, let playlist):        return playlist
         case .YouTubePlaylist(_, let playlist): return playlist
+        case .TrackHistory(_, let playlist):    return playlist
         }
     }
 
@@ -42,6 +45,7 @@ enum TimelineItem {
             case .Track(let track): return track.title
             }
         case .YouTubePlaylist(let playlistItem, _): return playlistItem.title
+        case .TrackHistory(_, let playlist): return playlist?.title
         }
     }
     var thumbnailURL: NSURL?  {
@@ -54,6 +58,7 @@ enum TimelineItem {
             case .Track(let track):       return track.thumbnailURL
             }
         case .YouTubePlaylist(let playlistItem, _): return playlistItem.thumbnailURL
+        case .TrackHistory(_, let playlist): return playlist?.thumbnailUrl
         }
     }
     var description:  String? {
@@ -67,6 +72,7 @@ enum TimelineItem {
             }
         case .YouTubePlaylist(let playlistItem, _):
             return playlistItem.description
+        case .TrackHistory(_, _): return nil
         }
     }
 
@@ -78,6 +84,7 @@ enum TimelineItem {
             return activity.createdAt.toDate()!.elapsedTime
         case .YouTubePlaylist(let playlistItem, _):
             return playlistItem.publishedAt?.toDate()?.elapsedTime
+        case .TrackHistory(let history, _): return history.timestamp.date.passedTime
         }
     }
 
@@ -100,6 +107,7 @@ enum TimelineItem {
             }
         case .YouTubePlaylist:
             return 1
+        case .TrackHistory(_, _): return 1
         }
     }
 }

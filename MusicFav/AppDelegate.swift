@@ -129,6 +129,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             Shortcut.updateShortcutItems(application)
         }
+        player?.addObserver(HistoryManager())
         window?.makeKeyAndVisible()
         if !didFinishTutorial { startTutorial() }
         reload()

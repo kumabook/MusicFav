@@ -262,7 +262,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
     }
 
     func showHistory() {
-        let vc = EntryHistoryTableViewController(streamLoader: EntryHistoryLoader())
+        let vc = HistoryTableViewController(streamLoader: HistoryLoader())
         appDelegate.miniPlayerViewController?.setCenterViewController(vc)
     }
 
