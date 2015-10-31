@@ -9,7 +9,7 @@
 import SwiftyJSON
 import Result
 import ReactiveCocoa
-import AFNetworking
+import Alamofire
 
 public class HypemAPIClient {
     let baseUrl = "http://api.hypem.com"
@@ -19,41 +19,44 @@ public class HypemAPIClient {
 
     public func getSiteInfo(siteId: Int64) -> SignalProducer<SiteInfo, NSError> {
         return SignalProducer { (sink, disposable) in
-            let manager = AFHTTPRequestOperationManager()
+            let manager = Alamofire.Manager.sharedInstance
             let url = String(format: "%@/get_site_info?siteid=%d", self.baseUrl + self.apiRoot, siteId)
-            let operation: AFHTTPRequestOperation? = manager.GET(url, parameters: [:],
-                success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
-                    let json = JSON(response)
-                    sink(.Next(SiteInfo(json: json)))
-                    sink(.Completed)
-                },
-                failure: { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
-                    sink(.Error(error))
-            })
+            let request = manager
+                .request(.GET, url, parameters: [:], encoding: ParameterEncoding.URL)
+                .responseJSON(options: NSJSONReadingOptions()) { (req, res, result) -> Void in
+                    if let error = result.error {
+                        sink(.Error(error as NSError))
+                    } else if let value = result.value {
+                        let json = JSON(value)
+                        sink(.Next(SiteInfo(json: json)))
+                        sink(.Completed)
+                    }
+            }
             disposable.addDisposable {
-                operation?.cancel()
+                request.cancel()
             }
         }
     }
 
     public func getAllBlogs() -> SignalProducer<[Blog], NSError> {
         return SignalProducer { (sink, disposable) in
-            let manager = AFHTTPRequestOperationManager()
+            let manager = Alamofire.Manager.sharedInstance
             let url = String(format: "%@/get_all_blogs", self.baseUrl + self.apiRoot)
-            let operation = manager.GET(url, parameters: [:],
-                success: { (operation:AFHTTPRequestOperation!, response:AnyObject!) -> Void in
-                    QueueScheduler().schedule {
-                        let json = JSON(response)
-                        sink(.Next(json.arrayValue.map({ Blog(json: $0) })))
-                        sink(.Completed)
+            let request = manager
+                .request(.GET, url, parameters: [:], encoding: ParameterEncoding.URL)
+                .responseJSON(options: NSJSONReadingOptions()) { (req, res, result) -> Void in
+                    if let error = result.error {
+                        sink(.Error(error as NSError))
+                    } else if let value = result.value {
+                        QueueScheduler().schedule {
+                            let json = JSON(value)
+                            sink(.Next(json.arrayValue.map({ Blog(json: $0) })))
+                            sink(.Completed)
+                        }
                     }
-                    return
-                },
-                failure: { (operation:AFHTTPRequestOperation!, error:NSError!) -> Void in
-                    sink(.Error(error))
-            })
+            }
             disposable.addDisposable {
-                operation?.cancel()
+                request.cancel()
             }
         }
     }
