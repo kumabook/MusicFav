@@ -128,8 +128,9 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             sections.append(.GlobalResource(FeedlyKit.Category.All(userId)))
             sections.append(.GlobalResource(FeedlyKit.Tag.Saved(userId)))
             sections.append(.GlobalResource(FeedlyKit.Tag.Read(userId)))
+        } else {
+            sections.append(.Saved)
         }
-        sections.append(.Saved)
         sections.append(.History)
         sections.append(.YouTube)
         sections.append(.SoundCloud)
