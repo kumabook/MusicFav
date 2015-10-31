@@ -222,10 +222,10 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         updateViews()
         if let url = currentURL, entryURL = entry.url {
             if url == entryURL {
-                EntryHistoryStore.add(entry)
+                HistoryStore.add(entry)
             } else {
                 if let en = buildEntryWithCurrentPage() {
-                    EntryHistoryStore.add(en)
+                    HistoryStore.add(en)
                 }
             }
         }
