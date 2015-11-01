@@ -4,7 +4,6 @@ use_frameworks!
 xcodeproj 'MusicFav.xcodeproj'
 
 pod 'NXOAuth2Client',       '>= 1.2.2'
-pod 'AFNetworking',         '>= 2.0'
 pod 'JASidePanels',         '>= 1.3'
 pod 'MBProgressHUD',        '>= 0.8'
 pod 'MCSwipeTableViewCell', '>= 2.1.0'

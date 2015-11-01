@@ -1,25 +1,4 @@
 PODS:
-  - AFNetworking (2.6.0):
-    - AFNetworking/NSURLConnection (= 2.6.0)
-    - AFNetworking/NSURLSession (= 2.6.0)
-    - AFNetworking/Reachability (= 2.6.0)
-    - AFNetworking/Security (= 2.6.0)
-    - AFNetworking/Serialization (= 2.6.0)
-    - AFNetworking/UIKit (= 2.6.0)
-  - AFNetworking/NSURLConnection (2.6.0):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.6.0):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.6.0)
-  - AFNetworking/Security (2.6.0)
-  - AFNetworking/Serialization (2.6.0)
-  - AFNetworking/UIKit (2.6.0):
-    - AFNetworking/NSURLConnection
-    - AFNetworking/NSURLSession
   - Crashlytics (3.3.4)
   - EAIntroView (2.7.4):
     - EARestrictedScrollView (~> 0.2.0)
@@ -39,7 +18,6 @@ PODS:
   - RMDateSelectionViewController (1.5.1)
 
 DEPENDENCIES:
-  - AFNetworking (>= 2.0)
   - Crashlytics
   - EAIntroView (~> 2.7.0)
   - Fabric
@@ -65,7 +43,6 @@ CHECKOUT OPTIONS:
     :git: https://github.com/kumabook/RATreeView.git
 
 SPEC CHECKSUMS:
-  AFNetworking: 79f7eb1a0fcfa7beb409332b2ca49afe9ce53b05
   Crashlytics: 41c082440d2e14da444186fff65e79c0b4b35d4c
   EAIntroView: 50b85eedf414260e61330070ffe5947e72493a62
   EARestrictedScrollView: f86d61e16c61d3e93c84f8e96e83122a2a3b7631
