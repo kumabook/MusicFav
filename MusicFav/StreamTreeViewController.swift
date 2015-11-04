@@ -30,7 +30,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             switch self {
             case .GlobalResource(let stream):                  return stream.streamTitle.localize()
             case .Saved:                                       return "Saved".localize()
-            case .History:                                     return "History"
+            case .History:                                     return "History".localize()
             case .YouTube:                                     return "YouTube"
             case .SoundCloud:                                  return "SoundCloud"
             case .Pocket:                                      return "Pocket"
