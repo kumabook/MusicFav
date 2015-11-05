@@ -127,27 +127,18 @@ class TutorialView: EAIntroView {
         let height = frame.height
         let width  = frame.width
         let deviceType = DeviceType.from(device: UIDevice.currentDevice())
-        let loginButton      = UIButton(frame: CGRect(x: 0, y: height*0.48,
-            width: width, height: height*0.2))
-        loginButton.setImage(UIImage(named: "feedly"), forState: UIControlState.Normal)
-        loginButton.imageView?.contentMode = UIViewContentMode.ScaleAspectFit
-        if let _delegate = delegate {
-            loginButton.addTarget(_delegate, action: "tutorialLoginButtonTapped",
-                forControlEvents: UIControlEvents.TouchUpInside)
-        }
         let page              = EAIntroPage()
         page.title            = String.tutorialString("last_page_title")
         page.titleFont        = UIFont.boldSystemFontOfSize(32)
-        page.titlePositionY   = height * 0.6
+        page.titlePositionY   = height * 0.5
         let imageView         = UIImageView(image: UIImage(named: "note"))
         imageView.contentMode = UIViewContentMode.ScaleAspectFit
-        imageView.frame       = CGRect(x: 0, y: 0, width: width * 0.3, height: height * 0.3)
+        imageView.frame       = CGRect(x: 0, y: 0, width: width * 0.4, height: height * 0.4)
         page.titleIconView    = imageView
         page.desc             = String.tutorialString("last_page_desc")
         page.descFont         = UIFont.systemFontOfSize(20)
-        page.descPositionY    = height * 0.3
+        page.descPositionY    = height * 0.4
         page.bgColor          = UIColor.theme
-        page.subviews         = [loginButton]
         switch deviceType {
         case .iPhone4OrLess:
             page.descFont     = UIFont.systemFontOfSize(16)

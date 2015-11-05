@@ -16,10 +16,10 @@
 "playlist_page_desc"  = "・フィードから自動でプレイリストを作成\n・お気に入りの曲からプレイリスト作成\n・YouTube・SoundCloudのプレイリストも再生可能";
 
 "player_page_title"   = "記事を見ながらまたは全画面で音楽を楽しもう";
-"player_page_desc"    = "・タップまたはドラッグミニプレーヤ・フルスクリーンプレーヤを切り替え\n・バックグラウンド再生・Air-playに対応";
+"player_page_desc"    = "・タップまたはドラッグミニプレーヤ・フルスクリーンプレーヤを切り替え\n・バックグラウンド再生・Air-playに対応\n・動画品質の切り替え";
 
 "menu_page_title"     = "他サービスと連携してより快適に";
 "menu_page_desc"      = "・Feedlyアカウント連携でフィードを同期\n・YouTubeの履歴・プレイリストの再生\n・SoundCloudプレイリスト・タイムラインの再生";
 
-"last_page_title"     = "Enjoy MusicFav!";
-"last_page_desc"      = "※設定メニューからも\nログインできます。";
+"last_page_title"     = "Thank you!";
+"last_page_desc"      = "Enjoy MusicFav!";
