@@ -67,9 +67,9 @@ class PreferenceViewController: UITableViewController {
             switch self {
             case Feedly:
                 if CloudAPIClient.isLoggedIn {
-                    return "Logout".localize()
+                    return "Disconnect with Feedly".localize()
                 } else {
-                    return "Login".localize()
+                    return "Manage feeds with Feedly".localize()
                 }
             case YouTube:
                 if YouTubeAPIClient.isLoggedIn {
@@ -230,7 +230,7 @@ class PreferenceViewController: UITableViewController {
     }
 
     func showLogoutDialog() {
-        showConfirmDialog("Logout", message: "Are you sure you want to logout?") { (action) in
+        showConfirmDialog("Logout", message: "Are you sure you want to disconnect with Feedly?") { (action) in
             self.logout()
         }
     }
