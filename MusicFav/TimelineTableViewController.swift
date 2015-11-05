@@ -89,7 +89,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
                                                             style: UIBarButtonItemStyle.Plain,
                                                            target: self,
                                                            action: "showPlaylist")
-        navigationItem.title                            = timelineTitle
+        navigationItem.title                            = timelineTitle.localize()
         navigationController?.toolbar.translucent       = false
         navigationController?.navigationBar.translucent = false
         let nib = UINib(nibName: "TimelineTableViewCell", bundle: nil)
