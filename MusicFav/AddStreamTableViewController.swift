@@ -44,11 +44,13 @@ class AddStreamTableViewController: UITableViewController {
     }
 
     func reloadData(keepSelection keepSelection: Bool) {
-        tableView.reloadData()
         if keepSelection, let indexes = tableView.indexPathsForSelectedRows {
+            tableView.reloadData()
             for index in indexes {
                 tableView.selectRowAtIndexPath(index, animated: false, scrollPosition: UITableViewScrollPosition.None)
             }
+        } else {
+            tableView.reloadData()
         }
     }
 
