@@ -13,6 +13,7 @@ import MusicFeeder
 
 class UpdateChecker {
     let apiClient = CloudAPIClient.sharedInstance
+    let perPage   = 3
     let newerThan: NSDate
     init() {
         if let fromDate = FeedlyAPI.lastChecked {
@@ -59,7 +60,8 @@ class UpdateChecker {
         if let profile = FeedlyAPI.profile {
             entriesSignal = apiClient.fetchEntries(streamId: FeedlyKit.Category.All(profile.id).streamId,
                                                   newerThan: newerThan.timestamp,
-                                                 unreadOnly: true)
+                                                 unreadOnly: true,
+                                                    perPage: perPage)
                 .map { $0.items }
         } else {
             entriesSignal = StreamListLoader().fetchLocalSubscrptions()
@@ -67,7 +69,10 @@ class UpdateChecker {
                     return table.values.flatMap { $0 }
                 }.map { streams in
                     return streams.map { stream in
-                        return self.apiClient.fetchEntries(streamId: stream.streamId, newerThan: self.newerThan.timestamp, unreadOnly: true).map { $0.items }
+                        return self.apiClient.fetchEntries(streamId: stream.streamId,
+                                                          newerThan: self.newerThan.timestamp,
+                                                         unreadOnly: true,
+                                                            perPage: self.perPage).map { $0.items }
                         }.reduce(SignalProducer<[Entry], NSError>(value: [])) {
                             combineLatest($0, $1).map {
                                 var list = $0.0; list.appendContentsOf($0.1); return list
