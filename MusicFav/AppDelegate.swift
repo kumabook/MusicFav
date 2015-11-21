@@ -113,7 +113,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             GAIConfig.setup(path)
         }
         paymentManager = PaymentManager()
-        setupAudioSession(application)
         setupAPIClient()
         registerNSUserDefaults()
         if isFirstLaunch {
@@ -229,11 +228,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Player control functions
 
     func select(trackIndex: Int, playlist: MusicFeeder.Playlist, playlists: [MusicFeeder.Playlist]) {
+        setupAudioSession(UIApplication.sharedApplication())
         player?.select(trackIndex, playlist: playlist, playlists: playlists.map { $0 as PlayerKit.Playlist})
     }
 
     func toggle() {
+        setupAudioSession(UIApplication.sharedApplication())
         player?.toggle()
     }
+    func play()  { setupAudioSession(UIApplication.sharedApplication()); player?.play() }
+    func pause() { player?.pause() }
 }
 

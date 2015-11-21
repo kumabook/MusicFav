@@ -108,10 +108,10 @@ enum Shortcut: String {
         let app = Shortcut.appDelegate
         switch self {
         case .Play:
-            app.player?.play()
+            app.play()
             return true
         case .Pause:
-            app.player?.pause()
+            app.pause()
             return true
         case .Playlist:
             let vc = app.miniPlayerViewController
