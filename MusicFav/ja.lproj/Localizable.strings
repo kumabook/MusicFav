@@ -57,7 +57,8 @@
 "watchLater"    = "あとで見る";
 "likes"         = "いいね";
 
-
+"Favorite the Entry"                = "記事をお気に入りに登録";
+"Open with Safari"                  = "Safariで開く";
 "Please Rate MusicFav"              = "MusicFavを評価";
 "Network error"                     = "通信エラー";
 "Import Feed"                       = "フィードをインポート";

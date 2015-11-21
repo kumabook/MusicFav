@@ -16,7 +16,7 @@ import MBProgressHUD
 class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler {
     let indicatorSize = 48
     var playlistButton:       UIBarButtonItem?
-    var favEntryButton:       UIBarButtonItem?
+    var entryMenuButton:      UIBarButtonItem?
     var historyForwardButton: UIBarButtonItem?
     var historyBackButton:    UIBarButtonItem?
 
@@ -67,10 +67,10 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
                                                 style: UIBarButtonItemStyle.Plain,
                                                target: self,
                                                action: "showPlaylist")
-        favEntryButton        = UIBarButtonItem(image: UIImage(named: "fav_entry"),
+        entryMenuButton       = UIBarButtonItem(image: UIImage(named: "entry_menu"),
                                                 style: UIBarButtonItemStyle.Plain,
                                                target: self,
-                                               action: "favEntry")
+                                               action: "showEntryMenu")
         historyForwardButton  = UIBarButtonItem(image: UIImage(named: "history_forward"),
                                                 style: UIBarButtonItemStyle.Plain,
                                                target: self,
@@ -81,7 +81,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
                                                action: "historyBack")
 
         navigationItem.rightBarButtonItems = [playlistButton!,
-                                              favEntryButton!,
+                                              entryMenuButton!,
                                               historyForwardButton!,
                                               historyBackButton!]
 
@@ -243,5 +243,24 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
             return en
         }
         return nil
+    }
+
+    func showEntryMenu() {
+        let menu = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
+        let favAction = UIAlertAction(title: "Favorite the Entry".localize(), style: .Default) { alert in
+            self.favEntry()
+        }
+        let openWithSafariAction = UIAlertAction(title: "Open with Safari".localize(), style: .Default) { alert in
+            if let url = self.currentURL {
+                UIApplication.sharedApplication().openURL(url)
+            }
+        }
+        let cancelAction = UIAlertAction(title: "Cancel".localize(), style: .Cancel) { alert in
+            menu.dismissViewControllerAnimated(true, completion: nil)
+        }
+        menu.addAction(favAction)
+        menu.addAction(openWithSafariAction)
+        menu.addAction(cancelAction)
+        presentViewController(menu, animated: true, completion: nil)
     }
 }
