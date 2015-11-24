@@ -255,11 +255,25 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
                 UIApplication.sharedApplication().openURL(url)
             }
         }
+        let shareAction = UIAlertAction(title: "Share the Entry".localize(), style: .Default) { alert in
+            var sharingItems = [AnyObject]()
+            if let entry = self.buildEntryWithCurrentPage() {
+                if let title = entry.title { sharingItems.append(title) }
+            } else {
+                if let title = self.entry.title { sharingItems.append(title) }
+            }
+            if let url = self.currentURL {
+                sharingItems.append(url)
+            }
+            let activityViewController = UIActivityViewController(activityItems: sharingItems, applicationActivities: nil)
+            self.presentViewController(activityViewController, animated: true, completion: nil)
+        }
         let cancelAction = UIAlertAction(title: "Cancel".localize(), style: .Cancel) { alert in
             menu.dismissViewControllerAnimated(true, completion: nil)
         }
         menu.addAction(favAction)
         menu.addAction(openWithSafariAction)
+        menu.addAction(shareAction)
         menu.addAction(cancelAction)
         presentViewController(menu, animated: true, completion: nil)
     }
