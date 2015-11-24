@@ -146,20 +146,13 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         playlists = Playlist.shared.current
         tableView.reloadData()
         playlistsObserver = Playlist.shared.signal.observeNext({ event in
-                let section = Section.Favorites.rawValue
                 switch event {
                 case .Created(let playlist):
-                    let indexPath = NSIndexPath(forItem: self.playlists.count, inSection: section)
-                    self.playlists.append(playlist)
-                    self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                    self.createPlaylist(playlist)
                 case .Updated(let playlist):
                     self.updatePlaylist(playlist)
                 case .Removed(let playlist):
-                    if let index = self.playlists.indexOf(playlist) {
-                        _ = self.playlists.removeAtIndex(index)
-                        let indexPath = NSIndexPath(forItem: index, inSection: section)
-                        self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                    }
+                    self.removePlaylist(playlist)
                 case .TracksAdded(let playlist, _):
                     self.updatePlaylist(playlist)
                 case .TrackRemoved(let playlist, _, _):
@@ -171,19 +164,35 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             })
     }
 
+    func createPlaylist(playlist: MusicFeeder.Playlist) {
+        let section = Section.Favorites.rawValue
+        let indexPath = NSIndexPath(forItem: playlists.count, inSection: section)
+        playlists.append(playlist)
+        tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+    }
+
     func updatePlaylist(playlist: MusicFeeder.Playlist) {
         let section = Section.Favorites.rawValue
-        if playlist == self.appDelegate.playingPlaylist {
+        if playlist == appDelegate.playingPlaylist {
             let indexPath = NSIndexPath(forItem: 0, inSection: Section.Playing.rawValue)
-            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if playlist == self.appDelegate.selectedPlaylist {
+            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        } else if playlist == appDelegate.selectedPlaylist {
             let indexPath = NSIndexPath(forItem: 0, inSection: Section.Selected.rawValue)
-            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
         if let index = self.playlists.indexOf(playlist) {
             let indexPath = NSIndexPath(forItem: index, inSection: section)
-            self.playlists[index] = playlist
-            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            playlists[index] = playlist
+            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        }
+    }
+
+    func removePlaylist(playlist: MusicFeeder.Playlist) {
+        let section = Section.Favorites.rawValue
+        if let index = playlists.indexOf(playlist) {
+            _ = playlists.removeAtIndex(index)
+            let indexPath = NSIndexPath(forItem: index, inSection: section)
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
     }
 
