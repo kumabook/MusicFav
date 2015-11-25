@@ -62,7 +62,8 @@ class TrackTableViewController: UITableViewController {
     var _playlist: Playlist!
     var playlistLoader: PlaylistLoader!
     var indicator:  UIActivityIndicatorView!
-    var playerObserver: TrackTableViewPlayerObserver!
+    var playerObserver:   TrackTableViewPlayerObserver!
+    var playlistObserver: Disposable?
 
     var playlist: Playlist {
         return _playlist
@@ -108,6 +109,7 @@ class TrackTableViewController: UITableViewController {
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         observePlayer()
+        observePlaylist()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -121,6 +123,8 @@ class TrackTableViewController: UITableViewController {
             player?.removeObserver(playerObserver)
         }
         playerObserver = nil
+        playlistObserver?.dispose()
+        playlistObserver = nil
     }
 
     func updateNavbar() {
@@ -151,6 +155,35 @@ class TrackTableViewController: UITableViewController {
         playerObserver = TrackTableViewPlayerObserver(viewController: self)
         player?.addObserver(playerObserver)
         updateSelection()
+    }
+
+    func observePlaylist() {
+        playlistObserver?.dispose()
+        playlistObserver = Playlist.shared.signal.observeNext({ event in
+            switch event {
+            case .Created(_): break
+            case .Removed(_): break
+            case .Updated(let playlist):
+                if self.playlist == playlist {
+                    self.tableView.reloadData()
+                }
+            case .TracksAdded(let playlist, _):
+                if self.playlist == playlist {
+                    self.tableView.reloadData()
+                }
+            case .TrackRemoved(let playlist, _, let index):
+                if self.playlist == playlist {
+                    let indexPath = NSIndexPath(forItem: index, inSection: 0)
+                    self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                }
+            case .TrackUpdated(let playlist, _):
+                if self.playlist == playlist {
+                    self.tableView.reloadData()
+                }
+            }
+            return
+        })
+
     }
 
     func isPlaylistPlaying() -> Bool {
@@ -317,7 +350,6 @@ class TrackTableViewController: UITableViewController {
             (action, indexPath) in
             Logger.sendUIActionEvent(self, action: "removeTrack", label: "\(indexPath.item)")
             self.playlist.removeTrackAtIndex(UInt(indexPath.item))
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
 
         remove.backgroundColor = UIColor.red
