@@ -236,30 +236,20 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         tableView.reloadData()
     }
 
-    func getSection(originalSectionIndex: Int) -> Section? {
-        if appDelegate.selectedPlaylist == nil && originalSectionIndex > 0 {
-            return Section(rawValue: originalSectionIndex + 1)
-        }
-        return Section(rawValue: originalSectionIndex)
-    }
-
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        if appDelegate.selectedPlaylist == nil {
-            return Section.count - 1
-        }
         return Section.count
     }
 
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return getSection(section)?.title
+        return Section(rawValue: section)?.title
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        switch (getSection(section)!) {
+        switch (Section(rawValue: section)!) {
         case .Playing:    return 1
-        case .Selected:   return 1
+        case .Selected:   return appDelegate.selectedPlaylist == nil ? 0 : 1
         case .YouTube:    return 1
         case .SoundCloud: return 1
         case .Favorites:  return playlists.count
@@ -273,7 +263,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier(self.tableCellReuseIdentifier, forIndexPath: indexPath) as! PlaylistTableViewCell
         var playlist: MusicFeeder.Playlist?
-        switch (getSection(indexPath.section)!) {
+        switch (Section(rawValue: indexPath.section)!) {
         case .Playing:
             playlist = appDelegate.playingPlaylist
             if let p = playlist {
@@ -316,7 +306,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
         let edit = UITableViewRowAction(style: .Default, title: "Edit title".localize()) {
             (action, indexPath) in
-            switch (self.getSection(indexPath.section)!) {
+            switch (Section(rawValue: indexPath.section)!) {
             case .Favorites:
                 self.showTitleEditAlertViewAtIndex(indexPath.item)
             default:
@@ -346,7 +336,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        switch (getSection(indexPath.section)!) {
+        switch (Section(rawValue: indexPath.section)!) {
         case .Playing:
             showPlayingPlaylist(true)
         case .Selected:
