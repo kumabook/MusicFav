@@ -19,7 +19,7 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
 
     private static let userDefaults = NSUserDefaults.standardUserDefaults()
     var productDic: [String:SKProduct] = [:]
-    weak var viewController: UITableViewController?
+    weak var viewController: UIViewController?
     static var isUnlockedEverything: Bool {
         get      { return userDefaults.boolForKey("is_unlocked_everything") }
         set(val) {
@@ -132,7 +132,9 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
                 queue.finishTransaction(transaction)
                 if let vc = viewController, view = vc.navigationController?.view {
                     MBProgressHUD.hideAllHUDsForView(view, animated: true)
-                    vc.tableView.reloadData()
+                    if let tvc = vc as? UITableViewController {
+                        tvc.tableView.reloadData()
+                    }
                     MBProgressHUD.showCompletedHUDForView(view, animated: true, duration: 1.0, after: {})
                 }
             case .Failed:
@@ -154,7 +156,9 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
                 queue.finishTransaction(transaction)
                 if let vc = viewController, view = vc.navigationController?.view {
                     MBProgressHUD.hideAllHUDsForView(view, animated: true)
-                    vc.tableView.reloadData()
+                    if let tvc = vc as? UITableViewController {
+                        tvc.tableView.reloadData()
+                    }
                     MBProgressHUD.showCompletedHUDForView(view, animated: true, duration: 1.0, after: {})
                 }
             case .Deferred:
@@ -180,7 +184,9 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
     func paymentQueueRestoreCompletedTransactionsFinished(queue: SKPaymentQueue) {
         if let vc = viewController, view = vc.navigationController?.view {
             MBProgressHUD.hideAllHUDsForView(view, animated: true)
-            vc.tableView.reloadData()
+            if let tvc = vc as? UITableViewController {
+                tvc.tableView.reloadData()
+            }
         }
     }
 }
