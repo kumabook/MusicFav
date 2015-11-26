@@ -77,6 +77,8 @@
 		67428D591B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67428D581B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift */; };
 		674AAC891B02D64E00C1FC18 /* UINotificationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */; };
 		6751509D1BA8542C00035DE6 /* SpecHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6751509C1BA8542C00035DE6 /* SpecHelper.swift */; };
+		67527B6F1C04C3F900CE1C27 /* PageMenu.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67527B6E1C04C3F900CE1C27 /* PageMenu.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		67527B701C04C43400CE1C27 /* PageMenu.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67527B6E1C04C3F900CE1C27 /* PageMenu.framework */; };
 		67554F091A4F127400F7AE72 /* TrackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */; };
 		67554F0A1A4F127400F7AE72 /* TrackTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */; };
 		675AB3341AD3903B0003824C /* XCDYouTubeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 675AB3331AD3903B0003824C /* XCDYouTubeKit.framework */; };
@@ -167,7 +169,7 @@
 		67F8466F1BA47B720005E78A /* ControlPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F8466E1BA47B720005E78A /* ControlPanel.swift */; };
 		67FA09671AF8CA570086AA45 /* AccessibilityLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FA09661AF8CA570086AA45 /* AccessibilityLabel.swift */; };
 		67FBBDF91B6CD46B00B567CB /* UpdateChecker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67FBBDF81B6CD46B00B567CB /* UpdateChecker.swift */; };
-		76DBFB24E45726C28C7E6397 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C231C8D483ACF959FE482B6 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		76DBFB24E45726C28C7E6397 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C231C8D483ACF959FE482B6 /* Pods.framework */; };
 		D787A5DFEC93A957B280A77A /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1C231C8D483ACF959FE482B6 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -188,6 +190,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				67527B6F1C04C3F900CE1C27 /* PageMenu.framework in Embed Frameworks */,
 				671D07191B94782500DC99A5 /* SoundCloudKit.framework in Embed Frameworks */,
 				67428D4D1B8174E7002FFA1A /* Breit.framework in Embed Frameworks */,
 				6725420C1B784E3300EDA2C3 /* MusicFeeder.framework in Embed Frameworks */,
@@ -293,6 +296,7 @@
 		67428D581B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubePlaylistItemTableViewController.swift; sourceTree = "<group>"; };
 		674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINotificationExtension.swift; sourceTree = "<group>"; };
 		6751509C1BA8542C00035DE6 /* SpecHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecHelper.swift; sourceTree = "<group>"; };
+		67527B6E1C04C3F900CE1C27 /* PageMenu.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PageMenu.framework; path = Carthage/Build/iOS/PageMenu.framework; sourceTree = "<group>"; };
 		67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewCell.swift; sourceTree = "<group>"; };
 		67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrackTableViewCell.xib; sourceTree = "<group>"; };
 		675AB3331AD3903B0003824C /* XCDYouTubeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCDYouTubeKit.framework; path = Carthage/Build/iOS/XCDYouTubeKit.framework; sourceTree = "<group>"; };
@@ -385,6 +389,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				67527B701C04C43400CE1C27 /* PageMenu.framework in Frameworks */,
 				67D837201BA06A2F0025B14B /* PlayerKit.framework in Frameworks */,
 				671D07181B9477F500DC99A5 /* SoundCloudKit.framework in Frameworks */,
 				67428D4A1B80C23F002FFA1A /* Breit.framework in Frameworks */,
@@ -714,6 +719,7 @@
 		7472929E5548D8618A0DE458 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				67527B6E1C04C3F900CE1C27 /* PageMenu.framework */,
 				671D07171B9477F500DC99A5 /* SoundCloudKit.framework */,
 				67428D491B80C23F002FFA1A /* Breit.framework */,
 				6725420B1B784E3300EDA2C3 /* MusicFeeder.framework */,
@@ -964,6 +970,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/MusicFeeder.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/PlayerKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SoundCloudKit.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/PageMenu.framework",
 			);
 			name = "Carthage copy-frameworks";
 			outputPaths = (
