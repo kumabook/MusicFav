@@ -72,6 +72,8 @@
 "Are you sure you want to disconnect with YouTube?"    = "YouTubeとの連携を解除してよろしいですか？";
 "Are you sure you want to disconnect with SoundCloud?" = "SoundCloudとの連携を解除してよろしいですか？";
 
+"Let's add your favorite tracks from ♥ button or swipe menu of a track" = "♥ボタンもしくはトラックをスワイプするとプレイリストに曲を追加できます";
+
 "Sorry, network error occured."     = "通信状況が良くありません。";
 "Notification of new arrivals"      = "新着通知";
 "No notification"                   = "通知なし";

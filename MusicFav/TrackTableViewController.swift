@@ -104,6 +104,9 @@ class TrackTableViewController: UITableViewController {
         updateNavbar()
 
         fetchTracks()
+        if playlistType == .Favorite && tracks.count == 0 {
+            showGuideMessage()
+        }
     }
 
     override func viewDidAppear(animated: Bool) {
@@ -141,6 +144,19 @@ class TrackTableViewController: UITableViewController {
         if playlistType != .Playing {
             navigationItem.rightBarButtonItems?.append(favPlaylistButton)
         }
+    }
+
+    func showGuideMessage() {
+        let size =  tableView.bounds.size
+        let backgroundView = UIView(frame: view.frame)
+        let messageView = UILabel(frame: CGRect(x: size.width * 0.3, y: 0, width: size.width * 0.6, height: size.height))
+        messageView.textAlignment      = NSTextAlignment.Center
+        messageView.numberOfLines      = 0
+        messageView.clipsToBounds      = true
+        tableView.separatorStyle       = UITableViewCellSeparatorStyle.None
+        messageView.text = "Let's add your favorite tracks from ♥ button or swipe menu of a track".localize()
+        tableView.backgroundView = backgroundView
+        backgroundView.addSubview(messageView)
     }
 
     override func didReceiveMemoryWarning() {
