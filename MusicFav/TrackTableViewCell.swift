@@ -7,14 +7,18 @@
 //
 
 import UIKit
+import SnapKit
 
 class TrackTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var thumbImgView:     UIImageView!
-    @IBOutlet weak var trackNameLabel:   UILabel!
-    @IBOutlet weak var durationLabel: UILabel!
+    @IBOutlet weak var thumbImgView:   UIImageView!
+    @IBOutlet weak var trackNameLabel: UILabel!
+    @IBOutlet weak var durationLabel:  UILabel!
+    let leftMarginPercent: CGFloat = 0.2
     override func awakeFromNib() {
         super.awakeFromNib()
+        contentView.constraints.filter { $0.identifier == "left_margin" }.forEach {
+            $0.constant = self.frame.width * leftMarginPercent
+        }
     }
-
 }

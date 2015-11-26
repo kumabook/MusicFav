@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="7706" systemVersion="14F6a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7703"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
@@ -11,51 +12,47 @@
             <rect key="frame" x="0.0" y="0.0" width="320" height="80"/>
             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
             <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
-                <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                <rect key="frame" x="0.0" y="0.0" width="320" height="79"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="N songs" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p1w-yb-fbN">
+                        <rect key="frame" x="255" y="52" width="57" height="18"/>
+                        <animations/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="TitleTitleTitleTitleTitleTitleTitleTitle" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c10-vl-81A">
+                        <rect key="frame" x="93" y="3" width="219" height="45"/>
+                        <animations/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="45" id="J27-MC-AEM"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="Nx2-sw-dTn">
-                        <rect key="frame" x="36" y="4" width="80" height="71"/>
+                        <rect key="frame" x="-1" y="0.0" width="80" height="80"/>
+                        <animations/>
                         <constraints>
                             <constraint firstAttribute="width" constant="80" id="99S-Vd-OS6"/>
                         </constraints>
                     </imageView>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="N songs" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p1w-yb-fbN">
-                        <rect key="frame" x="251" y="52" width="61" height="20"/>
-                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="c10-vl-81A">
-                        <rect key="frame" x="124" y="0.0" width="188" height="45"/>
-                        <constraints>
-                            <constraint firstAttribute="height" constant="45" id="J27-MC-AEM"/>
-                            <constraint firstAttribute="width" constant="188" id="h0r-Jh-vHr"/>
-                        </constraints>
-                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
-                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                        <nil key="highlightedColor"/>
-                    </label>
                 </subviews>
+                <animations/>
                 <constraints>
-                    <constraint firstItem="c10-vl-81A" firstAttribute="leading" secondItem="Nx2-sw-dTn" secondAttribute="trailing" constant="8" id="1Cd-06-pxF"/>
-                    <constraint firstAttribute="bottomMargin" secondItem="p1w-yb-fbN" secondAttribute="bottom" constant="-1" id="AN9-84-h7X"/>
+                    <constraint firstItem="c10-vl-81A" firstAttribute="leading" secondItem="Nx2-sw-dTn" secondAttribute="trailing" constant="14" id="1Cd-06-pxF"/>
+                    <constraint firstAttribute="bottomMargin" secondItem="p1w-yb-fbN" secondAttribute="bottom" constant="1" id="AN9-84-h7X"/>
                     <constraint firstAttribute="trailingMargin" secondItem="p1w-yb-fbN" secondAttribute="trailing" id="EeQ-Oq-3uC"/>
-                    <constraint firstItem="c10-vl-81A" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="MsZ-uJ-coD"/>
-                    <constraint firstItem="Nx2-sw-dTn" firstAttribute="bottom" secondItem="H2p-sc-9uM" secondAttribute="bottomMargin" constant="4" id="RCP-kR-2ZO"/>
-                    <constraint firstItem="Nx2-sw-dTn" firstAttribute="top" secondItem="c10-vl-81A" secondAttribute="top" constant="4" id="To0-7W-FEr"/>
-                    <constraint firstItem="Nx2-sw-dTn" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-7" id="Y0G-Cf-8bP"/>
-                    <constraint firstItem="c10-vl-81A" firstAttribute="top" secondItem="Nx2-sw-dTn" secondAttribute="top" id="bZf-0O-HZ1"/>
-                    <constraint firstItem="Nx2-sw-dTn" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-4" id="kKg-Un-jud"/>
+                    <constraint firstItem="Nx2-sw-dTn" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="-9" identifier="left_margin" id="HIG-EU-h2o"/>
+                    <constraint firstItem="Nx2-sw-dTn" firstAttribute="bottom" secondItem="H2p-sc-9uM" secondAttribute="bottomMargin" constant="9" id="RCP-kR-2ZO"/>
+                    <constraint firstItem="Nx2-sw-dTn" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="d6L-Ts-kO3"/>
+                    <constraint firstItem="Nx2-sw-dTn" firstAttribute="top" secondItem="c10-vl-81A" secondAttribute="top" constant="-3" id="f3e-oV-13b"/>
                     <constraint firstAttribute="trailingMargin" secondItem="c10-vl-81A" secondAttribute="trailing" id="wGe-rK-cIG"/>
                 </constraints>
-                <variation key="default">
-                    <mask key="constraints">
-                        <exclude reference="Y0G-Cf-8bP"/>
-                        <exclude reference="bZf-0O-HZ1"/>
-                    </mask>
-                </variation>
             </tableViewCellContentView>
+            <animations/>
             <connections>
                 <outlet property="thumbImageView" destination="Nx2-sw-dTn" id="dfu-op-ody"/>
                 <outlet property="titleLabel" destination="c10-vl-81A" id="Xfg-nQ-j23"/>
