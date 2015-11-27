@@ -13,7 +13,7 @@ import FeedlyKit
 import MusicFeeder
 import MBProgressHUD
 
-class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler {
+class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler, EntryMenuDelegate {
     let indicatorSize = 48
     var playlistButton:       UIBarButtonItem?
     var entryMenuButton:      UIBarButtonItem?
@@ -26,6 +26,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
     var entry:      Entry
     var url:        NSURL = NSURL()
     var playlist:   Playlist?
+    var entryMenu:  EntryMenu?
 
     init(entry: Entry, playlist: Playlist?) {
         self.entry     = entry
@@ -79,12 +80,11 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
                                                 style: UIBarButtonItemStyle.Plain,
                                                target: self,
                                                action: "historyBack")
-
         navigationItem.rightBarButtonItems = [playlistButton!,
                                               entryMenuButton!,
                                               historyForwardButton!,
                                               historyBackButton!]
-
+        loadEntryMenu()
         if let url = entry.url {
             loadURL(url)
         }
@@ -99,10 +99,26 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         webView?.configuration.userContentController.addScriptMessageHandler(self, name: "MusicFav")
     }
 
+    override func viewWillDisappear(animated: Bool) {
+        super.viewWillDisappear(animated)
+        entryMenu?.hide()
+    }
+
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         webView?.navigationDelegate = nil
         webView?.configuration.userContentController.removeScriptMessageHandlerForName("MusicFav")
+    }
+
+    func loadEntryMenu() {
+        if let menu = entryMenu {
+            menu.removeFromSuperview()
+            menu.delegate = nil
+        }
+        entryMenu = EntryMenu(frame: view.frame, items: [.OpenWithSafari, .Share, .Favorite, .SaveToFeedly ])
+        entryMenu?.delegate = self
+        view.addSubview(entryMenu!)
+        entryMenu?.hidden = true
     }
 
     func loadURL(url: NSURL) {
@@ -166,8 +182,47 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         webView?.goForward()
     }
 
+    func openWithSafari() {
+        if let url = self.currentURL {
+            UIApplication.sharedApplication().openURL(url)
+        }
+    }
+
+    func share() {
+        var sharingItems = [AnyObject]()
+        if let entry = self.buildEntryWithCurrentPage() {
+            if let title = entry.title { sharingItems.append(title) }
+        } else {
+            if let title = self.entry.title { sharingItems.append(title) }
+        }
+        if let url = self.currentURL {
+            sharingItems.append(url)
+        }
+        let activityViewController = UIActivityViewController(activityItems: sharingItems, applicationActivities: nil)
+        self.presentViewController(activityViewController, animated: true, completion: nil)
+    }
+
     func favEntry() {
         Logger.sendUIActionEvent(self, action: "favEntry", label: "")
+        var en: Entry
+        if let e = buildEntryWithCurrentPage() {
+            en = e
+        } else {
+            en = entry
+        }
+        if EntryStore.create(en) {
+            MBProgressHUD.showCompletedHUDForView(self.navigationController!.view, animated: true, duration: 1.0) {
+                self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
+                return
+            }
+        } else {
+            let ac = Error.EntryAlreadyExists.alertController { (action) in }
+            self.presentViewController(ac, animated: true, completion: nil)
+        }
+    }
+
+    func saveToFeedly() {
+        Logger.sendUIActionEvent(self, action: "saveToFeedly", label: "")
         let feedlyClient = CloudAPIClient.sharedInstance
         if CloudAPIClient.isLoggedIn {
             MBProgressHUD.showHUDAddedTo(view, animated: true)
@@ -184,21 +239,8 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
                 }
             })
         } else {
-            var en: Entry
-            if let e = buildEntryWithCurrentPage() {
-                en = e
-            } else {
-                en = entry
-            }
-            if EntryStore.create(en) {
-                MBProgressHUD.showCompletedHUDForView(self.navigationController!.view, animated: true, duration: 1.0) {
-                    self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
-                    return
-                }
-            } else {
-                let ac = Error.EntryAlreadyExists.alertController { (action) in }
-                self.presentViewController(ac, animated: true, completion: nil)
-            }
+            let vc = UINavigationController(rootViewController: FeedlyOAuthViewController())
+            navigationController?.presentViewController(vc, animated: true, completion: {})
         }
     }
 
@@ -246,35 +288,20 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
     }
 
     func showEntryMenu() {
-        let menu = UIAlertController(title: nil, message: nil, preferredStyle: UIAlertControllerStyle.ActionSheet)
-        let favAction = UIAlertAction(title: "Favorite the Entry".localize(), style: .Default) { alert in
-            self.favEntry()
+        if let menu = entryMenu {
+            if menu.hidden { menu.showWithNavigationBar(navigationController?.navigationBar) }
+            else           { menu.hide() }
         }
-        let openWithSafariAction = UIAlertAction(title: "Open with Safari".localize(), style: .Default) { alert in
-            if let url = self.currentURL {
-                UIApplication.sharedApplication().openURL(url)
-            }
+    }
+
+    // MARK: - EntryMenuDelegate
+
+    func entryMenuSelected(item: EntryMenu.MenuItem) {
+        switch item {
+        case .OpenWithSafari: openWithSafari()
+        case .Share:          share()
+        case .Favorite:       favEntry()
+        case .SaveToFeedly:   saveToFeedly()
         }
-        let shareAction = UIAlertAction(title: "Share the Entry".localize(), style: .Default) { alert in
-            var sharingItems = [AnyObject]()
-            if let entry = self.buildEntryWithCurrentPage() {
-                if let title = entry.title { sharingItems.append(title) }
-            } else {
-                if let title = self.entry.title { sharingItems.append(title) }
-            }
-            if let url = self.currentURL {
-                sharingItems.append(url)
-            }
-            let activityViewController = UIActivityViewController(activityItems: sharingItems, applicationActivities: nil)
-            self.presentViewController(activityViewController, animated: true, completion: nil)
-        }
-        let cancelAction = UIAlertAction(title: "Cancel".localize(), style: .Cancel) { alert in
-            menu.dismissViewControllerAnimated(true, completion: nil)
-        }
-        menu.addAction(favAction)
-        menu.addAction(openWithSafariAction)
-        menu.addAction(shareAction)
-        menu.addAction(cancelAction)
-        presentViewController(menu, animated: true, completion: nil)
     }
 }

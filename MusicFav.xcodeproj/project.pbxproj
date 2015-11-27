@@ -81,6 +81,7 @@
 		67527B701C04C43400CE1C27 /* PageMenu.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67527B6E1C04C3F900CE1C27 /* PageMenu.framework */; };
 		67554F091A4F127400F7AE72 /* TrackTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */; };
 		67554F0A1A4F127400F7AE72 /* TrackTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */; };
+		675553051C0743BE00E3241C /* EntryMenu.swift in Sources */ = {isa = PBXBuildFile; fileRef = 675553041C0743BE00E3241C /* EntryMenu.swift */; settings = {ASSET_TAGS = (); }; };
 		675AB3341AD3903B0003824C /* XCDYouTubeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 675AB3331AD3903B0003824C /* XCDYouTubeKit.framework */; };
 		675AB3351AD390790003824C /* XCDYouTubeKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 675AB3331AD3903B0003824C /* XCDYouTubeKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		675AB33B1AD3D80A0003824C /* feedly.json in Resources */ = {isa = PBXBuildFile; fileRef = 675AB33A1AD3D80A0003824C /* feedly.json */; };
@@ -299,6 +300,7 @@
 		67527B6E1C04C3F900CE1C27 /* PageMenu.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PageMenu.framework; path = Carthage/Build/iOS/PageMenu.framework; sourceTree = "<group>"; };
 		67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewCell.swift; sourceTree = "<group>"; };
 		67554F081A4F127400F7AE72 /* TrackTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TrackTableViewCell.xib; sourceTree = "<group>"; };
+		675553041C0743BE00E3241C /* EntryMenu.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EntryMenu.swift; sourceTree = "<group>"; };
 		675AB3331AD3903B0003824C /* XCDYouTubeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCDYouTubeKit.framework; path = Carthage/Build/iOS/XCDYouTubeKit.framework; sourceTree = "<group>"; };
 		675AB33A1AD3D80A0003824C /* feedly.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = feedly.json; path = ../config/feedly.json; sourceTree = "<group>"; };
 		675AB3401AD3E3DA0003824C /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
@@ -606,6 +608,7 @@
 				67F8466E1BA47B720005E78A /* ControlPanel.swift */,
 				679F453C1AF104F7008D1B7F /* OnpuRefreshControl.swift */,
 				673C81BD1BC8C4A700EE6F70 /* OnpuIndicatorView.swift */,
+				675553041C0743BE00E3241C /* EntryMenu.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -1137,6 +1140,7 @@
 				67254C7C1A4968F50064E5DF /* EntryWebViewController.swift in Sources */,
 				6724E1C51A9C9E9900D8E0FA /* UIColorExtenstion.swift in Sources */,
 				6705761E1BDE75870087063A /* HistoryTableViewController.swift in Sources */,
+				675553051C0743BE00E3241C /* EntryMenu.swift in Sources */,
 				67DA46621A87B3AB0048B29C /* SelectPlaylistTableViewController.swift in Sources */,
 				67E5DEE31AEC4CEA000E016F /* FabricConfig.swift in Sources */,
 				67428D511B817980002FFA1A /* SearchStreamPageMenuController.swift in Sources */,

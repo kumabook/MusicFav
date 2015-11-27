@@ -2,12 +2,12 @@
   "images" : [
     {
       "idiom" : "universal",
+      "filename" : "star129.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "scale" : "2x",
-      "filename" : "star129.png"
+      "scale" : "2x"
     },
     {
       "idiom" : "universal",
