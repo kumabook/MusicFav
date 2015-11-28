@@ -95,6 +95,7 @@
 "Login failed."                     = "ログインできませんでした。";
 "Save the track"                    = "トラックを登録";
 
+"This entry already saved as favorite"            = "この記事は既に保存済みです。";
 "Sorry. Failed to purchase \"%@\"."               = "申し訳ございません。「%@」の購入ができませんでした。";
 "Sorry. In-App Purchase is restricted"            = "申し訳ございません。アプリ内課金が制限されています。";
 "Sorry. Failed to restore."                       = "申し訳ございません。復元できませんでした。";
