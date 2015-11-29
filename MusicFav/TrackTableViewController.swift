@@ -102,7 +102,7 @@ class TrackTableViewController: UITableViewController {
         indicator.hidesWhenStopped = true
         indicator.stopAnimating()
         updateNavbar()
-
+        observePlaylist()
         fetchTracks()
         if playlistType == .Favorite && tracks.count == 0 {
             showGuideMessage()
@@ -183,9 +183,16 @@ class TrackTableViewController: UITableViewController {
                 if self.playlist == playlist {
                     self.tableView.reloadData()
                 }
-            case .TracksAdded(let playlist, _):
+            case .TracksAdded(let playlist, let tracks):
                 if self.playlist == playlist {
-                    self.tableView.reloadData()
+                    let offset = playlist.tracks.count-tracks.count
+                    var indexes: [NSIndexPath] = []
+                    for i in offset..<offset+tracks.count {
+                        indexes.append(NSIndexPath(forItem: i, inSection: 0))
+                    }
+                    self.tableView.beginUpdates()
+                    self.tableView.insertRowsAtIndexPaths(indexes, withRowAnimation: UITableViewRowAnimation.Fade)
+                    self.tableView.endUpdates()
                 }
             case .TrackRemoved(let playlist, _, let index):
                 if self.playlist == playlist {
@@ -199,7 +206,6 @@ class TrackTableViewController: UITableViewController {
             }
             return
         })
-
     }
 
     func isPlaylistPlaying() -> Bool {
@@ -271,15 +277,7 @@ class TrackTableViewController: UITableViewController {
         ptc.callback = {(playlist: Playlist?) in
             if let p = playlist {
                 switch p.appendTracks(tracks) {
-                case .Success:
-                    if p == self.playlist {
-                        var indexes: [NSIndexPath] = []
-                        let offset = p.tracks.count-1
-                        for i in offset..<tracks.count + offset {
-                            indexes.append(NSIndexPath(forItem: i, inSection: 0))
-                        }
-                        self.tableView.insertRowsAtIndexPaths(indexes, withRowAnimation: UITableViewRowAnimation.Fade)
-                    }
+                case .Success: break
                 case .Failure:
                     let message = "Failed to add tracks".localize()
                     UIAlertController.show(self, title: "MusicFav", message: message, handler: { action in })
@@ -300,22 +298,7 @@ class TrackTableViewController: UITableViewController {
     }
 
     func fetchTrackDetails() {
-        weak var _self = self
-        playlistLoader.fetchTracks().on(
-            next: { (index, track) in
-                UIScheduler().schedule {
-                    if let __self = _self {
-                        __self.tableView?.reloadRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)],
-                            withRowAnimation: UITableViewRowAnimation.None)
-                        Playlist.notifyChange(.Updated(__self.playlist))
-                    }
-                }
-                return
-            }, error: { error in
-                self.tableView.reloadData()
-            }, completed: {
-                self.tableView.reloadData()
-        }).start()
+        playlistLoader.fetchTracks()
     }
 
     // MARK: UITableViewDataSource
