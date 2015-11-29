@@ -37,7 +37,11 @@ class StreamTimelineTableViewController: TimelineTableViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
-        fetchTracks()
+        streamLoader.fetchAllPlaylists()
+    }
+
+    override func viewDidAppear(animated: Bool) {
+        streamLoader.cancelFetchingPlaylists()
     }
 
     override func fetchLatest() {
@@ -79,13 +83,5 @@ class StreamTimelineTableViewController: TimelineTableViewController {
                 self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             }
         })
-    }
-
-    func fetchTracks() {
-        for item in self.getItems() {
-            if let playlist = item.playlist, let entry = item.entry {
-                streamLoader.fetchTracks(playlist, entry: entry)
-            }
-        }
     }
 }
