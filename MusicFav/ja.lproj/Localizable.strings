@@ -45,7 +45,7 @@
 "All"           = "すべて";
 "Uncategorized" = "未分類";
 "Read"          = "既読";
-"Saved"         = "お気に入り";
+"Saved"         = "保存";
 "History"       = "履歴";
 "Select"        = "選択";
 "Purchase"      = "購入";
@@ -58,6 +58,7 @@
 "likes"         = "いいね";
 
 "Favorite the Entry"                = "記事をお気に入りに登録";
+"Save to Feedly"                    = "Feedlyに保存";
 "Open with Safari"                  = "Safariで開く";
 "Share the Entry"                   = "記事をシェア";
 "Please Rate MusicFav"              = "MusicFavを評価";

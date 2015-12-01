@@ -19,7 +19,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         case GlobalResource(Stream)
         case FeedlyCategory(FeedlyKit.Category)
         case UncategorizedSubscription(Subscription)
-        case Saved
+        case Favorite
         case History
         case YouTube
         case SoundCloud
@@ -29,7 +29,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         var title: String {
             switch self {
             case .GlobalResource(let stream):                  return stream.streamTitle.localize()
-            case .Saved:                                       return "Saved".localize()
+            case .Favorite:                                    return "Favorite".localize()
             case .History:                                     return "History".localize()
             case .YouTube:                                     return "YouTube"
             case .SoundCloud:                                  return "SoundCloud"
@@ -53,8 +53,8 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
                 }
             case History:
                 view?.image = UIImage(named: "history")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
-            case Saved:
-                view?.image = UIImage(named: "saved")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+            case Favorite:
+                view?.image = UIImage(named: "fav_entry")?.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
             case .YouTube:
                 view?.image = UIImage(named: "youtube")
             case .SoundCloud:
@@ -71,7 +71,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             switch self {
             case .GlobalResource: return []
             case .History:        return []
-            case .Saved:          return []
+            case .Favorite:       return []
             case .YouTube:
                 let i = vc.youtubeActivityLoader.itemsOfPlaylist.startIndex.advancedBy(index)
                 return vc.youtubeActivityLoader.itemsOfPlaylist.keys[i]
@@ -91,7 +91,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             switch self {
             case .GlobalResource: return 0
             case .History:        return 0
-            case .Saved:          return 0
+            case .Favorite:       return 0
             case .YouTube:
                 return vc.youtubeActivityLoader.itemsOfPlaylist.count
             case .SoundCloud:     return 0
@@ -128,9 +128,8 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             sections.append(.GlobalResource(FeedlyKit.Category.All(userId)))
             sections.append(.GlobalResource(FeedlyKit.Tag.Saved(userId)))
             sections.append(.GlobalResource(FeedlyKit.Tag.Read(userId)))
-        } else {
-            sections.append(.Saved)
         }
+        sections.append(.Favorite)
         sections.append(.History)
         sections.append(.YouTube)
         sections.append(.SoundCloud)
@@ -226,7 +225,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         switch section {
         case .GlobalResource(let stream):
             showStream(stream: stream)
-        case .Saved:
+        case .Favorite:
             showSavedStream()
         case .History:
             showHistory()
