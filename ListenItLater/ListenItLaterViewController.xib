@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ListenItLaterViewController" customModule="ListenItLater" customModuleProvider="target">
+            <connections>
+                <outlet property="messabeLabel" destination="Vu2-wr-BVx" id="tCn-cq-4wL"/>
+                <outlet property="messageView" destination="bdW-Rr-rIn" id="Acb-ho-Bdc"/>
+                <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bdW-Rr-rIn">
+                    <rect key="frame" x="231" y="269" width="139" height="62"/>
+                    <subviews>
+                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="icon" translatesAutoresizingMaskIntoConstraints="NO" id="bvI-gN-TZf">
+                            <rect key="frame" x="8" y="6" width="48" height="48"/>
+                            <animations/>
+                        </imageView>
+                    </subviews>
+                    <animations/>
+                    <color key="backgroundColor" red="0.94117647058823528" green="0.54509803921568623" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="62" id="xid-aX-IH4"/>
+                    </constraints>
+                    <userDefinedRuntimeAttributes>
+                        <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="YES"/>
+                        <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                            <integer key="value" value="12"/>
+                        </userDefinedRuntimeAttribute>
+                    </userDefinedRuntimeAttributes>
+                </view>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Saved!" lineBreakMode="clip" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vu2-wr-BVx">
+                    <rect key="frame" x="294" y="289" width="59" height="22"/>
+                    <animations/>
+                    <fontDescription key="fontDescription" type="boldSystem" pointSize="18"/>
+                    <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    <nil key="highlightedColor"/>
+                </label>
+            </subviews>
+            <animations/>
+            <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.050000000000000003" colorSpace="calibratedRGB"/>
+            <constraints>
+                <constraint firstItem="bdW-Rr-rIn" firstAttribute="centerY" secondItem="i5M-Pr-FkT" secondAttribute="centerY" id="6ZQ-jb-fVv"/>
+                <constraint firstItem="bdW-Rr-rIn" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="BCT-ci-EjK"/>
+                <constraint firstItem="bdW-Rr-rIn" firstAttribute="centerX" secondItem="Vu2-wr-BVx" secondAttribute="centerX" constant="-23" id="Ulb-Mm-QH9"/>
+                <constraint firstItem="Vu2-wr-BVx" firstAttribute="leading" secondItem="bdW-Rr-rIn" secondAttribute="leading" constant="63" id="d9q-jn-i1R"/>
+                <constraint firstItem="bdW-Rr-rIn" firstAttribute="centerY" secondItem="Vu2-wr-BVx" secondAttribute="centerY" id="uzJ-VA-aly"/>
+            </constraints>
+            <point key="canvasLocation" x="174" y="-4"/>
+        </view>
+    </objects>
+    <resources>
+        <image name="icon" width="196" height="187"/>
+    </resources>
+</document>

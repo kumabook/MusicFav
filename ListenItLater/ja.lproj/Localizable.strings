@@ -1,0 +1,10 @@
+/* 
+  ListenItLater.strings
+  MusicFav
+
+  Created by Hiroki Kumamoto on 12/4/15.
+  Copyright © 2015 Hiroki Kumamoto. All rights reserved.
+*/
+
+"Saved!"                   = "保存しました!";
+"Sorry, failed to save：（" = "申し訳ございません。保存できませんでした(>_<)";

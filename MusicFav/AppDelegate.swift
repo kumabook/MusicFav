@@ -158,6 +158,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func applicationDidBecomeActive(application: UIApplication) {
         sink?(.Next(Event.DidBecomeActive))
         application.applicationIconBadgeNumber = 0
+        ListenItLaterEntryStore.moveToSaved()
     }
 
     func applicationWillTerminate(application: UIApplication) {
