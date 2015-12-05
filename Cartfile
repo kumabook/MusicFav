@@ -1,4 +1,4 @@
-github "kumabook/MusicFeeder" == 0.2.4
-github "Quick/Quick"          == 0.6.0
-github "Quick/Nimble"         == 2.0.0
+github "kumabook/MusicFeeder" == 0.3.0
+github "Quick/Quick"
+github "Quick/Nimble"
 github "uacaps/PageMenu"      "master"
