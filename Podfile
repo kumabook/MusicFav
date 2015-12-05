@@ -13,6 +13,7 @@ pod 'InAppSettingsKit',     '~> 2.1'
 pod 'EAIntroView',          '~> 2.7.0'
 pod 'Fabric'
 pod 'Crashlytics'
+pod 'GoogleAnalytics'
 pod 'MarqueeLabel'
 pod "RMDateSelectionViewController", "~> 1.5.1"
 pod 'ISAlternativeRefreshControl'
