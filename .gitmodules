@@ -1,6 +1,3 @@
-[submodule "GoogleAnalytics-SDK-iOS"]
-	path = GoogleAnalytics-SDK-iOS
-	url = git@github.com:kumabook/GoogleAnalytics-SDK-iOS.git
 [submodule "Carthage/Checkouts/Alamofire"]
 	path = Carthage/Checkouts/Alamofire
 	url = ssh://git@github.com/Alamofire/Alamofire.git

@@ -60,23 +60,11 @@
 		6736D00D1B86341000CCDD80 /* YouTubePlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6736D00B1B86341000CCDD80 /* YouTubePlaylist.swift */; };
 		6736D00E1B86341000CCDD80 /* YouTubePlaylistLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6736D00C1B86341000CCDD80 /* YouTubePlaylistLoader.swift */; };
 		673C81BE1BC8C4A700EE6F70 /* OnpuIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 673C81BD1BC8C4A700EE6F70 /* OnpuIndicatorView.swift */; };
-		673DCC831AF530810043E51D /* libGoogleAnalyticsServices.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 673DCC821AF530810043E51D /* libGoogleAnalyticsServices.a */; };
 		673DCC851AF530C30043E51D /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 673DCC841AF530C30043E51D /* CoreData.framework */; };
 		673DCC871AF530F50043E51D /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 673DCC861AF530F50043E51D /* AdSupport.framework */; };
 		673DCC891AF530FF0043E51D /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 673DCC881AF530FF0043E51D /* libz.dylib */; };
 		673DCC8B1AF531090043E51D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 673DCC8A1AF531090043E51D /* SystemConfiguration.framework */; };
 		673DCC8D1AF531210043E51D /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 673DCC8C1AF531210043E51D /* libsqlite3.dylib */; };
-		673DCC8F1AF5326E0043E51D /* GAI.h in Headers */ = {isa = PBXBuildFile; fileRef = 673DCC781AF5304B0043E51D /* GAI.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		673DCC901AF5326E0043E51D /* GAIDictionaryBuilder.h in Headers */ = {isa = PBXBuildFile; fileRef = 673DCC791AF5304B0043E51D /* GAIDictionaryBuilder.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		673DCC911AF5326E0043E51D /* GAIEcommerceFields.h in Headers */ = {isa = PBXBuildFile; fileRef = 673DCC7A1AF5304B0043E51D /* GAIEcommerceFields.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		673DCC921AF5326E0043E51D /* GAIEcommerceProduct.h in Headers */ = {isa = PBXBuildFile; fileRef = 673DCC7B1AF5304B0043E51D /* GAIEcommerceProduct.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		673DCC931AF5326E0043E51D /* GAIEcommerceProductAction.h in Headers */ = {isa = PBXBuildFile; fileRef = 673DCC7C1AF5304B0043E51D /* GAIEcommerceProductAction.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		673DCC941AF5326E0043E51D /* GAIEcommercePromotion.h in Headers */ = {isa = PBXBuildFile; fileRef = 673DCC7D1AF5304B0043E51D /* GAIEcommercePromotion.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		673DCC951AF5326E0043E51D /* GAIFields.h in Headers */ = {isa = PBXBuildFile; fileRef = 673DCC7E1AF5304B0043E51D /* GAIFields.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		673DCC961AF5326E0043E51D /* GAILogger.h in Headers */ = {isa = PBXBuildFile; fileRef = 673DCC7F1AF5304B0043E51D /* GAILogger.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		673DCC971AF5326E0043E51D /* GAITrackedViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 673DCC801AF5304B0043E51D /* GAITrackedViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		673DCC981AF5326E0043E51D /* GAITracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 673DCC811AF5304B0043E51D /* GAITracker.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		673DCC991AF53AD70043E51D /* libGoogleAnalyticsServices.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 673DCC821AF530810043E51D /* libGoogleAnalyticsServices.a */; };
 		673DCC9A1AF53AE80043E51D /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 673DCC841AF530C30043E51D /* CoreData.framework */; };
 		673DCC9B1AF53AEF0043E51D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 673DCC8A1AF531090043E51D /* SystemConfiguration.framework */; };
 		673DCC9C1AF53AF60043E51D /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 673DCC861AF530F50043E51D /* AdSupport.framework */; };
@@ -312,17 +300,6 @@
 		6736D00B1B86341000CCDD80 /* YouTubePlaylist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = YouTubePlaylist.swift; path = MusicFav/YouTubePlaylist.swift; sourceTree = "<group>"; };
 		6736D00C1B86341000CCDD80 /* YouTubePlaylistLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = YouTubePlaylistLoader.swift; path = MusicFav/YouTubePlaylistLoader.swift; sourceTree = "<group>"; };
 		673C81BD1BC8C4A700EE6F70 /* OnpuIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnpuIndicatorView.swift; sourceTree = "<group>"; };
-		673DCC781AF5304B0043E51D /* GAI.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GAI.h; path = "GoogleAnalytics-SDK-iOS/GoogleAnalytics/Library/GAI.h"; sourceTree = "<group>"; };
-		673DCC791AF5304B0043E51D /* GAIDictionaryBuilder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GAIDictionaryBuilder.h; path = "GoogleAnalytics-SDK-iOS/GoogleAnalytics/Library/GAIDictionaryBuilder.h"; sourceTree = "<group>"; };
-		673DCC7A1AF5304B0043E51D /* GAIEcommerceFields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GAIEcommerceFields.h; path = "GoogleAnalytics-SDK-iOS/GoogleAnalytics/Library/GAIEcommerceFields.h"; sourceTree = "<group>"; };
-		673DCC7B1AF5304B0043E51D /* GAIEcommerceProduct.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GAIEcommerceProduct.h; path = "GoogleAnalytics-SDK-iOS/GoogleAnalytics/Library/GAIEcommerceProduct.h"; sourceTree = "<group>"; };
-		673DCC7C1AF5304B0043E51D /* GAIEcommerceProductAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GAIEcommerceProductAction.h; path = "GoogleAnalytics-SDK-iOS/GoogleAnalytics/Library/GAIEcommerceProductAction.h"; sourceTree = "<group>"; };
-		673DCC7D1AF5304B0043E51D /* GAIEcommercePromotion.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GAIEcommercePromotion.h; path = "GoogleAnalytics-SDK-iOS/GoogleAnalytics/Library/GAIEcommercePromotion.h"; sourceTree = "<group>"; };
-		673DCC7E1AF5304B0043E51D /* GAIFields.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GAIFields.h; path = "GoogleAnalytics-SDK-iOS/GoogleAnalytics/Library/GAIFields.h"; sourceTree = "<group>"; };
-		673DCC7F1AF5304B0043E51D /* GAILogger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GAILogger.h; path = "GoogleAnalytics-SDK-iOS/GoogleAnalytics/Library/GAILogger.h"; sourceTree = "<group>"; };
-		673DCC801AF5304B0043E51D /* GAITrackedViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GAITrackedViewController.h; path = "GoogleAnalytics-SDK-iOS/GoogleAnalytics/Library/GAITrackedViewController.h"; sourceTree = "<group>"; };
-		673DCC811AF5304B0043E51D /* GAITracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = GAITracker.h; path = "GoogleAnalytics-SDK-iOS/GoogleAnalytics/Library/GAITracker.h"; sourceTree = "<group>"; };
-		673DCC821AF530810043E51D /* libGoogleAnalyticsServices.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libGoogleAnalyticsServices.a; path = "GoogleAnalytics-SDK-iOS/libGoogleAnalyticsServices.a"; sourceTree = "<group>"; };
 		673DCC841AF530C30043E51D /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		673DCC861AF530F50043E51D /* AdSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AdSupport.framework; path = System/Library/Frameworks/AdSupport.framework; sourceTree = SDKROOT; };
 		673DCC881AF530FF0043E51D /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -442,7 +419,6 @@
 				67B777A61B6E3CBC001B777B /* Realm.framework in Frameworks */,
 				673DCC891AF530FF0043E51D /* libz.dylib in Frameworks */,
 				673DCC8D1AF531210043E51D /* libsqlite3.dylib in Frameworks */,
-				673DCC831AF530810043E51D /* libGoogleAnalyticsServices.a in Frameworks */,
 				679F405A1B05091D0070602D /* StoreKit.framework in Frameworks */,
 				673DCC871AF530F50043E51D /* AdSupport.framework in Frameworks */,
 				673DCC8B1AF531090043E51D /* SystemConfiguration.framework in Frameworks */,
@@ -465,7 +441,6 @@
 				673DCC9C1AF53AF60043E51D /* AdSupport.framework in Frameworks */,
 				673DCC9B1AF53AEF0043E51D /* SystemConfiguration.framework in Frameworks */,
 				673DCC9A1AF53AE80043E51D /* CoreData.framework in Frameworks */,
-				673DCC991AF53AD70043E51D /* libGoogleAnalyticsServices.a in Frameworks */,
 				675BEBF71AEAF81900BD853D /* Nimble.framework in Frameworks */,
 				675BEBF81AEAF81900BD853D /* Quick.framework in Frameworks */,
 				675BEBFB1AEAF81900BD853D /* SwiftyJSON.framework in Frameworks */,
@@ -760,24 +735,6 @@
 			name = Fixtures;
 			sourceTree = "<group>";
 		};
-		675F05831AF35279001CD799 /* GAI */ = {
-			isa = PBXGroup;
-			children = (
-				673DCC821AF530810043E51D /* libGoogleAnalyticsServices.a */,
-				673DCC781AF5304B0043E51D /* GAI.h */,
-				673DCC791AF5304B0043E51D /* GAIDictionaryBuilder.h */,
-				673DCC7A1AF5304B0043E51D /* GAIEcommerceFields.h */,
-				673DCC7B1AF5304B0043E51D /* GAIEcommerceProduct.h */,
-				673DCC7C1AF5304B0043E51D /* GAIEcommerceProductAction.h */,
-				673DCC7D1AF5304B0043E51D /* GAIEcommercePromotion.h */,
-				673DCC7E1AF5304B0043E51D /* GAIFields.h */,
-				673DCC7F1AF5304B0043E51D /* GAILogger.h */,
-				673DCC801AF5304B0043E51D /* GAITrackedViewController.h */,
-				673DCC811AF5304B0043E51D /* GAITracker.h */,
-			);
-			name = GAI;
-			sourceTree = "<group>";
-		};
 		67F5308A1B7F52E200D8EEF1 /* AddSubscription */ = {
 			isa = PBXGroup;
 			children = (
@@ -807,7 +764,6 @@
 				67B777A71B6E3CE0001B777B /* Realm.framework */,
 				6720B9B51B27A08F000C4D3A /* Result.framework */,
 				679F40591B05091D0070602D /* StoreKit.framework */,
-				675F05831AF35279001CD799 /* GAI */,
 				673DCC8A1AF531090043E51D /* SystemConfiguration.framework */,
 				673DCC861AF530F50043E51D /* AdSupport.framework */,
 				673DCC841AF530C30043E51D /* CoreData.framework */,
@@ -849,16 +805,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				673DCC8F1AF5326E0043E51D /* GAI.h in Headers */,
-				673DCC901AF5326E0043E51D /* GAIDictionaryBuilder.h in Headers */,
-				673DCC911AF5326E0043E51D /* GAIEcommerceFields.h in Headers */,
-				673DCC921AF5326E0043E51D /* GAIEcommerceProduct.h in Headers */,
-				673DCC931AF5326E0043E51D /* GAIEcommerceProductAction.h in Headers */,
-				673DCC941AF5326E0043E51D /* GAIEcommercePromotion.h in Headers */,
-				673DCC951AF5326E0043E51D /* GAIFields.h in Headers */,
-				673DCC961AF5326E0043E51D /* GAILogger.h in Headers */,
-				673DCC971AF5326E0043E51D /* GAITrackedViewController.h in Headers */,
-				673DCC981AF5326E0043E51D /* GAITracker.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
