@@ -55,7 +55,7 @@
 		6732B5271C1101A4005559A6 /* ListenItLaterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67AD46921C0F35B30058E176 /* ListenItLaterViewController.swift */; };
 		6732B5281C1101B3005559A6 /* ListenItLaterViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67AD46931C0F35B30058E176 /* ListenItLaterViewController.xib */; };
 		6732B5291C1101E7005559A6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 67277CB71A434304002FD3E0 /* Images.xcassets */; };
-		6732B52D1C1106E9005559A6 /* GetEntry.js in Resources */ = {isa = PBXBuildFile; fileRef = 6732B52C1C1106E9005559A6 /* GetEntry.js */; settings = {ASSET_TAGS = (); }; };
+		6732B52D1C1106E9005559A6 /* GetEntry.js in Resources */ = {isa = PBXBuildFile; fileRef = 6732B52C1C1106E9005559A6 /* GetEntry.js */; };
 		6732B5311C11DEBB005559A6 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6732B5331C11DEBB005559A6 /* Localizable.strings */; };
 		6736D00D1B86341000CCDD80 /* YouTubePlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6736D00B1B86341000CCDD80 /* YouTubePlaylist.swift */; };
 		6736D00E1B86341000CCDD80 /* YouTubePlaylistLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6736D00C1B86341000CCDD80 /* YouTubePlaylistLoader.swift */; };
@@ -1651,6 +1651,7 @@
 				6732B51B1C11003B005559A6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 
