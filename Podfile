@@ -1,7 +1,9 @@
+source 'https://github.com/CocoaPods/Specs.git'
+
 platform :ios, '8.0'
 use_frameworks!
 
-xcodeproj 'MusicFav.xcodeproj'
+xcodeproj 'MusicFav'
 
 pod 'NXOAuth2Client',       '>= 1.2.2'
 pod 'JASidePanels',         '>= 1.3'
@@ -9,7 +11,6 @@ pod 'MBProgressHUD',        '>= 0.8'
 pod 'MCSwipeTableViewCell', '>= 2.1.0'
 pod 'InAppSettingsKit',     '~> 2.1'
 pod 'EAIntroView',          '~> 2.7.0'
-pod 'PageMenu'
 pod 'Fabric'
 pod 'Crashlytics'
 pod 'MarqueeLabel'
