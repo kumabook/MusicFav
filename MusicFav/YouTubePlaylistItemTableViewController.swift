@@ -89,7 +89,7 @@ class YouTubePlaylistItemTableViewController: TrackTableViewController {
                         }
                     }
                     return
-                }, error: { error in
+                }, failed: { error in
                     self.tableView.reloadData()
                 }, completed: {
                     self.tableView.reloadData()

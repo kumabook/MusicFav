@@ -29,7 +29,7 @@ class YouTubePlaylistLoader {
 
     var state:          State
     var signal:         Signal<Event, NSError>
-    var sink:           Signal<Event, NSError>.Observer
+    var observer:       Signal<Event, NSError>.Observer
 
     var playlistsPageToken:  String?
     var playlistsDisposable: Disposable?
@@ -43,7 +43,7 @@ class YouTubePlaylistLoader {
         self.state         = .Init
         let pipe           = Signal<Event, NSError>.pipe()
         signal             = pipe.0
-        sink               = pipe.1
+        observer           = pipe.1
         playlistsPageToken = ""
         itemsPageTokenOfPlaylist  = [:]
         itemsDisposableOfPlaylist = [:]
@@ -89,7 +89,7 @@ class YouTubePlaylistLoader {
 
     private func fetchNextPlaylists() -> SignalProducer<Void, NSError> {
         state = State.Fetching
-        sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
+        observer.sendNext(.StartLoading)
         return YouTubeAPIClient.sharedInstance.fetchPlaylists(playlistsPageToken).map {
             self.playlists.appendContentsOf($0.items)
             self.playlistsPageToken = $0.nextPageToken
@@ -97,19 +97,19 @@ class YouTubePlaylistLoader {
                 self.itemsOfPlaylist[i]          = []
                 self.itemsPageTokenOfPlaylist[i] = ""
             }
-            self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.CompleteLoading))
+            self.observer.sendNext(.CompleteLoading)
             self.state = State.Normal
         }
     }
 
     private func fetchNextPlaylistItems(playlist: YouTubePlaylist) -> SignalProducer<Void, NSError> {
         state = State.Fetching
-        sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
+        observer.sendNext(.StartLoading)
         let pageToken = itemsPageTokenOfPlaylist[playlist]!
         return YouTubeAPIClient.sharedInstance.fetchPlaylistItems(playlist, pageToken: pageToken).map {
             self.itemsOfPlaylist[playlist]?.appendContentsOf($0.items)
             self.itemsPageTokenOfPlaylist[playlist] = $0.nextPageToken
-            self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.CompleteLoading))
+            self.observer.sendNext(.CompleteLoading)
             self.state = State.Normal
         }
     }

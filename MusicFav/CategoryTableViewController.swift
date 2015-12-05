@@ -112,7 +112,7 @@ class CategoryTableViewController: UITableViewController {
             next: {subscriptions in
                 MBProgressHUD.hideHUDForView(self.navigationController!.view, animated:false)
             },
-            error: {e in
+            failed: {e in
                 MBProgressHUD.hideHUDForView(self.navigationController!.view, animated:false)
                 let ac = CloudAPIClient.alertController(error: e, handler: { (action) in })
                 self.presentViewController(ac, animated: true, completion: nil)

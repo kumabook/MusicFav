@@ -46,6 +46,6 @@ class HistoryTableViewController: StreamTimelineTableViewController {
         let history = historyLoader.histories[indexPath.item]
         HistoryStore.remove(history.toStoreObject())
         historyLoader.histories.removeAtIndex(indexPath.item)
-        streamLoader.sink(.Next(.RemoveAt(indexPath.item)))
+        streamLoader.observer.sendNext(.RemoveAt(indexPath.item))
     }
 }

@@ -42,7 +42,7 @@ class SoundCloudUserLoader {
 
     var state:          State
     var signal:         Signal<Event, NSError>
-    var sink:           Signal<Event, NSError>.Observer
+    var observer:       Signal<Event, NSError>.Observer
 
     var followingsDisposable: Disposable?
     var hasNextFollowings:    Bool
@@ -60,7 +60,7 @@ class SoundCloudUserLoader {
         self.state                 = .Init
         let pipe                   = Signal<Event, NSError>.pipe()
         signal                     = pipe.0
-        sink                       = pipe.1
+        observer                   = pipe.1
         followingsDisposable       = nil
         hasNextFollowings          = true
         searchDisposable           = nil
@@ -74,15 +74,15 @@ class SoundCloudUserLoader {
     private func fetchNextFollowings() -> SignalProducer<Void, NSError> {
         if user == nil { return SignalProducer.empty }
         state = State.Fetching
-        sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
+        observer.sendNext(.StartLoading)
         return APIClient.sharedInstance.fetchFollowingsOf(user!).map {
             self.hasNextFollowings = false
             self.followings.appendContentsOf($0)
-            self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.CompleteLoading))
+            self.observer.sendNext(.CompleteLoading)
             self.state = State.Normal
             }.mapError {
                 self.hasNextFollowings = true
-                self.sink(ReactiveCocoa.Event<Event, NSError>.Error($0))
+                self.observer.sendFailed($0)
                 self.state = State.Error
                 return $0
         }
@@ -105,16 +105,16 @@ class SoundCloudUserLoader {
     func searchUsers(query: String) {
         if state == State.Fetching { return }
         state = State.Fetching
-        sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
+        observer.sendNext(.StartLoading)
         APIClient.sharedInstance.fetchUsers(query).on(
-            error: { e in
+            failed: { e in
                 self.hasNextSearch = true
-                self.sink(ReactiveCocoa.Event<Event, NSError>.Error(e))
+                self.observer.sendFailed(e)
                 self.state = State.Error
             }, next: { users in
                 self.hasNextSearch = false
                 self.searchResults.appendContentsOf(users)
-                self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.CompleteLoading))
+                self.observer.sendNext(.CompleteLoading)
                 self.state = State.Normal
         }).start()
     }

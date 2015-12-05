@@ -44,7 +44,7 @@ class FeedlyOAuthViewController: OAuthViewController {
                 next: {profile in
                     CloudAPIClient.login(profile, token: account.accessToken.accessToken)
                 },
-                error: {error in
+                failed: {error in
                     self.showAlert()
                 },
                 completed: {

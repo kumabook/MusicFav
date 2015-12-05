@@ -226,9 +226,9 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         let feedlyClient = CloudAPIClient.sharedInstance
         if CloudAPIClient.isLoggedIn {
             MBProgressHUD.showHUDAddedTo(view, animated: true)
-            feedlyClient.markEntriesAsSaved([entry.id], completionHandler: { (req, res, result) -> Void in
+            feedlyClient.markEntriesAsSaved([entry.id], completionHandler: { response in
                 MBProgressHUD.hideHUDForView(self.view, animated:false)
-                if let e = result.error {
+                if let e = response.result.error {
                     let ac = CloudAPIClient.alertController(error: e, handler: { (action) in })
                     self.presentViewController(ac, animated: true, completion: nil)
                 } else {

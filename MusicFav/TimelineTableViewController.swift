@@ -192,7 +192,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
 
     func updateTrack(track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist, playerState: PlayerState) {
         if let p = playlist as? Playlist, indexPath = indexPathOfPlaylist(p) {
-            getItems()[indexPath.item].playlist?.sink(.Next(PlaylistEvent.ChangePlayState(index: index, playerState: playerState)))
+            getItems()[indexPath.item].playlist?.observer.sendNext(PlaylistEvent.ChangePlayState(index: index, playerState: playerState))
         }
     }
 

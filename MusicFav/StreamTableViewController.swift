@@ -139,7 +139,7 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
         disposable = CloudAPIClient.sharedInstance.fetchFeedsByIds(RecommendFeed.ids).on(
             next: { feeds in
                 self._streams = feeds
-            }, error: { error in
+            }, failed: { error in
             }, completed: {
                 self.reloadData(keepSelection: true)
         }).start()
@@ -159,7 +159,7 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
                 next: { feeds in
                     self._streams = feeds
                 },
-                error: { error in
+                failed: { error in
                     let ac = CloudAPIClient.alertController(error: error, handler: { (action) in })
                     self.presentViewController(ac, animated: true, completion: nil)
                 },

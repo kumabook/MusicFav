@@ -44,7 +44,7 @@ class UpdateChecker {
                         }
                     }
                     FeedlyAPI.lastChecked = NSDate()
-                }, error: { error in
+                }, failed: { error in
                     UIScheduler().schedule { completionHandler?(UIBackgroundFetchResult.Failed) }
                 }, completed: {
                 }, interrupted: {

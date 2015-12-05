@@ -45,7 +45,7 @@ public class SoundCloudActivityLoader {
     public var playlists:  [MusicFeeder.Playlist?]
     public var state:      State
     public var signal:     Signal<Event, NSError>
-    public var sink:       Signal<Event, NSError>.Observer
+    public var observer:   Signal<Event, NSError>.Observer
 
     var nextHref:   String? = ""
     var futureHref: String?
@@ -56,7 +56,7 @@ public class SoundCloudActivityLoader {
         playlists        = []
         let pipe         = Signal<Event, NSError>.pipe()
         signal           = pipe.0
-        sink             = pipe.1
+        observer         = pipe.1
     }
 
     deinit {
@@ -71,7 +71,7 @@ public class SoundCloudActivityLoader {
             return
         }
         state = .Fetching
-        sink(.Next(.StartLoadingLatest))
+        observer.sendNext(.StartLoadingLatest)
         var producer: SignalProducer<ActivityList, NSError>
         if let href = futureHref {
             producer = APIClient.sharedInstance.fetchLatestActivities(href)
@@ -87,13 +87,13 @@ public class SoundCloudActivityLoader {
                     self.nextHref   = activityList.nextHref
                     self.futureHref = activityList.futureHref
                 },
-                error: { error in
+                failed: { error in
                     SoundCloudKit.APIClient.handleError(error: error)
                     self.state = State.Error
-                    self.sink(.Next(.FailToLoadLatest))
+                    self.observer.sendNext(.FailToLoadLatest)
                 },
                 completed: {
-                    self.sink(.Next(.CompleteLoadingLatest))
+                    self.observer.sendNext(.CompleteLoadingLatest)
                     self.state = .Normal
             }).start()
     }
@@ -108,7 +108,7 @@ public class SoundCloudActivityLoader {
             return
         }
         state = .Fetching
-        sink(.Next(.StartLoadingNext))
+        observer.sendNext(.StartLoadingNext)
         var producer: SignalProducer<ActivityList, NSError>
         let href = nextHref!
         if href.isEmpty {
@@ -128,23 +128,23 @@ public class SoundCloudActivityLoader {
                             next: { playlist in
                                 self.playlists[i] = playlist.toPlaylist()
                                 return
-                            }, error: { e in
+                            }, failed: { e in
                             }, completed: {
                             }).start()
                     }
                     self.nextHref   = activityList.nextHref
                     self.futureHref = activityList.futureHref
-                    self.sink(.Next(.CompleteLoadingNext)) // First reload tableView,
+                    self.observer.sendNext(.CompleteLoadingNext) // First reload tableView,
                     if activityList.nextHref == nil { // then wait for next load
                         self.state = .Complete
                     } else {
                         self.state = .Normal
                     }
                 },
-                error: {error in
+                failed: {error in
                     SoundCloudKit.APIClient.handleError(error: error)
                     self.state = State.Error
-                    self.sink(.Next(.FailToLoadNext))
+                    self.observer.sendNext(.FailToLoadNext)
                 },
                 completed: {
             }).start()

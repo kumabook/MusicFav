@@ -141,7 +141,7 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
         CloudAPIClient.sharedInstance.fetchFeedsByIds(RecommendFeed.ids).on(
             next: { feeds in
                 self.recommendFeeds = feeds
-            }, error: { error in
+            }, failed: { error in
             }, completed: {
                 self.tableView?.reloadData()
         }).start()

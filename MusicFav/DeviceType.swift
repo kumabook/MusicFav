@@ -8,7 +8,7 @@
 
 import UIKit
 
-enum UIUserInterfaceIdiom : Int {
+enum UIUserInterfaceIdiom {
     case Unspecified
     case Phone
     case Pad
@@ -42,8 +42,8 @@ enum DeviceType {
             }
         case .Pad:
             return iPad
-        case .Unspecified:
-            break
+        default:
+            return Unknown
         }
         return Unknown
     }

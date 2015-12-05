@@ -31,7 +31,7 @@ class YouTubeActivityLoader {
 
     var state:          State
     var signal:         Signal<Event, NSError>
-    var sink:           Signal<Event, NSError>.Observer
+    var observer:       Signal<Event, NSError>.Observer
 
     var itemsPageTokenOfPlaylist:  [YouTubePlaylist: String]
     var itemsDisposableOfPlaylist: [YouTubePlaylist: Disposable?]
@@ -45,7 +45,7 @@ class YouTubeActivityLoader {
         self.state                 = .Init
         let pipe                   = Signal<Event, NSError>.pipe()
         signal                     = pipe.0
-        sink                       = pipe.1
+        observer                   = pipe.1
         channelsPageToken          = ""
         itemsPageTokenOfPlaylist   = [:]
         itemsDisposableOfPlaylist  = [:]
@@ -88,7 +88,7 @@ class YouTubeActivityLoader {
 
     private func fetchNextChannels() -> SignalProducer<Void, NSError> {
         state = State.Fetching
-        sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
+        observer.sendNext(.StartLoading)
         return YouTubeAPIClient.sharedInstance.fetchMyChannels(channelsPageToken).map {
             self.channels.appendContentsOf($0.items)
             self.channelsPageToken = $0.nextPageToken
@@ -102,7 +102,7 @@ class YouTubeActivityLoader {
                     self.fetchNextPlaylistItems(playlist).start()
                 }
             }
-            self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.CompleteLoading))
+            self.observer.sendNext(.CompleteLoading)
             self.state = State.Normal
         }
     }
@@ -123,7 +123,7 @@ class YouTubeActivityLoader {
 
     private func fetchNextPlaylistItems(playlist: YouTubePlaylist) -> SignalProducer<Void, NSError> {
         state = State.Fetching
-        sink(ReactiveCocoa.Event<Event, NSError>.Next(.StartLoading))
+        observer.sendNext(.StartLoading)
         let pageToken = itemsPageTokenOfPlaylist[playlist]
         return YouTubeAPIClient.sharedInstance.fetchPlaylistItems(playlist.id, pageToken: pageToken).map {
             if self.itemsPageTokenOfPlaylist[playlist] == "" {
@@ -137,12 +137,12 @@ class YouTubeActivityLoader {
                 self.playlistsOfYouTubePlaylist[playlist]?.append(p)
                 item.track.fetchTrackDetail(false)
                     .on(
-                        next: { item in p.sink(.Next(PlaylistEvent.Load(index: 0)))},
-                        error: { error in },
+                        next: { item in p.observer.sendNext(PlaylistEvent.Load(index: 0))},
+                        failed: { error in },
                         completed: {}
                     ).start()
             }
-            self.sink(ReactiveCocoa.Event<Event, NSError>.Next(.CompleteLoading))
+            self.observer.sendNext(.CompleteLoading)
             self.state = State.Normal
         }
     }

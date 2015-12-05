@@ -41,7 +41,7 @@ class SoundCloudOAuthViewController: OAuthViewController {
         super.onLoggedIn(account)
         SoundCloudKit.APIClient.accessToken = account.accessToken.accessToken
         SoundCloudKit.APIClient.sharedInstance.fetchMe().on(
-            error: { error in
+            failed: { error in
                 self.showAlert()
             }, next: { user in
                 SoundCloudKit.APIClient.me = user

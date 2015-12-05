@@ -18,18 +18,18 @@ public class HypemAPIClient {
     public static var sharedInstance = HypemAPIClient()
 
     public func getSiteInfo(siteId: Int64) -> SignalProducer<SiteInfo, NSError> {
-        return SignalProducer { (sink, disposable) in
+        return SignalProducer { (observer, disposable) in
             let manager = Alamofire.Manager.sharedInstance
             let url = String(format: "%@/get_site_info?siteid=%d", self.baseUrl + self.apiRoot, siteId)
             let request = manager
                 .request(.GET, url, parameters: [:], encoding: ParameterEncoding.URL)
-                .responseJSON(options: NSJSONReadingOptions()) { (req, res, result) -> Void in
-                    if let error = result.error {
-                        sink(.Error(error as NSError))
-                    } else if let value = result.value {
+                .responseJSON(options: NSJSONReadingOptions()) { response -> Void in
+                    if let error = response.result.error {
+                        observer.sendFailed(error as NSError)
+                    } else if let value = response.result.value {
                         let json = JSON(value)
-                        sink(.Next(SiteInfo(json: json)))
-                        sink(.Completed)
+                        observer.sendNext(SiteInfo(json: json))
+                        observer.sendCompleted()
                     }
             }
             disposable.addDisposable {
@@ -39,19 +39,19 @@ public class HypemAPIClient {
     }
 
     public func getAllBlogs() -> SignalProducer<[Blog], NSError> {
-        return SignalProducer { (sink, disposable) in
+        return SignalProducer { (observer, disposable) in
             let manager = Alamofire.Manager.sharedInstance
             let url = String(format: "%@/get_all_blogs", self.baseUrl + self.apiRoot)
             let request = manager
                 .request(.GET, url, parameters: [:], encoding: ParameterEncoding.URL)
-                .responseJSON(options: NSJSONReadingOptions()) { (req, res, result) -> Void in
-                    if let error = result.error {
-                        sink(.Error(error as NSError))
-                    } else if let value = result.value {
+                .responseJSON(options: NSJSONReadingOptions()) { response in
+                    if let error = response.result.error {
+                        observer.sendFailed(error as NSError)
+                    } else if let value = response.result.value {
                         QueueScheduler().schedule {
                             let json = JSON(value)
-                            sink(.Next(json.arrayValue.map({ Blog(json: $0) })))
-                            sink(.Completed)
+                            observer.sendNext(json.arrayValue.map({ Blog(json: $0) }))
+                            observer.sendCompleted()
                         }
                     }
             }

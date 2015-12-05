@@ -35,7 +35,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var miniPlayerViewController: MiniPlayerViewController?
     var player:                   Player?
     var signal:                   Signal<AppDelegate.Event, NSError>?
-    var sink:                     Signal<AppDelegate.Event, NSError>.Observer?
+    var observer:                 Signal<AppDelegate.Event, NSError>.Observer?
     var selectedPlaylist:         MusicFeeder.Playlist?
     var playingPlaylist:          MusicFeeder.Playlist? {
         get {
@@ -101,8 +101,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         let pipe = Signal<AppDelegate.Event, NSError>.pipe()
-        signal = pipe.0
-        sink   = pipe.1
+        signal   = pipe.0
+        observer = pipe.1
         let mainBundle = NSBundle.mainBundle()
         let fabricConfig = FabricConfig(filePath: mainBundle.pathForResource("fabric", ofType: "json")!)
         if !fabricConfig.skip {
@@ -138,31 +138,31 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillResignActive(application: UIApplication) {
-        sink?(.Next(Event.WillResignActive))
+        observer?.sendNext(Event.WillResignActive)
         playerViewController?.disablePlayerView()
         Shortcut.updateShortcutItems(application)
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
-        sink?(.Next(Event.DidEnterBackground))
+        observer?.sendNext(Event.DidEnterBackground)
         playerViewController?.disablePlayerView()
         Shortcut.updateShortcutItems(application)
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
-        sink?(.Next(Event.WillEnterForeground))
+        observer?.sendNext(Event.WillEnterForeground)
         mainViewController?.centerPanel
         playerViewController?.enablePlayerView()
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
-        sink?(.Next(Event.DidBecomeActive))
+        observer?.sendNext(Event.DidBecomeActive)
         application.applicationIconBadgeNumber = 0
         ListenItLaterEntryStore.moveToSaved()
     }
 
     func applicationWillTerminate(application: UIApplication) {
-        sink?(.Next(Event.WillTerminate))
+        observer?.sendNext(Event.WillTerminate)
         Logger.sendEndSession()
     }
 

@@ -14,7 +14,7 @@ import ReactiveCocoa
 import Alamofire
 
 public class OAuth2ClientDelegate: NSObject, NXOAuth2ClientDelegate {
-    public typealias RequestCallback = (NSURLRequest?, NSHTTPURLResponse?, Result<AnyObject>) -> Void
+    public typealias RequestCallback = (Response<AnyObject, NSError>) -> Void
     public var pendingRequests: [(APIClient.Router, RequestCallback)]
     public override init() {
         pendingRequests = []
@@ -171,30 +171,30 @@ extension APIClient {
 
 
     func fetch(route: Router, callback: OAuth2ClientDelegate.RequestCallback) {
-        self.manager.request(route).validate(statusCode: 200..<300).responseJSON(options: .AllowFragments) {(req: NSURLRequest?, res: NSHTTPURLResponse?, result: Result<AnyObject>) -> Void in
-            if result.isFailure {
+        self.manager.request(route).validate(statusCode: 200..<300).responseJSON(options: .AllowFragments) {(response: Response<AnyObject, NSError>) -> Void in
+            if response.result.isFailure {
                 if let oauth2client = APIClient.createOauth2client(APIClient.oauth2clientDelegate) {
                     APIClient.oauth2clientDelegate.addPendingRequest(route, callback: callback)
                     oauth2client.refreshAccessToken()
                     return
                 }
             }
-            callback(req, res, result)
+            callback(response)
         }
     }
 
     func fetchItem<T: JSONInitializable>(route: Router) -> SignalProducer<T, NSError> {
-        return SignalProducer { sink, disposable in
-            let callback: OAuth2ClientDelegate.RequestCallback = {(req: NSURLRequest?, res: NSHTTPURLResponse?, result: Result<AnyObject>) -> Void in
-                if let e = result.error as NSError? {
-                    if let r = res {
-                        sink(.Error(NSError(domain: e.domain, code: e.code, userInfo: [APIClient.errorResponseKey:r])))
+        return SignalProducer { observer, disposable in
+            let callback: OAuth2ClientDelegate.RequestCallback = {(response: Response<AnyObject, NSError>) -> Void in
+                if let e = response.result.error as NSError? {
+                    if let r = response.response {
+                        observer.sendFailed(NSError(domain: e.domain, code: e.code, userInfo: [APIClient.errorResponseKey:r]))
                     } else {
-                        sink(.Error(e))
+                        observer.sendFailed(e)
                     }
-                } else if let obj = result.value {
-                    sink(.Next(T(json: JSON(obj))))
-                    sink(.Completed)
+                } else if let obj = response.result.value {
+                    observer.sendNext(T(json: JSON(obj)))
+                    observer.sendCompleted()
                 }
             }
             self.fetch(route, callback: callback)
@@ -202,17 +202,17 @@ extension APIClient {
     }
 
     func fetchItems<T: JSONInitializable>(route: Router) -> SignalProducer<[T], NSError> {
-        return SignalProducer { sink, disposable in
-            let callback: OAuth2ClientDelegate.RequestCallback = {(req: NSURLRequest?, res: NSHTTPURLResponse?, result: Result<AnyObject>) -> Void in
-                if let e = result.error as NSError? {
-                    if let r = res {
-                        sink(.Error(NSError(domain: e.domain, code: e.code, userInfo: [APIClient.errorResponseKey:r])))
+        return SignalProducer { observer, disposable in
+            let callback: OAuth2ClientDelegate.RequestCallback = {(response: Response<AnyObject, NSError>) -> Void in
+                if let e = response.result.error as NSError? {
+                    if let r = response.response {
+                        observer.sendFailed(NSError(domain: e.domain, code: e.code, userInfo: [APIClient.errorResponseKey:r]))
                     } else {
-                        sink(.Error(e))
+                        observer.sendFailed(e)
                     }
-                } else if let obj = result.value {
-                    sink(.Next(JSON(obj).arrayValue.map { T(json: $0) }))
-                    sink(.Completed)
+                } else if let obj = response.result.value {
+                    observer.sendNext(JSON(obj).arrayValue.map { T(json: $0) })
+                    observer.sendCompleted()
                 }
             }
             self.fetch(route, callback: callback)
