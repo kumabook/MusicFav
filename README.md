@@ -9,7 +9,7 @@ but is available via TestFlight Beta Testing.
 
 ## How to build
 
-- Use xcode 7.0
+- Use xcode 7.1
 - Install [CocoaPods][] via `bundle install`
 - Install [Carthage][] (0.7.5)
 - Install dependencies with below:
