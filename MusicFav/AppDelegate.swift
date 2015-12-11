@@ -108,7 +108,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if !fabricConfig.skip {
             Crashlytics.startWithAPIKey(fabricConfig.apiKey)
         }
-        TrackStore.migration()
+        RealmMigration.groupIdentifier = "group.io.kumabook.MusicFav"
+        RealmMigration.migrateAll()
         if let path = mainBundle.pathForResource("google_analytics", ofType: "json") {
             GAIConfig.setup(path)
         }
