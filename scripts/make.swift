@@ -62,12 +62,14 @@ enum Target: String {
     func install_lib() {
         run("bundle install")
         run("bundle exec pod install")
-        let options = "--use-submodules --use-ssh --platform iOS --no-use-binaries"
+        let options = "--use-submodules --use-ssh --no-use-binaries"
         switch self {
         case .Production:
-          run("carthage bootstrap \(options) --configuration Release")
+          run("carthage checkout \(options)")
+          run("carthage build --platform iOS --configuration Release")
         case .Sandbox:
-          run("carthage bootstrap \(options) --configuration Debug")
+          run("carthage checkout \(options)")
+          run("carthage build --platform iOS --configuration Debug")
         }
     }
 }
