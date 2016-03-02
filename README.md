@@ -17,12 +17,6 @@ but is available via TestFlight Beta Testing.
   ```shell
   scripts/make.swift install
   ```
-- Download [Google analytics iOS SDK][] as submobule
-
-  ```shell
-  git submodule init
-  git submodule update
-  ```
 - Edit config files for third party api
     - config/feedly.json
       - You can get sandbox api key at [Feedly Cloud API][]
@@ -38,4 +32,3 @@ but is available via TestFlight Beta Testing.
 [SoundCloud API]:           https://developers.soundcloud.com/
 [Fabric]:                   https://get.fabric.io/
 [TestFlight Beta Testing]:  http://musicfav.github.io//flight/
-[Google analytics iOS SDK]: https://developers.google.com/analytics/devguides/collection/ios/resources
