@@ -11,7 +11,7 @@ but is available via TestFlight Beta Testing.
 
 - Use xcode 7.1
 - Install [CocoaPods][] via `bundle install`
-- Install [Carthage][] (0.11.0)
+- Install [Carthage][] (0.15.0)
 - Install dependencies with below:
 
   ```shell
