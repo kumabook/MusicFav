@@ -43,3 +43,6 @@
 [submodule "Carthage/Checkouts/MusicFeeder"]
 	url = ssh://git@github.com/kumabook/MusicFeeder.git
 	path = Carthage/Checkouts/MusicFeeder
+[submodule "Carthage/Checkouts/PageMenu"]
+	path = Carthage/Checkouts/PageMenu
+	url = ssh://git@github.com/uacaps/PageMenu.git
