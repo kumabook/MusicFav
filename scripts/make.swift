@@ -40,18 +40,25 @@ enum Target: String {
         }
     }
 
+    // fastlane
+    var deliverfile: String { return "fastlane/Deliverfile.production" }
+    var appfile:     String { return "fastlane/Appfile.production" }
+
     var feedlyConfigDst:     String { return "config/feedly.json" }
     var youtubeConfigDst:    String { return "config/youtube.json" }
     var soundCloudConfigDst: String { return "config/soundcloud.json" }
     var fabricConfigDst:     String { return "config/fabric.json" }
     var gaConfigDst:         String { return "config/google_analytics.json" }
+    var deliverfileDst:      String { return "fastlane/Deliverfile" }
+    var appfileDst:          String { return "fastlane/Appfile" }
     func config() {
         print("------ setup config files for \(self) --------")
         run("cp \(feedlyConfig) \(feedlyConfigDst)")
         run("cp \(youtubeConfig) \(youtubeConfigDst)")
         run("cp \(soundCloudConfig) \(soundCloudConfigDst)")
         run("cp \(fabricConfig) \(fabricConfigDst)")
-        run("cp \(gaConfig) \(gaConfigDst)")
+        run("cp \(deliverfile) \(deliverfileDst)")
+        run("cp \(appfile) \(appfileDst)")
     }
     func prepare() {
         install_lib()
@@ -62,6 +69,8 @@ enum Target: String {
         run("git checkout HEAD \(soundCloudConfigDst)")
         run("git checkout HEAD \(fabricConfigDst)")
         run("git checkout HEAD \(gaConfigDst)")
+        run("git checkout HEAD \(deliverfileDst)")
+        run("git checkout HEAD \(appfileDst)")
     }
     func build() {
         run("xctool -workspace MusicFav.xcworkspace -scheme MusicFav archive -archivePath archives/MusicFav-`date +%Y%m%d%H%M`")
