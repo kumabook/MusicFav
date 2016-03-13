@@ -3,12 +3,22 @@
 import Darwin
 import Foundation
 
+extension String {
+    func trim() -> String
+    {
+        return self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+    }
+}
+
+let version = "0.4.3"
+
 enum Task: String {
     case Config  = "config"
     case Prepare = "prepare"
     case Build   = "build"
     case Test    = "test"
     case Clean   = "clean"
+    case Version = "next-version"
 }
 
 enum Target: String {
@@ -74,8 +84,20 @@ enum Target: String {
     }
 }
 
-func run(command: String) {
-    print(command)
+func shell(command: String) -> String {
+    let fp = popen(command, "r")
+    var buf = Array<CChar>(count: 128, repeatedValue: 0)
+    var result = ""
+    while fgets(&buf, CInt(buf.count), fp) != nil,
+          let str = String.fromCString(buf) {
+              result.appendContentsOf(str)
+    }
+    fclose(fp)
+    return result
+}
+
+func run(command: String, silent: Bool = false) {
+    if !silent { print(command) }
     system(command)
 }
 
@@ -86,6 +108,15 @@ func showUsage() {
     print("  target ... production|sandbox")
 }
 
+func nextVersion() {
+    print("-------- increment versions --------")
+    let currentVersion = Int(shell("agvtool what-version -terse").trim())!
+    run("agvtool next-version", silent: true)
+    print("update bundle version: \(currentVersion) -> \(currentVersion + 1)")
+    print("-------- update version strings  --------")
+    run("agvtool new-marketing-version \(version)", silent: true)
+}
+
 func main(task task: Task, target: Target) {
     switch task {
     case .Config:  target.config()
@@ -93,6 +124,7 @@ func main(task task: Task, target: Target) {
     case .Build:   target.config(); target.build()
     case .Test:    target.test()
     case .Clean:   target.clean()
+    case .Version: nextVersion()
     }
 }
 
