@@ -52,29 +52,26 @@ class ListenItLaterViewController: UIViewController {
     }
 
     func listenItLater() {
+        let fail = { self.notifyResult(ListenItLaterResult.Error) }
         messageView.hidden = true
         self.extensionContext!.inputItems.forEach { inputItem in
             inputItem.attachments.flatMap({ $0 })?.forEach { _itemProvider in
-                if let itemProvider = _itemProvider as? NSItemProvider {
-                    if itemProvider.hasItemConformingToTypeIdentifier(kUTTypeURL as String) {
-                        itemProvider.loadItemForTypeIdentifier(kUTTypeURL as String, options: nil) { (url, error) in
-                            if let _ = url as? NSURL {
-                                self.notifyResult(ListenItLaterResult.Error)
-                            }
-                        }
-                    } else if itemProvider.hasItemConformingToTypeIdentifier(kUTTypePropertyList as String) {
-                        itemProvider.loadItemForTypeIdentifier(kUTTypePropertyList as String, options: nil) { (item, error) in
-                            if let results: NSDictionary = item as? NSDictionary {
-                                if let dic = results[NSExtensionJavaScriptPreprocessingResultsKey] as? NSDictionary {
-                                    if let url = dic["url"] as? String, title = dic["title"] as? String {
-                                        self.notifyResult(self.saveEntry(url: url, title: title))
-                                    } else {
-                                        self.notifyResult(ListenItLaterResult.Error)
-                                    }
-                                }
-                            }
+                guard  let itemProvider = _itemProvider as? NSItemProvider                 else { fail(); return }
+                if itemProvider.hasItemConformingToTypeIdentifier(kUTTypeURL as String) {
+                    itemProvider.loadItemForTypeIdentifier(kUTTypeURL as String, options: nil) { (url, error) in
+                        if url is NSURL {
+                            fail()
                         }
                     }
+                } else if itemProvider.hasItemConformingToTypeIdentifier(kUTTypePropertyList as String) {
+                    itemProvider.loadItemForTypeIdentifier(kUTTypePropertyList as String, options: nil) { (item, error) in
+                        guard let results: NSDictionary = item as? NSDictionary                                else { fail(); return }
+                        guard let dic = results[NSExtensionJavaScriptPreprocessingResultsKey] as? NSDictionary else { fail(); return }
+                        guard let url = dic["url"] as? String, title = dic["title"] as? String                 else { fail(); return }
+                        self.notifyResult(self.saveEntry(url: url, title: title))
+                    }
+                } else {
+                    fail()
                 }
             }
         }
