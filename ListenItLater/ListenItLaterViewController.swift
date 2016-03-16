@@ -58,10 +58,9 @@ class ListenItLaterViewController: UIViewController {
             inputItem.attachments.flatMap({ $0 })?.forEach { _itemProvider in
                 guard  let itemProvider = _itemProvider as? NSItemProvider                 else { fail(); return }
                 if itemProvider.hasItemConformingToTypeIdentifier(kUTTypeURL as String) {
-                    itemProvider.loadItemForTypeIdentifier(kUTTypeURL as String, options: nil) { (url, error) in
-                        if url is NSURL {
-                            fail()
-                        }
+                    itemProvider.loadItemForTypeIdentifier(kUTTypeURL as String, options: nil) { (value, error) in
+                        guard let url = value as? NSURL else { fail(); return }
+                        self.notifyResult(self.saveEntry(url: url.absoluteString, title: url.absoluteString))
                     }
                 } else if itemProvider.hasItemConformingToTypeIdentifier(kUTTypePropertyList as String) {
                     itemProvider.loadItemForTypeIdentifier(kUTTypePropertyList as String, options: nil) { (item, error) in
