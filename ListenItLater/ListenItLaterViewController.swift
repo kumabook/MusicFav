@@ -34,6 +34,7 @@ class ListenItLaterViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupRealm()
         listenItLater()
     }
     
@@ -43,6 +44,11 @@ class ListenItLaterViewController: UIViewController {
 
     override func beginRequestWithExtensionContext(context: NSExtensionContext) {
         super.beginRequestWithExtensionContext(context)
+    }
+
+    func setupRealm() {
+        RealmMigration.groupIdentifier = "group.io.kumabook.MusicFav"
+        RealmMigration.migrateListenItLater()
     }
 
     func listenItLater() {
