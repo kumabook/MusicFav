@@ -37,6 +37,9 @@ class StreamTimelineTableViewController: TimelineTableViewController {
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
+        if streamLoader.state == StreamLoader.State.Error {
+            streamLoader.fetchLatestEntries()
+        }
         streamLoader.fetchAllPlaylists()
     }
 
