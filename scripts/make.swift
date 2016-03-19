@@ -113,14 +113,14 @@ func run(command: String, silent: Bool = false) {
 func showUsage() {
     print("Unknown task or target")
     print("Usage: ./make task target")
-    print("  task   ... config|prepare|build|test|clean")
+    print("  task   ... config|prepare|build|test|clean|next-version")
     print("  target ... production|sandbox")
 }
 
 func nextVersion() {
     print("-------- increment versions --------")
     let currentVersion = Int(shell("agvtool what-version -terse").trim())!
-    run("agvtool next-version", silent: true)
+    run("agvtool next-version -all", silent: true)
     print("update bundle version: \(currentVersion) -> \(currentVersion + 1)")
     print("-------- update version strings  --------")
     run("agvtool new-marketing-version \(version)", silent: true)
