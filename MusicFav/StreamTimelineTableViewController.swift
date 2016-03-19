@@ -44,6 +44,7 @@ class StreamTimelineTableViewController: TimelineTableViewController {
     }
 
     override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
         streamLoader.cancelFetchingPlaylists()
     }
 
