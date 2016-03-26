@@ -101,7 +101,8 @@ public class YouTubePlaylistItem: YouTubeResource, Hashable, Equatable {
         note               = contentDetails["note"]?.stringValue
         privacyStatus      = status["privacyStatus"]?.stringValue
 
-        track              = Track(provider: Provider.YouTube,
+        track              = Track(      id: "\(Provider.YouTube.rawValue)/\(videoId)",
+                                   provider: Provider.YouTube,
                                         url: "https://www.youtube.com/watch?v=\(videoId)",
                                  identifier: videoId,
                                       title: title)
