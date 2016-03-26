@@ -154,6 +154,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         observer?.sendNext(Event.WillEnterForeground)
         mainViewController?.centerPanel
         playerViewController?.enablePlayerView()
+        reloadExpiredTracks()
     }
 
     func applicationDidBecomeActive(application: UIApplication) {
@@ -240,5 +241,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     func play()  { setupAudioSession(UIApplication.sharedApplication()); player?.play() }
     func pause() { player?.pause() }
+
+    func reloadExpiredTracks() {
+        guard let playlists = player?.playlists else { return }
+        playlists.forEach {
+            guard let p = $0 as? MusicFeeder.Playlist else { return }
+            p.reloadExpiredTracks().start()
+        }
+    }
 }
 
