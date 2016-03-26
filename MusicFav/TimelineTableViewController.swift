@@ -147,10 +147,18 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         playerObserver = nil
     }
 
+    func reloadExpiredTracks() {
+        for item in getItems() {
+            item.playlist?.reloadExpiredTracks().on(next: {_ in self.tableView?.reloadData() }).start()
+        }
+        self.tableView?.reloadData()
+    }
+
     func observeApp() {
         appObserver = appDelegate.signal?.observeNext({ event in
             if event == AppDelegate.Event.WillEnterForeground {
                 self.restorePlayerIcon()
+                self.reloadExpiredTracks()
             }
         })
     }
