@@ -125,6 +125,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         Logger.sendScreenView(self)
         observer?.dispose()
         observer = observeTimelineLoader()
+        reloadExpiredTracks()
     }
 
     override func viewDidAppear(animated: Bool) {
