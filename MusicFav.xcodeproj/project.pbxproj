@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 47;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -803,7 +803,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 67277CCA1A434304002FD3E0 /* Build configuration list for PBXNativeTarget "MusicFav" */;
 			buildPhases = (
-				1AD43046594D8164D2F8FD75 /* Check Pods Manifest.lock */,
+				1AD43046594D8164D2F8FD75 /* 📦 Check Pods Manifest.lock */,
 				67277CA41A434304002FD3E0 /* Sources */,
 				67277CA51A434304002FD3E0 /* Frameworks */,
 				67277CA61A434304002FD3E0 /* Resources */,
@@ -813,8 +813,9 @@
 				67C9A89C1AEBCF1100E3401E /* Fabric run script */,
 				673DCC8E1AF5325D0043E51D /* Headers */,
 				6782D9491C0DEB57000BFC2C /* Embed App Extensions */,
-				BB343F6AE050C42BDAAF39D2 /* Embed Pods Frameworks */,
-				B2A019171A144C54021F6BE7 /* Copy Pods Resources */,
+				BB343F6AE050C42BDAAF39D2 /* 📦 Embed Pods Frameworks */,
+				B2A019171A144C54021F6BE7 /* 📦 Copy Pods Resources */,
+				E3C04DBDDED10EE8A1B8C7BA /* Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -901,7 +902,7 @@
 				};
 			};
 			buildConfigurationList = 67277CA31A434304002FD3E0 /* Build configuration list for PBXProject "MusicFav" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 6.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -974,14 +975,14 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		1AD43046594D8164D2F8FD75 /* Check Pods Manifest.lock */ = {
+		1AD43046594D8164D2F8FD75 /* 📦 Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "📦 Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1045,14 +1046,14 @@
 			shellPath = /bin/sh;
 			shellScript = "if [ -e config/fabric.json ]; then\n    ruby scripts/fabric.rb\nelse\n    echo \"Running config/fabric.json is not found, do nothing.\"\nfi\n";
 		};
-		B2A019171A144C54021F6BE7 /* Copy Pods Resources */ = {
+		B2A019171A144C54021F6BE7 /* 📦 Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "📦 Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1060,7 +1061,22 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MusicFav/Pods-MusicFav-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		BB343F6AE050C42BDAAF39D2 /* Embed Pods Frameworks */ = {
+		BB343F6AE050C42BDAAF39D2 /* 📦 Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "📦 Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MusicFav/Pods-MusicFav-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E3C04DBDDED10EE8A1B8C7BA /* Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
