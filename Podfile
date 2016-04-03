@@ -10,7 +10,7 @@ target "MusicFav" do
   pod 'JASidePanels',         '>= 1.3'
   pod 'MBProgressHUD',        '>= 0.8'
   pod 'MCSwipeTableViewCell', '>= 2.1.0'
-  pod 'InAppSettingsKit',     '~> 2.1'
+  pod 'InAppSettingsKit'
   pod 'EAIntroView',          '~> 2.7.0'
   pod 'Fabric'
   pod 'Crashlytics'
