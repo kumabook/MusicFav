@@ -119,7 +119,10 @@ func showUsage() {
 
 func nextVersion() {
     print("-------- increment versions --------")
-    let currentVersion = Int(shell("agvtool what-version -terse").trim())!
+    guard let currentVersion = Int(shell("agvtool what-version -terse").trim()) else {
+      print("Failed to get currentVersion")
+      return
+    }
     run("agvtool next-version -all", silent: true)
     print("update bundle version: \(currentVersion) -> \(currentVersion + 1)")
     print("-------- update version strings  --------")
