@@ -34,11 +34,11 @@ class SelectPlaylistTableViewController: UITableViewController {
         let closeButton = UIBarButtonItem(title: "Cancel".localize(),
                                           style: UIBarButtonItemStyle.Plain,
                                          target: self,
-                                         action: "close")
+                                         action: #selector(SelectPlaylistTableViewController.close))
         let newPlaylistButton = UIBarButtonItem(image: UIImage(named: "add_stream"),
                                                 style: UIBarButtonItemStyle.Plain,
                                                target: self,
-                                               action: "newPlaylist")
+                                               action: #selector(SelectPlaylistTableViewController.newPlaylist))
         navigationItem.rightBarButtonItems = [newPlaylistButton]
 
         navigationItem.leftBarButtonItems = [closeButton]

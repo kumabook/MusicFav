@@ -92,7 +92,7 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title:"Close".localize(),
                                                            style: UIBarButtonItemStyle.Plain,
                                                           target: self,
-                                                          action: "close")
+                                                          action: #selector(AddStreamMenuViewController.close))
         navigationItem.rightBarButtonItem?.enabled = false
         searchBar                 = UISearchBar(frame:CGRectMake(0, 0, view.bounds.size.width, SEARCH_BAR_HEIGHT))
         searchBar.placeholder     = "URL or Keyword".localize()

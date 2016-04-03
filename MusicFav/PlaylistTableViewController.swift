@@ -91,7 +91,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         let newPlaylistButton = UIBarButtonItem(image: UIImage(named: "add_stream"),
                                                 style: UIBarButtonItemStyle.Plain,
                                                target: self,
-                                               action: "newPlaylist")
+                                               action: #selector(PlaylistTableViewController.newPlaylist))
         newPlaylistButton.accessibilityLabel = AccessibilityLabel.NewPlaylistButton.s
         navigationItem.rightBarButtonItems = [newPlaylistButton]
     }

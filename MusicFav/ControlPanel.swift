@@ -32,7 +32,7 @@ public class ControlPanel: PlayerKit.ControlPanel {
         super.initializeSubviews()
         likeButton.tintColor = UIColor.whiteColor()
         likeButton.setImage(UIImage(named: "like"), forState: UIControlState())
-        likeButton.addTarget(self, action: "like", forControlEvents: UIControlEvents.TouchUpInside)
+        likeButton.addTarget(self, action: #selector(ControlPanel.like), forControlEvents: UIControlEvents.TouchUpInside)
         addSubview(likeButton)
     }
 

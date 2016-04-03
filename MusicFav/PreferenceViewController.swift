@@ -169,7 +169,7 @@ class PreferenceViewController: UITableViewController {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Close".localize(),
                                                            style: UIBarButtonItemStyle.Plain,
                                                           target: self,
-                                                          action: "close")
+                                                          action: #selector(PreferenceViewController.close))
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
     }
 

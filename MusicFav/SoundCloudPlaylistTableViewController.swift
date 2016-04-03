@@ -69,7 +69,7 @@ class SoundCloudPlaylistTableViewController: UITableViewController {
         let showFavListButton = UIBarButtonItem(image: UIImage(named: "fav_list"),
                                                 style: UIBarButtonItemStyle.Plain,
                                                target: self,
-                                               action: "showFavoritePlaylist")
+                                               action: #selector(SoundCloudPlaylistTableViewController.showFavoritePlaylist))
         navigationItem.rightBarButtonItems = [showFavListButton]
     }
 

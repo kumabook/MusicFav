@@ -141,7 +141,7 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
                 queue.finishTransaction(transaction)
                 if let vc = viewController, view = vc.navigationController?.view {
                     MBProgressHUD.hideAllHUDsForView(view, animated: true)
-                    if let code = transaction.error?.code where code != SKErrorPaymentCancelled {
+                    if let code = transaction.error?.code where code != SKErrorCode.PaymentCancelled.rawValue {
                         if let product = productDic[identifier] {
                             let title = product.localizedTitle
                             let message = String(format: "Sorry. Failed to purchase \"%@\".".localize(), title)

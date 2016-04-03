@@ -66,7 +66,7 @@ class OAuthViewController: UIViewController, UIWebViewDelegate {
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"Close".localize(),
                                                                 style: UIBarButtonItemStyle.Plain,
                                                                target: self,
-                                                               action: "close")
+                                                               action: #selector(OAuthViewController.close))
         loginWebView = UIWebView(frame: view.frame)
         view.addSubview(loginWebView)
         loginWebView.delegate = self

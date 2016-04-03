@@ -28,6 +28,8 @@ extension JASidePanelController {
         case .TV:
             leftGapPercentage    = 0.8
             rightGapPercentage   = 0.8
+        default:
+            break
         }
     }
     func showRightPanelAnimated(animated: Bool, completion: () -> Void) {

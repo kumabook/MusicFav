@@ -92,7 +92,7 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title:"Add".localize(),
                                                             style: UIBarButtonItemStyle.Plain,
                                                            target: self,
-                                                           action: "add")
+                                                           action: #selector(ChannelCategoryTableViewController.add))
 
         indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
         indicator.bounds = CGRect(x: 0,
@@ -105,7 +105,7 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
         reloadButton = UIButton()
         reloadButton.setImage(UIImage(named: "network_error"), forState: UIControlState.Normal)
         reloadButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        reloadButton.addTarget(self, action:"refresh", forControlEvents:UIControlEvents.TouchUpInside)
+        reloadButton.addTarget(self, action:#selector(ChannelCategoryTableViewController.refresh), forControlEvents:UIControlEvents.TouchUpInside)
         reloadButton.setTitle("Sorry, network error occured.".localize(), forState:UIControlState.Normal)
         reloadButton.frame = CGRectMake(0, 0, tableView.frame.size.width, 44);
         tableView.allowsMultipleSelection = true

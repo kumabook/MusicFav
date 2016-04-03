@@ -134,11 +134,11 @@ class TrackTableViewController: UITableViewController {
         let showFavListButton         = UIBarButtonItem(image: UIImage(named: "fav_list"),
                                                         style: UIBarButtonItemStyle.Plain,
                                                        target: self,
-                                                       action: "showFavoritePlaylist")
+                                                       action: #selector(TrackTableViewController.showFavoritePlaylist))
         let favPlaylistButton         = UIBarButtonItem(image: UIImage(named: "fav_playlist"),
                                                         style: UIBarButtonItemStyle.Plain,
                                                        target: self,
-                                                       action: "favPlaylist")
+                                                       action: #selector(TrackTableViewController.favPlaylist))
 
         navigationItem.rightBarButtonItems  = [showFavListButton]
         if playlistType != .Playing {

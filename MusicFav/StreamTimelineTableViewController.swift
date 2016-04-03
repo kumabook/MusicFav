@@ -85,6 +85,8 @@ class StreamTimelineTableViewController: TimelineTableViewController {
             case .RemoveAt(let index):
                 let indexPath = NSIndexPath(forItem: index, inSection: 0)
                 self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            case .CompleteLoadingTrackDetail(_):
+                break
             }
         })
     }

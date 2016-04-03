@@ -22,7 +22,7 @@ class TutorialViewController: UIViewController, TutorialViewDelegate, OAuthViewD
         modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
         tutorialView = TutorialView.tutorialView(view.frame, delegate: self)
         tutorialView.skipButton.hidden = true
-        tutorialView.skipButton.addTarget(self, action: "skipButtonTapped", forControlEvents: UIControlEvents.TouchUpInside)
+        tutorialView.skipButton.addTarget(self, action: #selector(TutorialViewController.skipButtonTapped), forControlEvents: UIControlEvents.TouchUpInside)
         view.addSubview(tutorialView)
     }
 

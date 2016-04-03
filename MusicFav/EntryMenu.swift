@@ -137,7 +137,7 @@ public class EntryMenu: UIButton {
             iconView.tintColor = UIColor.whiteColor()
             itemView.addSubview(label)
             itemView.addSubview(iconView)
-            itemView.addTarget(self, action: "menuSelected:", forControlEvents: UIControlEvents.TouchUpInside)
+            itemView.addTarget(self, action: #selector(EntryMenu.menuSelected(_:)), forControlEvents: UIControlEvents.TouchUpInside)
             itemView.setBackgroundImage(item.normalBackgroundImage, forState: UIControlState.Normal)
             itemView.setBackgroundImage(item.highlightedBackgroundImage, forState: UIControlState.Highlighted)
             itemView.tag = i
@@ -152,7 +152,7 @@ public class EntryMenu: UIButton {
                 make.height.equalTo(iconSize)
             }
         }
-        addTarget(self, action: "hide", forControlEvents: UIControlEvents.TouchUpInside)
+        addTarget(self, action: #selector(EntryMenu.hide), forControlEvents: UIControlEvents.TouchUpInside)
         upArrow = UpArrow(color: items[0].normalColor)
     }
 

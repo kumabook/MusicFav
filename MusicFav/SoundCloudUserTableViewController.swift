@@ -81,7 +81,7 @@ class SoundCloudUserTableViewController: AddStreamTableViewController {
         reloadButton = UIButton()
         reloadButton.setImage(UIImage(named: "network_error"), forState: UIControlState.Normal)
         reloadButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        reloadButton.addTarget(self, action:"fetchNext", forControlEvents:UIControlEvents.TouchUpInside)
+        reloadButton.addTarget(self, action:#selector(SoundCloudUserTableViewController.fetchNext), forControlEvents:UIControlEvents.TouchUpInside)
         reloadButton.setTitle("Sorry, network error occured.".localize(), forState:UIControlState.Normal)
         reloadButton.frame = CGRectMake(0, 0, tableView.frame.size.width, 44);
         refresh(type)

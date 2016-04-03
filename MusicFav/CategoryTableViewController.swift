@@ -46,7 +46,7 @@ class CategoryTableViewController: UITableViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "add_stream"),
                                                             style: UIBarButtonItemStyle.Plain,
                                                            target: self,
-                                                           action: "newCategory")
+                                                           action: #selector(CategoryTableViewController.newCategory))
     }
 
     override func viewWillAppear(animated: Bool) {

@@ -38,7 +38,7 @@ class AddStreamTableViewController: UITableViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title:"Add".localize(),
                                                             style: UIBarButtonItemStyle.Plain,
                                                            target: self,
-                                                           action: "add")
+                                                           action: #selector(AddStreamTableViewController.add))
         navigationItem.rightBarButtonItem?.enabled = false
         tableView.allowsMultipleSelection = true
     }

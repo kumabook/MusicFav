@@ -67,19 +67,19 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         playlistButton        = UIBarButtonItem(image: UIImage(named: "playlist"),
                                                 style: UIBarButtonItemStyle.Plain,
                                                target: self,
-                                               action: "showPlaylist")
+                                               action: #selector(EntryWebViewController.showPlaylist))
         entryMenuButton       = UIBarButtonItem(image: UIImage(named: "entry_menu"),
                                                 style: UIBarButtonItemStyle.Plain,
                                                target: self,
-                                               action: "showEntryMenu")
+                                               action: #selector(EntryWebViewController.showEntryMenu))
         historyForwardButton  = UIBarButtonItem(image: UIImage(named: "history_forward"),
                                                 style: UIBarButtonItemStyle.Plain,
                                                target: self,
-                                               action: "historyForward")
+                                               action: #selector(EntryWebViewController.historyForward))
         historyBackButton     = UIBarButtonItem(image: UIImage(named: "history_back"),
                                                 style: UIBarButtonItemStyle.Plain,
                                                target: self,
-                                               action: "historyBack")
+                                               action: #selector(EntryWebViewController.historyBack))
         navigationItem.rightBarButtonItems = [playlistButton!,
                                               entryMenuButton!,
                                               historyForwardButton!,

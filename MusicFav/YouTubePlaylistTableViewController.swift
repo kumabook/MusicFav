@@ -63,7 +63,7 @@ class YouTubePlaylistTableViewController: UITableViewController {
         let showFavListButton = UIBarButtonItem(image: UIImage(named: "fav_list"),
                                                 style: UIBarButtonItemStyle.Plain,
                                                target: self,
-                                               action: "showFavoritePlaylist")
+                                               action: #selector(YouTubePlaylistTableViewController.showFavoritePlaylist))
         navigationItem.rightBarButtonItems = [showFavListButton]
     }
 

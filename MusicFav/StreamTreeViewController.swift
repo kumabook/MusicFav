@@ -157,11 +157,11 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         let settingsButton  = UIBarButtonItem(image: UIImage(named: "settings"),
                                               style: UIBarButtonItemStyle.Plain,
                                              target: self,
-                                             action: "showPreference")
+                                             action: #selector(StreamTreeViewController.showPreference))
         let addStreamButton = UIBarButtonItem(image: UIImage(named: "add_stream"),
                                               style: UIBarButtonItemStyle.Plain,
                                              target: self,
-                                             action: "addStream")
+                                             action: #selector(StreamTreeViewController.addStream))
         navigationItem.leftBarButtonItems  = [settingsButton, addStreamButton]
         view.backgroundColor = UIColor.whiteColor()
         treeView = RATreeView(frame: CGRect(x: 0, y: 0, width: appDelegate.leftVisibleWidth!, height: view.frame.height))
@@ -172,7 +172,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         view.addSubview(self.treeView!)
 
         refreshControl = UIRefreshControl()
-        refreshControl?.addTarget(self, action:"refresh", forControlEvents:UIControlEvents.ValueChanged)
+        refreshControl?.addTarget(self, action:#selector(StreamTreeViewController.refresh), forControlEvents:UIControlEvents.ValueChanged)
         treeView?.addResreshControl(refreshControl!)
 
         refresh()
@@ -348,7 +348,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             case .FeedlyCategory(let c): if c == category { return i }
             default:                     break
             }
-            i++
+            i += 1
         }
         return i
     }
@@ -360,7 +360,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             case .UncategorizedSubscription(let sub): if sub == subscription { return i }
             default:                                  break
             }
-            i++
+            i += 1
         }
         return i
     }

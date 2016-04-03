@@ -54,8 +54,8 @@ class TimelineTableViewCell: MCSwipeTableViewCell {
         indicator.hidden           = true
         thumbListContainer.addSubview(indicator)
         indicator.userInteractionEnabled = true
-        playButton.addTarget(self, action: "playButtonTouched", forControlEvents: UIControlEvents.TouchUpInside)
-        articleButton.addTarget(self, action: "articleButtonTouched", forControlEvents: UIControlEvents.TouchUpInside)
+        playButton.addTarget(self, action: #selector(TimelineTableViewCell.playButtonTouched), forControlEvents: UIControlEvents.TouchUpInside)
+        articleButton.addTarget(self, action: #selector(TimelineTableViewCell.articleButtonTouched), forControlEvents: UIControlEvents.TouchUpInside)
         selectionStyle = UITableViewCellSelectionStyle.None
         playerState = .Init
     }
@@ -96,7 +96,7 @@ class TimelineTableViewCell: MCSwipeTableViewCell {
                          height: tw)
             let imageView = UIImageView(frame: rect)
             imageView.userInteractionEnabled = true
-            imageView.addGestureRecognizer(UITapGestureRecognizer(target:self, action:"thumbImageTapped:"))
+            imageView.addGestureRecognizer(UITapGestureRecognizer(target:self, action:#selector(TimelineTableViewCell.thumbImageTapped(_:))))
             imageViews.append(imageView)
             thumbListContainer.addSubview(imageView)
             loadThumbnail(imageView, track: track)
@@ -106,7 +106,7 @@ class TimelineTableViewCell: MCSwipeTableViewCell {
         let pageNum      = Int((thumbnailWidth + padding) * count / widthPerPage) + 1
         let contentWidth = widthPerPage * CGFloat(pageNum)
         let marginView   = UIView(frame: CGRect(x: count * tw, y: 0.0, width: contentWidth - count * tw, height: tw))
-        marginView.addGestureRecognizer(UITapGestureRecognizer(target:self, action:"trackScrollViewMarginTouched:"))
+        marginView.addGestureRecognizer(UITapGestureRecognizer(target:self, action:#selector(TimelineTableViewCell.trackScrollViewMarginTouched(_:))))
         thumbListContainer.addSubview(marginView)
         thumbListContainer.contentSize = CGSize(width: contentWidth, height: thumbnailWidth)
     }
@@ -216,7 +216,7 @@ class TimelineTableViewCell: MCSwipeTableViewCell {
     var markAsUnsavedColor:     UIColor { return UIColor.blue }
 
     func prepareSwipeViews(markAs: StreamLoader.RemoveMark, onSwipe: (MCSwipeTableViewCell) -> Void) {
-        if respondsToSelector("setSeparatorInset:") {
+        if respondsToSelector(Selector("setSeparatorInset:")) {
             separatorInset = UIEdgeInsetsZero
         }
         contentView.backgroundColor = UIColor.whiteColor()

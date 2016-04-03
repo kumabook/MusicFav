@@ -45,11 +45,11 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
         navigationItem.leftBarButtonItem = UIBarButtonItem(title:"Back".localize(),
                                                            style: UIBarButtonItemStyle.Plain,
                                                           target: self,
-                                                          action: "back")
+                                                          action: #selector(SearchStreamPageMenuController.back))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title:"Add".localize(),
                                                             style: UIBarButtonItemStyle.Plain,
                                                            target: self,
-                                                           action: "add")
+                                                           action: #selector(SearchStreamPageMenuController.add))
         searchBar                        = UISearchBar(frame: navigationController!.navigationBar.bounds)
         searchBar.placeholder            = "URL or keywords"
         searchBar.autocapitalizationType = UITextAutocapitalizationType.None
