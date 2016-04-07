@@ -80,7 +80,7 @@ class YouTubePlaylistItemTableViewController: TrackTableViewController {
 
     override func fetchTrackDetails() {
         for track in tracks {
-            track.fetchTrackDetail(false).on(
+            track.fetchPropertiesFromProvider(false).on(
                 next: { (track: Track?) in
                     if let t = track {
                         if let index = self.tracks.indexOf(t) {

@@ -135,7 +135,7 @@ class YouTubeActivityLoader {
                 let p = item.toPlaylist()
                 self.itemsOfPlaylist[playlist]?.append(item)
                 self.playlistsOfYouTubePlaylist[playlist]?.append(p)
-                item.track.fetchTrackDetail(false)
+                item.track.fetchPropertiesFromProvider(false)
                     .on(
                         next: { item in p.observer.sendNext(PlaylistEvent.Load(index: 0))},
                         failed: { error in },

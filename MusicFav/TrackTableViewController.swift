@@ -64,6 +64,7 @@ class TrackTableViewController: UITableViewController {
     var indicator:  UIActivityIndicatorView!
     var playerObserver:   TrackTableViewPlayerObserver!
     var playlistObserver: Disposable?
+    var disposable: Disposable?
 
     var playlist: Playlist {
         return _playlist
@@ -103,7 +104,6 @@ class TrackTableViewController: UITableViewController {
         indicator.stopAnimating()
         updateNavbar()
         observePlaylist()
-        fetchTracks()
         if playlistType == .Favorite && tracks.count == 0 {
             showGuideMessage()
         }
@@ -113,6 +113,7 @@ class TrackTableViewController: UITableViewController {
         super.viewDidAppear(animated)
         observePlayer()
         observePlaylist()
+        fetchTracks()
     }
 
     override func viewWillAppear(animated: Bool) {
@@ -128,6 +129,8 @@ class TrackTableViewController: UITableViewController {
         playerObserver = nil
         playlistObserver?.dispose()
         playlistObserver = nil
+        disposable?.dispose()
+        disposable = nil
     }
 
     func updateNavbar() {
@@ -298,7 +301,7 @@ class TrackTableViewController: UITableViewController {
     }
 
     func fetchTrackDetails() {
-        playlistLoader.fetchTracks()
+        disposable = playlistLoader.fetchTracks().start()
     }
 
     // MARK: UITableViewDataSource
