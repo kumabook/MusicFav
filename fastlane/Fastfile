@@ -23,13 +23,11 @@ default_platform :ios
 platform :ios do
   before_all do
     # ENV["SLACK_URL"] = "https://hooks.slack.com/services/..."
-=begin
     cocoapods
     carthage platform: "iOS",
               use_ssh: true,
        use_submodules: true,
          use_binaries: false
-=end
   end
 
   desc "Runs all the tests"
