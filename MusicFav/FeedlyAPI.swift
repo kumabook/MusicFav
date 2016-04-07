@@ -126,8 +126,9 @@ public struct FeedlyAPI {
     }
 
     private static func clearAllAccount() {
-        let store = NXOAuth2AccountStore.sharedStore() as! NXOAuth2AccountStore
-        for account in store.accounts as! [NXOAuth2Account] {
+        guard let store    = NXOAuth2AccountStore.sharedStore() as? NXOAuth2AccountStore else { return }
+        guard let accounts = store.accounts as? [NXOAuth2Account]                        else { return }
+        for account in accounts {
             if account.accountType == "Feedly" {
                 store.removeAccount(account)
             }
