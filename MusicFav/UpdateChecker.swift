@@ -91,7 +91,7 @@ class UpdateChecker {
 
     func fetchPlaylistOfEntry(entry: Entry) -> SignalProducer<Playlist, NSError> {
         if let url = entry.url {
-            return MusicFavAPIClient.sharedInstance.playlistify(url, errorOnFailure: false)
+            return PinkSpiderAPIClient.sharedInstance.playlistify(url, errorOnFailure: false)
         } else {
             return SignalProducer<Playlist, NSError>.empty
         }
