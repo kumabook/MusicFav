@@ -12,7 +12,7 @@ import SwiftyJSON
 import FeedlyKit
 import NXOAuth2Client
 
-public struct FeedlyAPI {
+public extension CloudAPIClient {
     private static let userDefaults = NSUserDefaults.standardUserDefaults()
     private static var oauth2clientDelegate = FeedlyOAuth2ClientDelegate()
     private static var _account:                    NXOAuth2Account?
@@ -72,7 +72,7 @@ public struct FeedlyAPI {
                                        accessToken: account.accessToken,
                                      keyChainGroup: C.keyChainGroup,
                                         persistent: true,
-                                          delegate: FeedlyAPI.oauth2clientDelegate)
+                                          delegate: CloudAPIClient.oauth2clientDelegate)
         oauth2client.refreshAccessToken()
     }
 
@@ -196,7 +196,7 @@ public class FeedlyOAuth2ClientDelegate: NSObject, NXOAuth2ClientDelegate {
     public func oauthClientDidLoseAccessToken(client: NXOAuth2Client!) {
     }
     public func oauthClientDidRefreshAccessToken(client: NXOAuth2Client!) {
-        FeedlyAPI.refreshAccount(NXOAuth2Account(accountWithAccessToken: client.accessToken,
+        CloudAPIClient.refreshAccount(NXOAuth2Account(accountWithAccessToken: client.accessToken,
             accountType: CloudAPIClient.accountType))
     }
 }

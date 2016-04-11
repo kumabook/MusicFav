@@ -89,7 +89,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func setupAPIClient() {
-        FeedlyAPI.setup()
+        CloudAPIClient.setup()
         SoundCloudKit.APIClient.setup()
         YouTubeAPIClient.setup()
     }
@@ -119,7 +119,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         if isFirstLaunch {
             Playlist.createDefaultPlaylist()
             Track.youTubeVideoQuality = YouTubeVideoQuality.Medium360
-            FeedlyAPI.notificationDateComponents = UILocalNotification.defaultNotificationDateComponents
+            CloudAPIClient.notificationDateComponents = UILocalNotification.defaultNotificationDateComponents
             markAsLaunched()
         }
         setupMainViewControllers()

@@ -109,7 +109,7 @@ class PreferenceViewController: UITableViewController {
             case .YouTubeVideoQuality:
                 return Track.youTubeVideoQuality.label
             case .NotificationTime:
-                if let components = FeedlyAPI.notificationDateComponents {
+                if let components = CloudAPIClient.notificationDateComponents {
                     if components.hour <= 11 {
                         return String(format: "%02d:%02d AM", components.hour, components.minute)
                     } else {
@@ -321,18 +321,18 @@ class PreferenceViewController: UITableViewController {
                 let dateSelectionVC = RMDateSelectionViewController.dateSelectionController()
                 dateSelectionVC.selectButtonAction = { (controller, date) in
                     let calendar = NSCalendar.currentCalendar()
-                    FeedlyAPI.notificationDateComponents = calendar.components([NSCalendarUnit.Hour, NSCalendarUnit.Minute], fromDate: date)
+                    CloudAPIClient.notificationDateComponents = calendar.components([NSCalendarUnit.Hour, NSCalendarUnit.Minute], fromDate: date)
                     tableView.reloadData()
                     UpdateChecker().check(UIApplication.sharedApplication(), completionHandler: nil)
                 }
                 dateSelectionVC.cancelButtonAction = { controller in }
                 dateSelectionVC.nowButtonAction = { controller in
-                    FeedlyAPI.notificationDateComponents = nil
+                    CloudAPIClient.notificationDateComponents = nil
                     self.tableView.reloadData()
                     dateSelectionVC.dismissViewControllerAnimated(true, completion: {})
                     UpdateChecker().check(UIApplication.sharedApplication(), completionHandler: nil)
                 }
-                if let time = FeedlyAPI.notificationDateComponents {
+                if let time = CloudAPIClient.notificationDateComponents {
                     let calendar = NSCalendar.currentCalendar()
                     let date = calendar.dateWithEra(1, year: 2015, month: 5, day: 11,
                                                        hour: time.hour, minute: time.minute,

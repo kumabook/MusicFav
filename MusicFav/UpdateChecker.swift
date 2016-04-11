@@ -16,14 +16,14 @@ class UpdateChecker {
     let perPage   = 3
     let newerThan: NSDate
     init() {
-        if let fromDate = FeedlyAPI.lastChecked {
+        if let fromDate = CloudAPIClient.lastChecked {
             newerThan = fromDate
         } else {
             newerThan = NSDate().yesterDay
         }
     }
     var nextNotificationDate: NSDate? {
-        if let components = FeedlyAPI.notificationDateComponents {
+        if let components = CloudAPIClient.notificationDateComponents {
             return NSDate.nextDateFromComponents(components)
         }
         return nil
@@ -43,7 +43,7 @@ class UpdateChecker {
                             completionHandler?(UIBackgroundFetchResult.NoData)
                         }
                     }
-                    FeedlyAPI.lastChecked = NSDate()
+                    CloudAPIClient.lastChecked = NSDate()
                 }, failed: { error in
                     UIScheduler().schedule { completionHandler?(UIBackgroundFetchResult.Failed) }
                 }, completed: {
@@ -57,7 +57,7 @@ class UpdateChecker {
     }
     func fetchNewTracks() -> SignalProducer<[Track], NSError> {
         var entriesSignal: SignalProducer<[Entry], NSError>!
-        if let profile = FeedlyAPI.profile {
+        if let profile = CloudAPIClient.profile {
             entriesSignal = apiClient.fetchEntries(streamId: FeedlyKit.Category.All(profile.id).streamId,
                                                   newerThan: newerThan.timestamp,
                                                  unreadOnly: true,

@@ -16,7 +16,7 @@ import PageMenu
 class AddStreamTableViewController: UITableViewController {
     let cellHeight:        CGFloat = 100
     let accessoryWidth:    CGFloat = 30
-    var isLoggedIn: Bool { return FeedlyAPI.account != nil }
+    var isLoggedIn: Bool { return CloudAPIClient.account != nil }
     let streamListLoader: StreamListLoader!
     init(streamListLoader: StreamListLoader) {
         self.streamListLoader = streamListLoader

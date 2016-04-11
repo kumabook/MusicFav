@@ -124,7 +124,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
 
     func defaultSections() -> [Section] {
         var sections: [Section] = []
-        if let userId = FeedlyAPI.profile?.id {
+        if let userId = CloudAPIClient.profile?.id {
             sections.append(.GlobalResource(FeedlyKit.Category.All(userId)))
             sections.append(.GlobalResource(FeedlyKit.Tag.Saved(userId)))
             sections.append(.GlobalResource(FeedlyKit.Tag.Read(userId)))
