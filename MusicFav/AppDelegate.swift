@@ -19,6 +19,8 @@ import PlayerKit
 import JASidePanels
 import SoundCloudKit
 
+typealias PlaylistQueue = PlayerKit.PlaylistQueue
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     enum Event {
@@ -31,7 +33,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var appearanceManager:        AppearanceManager?
     var paymentManager:           PaymentManager?
     var window:                   UIWindow?
-    var coverViewController:      DraggableCoverViewController?
+    var coverViewController:      CoverViewController?
     var miniPlayerViewController: MiniPlayerViewController?
     var player:                   Player?
     var signal:                   Signal<AppDelegate.Event, NSError>?
@@ -42,8 +44,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return miniPlayerViewController?.currentPlaylist
         }
     }
-    var playerViewController:     PlayerViewController? {
-        get { return coverViewController?.coverViewController as? PlayerViewController }
+    var playerPageViewController: PlayerPageViewController<PlayerViewController, SimpleMiniPlayerView>? {
+        get { return coverViewController?.ceilingViewController as? PlayerPageViewController<PlayerViewController, SimpleMiniPlayerView> }
     }
     var mainViewController: JASidePanelController? { return miniPlayerViewController?.mainViewController as? JASidePanelController }
     var leftVisibleWidth:   CGFloat? { return mainViewController?.leftVisibleWidth }
@@ -73,7 +75,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window                       = UIWindow(frame: UIScreen.mainScreen().bounds)
         miniPlayerViewController     = MiniPlayerViewController(player: player!)
         let playerPageViewController = PlayerPageViewController<PlayerViewController, SimpleMiniPlayerView>(player: player!)
-        coverViewController          = DraggableCoverViewController(coverViewController: playerPageViewController,
+        coverViewController          = CoverViewController(ceilingViewController: playerPageViewController,
             floorViewController: miniPlayerViewController!)
         window?.rootViewController  = self.coverViewController
     }
@@ -141,20 +143,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillResignActive(application: UIApplication) {
         observer?.sendNext(Event.WillResignActive)
-        playerViewController?.disablePlayerView()
+        playerPageViewController?.disablePlayerView()
         Shortcut.updateShortcutItems(application)
     }
 
     func applicationDidEnterBackground(application: UIApplication) {
         observer?.sendNext(Event.DidEnterBackground)
-        playerViewController?.disablePlayerView()
+        playerPageViewController?.disablePlayerView()
         Shortcut.updateShortcutItems(application)
     }
 
     func applicationWillEnterForeground(application: UIApplication) {
         observer?.sendNext(Event.WillEnterForeground)
         mainViewController?.centerPanel
-        playerViewController?.enablePlayerView()
+        playerPageViewController?.enablePlayerView()
         reloadExpiredTracks()
     }
 
@@ -231,9 +233,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // Player control functions
 
-    func select(trackIndex: Int, playlist: MusicFeeder.Playlist, playlists: [MusicFeeder.Playlist]) {
+    func select(trackIndex: Int, playlist: MusicFeeder.Playlist, playlistQueue: PlaylistQueue) {
         setupAudioSession(UIApplication.sharedApplication())
-        player?.select(trackIndex, playlist: playlist, playlists: playlists.map { $0 as PlayerKit.Playlist})
+        player?.select(trackIndex, playlist: playlist, playlistQueue: playlistQueue)
     }
 
     func toggle() {
@@ -244,7 +246,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func pause() { player?.pause() }
 
     func reloadExpiredTracks() {
-        guard let playlists = player?.playlists else { return }
+        guard let playlists = player?.playlistQueue.playlists else { return }
         playlists.forEach {
             guard let p = $0 as? MusicFeeder.Playlist else { return }
             p.reloadExpiredTracks().start()

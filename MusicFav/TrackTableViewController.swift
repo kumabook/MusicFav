@@ -377,7 +377,8 @@ class TrackTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let track = playlist.tracks[indexPath.item]
         if track.streamUrl != nil {
-            appDelegate.select(indexPath.item, playlist: playlist, playlists: [playlist])
+            let playlistQueue = PlaylistQueue(playlists: [playlist as PlayerKitPlaylist])
+            appDelegate.select(indexPath.item, playlist: playlist, playlistQueue: playlistQueue)
         } else {
             tableView.deselectRowAtIndexPath(indexPath, animated: true)
         }

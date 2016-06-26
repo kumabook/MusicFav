@@ -33,6 +33,9 @@ class StreamTimelineTableViewController: TimelineTableViewController {
     override func getItems() -> [TimelineItem] {
         return streamLoader.entries.map { TimelineItem.Entry($0, self.streamLoader.playlistsOfEntry[$0]) }
     }
+    override func getPlaylistQueue() -> PlaylistQueue {
+        return streamLoader.playlistQueue
+    }
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
