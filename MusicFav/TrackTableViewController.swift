@@ -26,20 +26,16 @@ class TrackTableViewController: UITableViewController {
             vc = viewController
             super.init()
         }
-        override func timeUpdated()      {}
-        override func didPlayToEndTime() {}
-        override func statusChanged() {
-            vc.updateSelection()
-        }
-        override func nextPlaylistRequested() {
-        }
-        override func previousPlaylistRequested() {
-        }
-        override func trackSelected(track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist) {
-            vc.updateSelection()
-        }
-        override func trackUnselected(track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist) {
-            vc.updateSelection()
+        func notify(event: Event) {
+            switch event {
+            case .StatusChanged, .ErrorOccured, .PlaylistChanged: vc.updateSelection()
+            case .TrackSelected:             vc.updateSelection()
+            case .TrackUnselected:           vc.updateSelection()
+            case .PreviousPlaylistRequested: break
+            case .NextPlaylistRequested:     break
+            case .TimeUpdated:               break
+            case .DidPlayToEndTime:          break
+            }
         }
     }
 
@@ -124,7 +120,7 @@ class TrackTableViewController: UITableViewController {
     override func viewWillDisappear(animated: Bool) {
         super.viewWillDisappear(animated)
         if playerObserver != nil {
-            player?.removeObserver(playerObserver)
+            appDelegate.player?.removeObserver(playerObserver)
         }
         playerObserver = nil
         playlistObserver?.dispose()
@@ -169,10 +165,10 @@ class TrackTableViewController: UITableViewController {
 
     func observePlayer() {
         if playerObserver != nil {
-            player?.removeObserver(playerObserver)
+            appDelegate.player?.removeObserver(playerObserver)
         }
         playerObserver = TrackTableViewPlayerObserver(viewController: self)
-        player?.addObserver(playerObserver)
+        appDelegate.player?.addObserver(playerObserver)
         updateSelection()
     }
 

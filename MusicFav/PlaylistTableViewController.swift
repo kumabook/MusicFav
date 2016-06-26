@@ -35,19 +35,22 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             vc = playlistTableViewController
             super.init()
         }
-        override func timeUpdated()      {}
-        override func didPlayToEndTime() {}
-        override func statusChanged()    {
-            if let playlist = vc.appDelegate.playingPlaylist {
-                vc.updatePlaylist(playlist)
-            }
-        }
+        func notify(event: Event) {
+            switch event {
+            case .TimeUpdated: break
+            case .DidPlayToEndTime: break
+            case .StatusChanged:
+                if let playlist = vc.appDelegate.playingPlaylist {
+                    vc.updatePlaylist(playlist)
+                }
+            case .TrackSelected:             update()
+            case .TrackUnselected:           update()
+            case .PreviousPlaylistRequested: break
+            case .NextPlaylistRequested:     break
+            case .ErrorOccured:              break
+            case .PlaylistChanged:           break
 
-        override func trackSelected(track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist) {
-            update()
-        }
-        override func trackUnselected(track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist) {
-            update()
+            }
         }
         func update() {
             vc.updatePlaylist(vc.appDelegate.playingPlaylist!)

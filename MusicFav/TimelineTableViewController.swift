@@ -14,7 +14,7 @@ import MusicFeeder
 
 class TimelineTableViewController: UITableViewController, TimelineTableViewCellDelegate {
     let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-    var player:     Player? { get { return appDelegate.player }}
+    var player:     Player? { return appDelegate.player }
     let cellHeight: CGFloat = 190
     let reuseIdentifier = "TimelineTableViewCell"
 
@@ -31,25 +31,22 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
             vc = viewController
             super.init()
         }
-        override func timeUpdated()      {}
-        override func didPlayToEndTime() {}
-        override func statusChanged() {
-            vc.updateSelection(UITableViewScrollPosition.None)
-            vc.updateCurrentTrack()
-        }
-        override func nextPlaylistRequested() {
-            vc.playPlaylist(vc.nextPlaylist())
-        }
-        override func previousPlaylistRequested() {
-            vc.playPlaylist(vc.previousPlaylist())
-        }
-        override func trackSelected(track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist) {
-            vc.updateTrack(track, index: index, playlist: playlist, playerState: vc.player!.currentState)
-            vc.tableView?.reloadData()
-        }
-        override func trackUnselected(track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist) {
-            vc.updateTrack(track, index: index, playlist: playlist, playerState: PlayerState.Init)
-            vc.tableView?.reloadData()
+        override func listen(event: Event) {
+            switch event {
+            case .StatusChanged, .ErrorOccured, .PlaylistChanged:
+                vc.updateSelection(UITableViewScrollPosition.None)
+                vc.updateCurrentTrack()
+            case .TrackSelected(let track, let index, let playlist):
+                vc.updateTrack(track, index: index, playlist: playlist, playerState: vc.player!.currentState)
+                vc.tableView?.reloadData()
+            case .TrackUnselected(let track, let index, let playlist):
+                vc.updateTrack(track, index: index, playlist: playlist, playerState: PlayerState.Init)
+                vc.tableView?.reloadData()
+            case .PreviousPlaylistRequested: vc.playPlaylist(vc.previousPlaylist())
+            case .NextPlaylistRequested:     vc.playPlaylist(vc.nextPlaylist())
+            case .TimeUpdated:               break
+            case .DidPlayToEndTime:          break
+            }
         }
     }
 
@@ -131,10 +128,10 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         if playerObserver != nil {
-            player?.removeObserver(playerObserver)
+            appDelegate.player?.removeObserver(playerObserver)
         }
         playerObserver = TimelinePlayerObserver(viewController: self)
-        player?.addObserver(playerObserver)
+        appDelegate.player?.addObserver(playerObserver)
         updateSelection(UITableViewScrollPosition.None)
     }
 
@@ -143,7 +140,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         observer?.dispose()
         appObserver?.dispose()
         if playerObserver != nil {
-            player?.removeObserver(playerObserver)
+            appDelegate.player?.removeObserver(playerObserver)
         }
         playerObserver = nil
     }
@@ -376,6 +373,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
             cell.observePlaylist(playlist)
         } else {
             cell.clearThumbnails()
+            cell.updatePlayerIcon(0, playerState: PlayerState.Init)
         }
         return cell
     }

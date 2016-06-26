@@ -12,16 +12,19 @@ import MusicFeeder
 import PlayerKit
 
 class ShortcutPlayerObserver: PlayerObserver {
-    override func timeUpdated() {}
-    override func didPlayToEndTime() {}
-    override func statusChanged() {                                                                   update() }
-    override func trackSelected(track: PlayerKit.Track, index: Int, playlist: PlayerKit.Playlist) {   update() }
-    override func trackUnselected(track: PlayerKit.Track, index: Int, playlist: PlayerKit.Playlist) { update() }
-    override func previousPlaylistRequested() {                                                       update() }
-    override func nextPlaylistRequested() {                                                           update() }
-    override func errorOccured() {
-        update()}
-
+    override func listen(event: PlayerEvent) {
+        switch event {
+        case .TimeUpdated:               break
+        case .DidPlayToEndTime:          break
+        case .StatusChanged:             break
+        case .TrackSelected:             update()
+        case .TrackUnselected:           update()
+        case .PreviousPlaylistRequested: update()
+        case .NextPlaylistRequested:     update()
+        case .ErrorOccured:              update()
+        case .PlaylistChanged:           update()
+        }
+    }
     func update() {
         Shortcut.updateShortcutItems(UIApplication.sharedApplication())
     }
@@ -147,6 +150,6 @@ enum Shortcut: String {
 
     static func observePlayer(player: Player) {
         let observer = ShortcutPlayerObserver()
-        player.addObserver(observer)
+        appDelegate.player?.addObserver(observer)
     }
 }

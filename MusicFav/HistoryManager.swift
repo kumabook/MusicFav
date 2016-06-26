@@ -11,14 +11,11 @@ import PlayerKit
 import MusicFeeder
 
 class HistoryManager: PlayerObserver {
-    override func timeUpdated() {}
-    override func didPlayToEndTime() {}
-    override func statusChanged() {}
-    override func trackUnselected(track: PlayerKit.Track, index: Int, playlist: PlayerKit.Playlist) {}
-    override func previousPlaylistRequested() {}
-    override func nextPlaylistRequested() {}
-    override func errorOccured() {}
-    override func trackSelected(track: PlayerKit.Track, index: Int, playlist: PlayerKit.Playlist) {
-        HistoryStore.add(track as! MusicFeeder.Track)
+    func notify(event: Event) {
+        switch event {
+        case .TrackSelected(let track, _, _):
+            HistoryStore.add(track as! MusicFeeder.Track)
+        default: break
+        }
     }
 }

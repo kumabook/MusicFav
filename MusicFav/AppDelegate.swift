@@ -67,12 +67,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func setupMainViewControllers() {
-        player                      = Player()
-        appearanceManager           = AppearanceManager()
+        player                       = Player()
+        appearanceManager            = AppearanceManager()
         appearanceManager?.apply()
-        window                      = UIWindow(frame: UIScreen.mainScreen().bounds)
-        miniPlayerViewController    = MiniPlayerViewController(player: player!)
-        coverViewController         = DraggableCoverViewController(coverViewController: PlayerViewController(player: player!),
+        window                       = UIWindow(frame: UIScreen.mainScreen().bounds)
+        miniPlayerViewController     = MiniPlayerViewController(player: player!)
+        let playerPageViewController = PlayerPageViewController<PlayerViewController, SimpleMiniPlayerView>(player: player!)
+        coverViewController          = DraggableCoverViewController(coverViewController: playerPageViewController,
             floorViewController: miniPlayerViewController!)
         window?.rootViewController  = self.coverViewController
     }

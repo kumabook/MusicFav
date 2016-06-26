@@ -10,19 +10,8 @@ import UIKit
 import PlayerKit
 import MusicFeeder
 
-class PlayerViewController: PlayerKit.PlayerViewController, ControlPanelDelegate {
-    override var thumbImage: UIImage {
-        return UIImage(named: "note")!
-    }
-
-    override func createSubviews() {
-        super.createSubviews()
-        let panel    = ControlPanel()
-        controlPanel = panel
-        panel.delegate = self
-    }
-
-    func likeButtonTapped(sender: ControlPanel) {
+class PlayerViewController: PlayerKit.SimplePlayerViewController {
+    func likeButtonTapped() {
         let app = UIApplication.sharedApplication().delegate as! AppDelegate
         if let track = app.player?.currentTrack as? MusicFeeder.Track{
             showSelectPlaylistViewController([track])
