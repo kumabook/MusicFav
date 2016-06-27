@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/CocoaPods/CocoaPods.git
-  revision: a3241de2ce571fe309e7ebc89fbedbd83e0546b8
+  revision: 03ab3a34822a2548faf6281fee5b550395d2c5f0
   specs:
     cocoapods (1.0.1)
       activesupport (>= 4.0.2)
@@ -15,14 +15,14 @@ GIT
       cocoapods-try (>= 1.0.0, < 2.0)
       colored (~> 1.2)
       escape (~> 0.0.4)
-      fourflusher (~> 0.3.0)
-      molinillo (~> 0.4.5)
+      fourflusher (~> 1.0.1)
+      molinillo (~> 0.5.0)
       nap (~> 1.0)
       xcodeproj (>= 1.1.0, < 2.0)
 
 GIT
   remote: https://github.com/CocoaPods/Xcodeproj.git
-  revision: 1b15f4c79303843e8f370afa9dd74b8ad0329785
+  revision: fb31bbbd7a31e011df5fde90e5b27c85114e99bb
   specs:
     xcodeproj (1.1.0)
       activesupport (>= 3)
@@ -42,7 +42,7 @@ GEM
   specs:
     RubyInline (3.12.4)
       ZenTest (~> 4.3)
-    ZenTest (4.11.0)
+    ZenTest (4.11.1)
     activesupport (4.2.6)
       i18n (~> 0.7)
       json (~> 1.7, >= 1.7.7)
@@ -60,7 +60,7 @@ GEM
       fuzzy_match (~> 2.0.4)
       nap (~> 1.0)
     cocoapods-deintegrate (1.0.0)
-    cocoapods-downloader (1.0.0)
+    cocoapods-downloader (1.0.1)
     cocoapods-plugins (1.0.0)
       nap
     cocoapods-search (1.0.0)
@@ -83,7 +83,7 @@ GEM
       fastlane_core (>= 0.46.2, < 1.0.0)
       plist (~> 3.1.0)
       spaceship (>= 0.26.2, < 1.0.0)
-    domain_name (0.5.20160310)
+    domain_name (0.5.20160615)
       unf (>= 0.0.5, < 1.0.0)
     dotenv (2.1.1)
     escape (0.0.4)
@@ -124,25 +124,27 @@ GEM
       xcode-install (~> 1.4.0)
       xcodeproj (>= 0.20, < 2.0.0)
       xcpretty (>= 0.2.1)
-    fastlane_core (0.46.3)
+    fastlane_core (0.48.0)
       babosa
       colored
       commander (= 4.3.5)
       credentials_manager (>= 0.16.0, < 1.0.0)
       excon (~> 0.45.0)
+      gh_inspector (>= 1.0.1, < 2.0.0)
       highline (>= 1.7.2)
       json
       multi_json
       plist (~> 3.1)
       rubyzip (~> 1.1.6)
       terminal-table (~> 1.4.5)
-    fourflusher (0.3.1)
+    fourflusher (1.0.1)
     frameit (2.7.0)
       deliver (> 0.3)
       fastimage (~> 1.6.3)
       fastlane_core (>= 0.36.1, < 1.0.0)
       mini_magick (~> 4.5.1)
     fuzzy_match (2.0.4)
+    gh_inspector (1.0.2)
     google-api-client (0.9.9)
       addressable (~> 2.3)
       googleauth (~> 0.5)
@@ -204,14 +206,14 @@ GEM
     mime-types-data (3.2016.0521)
     mini_magick (4.5.1)
     minitest (5.9.0)
-    molinillo (0.4.5)
+    molinillo (0.5.0)
     multi_json (1.12.1)
     multi_xml (0.5.5)
     multipart-post (2.0.0)
     nap (1.1.0)
     net-sftp (2.1.2)
       net-ssh (>= 2.6.5)
-    net-ssh (3.1.1)
+    net-ssh (3.2.0)
     netrc (0.7.8)
     os (0.9.6)
     osx_keychain (1.0.1)
@@ -231,7 +233,7 @@ GEM
     representable (2.3.0)
       uber (~> 0.0.7)
     retriable (2.1.0)
-    rouge (1.11.0)
+    rouge (1.11.1)
     rubyzip (1.1.7)
     scan (0.8.0)
       fastlane_core (>= 0.36.1, < 1.0.0)
@@ -246,7 +248,7 @@ GEM
       fastlane_core (>= 0.36.1, < 1.0.0)
       plist (~> 3.1)
       spaceship (>= 0.22.0, < 1.0.0)
-    signet (0.7.2)
+    signet (0.7.3)
       addressable (~> 2.3)
       faraday (~> 0.9)
       jwt (~> 1.5)
