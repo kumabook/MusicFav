@@ -77,6 +77,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let playerPageViewController = PlayerPageViewController<PlayerViewController, MiniPlayerView>(player: player!)
         coverViewController          = CoverViewController(ceilingViewController: playerPageViewController,
             floorViewController: miniPlayerViewController!)
+        miniPlayerViewController?.hideMiniPlayer(false)
+        coverViewController?.hideCoverViewController(false)
         window?.rootViewController  = self.coverViewController
     }
 
@@ -231,10 +233,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
+    func showMiniPlayer() {
+        coverViewController?.showCoverViewController(true) {
+            self.miniPlayerViewController?.showMiniPlayer(false)
+        }
+    }
+
     // Player control functions
 
     func select(trackIndex: Int, playlist: MusicFeeder.Playlist, playlistQueue: PlaylistQueue) {
         setupAudioSession(UIApplication.sharedApplication())
+        showMiniPlayer()
         player?.select(trackIndex, playlist: playlist, playlistQueue: playlistQueue)
     }
 
@@ -242,7 +251,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         setupAudioSession(UIApplication.sharedApplication())
         player?.toggle()
     }
-    func play()  { setupAudioSession(UIApplication.sharedApplication()); player?.play() }
+    func play()  {
+        setupAudioSession(UIApplication.sharedApplication())
+        showMiniPlayer()
+        player?.play()
+    }
     func pause() { player?.pause() }
 
     func reloadExpiredTracks() {
