@@ -14,6 +14,9 @@ import MusicFeeder
 class YouTubeActivityTableViewController: TimelineTableViewController {
     let activityLoader: YouTubeActivityLoader!
     var playlist: YouTubePlaylist!
+    override func getPlaylistQueue() -> PlaylistQueue {
+        return activityLoader.playlistQueue
+    }
 
    init(activityLoader: YouTubeActivityLoader, playlist: YouTubePlaylist) {
         self.activityLoader = activityLoader

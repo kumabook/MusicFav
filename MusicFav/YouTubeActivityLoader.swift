@@ -35,6 +35,7 @@ class YouTubeActivityLoader {
 
     var itemsPageTokenOfPlaylist:  [YouTubePlaylist: String]
     var itemsDisposableOfPlaylist: [YouTubePlaylist: Disposable?]
+    var playlistQueue:             PlaylistQueue
     var channelsPageToken:         String?
     var channelsDisposable:        Disposable?
 
@@ -42,6 +43,7 @@ class YouTubeActivityLoader {
         channels                   = []
         itemsOfPlaylist            = [:]
         playlistsOfYouTubePlaylist = [:]
+        playlistQueue              = PlaylistQueue(playlists: [])
         self.state                 = .Init
         let pipe                   = Signal<Event, NSError>.pipe()
         signal                     = pipe.0
@@ -60,6 +62,7 @@ class YouTubeActivityLoader {
         channels                   = []
         itemsOfPlaylist            = [:]
         playlistsOfYouTubePlaylist = [:]
+        playlistQueue              = PlaylistQueue(playlists: [])
         state                      = .Normal
         channelsPageToken          = ""
         itemsPageTokenOfPlaylist   = [:]
@@ -135,6 +138,7 @@ class YouTubeActivityLoader {
                 let p = item.toPlaylist()
                 self.itemsOfPlaylist[playlist]?.append(item)
                 self.playlistsOfYouTubePlaylist[playlist]?.append(p)
+                self.playlistQueue.enqueue(p)
                 item.track.fetchPropertiesFromProvider(false)
                     .on(
                         next: { item in p.observer.sendNext(PlaylistEvent.Load(index: 0))},

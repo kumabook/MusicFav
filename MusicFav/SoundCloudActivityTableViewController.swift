@@ -30,6 +30,9 @@ class SoundCloudActivityTableViewController: TimelineTableViewController {
     }
 
     override var timelineTitle: String { return "SoundCloud" }
+    override func getPlaylistQueue() -> PlaylistQueue {
+        return activityLoader.playlistQueue
+    }
     override func getItems() -> [TimelineItem] {
         var items: [TimelineItem] = []
         for i in 0..<activityLoader.activities.count {

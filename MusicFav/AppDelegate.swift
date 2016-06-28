@@ -19,7 +19,7 @@ import PlayerKit
 import JASidePanels
 import SoundCloudKit
 
-typealias PlaylistQueue = PlayerKit.PlaylistQueue
+public typealias PlaylistQueue = PlayerKit.PlaylistQueue
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {

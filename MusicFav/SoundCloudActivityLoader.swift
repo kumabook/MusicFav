@@ -41,11 +41,12 @@ public class SoundCloudActivityLoader {
         case FailToLoadLatest
     }
 
-    public var activities: [Activity]
-    public var playlists:  [MusicFeeder.Playlist?]
-    public var state:      State
-    public var signal:     Signal<Event, NSError>
-    public var observer:   Signal<Event, NSError>.Observer
+    public var activities:    [Activity]
+    public var playlists:     [MusicFeeder.Playlist?]
+    public var playlistQueue: PlaylistQueue
+    public var state:         State
+    public var signal:        Signal<Event, NSError>
+    public var observer:      Signal<Event, NSError>.Observer
 
     var nextHref:   String? = ""
     var futureHref: String?
@@ -54,6 +55,7 @@ public class SoundCloudActivityLoader {
         state            = .Normal
         activities       = []
         playlists        = []
+        playlistQueue    = PlaylistQueue(playlists: [])
         let pipe         = Signal<Event, NSError>.pipe()
         signal           = pipe.0
         observer         = pipe.1
@@ -122,11 +124,12 @@ public class SoundCloudActivityLoader {
                 next: { activityList in
                     for i in 0..<activityList.collection.count {
                         let activity = activityList.collection[i]
-                        self.activities.append(activity)
-                        self.playlists.append(activity.toPlaylist())
                         self.fetchPlaylist(activity).on(
                             next: { playlist in
-                                self.playlists[i] = playlist.toPlaylist()
+                                self.activities.append(activity)
+                                self.playlists.append(playlist)
+                                self.playlistQueue.enqueue(playlist)
+                                self.observer.sendNext(.CompleteLoadingNext)
                                 return
                             }, failed: { e in
                             }, completed: {
@@ -150,12 +153,12 @@ public class SoundCloudActivityLoader {
             }).start()
     }
 
-    public func fetchPlaylist(activity: Activity) -> SignalProducer<SoundCloudKit.Playlist, NSError> {
+    public func fetchPlaylist(activity: Activity) -> SignalProducer<MusicFeeder.Playlist, NSError> {
         switch activity.origin {
         case .Playlist(let playlist):
-            return APIClient.sharedInstance.fetchPlaylist(playlist.id)
-        case .Track:
-            return SignalProducer.empty
+            return APIClient.sharedInstance.fetchPlaylist(playlist.id).map { $0.toPlaylist() }
+        case .Track(let track):
+            return SignalProducer(value: MusicFeeder.Playlist(id: "sc_track_\(track.id)", title: track.title, tracks: [track.toTrack()]))
         }
     }
 }
