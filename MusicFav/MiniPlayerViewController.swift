@@ -16,7 +16,7 @@ import MusicFeeder
 import PlayerKit
 import MarqueeLabel
 
-class MiniPlayerViewController: PlayerKit.MiniPlayerViewController<MiniPlayerView> {
+class MiniPlayerViewController: PlayerKit.MiniPlayerViewController<PlayerKit.MiniPlayerView> {
     var playlistTableViewController: PlaylistTableViewController!
     var streamTreeViewController:    StreamTreeViewController!
     var currentPlaylist:             MusicFeeder.Playlist? { get { return player?.currentPlaylist as? MusicFeeder.Playlist }}

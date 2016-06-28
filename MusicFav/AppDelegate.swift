@@ -44,8 +44,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             return miniPlayerViewController?.currentPlaylist
         }
     }
-    var playerPageViewController: PlayerPageViewController<PlayerViewController, SimpleMiniPlayerView>? {
-        get { return coverViewController?.ceilingViewController as? PlayerPageViewController<PlayerViewController, SimpleMiniPlayerView> }
+    var playerPageViewController: PlayerPageViewController<PlayerViewController, MiniPlayerView>? {
+        get { return coverViewController?.ceilingViewController as? PlayerPageViewController<PlayerViewController, MiniPlayerView> }
     }
     var mainViewController: JASidePanelController? { return miniPlayerViewController?.mainViewController as? JASidePanelController }
     var leftVisibleWidth:   CGFloat? { return mainViewController?.leftVisibleWidth }
@@ -74,7 +74,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         appearanceManager?.apply()
         window                       = UIWindow(frame: UIScreen.mainScreen().bounds)
         miniPlayerViewController     = MiniPlayerViewController(player: player!)
-        let playerPageViewController = PlayerPageViewController<PlayerViewController, SimpleMiniPlayerView>(player: player!)
+        let playerPageViewController = PlayerPageViewController<PlayerViewController, MiniPlayerView>(player: player!)
         coverViewController          = CoverViewController(ceilingViewController: playerPageViewController,
             floorViewController: miniPlayerViewController!)
         window?.rootViewController  = self.coverViewController
