@@ -21,6 +21,25 @@ import SoundCloudKit
 
 public typealias PlaylistQueue = PlayerKit.PlaylistQueue
 
+class AppPlayerObserver: PlayerObserver {
+    var appDelegate: AppDelegate { return UIApplication.sharedApplication().delegate as! AppDelegate }
+    internal override func listen(event: Event) {
+        guard let state = appDelegate.player?.currentState else { return }
+        switch event {
+        case .TrackSelected(let track, _, _):
+            if state == .Play {
+                HistoryStore.add(track as! MusicFeeder.Track)
+            }
+        case .StatusChanged:
+            guard let track = appDelegate.player?.currentTrack else { return }
+            if state == .Play {
+                HistoryStore.add(track as! MusicFeeder.Track)
+            }
+        default: break
+        }
+    }
+}
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     enum Event {
@@ -38,6 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var player:                   Player?
     var signal:                   Signal<AppDelegate.Event, NSError>?
     var observer:                 Signal<AppDelegate.Event, NSError>.Observer?
+    var playerObserver:           AppPlayerObserver = AppPlayerObserver()
     var selectedPlaylist:         MusicFeeder.Playlist?
     var playingPlaylist:          MusicFeeder.Playlist? {
         get {
@@ -72,6 +92,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         player                       = Player()
         appearanceManager            = AppearanceManager()
         appearanceManager?.apply()
+        player?.addObserver(playerObserver)
         window                       = UIWindow(frame: UIScreen.mainScreen().bounds)
         miniPlayerViewController     = MiniPlayerViewController(player: player!)
         let playerPageViewController = PlayerPageViewController<PlayerViewController, MiniPlayerView>(player: player!)
