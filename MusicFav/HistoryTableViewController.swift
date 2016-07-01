@@ -21,14 +21,16 @@ class HistoryTableViewController: StreamTimelineTableViewController {
         return historyLoader.histories.flatMap {
             switch $0.type {
             case .Entry:
-                let entry = $0.entry!
+                guard let entry = $0.entry else { return nil }
                 return TimelineItem.Entry(entry, historyLoader.playlistsOfHistory[$0])
             case .Track:
                 return TimelineItem.TrackHistory($0, historyLoader.playlistsOfHistory[$0])
             }
         }
     }
-
+    override func getPlaylistQueue() -> PlaylistQueue {
+        return historyLoader.playlistQueue
+    }
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
         if let timelineTableViewCell = cell as? TimelineTableViewCell {
