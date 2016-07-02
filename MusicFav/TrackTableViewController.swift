@@ -35,6 +35,7 @@ class TrackTableViewController: UITableViewController {
             case .NextPlaylistRequested:     break
             case .TimeUpdated:               break
             case .DidPlayToEndTime:          break
+            case .NextTrackAdded:            break
             }
         }
     }

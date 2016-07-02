@@ -141,7 +141,10 @@ class YouTubeActivityLoader {
                 self.playlistQueue.enqueue(p)
                 item.track.fetchPropertiesFromProvider(false)
                     .on(
-                        next: { item in p.observer.sendNext(PlaylistEvent.Load(index: 0))},
+                        next: { track in
+                            self.playlistQueue.trackUpdated(track)
+                            p.observer.sendNext(PlaylistEvent.Load(index: 0))
+                        },
                         failed: { error in },
                         completed: {}
                     ).start()

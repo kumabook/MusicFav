@@ -49,7 +49,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             case .NextPlaylistRequested:     break
             case .ErrorOccured:              break
             case .PlaylistChanged:           break
-
+            case .NextTrackAdded:            break
             }
         }
         func update() {

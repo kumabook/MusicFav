@@ -23,6 +23,7 @@ class ShortcutPlayerObserver: PlayerObserver {
         case .NextPlaylistRequested:     update()
         case .ErrorOccured:              update()
         case .PlaylistChanged:           update()
+        case .NextTrackAdded:            update()
         }
     }
     func update() {

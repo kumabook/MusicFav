@@ -46,6 +46,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
             case .NextPlaylistRequested:     vc.playPlaylist(vc.nextPlaylist())
             case .TimeUpdated:               break
             case .DidPlayToEndTime:          break
+            case .NextTrackAdded:            break
             }
         }
     }
