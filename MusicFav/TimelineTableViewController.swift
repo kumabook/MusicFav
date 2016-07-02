@@ -289,8 +289,8 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
     }
 
     func trackScrollViewMarginTouched(sender: TimelineTableViewCell, playlist: Playlist?) {
-        if let _playlist = playlist {
-            showPlaylist(_playlist)
+        if let playlist = playlist where playlist.validTracksCount > 0 {
+            showPlaylist(playlist)
         }
     }
 
