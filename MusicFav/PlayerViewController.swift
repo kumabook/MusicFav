@@ -11,6 +11,34 @@ import PlayerKit
 import MusicFeeder
 
 class PlayerViewController: PlayerKit.SimplePlayerViewController {
+    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    let buttonSize:    CGFloat = 40.0
+    let buttonPadding: CGFloat = 20.0
+    var likeButton: UIButton!
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+
+    override func initializeSubviews() {
+        super.initializeSubviews()
+        likeButton = UIButton(type: UIButtonType.System)
+        likeButton.tintColor = UIColor.whiteColor()
+        likeButton.setImage(UIImage(named: "like"), forState: UIControlState())
+        likeButton.addTarget(self, action: #selector(PlayerViewController.likeButtonTapped), forControlEvents: UIControlEvents.TouchUpInside)
+        view.addSubview(likeButton)
+    }
+
+    override func updateConstraints() {
+        super.updateConstraints()
+        likeButton.snp_makeConstraints { make in
+            make.left.equalTo(self.view.snp_left).offset(self.buttonPadding)
+            make.bottom.equalTo(self.view.snp_bottom).offset(-self.buttonPadding*1.5)
+            make.width.equalTo(self.buttonSize)
+            make.height.equalTo(self.buttonSize)
+        }
+    }
+
     func likeButtonTapped() {
         let app = UIApplication.sharedApplication().delegate as! AppDelegate
         if let track = app.player?.currentTrack as? MusicFeeder.Track{
@@ -37,6 +65,6 @@ class PlayerViewController: PlayerKit.SimplePlayerViewController {
             ptc.callback = nil
         }
         let nvc = UINavigationController(rootViewController: ptc)
-        presentViewController(nvc, animated: true, completion: nil)
+        appDelegate.window?.rootViewController?.presentViewController(nvc, animated: true, completion: nil)
     }
 }
