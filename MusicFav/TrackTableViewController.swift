@@ -26,7 +26,7 @@ class TrackTableViewController: UITableViewController {
             vc = viewController
             super.init()
         }
-        func notify(event: Event) {
+        override func listen(event: Event) {
             switch event {
             case .StatusChanged, .ErrorOccured, .PlaylistChanged: vc.updateSelection()
             case .TrackSelected:             vc.updateSelection()
@@ -56,6 +56,7 @@ class TrackTableViewController: UITableViewController {
         return .Favorite
     }
 
+    let playlistQueue = PlaylistQueue(playlists: [])
     var _playlist: Playlist!
     var playlistLoader: PlaylistLoader!
     var indicator:  UIActivityIndicatorView!
@@ -74,6 +75,7 @@ class TrackTableViewController: UITableViewController {
     init(playlist: Playlist) {
         self._playlist  = playlist
         playlistLoader = PlaylistLoader(playlist: playlist)
+        playlistQueue.enqueue(playlist)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -169,7 +171,7 @@ class TrackTableViewController: UITableViewController {
             appDelegate.player?.removeObserver(playerObserver)
         }
         playerObserver = TrackTableViewPlayerObserver(viewController: self)
-        appDelegate.player?.addObserver(playerObserver)
+        appDelegate.player?.addObserver(playerObserver as PlayerObserver)
         updateSelection()
     }
 
@@ -378,7 +380,6 @@ class TrackTableViewController: UITableViewController {
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let track = playlist.tracks[indexPath.item]
         if track.streamUrl != nil {
-            let playlistQueue = PlaylistQueue(playlists: [playlist as PlayerKitPlaylist])
             appDelegate.toggle(indexPath.item, playlist: playlist, playlistQueue: playlistQueue)
         } else {
             tableView.deselectRowAtIndexPath(indexPath, animated: true)

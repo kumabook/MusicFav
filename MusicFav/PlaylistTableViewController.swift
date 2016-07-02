@@ -35,7 +35,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             vc = playlistTableViewController
             super.init()
         }
-        func notify(event: Event) {
+        override func listen(event: Event) {
             switch event {
             case .TimeUpdated: break
             case .DidPlayToEndTime: break

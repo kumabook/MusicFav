@@ -19,17 +19,15 @@ class SoundCloudTrackTableViewController: TrackTableViewController {
         return .ThirdParty
     }
 
-    override var playlist: MusicFeeder.Playlist {
-        return Playlist(id: "soundcloud-favorites", title: "Favorites", tracks: tracks)
-    }
-
     override var tracks: [MusicFeeder.Track] {
         return sctracks.map { $0.toTrack() }
     }
 
     init(tracks: [SoundCloudKit.Track]) {
         sctracks = tracks
-        super.init(playlist: Playlist(id: "soundcloud-favorites", title: "Favorites", tracks: []))
+        super.init(playlist: Playlist(id: "soundcloud-favorites",
+                                   title: "Favorites",
+                                  tracks: sctracks.map { $0.toTrack() }))
     }
 
     override init(style: UITableViewStyle) {
