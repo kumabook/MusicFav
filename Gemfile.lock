@@ -22,7 +22,7 @@ GIT
 
 GIT
   remote: https://github.com/CocoaPods/Xcodeproj.git
-  revision: fb31bbbd7a31e011df5fde90e5b27c85114e99bb
+  revision: fe71b7d4a7ba2b285fa49476e30d289f2a80b206
   specs:
     xcodeproj (1.1.0)
       activesupport (>= 3)
@@ -43,11 +43,10 @@ GEM
     RubyInline (3.12.4)
       ZenTest (~> 4.3)
     ZenTest (4.11.1)
-    activesupport (4.2.6)
+    activesupport (5.0.0)
+      concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (~> 0.7)
-      json (~> 1.7, >= 1.7.7)
       minitest (~> 5.1)
-      thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     addressable (2.4.0)
     babosa (1.0.2)
@@ -72,6 +71,7 @@ GEM
     colored (1.2)
     commander (4.3.5)
       highline (~> 1.7.2)
+    concurrent-ruby (1.0.2)
     credentials_manager (0.16.0)
       colored
       commander (>= 4.3.5)
@@ -124,7 +124,7 @@ GEM
       xcode-install (~> 1.4.0)
       xcodeproj (>= 0.20, < 2.0.0)
       xcpretty (>= 0.2.1)
-    fastlane_core (0.48.0)
+    fastlane_core (0.48.1)
       babosa
       colored
       commander (= 4.3.5)
