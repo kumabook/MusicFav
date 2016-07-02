@@ -378,7 +378,7 @@ class TrackTableViewController: UITableViewController {
         let track = playlist.tracks[indexPath.item]
         if track.streamUrl != nil {
             let playlistQueue = PlaylistQueue(playlists: [playlist as PlayerKitPlaylist])
-            appDelegate.select(indexPath.item, playlist: playlist, playlistQueue: playlistQueue)
+            appDelegate.toggle(indexPath.item, playlist: playlist, playlistQueue: playlistQueue)
         } else {
             tableView.deselectRowAtIndexPath(indexPath, animated: true)
         }

@@ -271,7 +271,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
 
     func playPlaylist(playlist: PlayerKitPlaylist?) {
         if let p = playlist as? Playlist {
-            appDelegate.select(0, playlist: p, playlistQueue: getPlaylistQueue())
+            appDelegate.toggle(0, playlist: p, playlistQueue: getPlaylistQueue())
         }
     }
 
@@ -283,7 +283,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
     // MARK: - PlaylistStreamTableViewDelegate
 
     func trackSelected(sender: TimelineTableViewCell, index: Int, track: Track, playlist: Playlist) {
-        appDelegate.select(index, playlist: playlist, playlistQueue: getPlaylistQueue())
+        appDelegate.toggle(index, playlist: playlist, playlistQueue: getPlaylistQueue())
         tableView.reloadData()
     }
 
@@ -302,7 +302,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
                     return
                 }
             }
-            appDelegate.select(0, playlist: playlist, playlistQueue: getPlaylistQueue())
+            appDelegate.toggle(0, playlist: playlist, playlistQueue: getPlaylistQueue())
             tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
             showPlaylist(playlist)
         }

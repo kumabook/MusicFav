@@ -262,10 +262,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // Player control functions
 
-    func select(trackIndex: Int, playlist: MusicFeeder.Playlist, playlistQueue: PlaylistQueue) {
+    func toggle(trackIndex: Int, playlist: MusicFeeder.Playlist, playlistQueue: PlaylistQueue) {
         setupAudioSession(UIApplication.sharedApplication())
-        showMiniPlayer()
-        player?.select(trackIndex, playlist: playlist, playlistQueue: playlistQueue)
+        if player?.toggle(trackIndex, playlist: playlist, playlistQueue: playlistQueue) ?? false {
+            showMiniPlayer()
+        }
     }
 
     func toggle() {
@@ -274,8 +275,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     func play()  {
         setupAudioSession(UIApplication.sharedApplication())
-        showMiniPlayer()
-        player?.play()
+
+        if player?.play() ?? false {
+            showMiniPlayer()
+        }
     }
     func pause() { player?.pause() }
 
