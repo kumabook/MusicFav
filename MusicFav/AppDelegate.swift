@@ -93,6 +93,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         appearanceManager            = AppearanceManager()
         appearanceManager?.apply()
         player?.addObserver(playerObserver)
+        player?.addObserver(NowPlayingInfoCenter(player: player!))
         window                       = UIWindow(frame: UIScreen.mainScreen().bounds)
         miniPlayerViewController     = MiniPlayerViewController(player: player!)
         let playerPageViewController = PlayerPageViewController<PlayerViewController, MiniPlayerView>(player: player!)
