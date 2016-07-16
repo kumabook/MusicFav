@@ -66,6 +66,7 @@ class YouTubePlaylistItemTableViewController: TrackTableViewController {
             case .CompleteLoading:
                 self.hideIndicator()
                 self.tableView.reloadData()
+                self.playlistQueue.enqueue(self.playlist)
                 self.fetchTrackDetails()
             case .FailToLoad:
                 break
