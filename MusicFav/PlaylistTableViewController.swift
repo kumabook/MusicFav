@@ -10,6 +10,7 @@ import UIKit
 import ReactiveCocoa
 import MusicFeeder
 import SoundCloudKit
+import Breit
 
 class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     let NEW_PLAYLIST_INDEX = -1
@@ -96,12 +97,20 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
                                                target: self,
                                                action: #selector(PlaylistTableViewController.newPlaylist))
         newPlaylistButton.accessibilityLabel = AccessibilityLabel.NewPlaylistButton.s
-        navigationItem.rightBarButtonItems = [newPlaylistButton]
+        let reorderButton     = UIBarButtonItem(image: UIImage(named: "reorder"),
+                                                style: UIBarButtonItemStyle.Plain,
+                                               target: self,
+                                               action: #selector(PlaylistTableViewController.reorder))
+        navigationItem.rightBarButtonItems = [newPlaylistButton, reorderButton]
     }
 
     func newPlaylist() {
         Logger.sendUIActionEvent(self, action: "newPlaylist", label: "")
         showTitleEditAlertViewAtIndex(NEW_PLAYLIST_INDEX)
+    }
+
+    func reorder() {
+        tableView.setEditing(!tableView.editing, animated: true)
     }
 
     func showPlaylist(playlist: MusicFeeder.Playlist, animated: Bool) -> TrackTableViewController {
@@ -162,6 +171,9 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
                     self.updatePlaylist(playlist)
                 case .TrackUpdated(let playlist, _):
                     self.updatePlaylist(playlist)
+                case .SharedListUpdated:
+                    self.playlists = Playlist.shared.current
+                    self.tableView.reloadData()
                 }
                 return
             })
@@ -169,8 +181,12 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
 
     func createPlaylist(playlist: MusicFeeder.Playlist) {
         let section = Section.Favorites.rawValue
-        let indexPath = NSIndexPath(forItem: playlists.count, inSection: section)
-        playlists.append(playlist)
+        playlists = Playlist.shared.current
+        guard let index = playlists.indexOf(playlist) else {
+            tableView.reloadData()
+            return
+        }
+        let indexPath = NSIndexPath(forItem: index, inSection: section)
         tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
     }
 
@@ -302,7 +318,6 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             cell.thumbImageView.image = UIImage(named: "default_thumb")
             cell.trackNumLabel.text   = ""
         }
-
         return cell
     }
 
@@ -330,11 +345,33 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         return [edit, remove]
     }
 
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        return true
+    override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+        Playlist.movePlaylistInSharedList(sourceIndexPath.item, toIndex: destinationIndexPath.item)
+    }
+
+    override func tableView(tableView: UITableView, shouldIndentWhileEditingRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return false
+    }
+
+    override func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+        return tableView.editing ? UITableViewCellEditingStyle.None : UITableViewCellEditingStyle.Delete
     }
 
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    }
+
+    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        switch (Section(rawValue: indexPath.section)!) {
+        case .Playing:    return false
+        case .Selected:   return false
+        case .YouTube:    return false
+        case .SoundCloud: return false
+        case .Favorites:  return tableView.editing
+        }
+    }
+
+    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
     }
 
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
