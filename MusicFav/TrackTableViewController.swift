@@ -141,10 +141,16 @@ class TrackTableViewController: UITableViewController {
                                                         style: UIBarButtonItemStyle.Plain,
                                                        target: self,
                                                        action: #selector(TrackTableViewController.favPlaylist))
-
+        let reorderButton             = UIBarButtonItem(image: UIImage(named: "edit"),
+                                                        style: UIBarButtonItemStyle.Plain,
+                                                       target: self,
+                                                       action: #selector(TrackTableViewController.reorder))
         navigationItem.rightBarButtonItems  = [showFavListButton]
         if playlistType != .Playing {
             navigationItem.rightBarButtonItems?.append(favPlaylistButton)
+        }
+        if playlistType == .Favorite {
+            navigationItem.rightBarButtonItems?.append(reorderButton)
         }
     }
 
@@ -205,6 +211,7 @@ class TrackTableViewController: UITableViewController {
                 if self.playlist == playlist {
                     self.tableView.reloadData()
                 }
+            case .SharedListUpdated: break
             }
             return
         })
@@ -272,6 +279,10 @@ class TrackTableViewController: UITableViewController {
     func favPlaylist() {
         Logger.sendUIActionEvent(self, action: "favPlaylist", label: "")
         showSelectPlaylistViewController(playlist.getTracks())
+    }
+
+    func reorder() {
+        tableView.setEditing(!tableView.editing, animated: true)
     }
 
     func showSelectPlaylistViewController(tracks: [Track]) {
@@ -368,7 +379,23 @@ class TrackTableViewController: UITableViewController {
         }
     }
 
+    override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+        playlist.moveTrackAtIndex(sourceIndexPath.item, toIndex: destinationIndexPath.item)
+    }
+
+    override func tableView(tableView: UITableView, shouldIndentWhileEditingRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return false
+    }
+
+    override func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
+        return tableView.editing ? UITableViewCellEditingStyle.None : UITableViewCellEditingStyle.Delete
+    }
+
     override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+
+    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
         return true
     }
 
