@@ -75,7 +75,6 @@ class TrackTableViewController: UITableViewController {
     init(playlist: Playlist) {
         self._playlist  = playlist
         playlistLoader = PlaylistLoader(playlist: playlist)
-        playlistQueue.enqueue(playlist)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -106,6 +105,7 @@ class TrackTableViewController: UITableViewController {
         if playlistType == .Favorite && tracks.count == 0 {
             showGuideMessage()
         }
+        playlistQueue.enqueue(playlist)
     }
 
     override func viewDidAppear(animated: Bool) {

@@ -19,18 +19,11 @@ class YouTubePlaylistItemTableViewController: TrackTableViewController {
         return .ThirdParty
     }
 
-    override var playlist: Playlist {
-        return Playlist(id: youtubePlaylist.id, title: youtubePlaylist.title, tracks: tracks)
-    }
-
-    override var tracks: [Track] {
-        return self.youtubePlaylistLoader.itemsOfPlaylist[youtubePlaylist]?.map { $0.track } ?? []
-    }
-
     init(playlist: YouTubePlaylist, playlistLoader: YouTubePlaylistLoader) {
-        self.youtubePlaylist       = playlist
-        self.youtubePlaylistLoader = playlistLoader
+        youtubePlaylist       = playlist
+        youtubePlaylistLoader = playlistLoader
         super.init(playlist: Playlist(id: youtubePlaylist.id, title: youtubePlaylist.title, tracks: []))
+        updateTracks()
     }
 
     override init(style: UITableViewStyle) {
@@ -65,14 +58,20 @@ class YouTubePlaylistItemTableViewController: TrackTableViewController {
                 self.showIndicator()
             case .CompleteLoading:
                 self.hideIndicator()
-                self.tableView.reloadData()
+                self.updateTracks()
                 self.playlistQueue.enqueue(self.playlist)
+                self.tableView.reloadData()
                 self.fetchTrackDetails()
             case .FailToLoad:
                 break
             }
         })
         tableView.reloadData()
+    }
+
+    func updateTracks() {
+        let tracks = youtubePlaylistLoader.itemsOfPlaylist[youtubePlaylist]?.map { $0.track } ?? []
+        _playlist = Playlist(id: youtubePlaylist.id, title: youtubePlaylist.title, tracks: tracks)
     }
 
     override func fetchTracks() {
