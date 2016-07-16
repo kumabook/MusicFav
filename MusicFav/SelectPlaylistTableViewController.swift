@@ -72,6 +72,9 @@ class SelectPlaylistTableViewController: UITableViewController {
                     self.updatePlaylist(playlist)
                 case .TrackUpdated(let playlist, _):
                     self.updatePlaylist(playlist)
+                case .SharedListUpdated:
+                    self.playlists = Playlist.shared.current
+                    self.tableView.reloadData()
                 }
             })
     }
