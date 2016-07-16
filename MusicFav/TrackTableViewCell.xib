@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="8191" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10117" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <objects>
@@ -17,7 +17,6 @@
                 <subviews>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="00:00" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="auv-wj-H23">
                         <rect key="frame" x="243" y="53" width="60" height="18"/>
-                        <animations/>
                         <constraints>
                             <constraint firstAttribute="width" constant="60" id="0nI-Om-pDr"/>
                         </constraints>
@@ -27,7 +26,6 @@
                     </label>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="o7x-bG-Ftz">
                         <rect key="frame" x="-1" y="0.0" width="80" height="80"/>
-                        <animations/>
                         <constraints>
                             <constraint firstAttribute="height" constant="80" id="e35-fL-GrS"/>
                             <constraint firstAttribute="width" constant="80" id="p2K-ow-zbr"/>
@@ -35,26 +33,23 @@
                     </imageView>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="track name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="803-zp-w7a">
                         <rect key="frame" x="93" y="20" width="219" height="18"/>
-                        <animations/>
                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
-                <animations/>
                 <constraints>
+                    <constraint firstAttribute="trailingMargin" secondItem="803-zp-w7a" secondAttribute="trailing" id="70J-cL-lor"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="auv-wj-H23" secondAttribute="trailing" constant="9" id="L2S-nk-W5F"/>
                     <constraint firstItem="o7x-bG-Ftz" firstAttribute="leading" secondItem="fIr-kh-vB0" secondAttribute="leadingMargin" constant="-9" identifier="left_margin" id="WRw-WK-xxh"/>
                 </constraints>
             </tableViewCellContentView>
-            <animations/>
             <constraints>
                 <constraint firstAttribute="bottom" secondItem="auv-wj-H23" secondAttribute="bottom" constant="9" id="JNh-78-Mdj"/>
-                <constraint firstAttribute="trailing" secondItem="auv-wj-H23" secondAttribute="trailing" constant="17" id="LzU-3J-ldW"/>
                 <constraint firstAttribute="bottom" secondItem="o7x-bG-Ftz" secondAttribute="bottom" id="NEB-MW-1Yb"/>
                 <constraint firstItem="auv-wj-H23" firstAttribute="top" secondItem="803-zp-w7a" secondAttribute="bottom" constant="15" id="Tsy-hb-SiH"/>
                 <constraint firstItem="803-zp-w7a" firstAttribute="leading" secondItem="o7x-bG-Ftz" secondAttribute="trailing" constant="14" id="ZOT-rh-wHf"/>
                 <constraint firstItem="o7x-bG-Ftz" firstAttribute="top" secondItem="gTV-IL-0wX" secondAttribute="top" id="hHG-8t-ZYc"/>
-                <constraint firstAttribute="trailing" secondItem="803-zp-w7a" secondAttribute="trailing" constant="8" id="m98-jc-NKY"/>
             </constraints>
             <connections>
                 <outlet property="durationLabel" destination="auv-wj-H23" id="fx0-9y-Aa4"/>
