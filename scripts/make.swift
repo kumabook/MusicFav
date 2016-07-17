@@ -10,7 +10,7 @@ extension String {
     }
 }
 
-let version = "0.4.6"
+let version = "0.4.7"
 
 enum Task: String {
     case Config  = "config"
