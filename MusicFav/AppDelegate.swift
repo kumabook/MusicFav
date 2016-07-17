@@ -141,6 +141,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             GAIConfig.setup(path)
         }
         paymentManager = PaymentManager()
+        Playlist.sharedOrderBy = PlaylistStore.OrderBy.Number(.Asc)
         setupAPIClient()
         registerNSUserDefaults()
         if isFirstLaunch {
