@@ -29,6 +29,7 @@ class MiniPlayerViewController: PlayerKit.MiniPlayerViewController<PlayerKit.Min
     override init(player: Player) {
         super.init(player: player)
         let vc                      = JASidePanelController()
+        vc.shouldResizeRightPanel   = DeviceType.from(device: UIDevice.currentDevice()) == .iPad
         mainViewController          = vc
         playlistTableViewController = PlaylistTableViewController()
         streamTreeViewController    = StreamTreeViewController()
