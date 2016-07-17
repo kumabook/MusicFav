@@ -42,10 +42,8 @@ class StreamTableViewCell: UITableViewCell {
     }
 
     func updateView(feed feed: Feed) {
-        if let url = feed.thumbnailURL {
-            thumbImageView.sd_setImageWithURL(url, placeholderImage: UIImage(named: "default_thumb"))
-        }
-        titleLabel.text        = feed.title
+        thumbImageView.sd_setImageWithURL(feed.thumbnailURL, placeholderImage: UIImage(named: "default_thumb"))
+        titleLabel.text = feed.title
         if let desc = feed.description {
             subtitle1Label.text = desc
         } else {
