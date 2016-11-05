@@ -7,21 +7,21 @@
 //
 
 import Foundation
-import ReactiveCocoa
+import ReactiveSwift
 import Result
 
 class YouTubePlaylistLoader {
     enum State {
-        case Init
-        case Fetching
-        case Normal
-        case Error
+        case `init`
+        case fetching
+        case normal
+        case error
     }
 
     enum Event {
-        case StartLoading
-        case CompleteLoading
-        case FailToLoad
+        case startLoading
+        case completeLoading
+        case failToLoad
     }
 
     var playlists:       [YouTubePlaylist]
@@ -40,7 +40,7 @@ class YouTubePlaylistLoader {
     init() {
         playlists          = []
         itemsOfPlaylist    = [:]
-        self.state         = .Init
+        self.state         = .init
         let pipe           = Signal<Event, NSError>.pipe()
         signal             = pipe.0
         observer           = pipe.1
@@ -53,7 +53,7 @@ class YouTubePlaylistLoader {
         playlists          = []
         itemsOfPlaylist    = [:]
         playlistsPageToken = ""
-        state              = .Normal
+        state              = .normal
         playlistsDisposable?.dispose()
         itemsPageTokenOfPlaylist  = [:]
         itemsDisposableOfPlaylist = [:]
@@ -66,51 +66,51 @@ class YouTubePlaylistLoader {
     func fetchPlaylists() {
         if !needFetchPlaylists() { return }
         switch state {
-        case .Init:     playlistsDisposable = fetchNextPlaylists().start()
-        case .Fetching: break
-        case .Normal:   playlistsDisposable = fetchNextPlaylists().start()
-        case .Error:    playlistsDisposable = fetchNextPlaylists().start()
+        case .init:     playlistsDisposable = fetchNextPlaylists().start()
+        case .fetching: break
+        case .normal:   playlistsDisposable = fetchNextPlaylists().start()
+        case .error:    playlistsDisposable = fetchNextPlaylists().start()
         }
     }
 
-    func needFetchPlaylistItems(playlist: YouTubePlaylist) -> Bool {
+    func needFetchPlaylistItems(_ playlist: YouTubePlaylist) -> Bool {
         return itemsPageTokenOfPlaylist[playlist] != nil
     }
 
-    func fetchPlaylistItems(playlist: YouTubePlaylist) {
+    func fetchPlaylistItems(_ playlist: YouTubePlaylist) {
         if !needFetchPlaylistItems(playlist) { return }
         switch state {
-        case .Init:     playlistsDisposable = fetchNextPlaylistItems(playlist).start()
-        case .Fetching: break
-        case .Normal:   playlistsDisposable = fetchNextPlaylistItems(playlist).start()
-        case .Error:    playlistsDisposable = fetchNextPlaylistItems(playlist).start()
+        case .init:     playlistsDisposable = fetchNextPlaylistItems(playlist).start()
+        case .fetching: break
+        case .normal:   playlistsDisposable = fetchNextPlaylistItems(playlist).start()
+        case .error:    playlistsDisposable = fetchNextPlaylistItems(playlist).start()
         }
     }
 
-    private func fetchNextPlaylists() -> SignalProducer<Void, NSError> {
-        state = State.Fetching
-        observer.sendNext(.StartLoading)
+    fileprivate func fetchNextPlaylists() -> SignalProducer<Void, NSError> {
+        state = State.fetching
+        observer.send(value: .startLoading)
         return YouTubeAPIClient.sharedInstance.fetchPlaylists(playlistsPageToken).map {
-            self.playlists.appendContentsOf($0.items)
+            self.playlists.append(contentsOf: $0.items)
             self.playlistsPageToken = $0.nextPageToken
             for i in $0.items {
                 self.itemsOfPlaylist[i]          = []
                 self.itemsPageTokenOfPlaylist[i] = ""
             }
-            self.observer.sendNext(.CompleteLoading)
-            self.state = State.Normal
+            self.observer.send(value: .completeLoading)
+            self.state = State.normal
         }
     }
 
-    private func fetchNextPlaylistItems(playlist: YouTubePlaylist) -> SignalProducer<Void, NSError> {
-        state = State.Fetching
-        observer.sendNext(.StartLoading)
+    fileprivate func fetchNextPlaylistItems(_ playlist: YouTubePlaylist) -> SignalProducer<Void, NSError> {
+        state = State.fetching
+        observer.send(value: .startLoading)
         let pageToken = itemsPageTokenOfPlaylist[playlist]!
         return YouTubeAPIClient.sharedInstance.fetchPlaylistItems(playlist, pageToken: pageToken).map {
-            self.itemsOfPlaylist[playlist]?.appendContentsOf($0.items)
+            self.itemsOfPlaylist[playlist]?.append(contentsOf: $0.items)
             self.itemsPageTokenOfPlaylist[playlist] = $0.nextPageToken
-            self.observer.sendNext(.CompleteLoading)
-            self.state = State.Normal
+            self.observer.send(value: .completeLoading)
+            self.state = State.normal
         }
     }
 }

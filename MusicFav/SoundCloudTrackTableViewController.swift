@@ -9,14 +9,14 @@
 import UIKit
 import MusicFeeder
 import SoundCloudKit
-import ReactiveCocoa
+import ReactiveSwift
 
 class SoundCloudTrackTableViewController: TrackTableViewController {
     var observer: Disposable?
     var sctracks: [SoundCloudKit.Track]
 
     override var playlistType: PlaylistType {
-        return .ThirdParty
+        return .thirdParty
     }
 
     override var tracks: [MusicFeeder.Track] {

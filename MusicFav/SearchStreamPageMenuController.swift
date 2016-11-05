@@ -11,7 +11,7 @@ import PageMenu
 import MusicFeeder
 import FeedlyKit
 import MBProgressHUD
-import ReactiveCocoa
+import ReactiveSwift
 
 class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
          var searchBar:      UISearchBar!
@@ -20,19 +20,19 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
     weak var channelTableViewController: ChannelTableViewController?
     weak var userTableViewController:    SoundCloudUserTableViewController?
 
-    var streamListLoader: StreamListLoader
+    var streamRepository: StreamRepository
     var blogLoader:       BlogLoader
     var channelLoader:    ChannelLoader
 
-    init(streamListLoader: StreamListLoader, blogLoader: BlogLoader, channelLoader: ChannelLoader) {
-        self.streamListLoader = streamListLoader
+    init(streamRepository: StreamRepository, blogLoader: BlogLoader, channelLoader: ChannelLoader) {
+        self.streamRepository = streamRepository
         self.blogLoader       = blogLoader
         self.channelLoader    = channelLoader
         super.init(nibName: nil, bundle: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
-        streamListLoader = StreamListLoader()
+        streamRepository = StreamRepository()
         blogLoader       = BlogLoader()
         channelLoader    = ChannelLoader()
         super.init(coder: aDecoder)
@@ -40,27 +40,27 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.toolbar.translucent       = false
-        self.navigationController?.navigationBar.translucent = false
+        self.navigationController?.toolbar.isTranslucent       = false
+        self.navigationController?.navigationBar.isTranslucent = false
         navigationItem.leftBarButtonItem = UIBarButtonItem(title:"Back".localize(),
-                                                           style: UIBarButtonItemStyle.Plain,
+                                                           style: UIBarButtonItemStyle.plain,
                                                           target: self,
                                                           action: #selector(SearchStreamPageMenuController.back))
         navigationItem.rightBarButtonItem = UIBarButtonItem(title:"Add".localize(),
-                                                            style: UIBarButtonItemStyle.Plain,
+                                                            style: UIBarButtonItemStyle.plain,
                                                            target: self,
                                                            action: #selector(SearchStreamPageMenuController.add))
         searchBar                        = UISearchBar(frame: navigationController!.navigationBar.bounds)
         searchBar.placeholder            = "URL or keywords"
-        searchBar.autocapitalizationType = UITextAutocapitalizationType.None
-        searchBar.keyboardType           = UIKeyboardType.Default
+        searchBar.autocapitalizationType = UITextAutocapitalizationType.none
+        searchBar.keyboardType           = UIKeyboardType.default
         searchBar.delegate               = self
         navigationItem.titleView         = searchBar
         navigationItem.titleView?.frame  = searchBar.frame
         searchBar.becomeFirstResponder()
         Logger.sendUIActionEvent(self, action: "searchFeeds", label: "")
-        let feedlyStreamVC = StreamTableViewController(streamListLoader: streamListLoader, type: .Search(""))
-        let channelVC      = ChannelTableViewController(streamListLoader: streamListLoader, channelLoader: channelLoader, type: .Search(""))
+        let feedlyStreamVC = StreamTableViewController(streamRepository: streamRepository, type: .search(""))
+        let channelVC      = ChannelTableViewController(streamRepository: streamRepository, channelLoader: channelLoader, type: .search(""))
 //        let userVC         = SoundCloudUserTableViewController(streamListLoader: streamListLoader, userLoader: SoundCloudUserLoader(), type: .Search(""))
 
         channelLoader.searchResults = []
@@ -70,24 +70,24 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
 //        userVC.title         = "SoundCloud"
         let controllerArray: [UIViewController] = [feedlyStreamVC, channelVC]//, userVC]
         let parameters: [CAPSPageMenuOption] = [
-            .MenuItemSeparatorWidth(0.0),
-            .UseMenuLikeSegmentedControl(true),
-            .MenuItemSeparatorPercentageHeight(0.0),
-            .MenuHeight(24),
-            .ScrollMenuBackgroundColor(UIColor.whiteColor()),
-            .SelectionIndicatorColor(UIColor.theme),
-            .SelectedMenuItemLabelColor(UIColor.theme),
-            .UnselectedMenuItemLabelColor(UIColor.grayColor()),
-            .MenuItemSeparatorColor(UIColor.lightGray),
-            .BottomMenuHairlineColor(UIColor.lightGray),
-            .MenuItemFont(UIFont.boldSystemFontOfSize(14))
+            .menuItemSeparatorWidth(0.0),
+            .useMenuLikeSegmentedControl(true),
+            .menuItemSeparatorPercentageHeight(0.0),
+            .menuHeight(24),
+            .scrollMenuBackgroundColor(UIColor.white),
+            .selectionIndicatorColor(UIColor.theme),
+            .selectedMenuItemLabelColor(UIColor.theme),
+            .unselectedMenuItemLabelColor(UIColor.gray),
+            .menuItemSeparatorColor(UIColor.lightGray),
+            .bottomMenuHairlineColor(UIColor.lightGray),
+            .menuItemFont(UIFont.boldSystemFont(ofSize: 14))
         ]
         pageMenu = CAPSPageMenu(viewControllers: controllerArray,
             frame: view.frame,
             pageMenuOptions: parameters)
         view.addSubview(pageMenu.view)
         addChildViewController(pageMenu)
-        pageMenu.didMoveToParentViewController(self)
+        pageMenu.didMove(toParentViewController: self)
         super.viewDidLoad()
         updateAddButton()
         feedlyStreamViewController = feedlyStreamVC
@@ -99,50 +99,50 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
         super.didReceiveMemoryWarning()
     }
 
-    func getSubscribables() -> [Stream] {
-        var subscribables: [Stream] = []
-        subscribables.appendContentsOf(feedlyStreamViewController?.getSubscribables() ?? [] )
-        subscribables.appendContentsOf(channelTableViewController?.getSubscribables() ?? [] )
-        subscribables.appendContentsOf(userTableViewController?.getSubscribables() ?? [] )
+    func getSubscribables() -> [FeedlyKit.Stream] {
+        var subscribables: [FeedlyKit.Stream] = []
+        subscribables.append(contentsOf: feedlyStreamViewController?.getSubscribables() ?? [] )
+        subscribables.append(contentsOf: channelTableViewController?.getSubscribables() ?? [] )
+        subscribables.append(contentsOf: userTableViewController?.getSubscribables() ?? [] )
         return subscribables
     }
 
     func back() {
-        dismissViewControllerAnimated(true, completion: {})
+        dismiss(animated: true, completion: {})
     }
 
     func close() {
-        navigationController?.dismissViewControllerAnimated(true, completion: {})
-        navigationController?.presentingViewController?.dismissViewControllerAnimated(true, completion: {})
+        navigationController?.dismiss(animated: true, completion: {})
+        navigationController?.presentingViewController?.dismiss(animated: true, completion: {})
     }
 
     func add() {
-        let ctc = CategoryTableViewController(subscribables: getSubscribables(), streamListLoader: streamListLoader)
+        let ctc = CategoryTableViewController(subscribables: getSubscribables(), streamRepository: streamRepository)
         navigationController?.pushViewController(ctc, animated: true)
     }
 
     func updateAddButton() {
-        navigationItem.rightBarButtonItem?.enabled = getSubscribables().count > 0
+        navigationItem.rightBarButtonItem?.isEnabled = getSubscribables().count > 0
     }
 
     func needSearch() -> Bool {
         return searchBar.text != ""
     }
 
-    func searchFeeds(query: String) {
-        feedlyStreamViewController?.refresh(.Search(query))
-        channelTableViewController?.refresh(.Search(query))
-        userTableViewController?.refresh(.Search(query))
+    func searchFeeds(_ query: String) {
+        feedlyStreamViewController?.refresh(.search(query))
+        channelTableViewController?.refresh(.search(query))
+        userTableViewController?.refresh(.search(query))
         updateAddButton()
     }
 
     // MARK: - UISearchBar delegate
 
-    func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
+    func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchFeeds(searchBar.text!)
     }
 
-    func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         searchFeeds(searchBar.text!)
     }
 }

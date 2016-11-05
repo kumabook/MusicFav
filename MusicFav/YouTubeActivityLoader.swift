@@ -7,22 +7,22 @@
 //
 
 import Foundation
-import ReactiveCocoa
+import ReactiveSwift
 import Result
 import MusicFeeder
 
 class YouTubeActivityLoader {
     enum State {
-        case Init
-        case Fetching
-        case Normal
-        case Error
+        case `init`
+        case fetching
+        case normal
+        case error
     }
 
     enum Event {
-        case StartLoading
-        case CompleteLoading
-        case FailToLoad
+        case startLoading
+        case completeLoading
+        case failToLoad
     }
 
     var itemsOfPlaylist:            [YouTubePlaylist: [YouTubePlaylistItem]]
@@ -44,7 +44,7 @@ class YouTubeActivityLoader {
         itemsOfPlaylist            = [:]
         playlistsOfYouTubePlaylist = [:]
         playlistQueue              = PlaylistQueue(playlists: [])
-        self.state                 = .Init
+        self.state                 = .init
         let pipe                   = Signal<Event, NSError>.pipe()
         signal                     = pipe.0
         observer                   = pipe.1
@@ -63,13 +63,13 @@ class YouTubeActivityLoader {
         itemsOfPlaylist            = [:]
         playlistsOfYouTubePlaylist = [:]
         playlistQueue              = PlaylistQueue(playlists: [])
-        state                      = .Normal
+        state                      = .normal
         channelsPageToken          = ""
         itemsPageTokenOfPlaylist   = [:]
         itemsDisposableOfPlaylist  = [:]
     }
 
-    func clearPlaylist(playlist: YouTubePlaylist) {
+    func clearPlaylist(_ playlist: YouTubePlaylist) {
         itemsDisposableOfPlaylist[playlist]??.dispose()
         itemsDisposableOfPlaylist[playlist]  = nil
         itemsPageTokenOfPlaylist[playlist]   = ""
@@ -82,18 +82,18 @@ class YouTubeActivityLoader {
     func fetchChannels() {
         if !needFetchChannels() { return }
         switch state {
-        case .Init:     channelsDisposable = fetchNextChannels().start()
-        case .Fetching: break
-        case .Normal:   channelsDisposable = fetchNextChannels().start()
-        case .Error:    channelsDisposable = fetchNextChannels().start()
+        case .init:     channelsDisposable = fetchNextChannels().start()
+        case .fetching: break
+        case .normal:   channelsDisposable = fetchNextChannels().start()
+        case .error:    channelsDisposable = fetchNextChannels().start()
         }
     }
 
-    private func fetchNextChannels() -> SignalProducer<Void, NSError> {
-        state = State.Fetching
-        observer.sendNext(.StartLoading)
+    fileprivate func fetchNextChannels() -> SignalProducer<Void, NSError> {
+        state = State.fetching
+        observer.send(value: .startLoading)
         return YouTubeAPIClient.sharedInstance.fetchMyChannels(channelsPageToken).map {
-            self.channels.appendContentsOf($0.items)
+            self.channels.append(contentsOf: $0.items)
             self.channelsPageToken = $0.nextPageToken
             if self.channels.count > 0 {
                 for key in self.channels[0].relatedPlaylists.keys {
@@ -105,28 +105,28 @@ class YouTubeActivityLoader {
                     self.fetchNextPlaylistItems(playlist).start()
                 }
             }
-            self.observer.sendNext(.CompleteLoading)
-            self.state = State.Normal
+            self.observer.send(value: .completeLoading)
+            self.state = State.normal
         }
     }
 
-    func needFetchPlaylistItems(playlist: YouTubePlaylist) -> Bool {
+    func needFetchPlaylistItems(_ playlist: YouTubePlaylist) -> Bool {
         return itemsPageTokenOfPlaylist[playlist] != nil
     }
 
-    func fetchPlaylistItems(playlist: YouTubePlaylist) {
+    func fetchPlaylistItems(_ playlist: YouTubePlaylist) {
         if !needFetchPlaylistItems(playlist) { return }
         switch state {
-        case .Init:     itemsDisposableOfPlaylist[playlist] = fetchNextPlaylistItems(playlist).start()
-        case .Fetching: break
-        case .Normal:   itemsDisposableOfPlaylist[playlist] = fetchNextPlaylistItems(playlist).start()
-        case .Error:    itemsDisposableOfPlaylist[playlist] = fetchNextPlaylistItems(playlist).start()
+        case .init:     itemsDisposableOfPlaylist[playlist] = fetchNextPlaylistItems(playlist).start()
+        case .fetching: break
+        case .normal:   itemsDisposableOfPlaylist[playlist] = fetchNextPlaylistItems(playlist).start()
+        case .error:    itemsDisposableOfPlaylist[playlist] = fetchNextPlaylistItems(playlist).start()
         }
     }
 
-    private func fetchNextPlaylistItems(playlist: YouTubePlaylist) -> SignalProducer<Void, NSError> {
-        state = State.Fetching
-        observer.sendNext(.StartLoading)
+    fileprivate func fetchNextPlaylistItems(_ playlist: YouTubePlaylist) -> SignalProducer<Void, NSError> {
+        state = State.fetching
+        observer.send(value: .startLoading)
         let pageToken = itemsPageTokenOfPlaylist[playlist]
         return YouTubeAPIClient.sharedInstance.fetchPlaylistItems(playlist.id, pageToken: pageToken).map {
             if self.itemsPageTokenOfPlaylist[playlist] == "" {
@@ -139,18 +139,18 @@ class YouTubeActivityLoader {
                 self.itemsOfPlaylist[playlist]?.append(item)
                 self.playlistsOfYouTubePlaylist[playlist]?.append(p)
                 self.playlistQueue.enqueue(p)
-                item.track.fetchPropertiesFromProvider(false)
+                item.track.fetchPropertiesFromProviderIfNeed()
                     .on(
-                        next: { track in
+                        value: { track in
                             self.playlistQueue.trackUpdated(track)
-                            p.observer.sendNext(PlaylistEvent.Load(index: 0))
+                            p.observer.send(value: PlaylistEvent.load(index: 0))
                         },
                         failed: { error in },
                         completed: {}
                     ).start()
             }
-            self.observer.sendNext(.CompleteLoading)
-            self.state = State.Normal
+            self.observer.send(value: .completeLoading)
+            self.state = State.normal
         }
     }
 }

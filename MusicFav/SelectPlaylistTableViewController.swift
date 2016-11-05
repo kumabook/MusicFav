@@ -15,28 +15,28 @@ class SelectPlaylistTableViewController: UITableViewController {
     var playlists: [Playlist] = []
     var callback: ((Playlist?) -> Void)?
 
-    var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as! AppDelegate }}
+    var appDelegate: AppDelegate { get { return UIApplication.shared.delegate as! AppDelegate }}
 
     override func viewDidLoad() {
         super.viewDidLoad()
         clearsSelectionOnViewWillAppear = true
         let nib = UINib(nibName: "SelectPlaylistTableViewCell", bundle: nil)
-        tableView?.registerNib(nib, forCellReuseIdentifier:self.tableCellReuseIdentifier)
+        tableView?.register(nib, forCellReuseIdentifier:self.tableCellReuseIdentifier)
         observePlaylists()
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         Logger.sendScreenView(self)
         updateNavbar()
     }
 
     func updateNavbar() {
         let closeButton = UIBarButtonItem(title: "Cancel".localize(),
-                                          style: UIBarButtonItemStyle.Plain,
+                                          style: UIBarButtonItemStyle.plain,
                                          target: self,
                                          action: #selector(SelectPlaylistTableViewController.close))
         let newPlaylistButton = UIBarButtonItem(image: UIImage(named: "add_stream"),
-                                                style: UIBarButtonItemStyle.Plain,
+                                                style: UIBarButtonItemStyle.plain,
                                                target: self,
                                                action: #selector(SelectPlaylistTableViewController.newPlaylist))
         navigationItem.rightBarButtonItems = [newPlaylistButton]
@@ -51,40 +51,41 @@ class SelectPlaylistTableViewController: UITableViewController {
     func observePlaylists() {
         playlists = Playlist.shared.current
         tableView.reloadData()
-        Playlist.shared.signal.observeNext({ event in
-                let section = 0
-                switch event {
-                case .Created(let playlist):
-                    let indexPath = NSIndexPath(forItem: self.playlists.count, inSection: section)
-                    self.playlists.append(playlist)
-                    self.tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                case .Updated(let playlist):
-                    self.updatePlaylist(playlist)
-                case .Removed(let playlist):
-                    if let index = self.playlists.indexOf(playlist) {
-                        self.playlists.removeAtIndex(index)
-                        let indexPath = NSIndexPath(forItem: index, inSection: section)
-                        self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-                    }
-                case .TracksAdded(let playlist, _):
-                    self.updatePlaylist(playlist)
-                case .TrackRemoved(let playlist, _, _):
-                    self.updatePlaylist(playlist)
-                case .TrackUpdated(let playlist, _):
-                    self.updatePlaylist(playlist)
-                case .SharedListUpdated:
-                    self.playlists = Playlist.shared.current
-                    self.tableView.reloadData()
+        Playlist.shared.signal.observeResult({ result in
+            guard let event = result.value else { return }
+            let section = 0
+            switch event {
+            case .created(let playlist):
+                let indexPath = IndexPath(item: self.playlists.count, section: section)
+                self.playlists.append(playlist)
+                self.tableView.insertRows(at: [indexPath], with: .fade)
+            case .updated(let playlist):
+                self.updatePlaylist(playlist)
+            case .removed(let playlist):
+                if let index = self.playlists.index(of: playlist) {
+                    self.playlists.remove(at: index)
+                    let indexPath = IndexPath(item: index, section: section)
+                    self.tableView.deleteRows(at: [indexPath], with: .fade)
                 }
-            })
+            case .tracksAdded(let playlist, _):
+                self.updatePlaylist(playlist)
+            case .trackRemoved(let playlist, _, _):
+                self.updatePlaylist(playlist)
+            case .trackUpdated(let playlist, _):
+                self.updatePlaylist(playlist)
+            case .sharedListUpdated:
+                self.playlists = Playlist.shared.current
+                self.tableView.reloadData()
+            }
+        })
     }
 
-    func updatePlaylist(playlist: Playlist) {
+    func updatePlaylist(_ playlist: Playlist) {
         let section = 0
-        if let index = self.playlists.indexOf(playlist) {
-            let indexPath = NSIndexPath(forItem: index, inSection: section)
+        if let index = self.playlists.index(of: playlist) {
+            let indexPath = IndexPath(item: index, section: section)
             self.playlists[index] = playlist
-            self.tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            self.tableView.reloadRows(at: [indexPath], with: .fade)
         }
     }
 
@@ -92,12 +93,12 @@ class SelectPlaylistTableViewController: UITableViewController {
         appDelegate.miniPlayerViewController?.playlistTableViewController.newPlaylist()
     }
 
-    func editPlaylist(index: Int) {
+    func editPlaylist(_ index: Int) {
         appDelegate.miniPlayerViewController?.playlistTableViewController.showTitleEditAlertViewAtIndex(index)
     }
 
     func close() {
-        navigationController?.dismissViewControllerAnimated(true, completion: {
+        navigationController?.dismiss(animated: true, completion: {
             if let callback = self.callback {
                 callback(nil)
             }
@@ -106,42 +107,42 @@ class SelectPlaylistTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return playlists.count
     }
 
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.cellHeight
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(self.tableCellReuseIdentifier, forIndexPath: indexPath) as! SelectPlaylistTableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: self.tableCellReuseIdentifier, for: indexPath) as! SelectPlaylistTableViewCell
         let playlist = playlists[indexPath.item]
         cell.titleLabel.text    = playlist.title
         cell.trackNumLabel.text = "\(playlist.tracks.count) tracks"
-        cell.thumbImageView.sd_setImageWithURL(playlist.thumbnailUrl)
+        cell.thumbImageView.sd_setImage(with: playlist.thumbnailUrl)
         return cell
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        navigationController?.dismissViewControllerAnimated(true, completion: { () -> Void in
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        navigationController?.dismiss(animated: true, completion: { () -> Void in
             if let callback = self.callback {
                 callback(self.playlists[indexPath.item])
             }
         })
     }
 
-    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        let edit = UITableViewRowAction(style: .Default, title: "Edit title".localize()) {
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let edit = UITableViewRowAction(style: .default, title: "Edit title".localize()) {
             (action, indexPath) in
             self.editPlaylist(indexPath.item)
         }
         edit.backgroundColor = UIColor.green
-        let remove = UITableViewRowAction(style: .Default, title: "Remove".localize()) {
+        let remove = UITableViewRowAction(style: .default, title: "Remove".localize()) {
             (action, indexPath) in
             self.playlists[indexPath.item].remove()
         }
@@ -149,7 +150,7 @@ class SelectPlaylistTableViewController: UITableViewController {
         return [edit, remove]
     }
 
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
 }

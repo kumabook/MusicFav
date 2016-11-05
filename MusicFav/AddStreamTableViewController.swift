@@ -17,68 +17,68 @@ class AddStreamTableViewController: UITableViewController {
     let cellHeight:        CGFloat = 100
     let accessoryWidth:    CGFloat = 30
     var isLoggedIn: Bool { return CloudAPIClient.account != nil }
-    let streamListLoader: StreamListLoader!
-    init(streamListLoader: StreamListLoader) {
-        self.streamListLoader = streamListLoader
+    let streamRepository: StreamRepository!
+    init(streamRepository: StreamRepository) {
+        self.streamRepository = streamRepository
         super.init(nibName: nil, bundle: nil)
     }
     required init(coder aDecoder: NSCoder) {
-        streamListLoader = StreamListLoader()
+        streamRepository = StreamRepository()
         super.init(nibName: nil, bundle: nil)
     }
 
     deinit {}
 
-    func getSubscribables() -> [Stream] {
+    func getSubscribables() -> [FeedlyKit.Stream] {
         return [] // should be overrided in subclass
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.rightBarButtonItem = UIBarButtonItem(title:"Add".localize(),
-                                                            style: UIBarButtonItemStyle.Plain,
+                                                            style: UIBarButtonItemStyle.plain,
                                                            target: self,
                                                            action: #selector(AddStreamTableViewController.add))
-        navigationItem.rightBarButtonItem?.enabled = false
+        navigationItem.rightBarButtonItem?.isEnabled = false
         tableView.allowsMultipleSelection = true
     }
 
-    func reloadData(keepSelection keepSelection: Bool) {
+    func reloadData(_ keepSelection: Bool) {
         if keepSelection, let indexes = tableView.indexPathsForSelectedRows {
             tableView.reloadData()
             for index in indexes {
-                tableView.selectRowAtIndexPath(index, animated: false, scrollPosition: UITableViewScrollPosition.None)
+                tableView.selectRow(at: index, animated: false, scrollPosition: UITableViewScrollPosition.none)
             }
         } else {
             tableView.reloadData()
         }
     }
 
-    func isSelected(indexPath indexPath: NSIndexPath) -> Bool {
+    func isSelected(_ indexPath: IndexPath) -> Bool {
         if let indexPaths = tableView.indexPathsForSelectedRows {
-            return indexPaths.contains({ $0 == indexPath})
+            return indexPaths.contains(where: { $0 == indexPath})
         }
         return false
     }
 
     func updateAddButton() {
         if let count = tableView.indexPathsForSelectedRows?.count {
-            navigationItem.rightBarButtonItem?.enabled = count > 0
+            navigationItem.rightBarButtonItem?.isEnabled = count > 0
         } else {
-            navigationItem.rightBarButtonItem?.enabled = false
+            navigationItem.rightBarButtonItem?.isEnabled = false
         }
-        if let p = parentViewController as? CAPSPageMenu, pp = p.parentViewController as? SearchStreamPageMenuController {
+        if let p = parent as? CAPSPageMenu, let pp = p.parent as? SearchStreamPageMenuController {
             pp.updateAddButton()
         }
     }
 
-    func setAccessoryView(cell: UITableViewCell, indexPath: NSIndexPath) {
-        if isSelected(indexPath: indexPath) {
+    func setAccessoryView(_ cell: UITableViewCell, indexPath: IndexPath) {
+        if isSelected(indexPath) {
             var image             = UIImage(named: "checkmark")
-            image                 = image!.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+            image                 = image!.withRenderingMode(UIImageRenderingMode.alwaysTemplate)
             let imageView         = UIImageView(image: image)
             imageView.frame       = CGRect(x: 0, y: 0, width: accessoryWidth, height: cellHeight)
-            imageView.contentMode = UIViewContentMode.ScaleAspectFit
+            imageView.contentMode = UIViewContentMode.scaleAspectFit
             imageView.tintColor   = UIColor.theme
             cell.accessoryView    = imageView
         } else {
@@ -86,28 +86,28 @@ class AddStreamTableViewController: UITableViewController {
         }
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let cell = tableView.cellForRow(at: indexPath) {
             setAccessoryView(cell, indexPath: indexPath)
         }
         updateAddButton()
     }
 
-    override func tableView(tableView: UITableView, didDeselectRowAtIndexPath indexPath: NSIndexPath) {
-        if let cell = tableView.cellForRowAtIndexPath(indexPath) {
+    override func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
+        if let cell = tableView.cellForRow(at: indexPath) {
             setAccessoryView(cell, indexPath: indexPath)
         }
         updateAddButton()
     }
 
     func close() {
-        self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
+        self.navigationController?.dismiss(animated: true, completion: nil)
     }
 
     func add() {
-        let subscribables: [Stream] = getSubscribables()
+        let subscribables: [FeedlyKit.Stream] = getSubscribables()
         Logger.sendUIActionEvent(self, action: "add", label: "")
-        let ctc = CategoryTableViewController(subscribables: subscribables, streamListLoader: streamListLoader)
+        let ctc = CategoryTableViewController(subscribables: subscribables, streamRepository: streamRepository)
         navigationController?.pushViewController(ctc, animated: true)
     }
 }

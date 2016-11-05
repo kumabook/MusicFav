@@ -9,7 +9,7 @@
 import Foundation
 import SwiftyJSON
 
-public class GAIConfig {
+open class GAIConfig {
     enum LogLevel: String {
         case None    = "none"
         case Error   = "error"
@@ -18,36 +18,36 @@ public class GAIConfig {
         case Verbose = "verbose"
         var gaiLogLevel: GAILogLevel {
             switch self {
-            case None:    return GAILogLevel.None
-            case Error:   return GAILogLevel.Error
-            case Warning: return GAILogLevel.Warning
-            case Info:    return GAILogLevel.Info
-            case Verbose: return GAILogLevel.Verbose
+            case .None:    return GAILogLevel.none
+            case .Error:   return GAILogLevel.error
+            case .Warning: return GAILogLevel.warning
+            case .Info:    return GAILogLevel.info
+            case .Verbose: return GAILogLevel.verbose
             }
         }
     }
-    public class func setup(filePath: String) {
+    open class func setup(_ filePath: String) {
         let gai                     = GAI.sharedInstance()
-        let data                    = NSData(contentsOfFile: filePath)
-        let jsonObject: AnyObject?  = try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
+        let data                    = try? Data(contentsOf: URL(fileURLWithPath: filePath))
+        let jsonObject: AnyObject?  = try! JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as AnyObject?
         let json                    = JSON(jsonObject!)
         
         if let trackerId = json["tracker_id"].string {
-            if trackerId.rangeOfString("UA-", options: NSStringCompareOptions(), range: nil, locale: NSLocale.autoupdatingCurrentLocale()) == nil {
+            if trackerId.range(of: "UA-") == nil {
                 return
             } else {
-                gai.trackerWithTrackingId(trackerId)
+                let _ = gai?.tracker(withTrackingId: trackerId)
             }
         }
 
-        gai.trackUncaughtExceptions = true;
+        gai?.trackUncaughtExceptions = true;
         if let dispatchInterval = json["dispatch_inverval"].int {
-            gai.dispatchInterval = NSTimeInterval(dispatchInterval)
+            gai?.dispatchInterval = TimeInterval(dispatchInterval)
         }
         if let level = LogLevel(rawValue: json["log_level"].stringValue) {
-            gai.logger.logLevel = level.gaiLogLevel
+            gai?.logger.logLevel = level.gaiLogLevel
         } else {
-            gai.logger.logLevel = .Verbose
+            gai?.logger.logLevel = .verbose
         }
     }
 }

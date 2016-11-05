@@ -12,79 +12,79 @@ import FeedlyKit
 import SoundCloudKit
 
 enum TimelineItem {
-    case Entry(FeedlyKit.Entry, MusicFeeder.Playlist?)
-    case Activity(SoundCloudKit.Activity, MusicFeeder.Playlist?)
-    case YouTubePlaylist(YouTubePlaylistItem, MusicFeeder.Playlist?)
-    case TrackHistory(MusicFeeder.History, MusicFeeder.Playlist?)
+    case entry(FeedlyKit.Entry, MusicFeeder.Playlist?)
+    case activity(SoundCloudKit.Activity, MusicFeeder.Playlist?)
+    case youTubePlaylist(YouTubePlaylistItem, MusicFeeder.Playlist?)
+    case trackHistory(MusicFeeder.History, MusicFeeder.Playlist?)
 
     var entry: FeedlyKit.Entry? {
         switch self {
-        case .Entry(let entry, _): return entry
-        case .Activity(_, _):      return nil
-        case .YouTubePlaylist(_):  return nil
-        case .TrackHistory(_):     return nil
+        case .entry(let entry, _): return entry
+        case .activity(_, _):      return nil
+        case .youTubePlaylist(_):  return nil
+        case .trackHistory(_):     return nil
         }
     }
 
     var playlist: MusicFeeder.Playlist? {
         switch self {
-        case .Entry(_, let playlist):           return playlist
-        case .Activity(_, let playlist):        return playlist
-        case .YouTubePlaylist(_, let playlist): return playlist
-        case .TrackHistory(_, let playlist):    return playlist
+        case .entry(_, let playlist):           return playlist
+        case .activity(_, let playlist):        return playlist
+        case .youTubePlaylist(_, let playlist): return playlist
+        case .trackHistory(_, let playlist):    return playlist
         }
     }
 
     var title: String? {
         switch self {
-        case .Entry(let entry, let playlist):
+        case .entry(let entry, let playlist):
             return entry.title ?? playlist?.title
-        case .Activity(let activity, let playlist):
+        case .activity(let activity, let playlist):
             switch activity.origin {
-            case .Playlist:         return playlist?.title ?? ""
-            case .Track(let track): return track.title
+            case .playlist:         return playlist?.title ?? ""
+            case .track(let track): return track.title
             }
-        case .YouTubePlaylist(let playlistItem, _): return playlistItem.title
-        case .TrackHistory(_, let playlist): return playlist?.title
+        case .youTubePlaylist(let playlistItem, _): return playlistItem.title
+        case .trackHistory(_, let playlist): return playlist?.title
         }
     }
-    var thumbnailURL: NSURL?  {
+    var thumbnailURL: URL?  {
         switch self {
-        case .Entry(let entry, let playlist):
+        case .entry(let entry, let playlist):
             return entry.thumbnailURL ?? playlist?.thumbnailUrl
-        case .Activity(let activity, _):
+        case .activity(let activity, _):
             switch activity.origin {
-            case .Playlist(let playlist): return playlist.thumbnailURL
-            case .Track(let track):       return track.thumbnailURL
+            case .playlist(let playlist): return playlist.thumbnailURL
+            case .track(let track):       return track.thumbnailURL
             }
-        case .YouTubePlaylist(let playlistItem, _): return playlistItem.thumbnailURL
-        case .TrackHistory(_, let playlist): return playlist?.thumbnailUrl
+        case .youTubePlaylist(let playlistItem, _): return playlistItem.thumbnailURL
+        case .trackHistory(_, let playlist): return playlist?.thumbnailUrl
         }
     }
     var description:  String? {
         switch self {
-        case .Entry(let entry, _):
+        case .entry(let entry, _):
             return entry.origin?.title
-        case .Activity(let activity, _):
+        case .activity(let activity, _):
             switch activity.origin {
-            case .Playlist(let playlist): return playlist.user.username
-            case .Track(let track):       return track.user.username
+            case .playlist(let playlist): return playlist.user.username
+            case .track(let track):       return track.user.username
             }
-        case .YouTubePlaylist(let playlistItem, _):
+        case .youTubePlaylist(let playlistItem, _):
             return playlistItem.description
-        case .TrackHistory(_, _): return nil
+        case .trackHistory(_, _): return nil
         }
     }
 
     var dateString:   String? {
         switch self {
-        case .Entry(let entry, _):
+        case .entry(let entry, _):
             return entry.passedTime
-        case .Activity(let activity, _):
+        case .activity(let activity, _):
             return activity.createdAt.toDate()!.elapsedTime
-        case .YouTubePlaylist(let playlistItem, _):
+        case .youTubePlaylist(let playlistItem, _):
             return playlistItem.publishedAt?.toDate()?.elapsedTime
-        case .TrackHistory(let history, _): return history.timestamp.date.passedTime
+        case .trackHistory(let history, _): return history.timestamp.date.passedTime
         }
     }
 
@@ -98,16 +98,16 @@ enum TimelineItem {
 
     var trackCount:   Int? {
         switch self {
-        case .Entry(_, let playlist):
+        case .entry(_, let playlist):
             return playlist?.tracks.count
-        case .Activity(let activity, let playlist):
+        case .activity(let activity, let playlist):
             switch activity.origin {
-            case .Playlist: return playlist?.tracks.count
-            case .Track:    return 1
+            case .playlist: return playlist?.tracks.count
+            case .track:    return 1
             }
-        case .YouTubePlaylist:
+        case .youTubePlaylist:
             return 1
-        case .TrackHistory(_, _): return 1
+        case .trackHistory(_, _): return 1
         }
     }
 }

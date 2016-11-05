@@ -11,10 +11,10 @@ import PlayerKit
 import MusicFeeder
 
 class HistoryManager: PlayerObserver {
-    func notify(event: Event) {
+    func notify(_ event: Event) {
         switch event {
-        case .TrackSelected(let track, _, _):
-            HistoryStore.add(track as! MusicFeeder.Track)
+        case .trackSelected(let track, _, _):
+            let _  = HistoryStore.add(track as! MusicFeeder.Track)
         default: break
         }
     }

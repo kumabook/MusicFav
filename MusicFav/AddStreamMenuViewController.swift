@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import MusicFeeder
 import FeedlyKit
 import SoundCloudKit
@@ -18,40 +18,40 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
     let accessoryWidth:    CGFloat = 30
     let SEARCH_BAR_HEIGHT: CGFloat = 40
     enum Menu: Int {
-        case Recommend
-        case YouTube
-        case Hypem
-        case SoundCloud
+        case recommend
+        case youTube
+        case hypem
+        case soundCloud
         static let count = 3
         var title: String? {
             switch self {
-            case .Recommend:
+            case .recommend:
                 return "MusicFav Recommend".localize()
-            case .YouTube:
+            case .youTube:
                 return "YouTube"
-            case .SoundCloud:
+            case .soundCloud:
                 return "SoundCloud"
-            case .Hypem:
+            case .hypem:
                 return "Hype machine featured".localize()
             }
         }
-        func thumbnailUrls(vc: AddStreamMenuViewController) -> [NSURL] {
+        func thumbnailUrls(_ vc: AddStreamMenuViewController) -> [URL] {
             switch self {
-            case .Recommend:
+            case .recommend:
                 return vc.recommendFeeds.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
-            case .YouTube:
+            case .youTube:
                 if YouTubeAPIClient.isLoggedIn {
                     return vc.channelLoader.subscriptions.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
                 } else {
                     return vc.channelLoader.searchResults.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
                 }
-            case .SoundCloud:
+            case .soundCloud:
                 if SoundCloudKit.APIClient.isLoggedIn {
                     return vc.userLoader.followings.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
                 } else {
                     return vc.userLoader.searchResults.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
                 }
-            case .Hypem:
+            case .hypem:
                 return vc.blogLoader.blogs.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
             }
         }
@@ -60,7 +60,7 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
     var indicator: UIActivityIndicatorView!
     var searchBar: UISearchBar!
 
-    var streamListLoader: StreamListLoader!
+    var streamRepository: StreamRepository!
     var recommendFeeds:   [Feed]
     let blogLoader:       BlogLoader
     var blogObserver:     Disposable?
@@ -69,8 +69,8 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
     var userLoader:       SoundCloudUserLoader!
     var userObserver:     Disposable?
 
-    init(streamListLoader: StreamListLoader) {
-        self.streamListLoader = streamListLoader
+    init(streamRepository: StreamRepository) {
+        self.streamRepository = streamRepository
         self.blogLoader       = BlogLoader()
         self.channelLoader    = ChannelLoader()
         self.userLoader       = SoundCloudUserLoader()
@@ -79,7 +79,7 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
     }
 
     required init(coder aDecoder: NSCoder) {
-        streamListLoader = StreamListLoader()
+        streamRepository = StreamRepository()
         blogLoader       = BlogLoader()
         channelLoader    = ChannelLoader()
         recommendFeeds   = []
@@ -88,13 +88,13 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView?.registerNib(UINib(nibName: "AddStreamMenuTableViewCell", bundle: nil) , forCellReuseIdentifier: reuseIdentifier)
+        tableView?.register(UINib(nibName: "AddStreamMenuTableViewCell", bundle: nil) , forCellReuseIdentifier: reuseIdentifier)
         navigationItem.leftBarButtonItem = UIBarButtonItem(title:"Close".localize(),
-                                                           style: UIBarButtonItemStyle.Plain,
+                                                           style: UIBarButtonItemStyle.plain,
                                                           target: self,
                                                           action: #selector(AddStreamMenuViewController.close))
-        navigationItem.rightBarButtonItem?.enabled = false
-        searchBar                 = UISearchBar(frame:CGRectMake(0, 0, view.bounds.size.width, SEARCH_BAR_HEIGHT))
+        navigationItem.rightBarButtonItem?.isEnabled = false
+        searchBar                 = UISearchBar(frame:CGRect(x: 0, y: 0, width: view.bounds.size.width, height: SEARCH_BAR_HEIGHT))
         searchBar.placeholder     = "URL or Keyword".localize()
         searchBar.delegate        = self
         tableView.tableHeaderView = searchBar
@@ -121,12 +121,12 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
         super.didReceiveMemoryWarning()
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         tableView.reloadData()
     }
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         blogObserver?.dispose()
         channelObserver?.dispose()
@@ -134,12 +134,12 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
     }
 
     func close() {
-        dismissViewControllerAnimated(true, completion: {})
+        dismiss(animated: true, completion: {})
     }
 
     func fetchRecommendFeeds() {
-        CloudAPIClient.sharedInstance.fetchFeedsByIds(RecommendFeed.ids).on(
-            next: { feeds in
+        CloudAPIClient.sharedInstance.fetchFeedsByIds(feedIds: RecommendFeed.ids).on(
+            value: { feeds in
                 self.recommendFeeds = feeds
             }, failed: { error in
             }, completed: {
@@ -149,35 +149,38 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
 
     func observeBlogLoader() {
         blogObserver?.dispose()
-        blogObserver = blogLoader.signal.observeNext({ event in
+        blogObserver = blogLoader.signal.observeResult({ result in
+            guard let event = result.value else { return }
             switch event {
-            case .StartLoading:    break
-            case .CompleteLoading: self.tableView?.reloadData()
-            case .FailToLoad:      break
+            case .startLoading:    break
+            case .completeLoading: self.tableView?.reloadData()
+            case .failToLoad:      break
             }
         })
     }
 
     func observeChannelLoader() {
         channelObserver?.dispose()
-        channelObserver = channelLoader.signal.observeNext({ event in
+        channelObserver = channelLoader.signal.observeResult({ result in
+            guard let event = result.value else { return }
             switch event {
-            case .StartLoading: break
-            case .CompleteLoading:
+            case .startLoading: break
+            case .completeLoading:
                 self.tableView.reloadData()
-            case .FailToLoad: break
+            case .failToLoad: break
             }
         })
     }
 
     func observeUserLoader() {
         userObserver?.dispose()
-        userObserver = userLoader.signal.observeNext({ event in
+        userObserver = userLoader.signal.observeResult({ result in
+            guard let event = result.value else { return }
             switch event {
-            case .StartLoading: break
-            case .CompleteLoading:
+            case .startLoading: break
+            case .completeLoading:
                 self.tableView.reloadData()
-            case .FailToLoad: break
+            case .failToLoad: break
             }
         })
     }
@@ -188,27 +191,27 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
 
     // MARK: - UISearchBarDelegate
 
-    func searchBarShouldBeginEditing(searchBar: UISearchBar) -> Bool {
-        let vc = SearchStreamPageMenuController(streamListLoader: streamListLoader,
+    func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
+        let vc = SearchStreamPageMenuController(streamRepository: streamRepository,
                                                       blogLoader: blogLoader,
                                                    channelLoader: channelLoader)
-        vc.modalTransitionStyle = UIModalTransitionStyle.FlipHorizontal
-        presentViewController(UINavigationController(rootViewController: vc), animated: true, completion: {})
+        vc.modalTransitionStyle = UIModalTransitionStyle.flipHorizontal
+        present(UINavigationController(rootViewController: vc), animated: true, completion: {})
         return false
     }
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return Menu.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath: indexPath) as! AddStreamMenuTableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for: indexPath) as! AddStreamMenuTableViewCell
         if let menu = Menu(rawValue: indexPath.item) {
             cell.nameLabel?.text = menu.title!
             cell.setThumbnailImages(menu.thumbnailUrls(self))
@@ -216,39 +219,39 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
         return cell
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if let menu = Menu(rawValue: indexPath.item) {
             switch menu {
-            case .Recommend:
-                let vc = StreamTableViewController(streamListLoader: streamListLoader,
-                                                               type: .Recommend(recommendFeeds))
+            case .recommend:
+                let vc = StreamTableViewController(streamRepository: streamRepository,
+                                                               type: .recommend(recommendFeeds))
                 navigationController?.pushViewController(vc, animated: true)
-            case .YouTube:
-                let vc = ChannelCategoryTableViewController(streamListLoader: streamListLoader, channelLoader: channelLoader)
+            case .youTube:
+                let vc = ChannelCategoryTableViewController(streamRepository: streamRepository, channelLoader: channelLoader)
                 navigationController?.pushViewController(vc, animated: true)
                 vc.showYouTubeLoginViewController()
-            case .SoundCloud:
+            case .soundCloud:
                 if SoundCloudKit.APIClient.isLoggedIn {
-                    let vc = SoundCloudUserTableViewController(streamListLoader: streamListLoader,
+                    let vc = SoundCloudUserTableViewController(streamRepository: streamRepository,
                                                                      userLoader: SoundCloudUserLoader(),
-                                                                           type: .Followings)
+                                                                           type: .followings)
                     navigationController?.pushViewController(vc, animated: true)
                 } else {
-                    let vc = SoundCloudUserTableViewController(streamListLoader: streamListLoader,
+                    let vc = SoundCloudUserTableViewController(streamRepository: streamRepository,
                                                                      userLoader: SoundCloudUserLoader(),
-                                                                           type: .Search("rock"))
+                                                                           type: .search("rock"))
                     navigationController?.pushViewController(vc, animated: true)
                     vc.showSoundCloudLoginViewController()
                 }
-            case .Hypem:
-                let vc = StreamTableViewController(streamListLoader: streamListLoader,
-                                                               type: .Hypem(blogLoader))
+            case .hypem:
+                let vc = StreamTableViewController(streamRepository: streamRepository,
+                                                               type: .hypem(blogLoader))
                 navigationController?.pushViewController(vc, animated: true)
             }
         }
     }
 
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return cellHeight
     }
 }

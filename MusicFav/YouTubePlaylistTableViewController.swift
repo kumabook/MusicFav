@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 
 class YouTubePlaylistTableViewController: UITableViewController {
     let tableCellReuseIdentifier = "playlistTableViewCell"
@@ -31,8 +31,8 @@ class YouTubePlaylistTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let nib = UINib(nibName: "PlaylistTableViewCell", bundle: nil)
-        tableView?.registerNib(nib, forCellReuseIdentifier: tableCellReuseIdentifier)
-        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        tableView?.register(nib, forCellReuseIdentifier: tableCellReuseIdentifier)
+        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
         indicator.bounds = CGRect(x: 0,
                                   y: 0,
                               width: indicator.bounds.width,
@@ -48,12 +48,12 @@ class YouTubePlaylistTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         observePlaylistLoader()
     }
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         observer?.dispose()
         observer = nil
@@ -61,14 +61,14 @@ class YouTubePlaylistTableViewController: UITableViewController {
 
     func updateNavbar() {
         let showFavListButton = UIBarButtonItem(image: UIImage(named: "fav_list"),
-                                                style: UIBarButtonItemStyle.Plain,
+                                                style: UIBarButtonItemStyle.plain,
                                                target: self,
                                                action: #selector(YouTubePlaylistTableViewController.showFavoritePlaylist))
         navigationItem.rightBarButtonItems = [showFavListButton]
     }
 
     func showFavoritePlaylist() {
-        navigationController?.popToRootViewControllerAnimated(true)
+        let _ = navigationController?.popToRootViewController(animated: true)
     }
 
     func showIndicator() {
@@ -83,16 +83,17 @@ class YouTubePlaylistTableViewController: UITableViewController {
 
     func observePlaylistLoader() {
         observer?.dispose()
-        observer = playlistLoader.signal.observeNext({ event in
+        observer = playlistLoader.signal.observeResult({ result in
+            guard let event = result.value else { return }
             switch event {
-            case .StartLoading:
-                if self.playlistLoader.state == .Fetching {
+            case .startLoading:
+                if self.playlistLoader.state == .fetching {
                     self.showIndicator()
                 }
-            case .CompleteLoading:
+            case .completeLoading:
                 self.hideIndicator()
                 self.tableView.reloadData()
-            case .FailToLoad:
+            case .failToLoad:
                 break
             }
         })
@@ -101,31 +102,31 @@ class YouTubePlaylistTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return playlistLoader.playlists.count
     }
 
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.cellHeight
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(self.tableCellReuseIdentifier, forIndexPath: indexPath) as! PlaylistTableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: self.tableCellReuseIdentifier, for: indexPath) as! PlaylistTableViewCell
         let playlist = playlistLoader.playlists[indexPath.item]
         cell.titleLabel.text    = playlist.title
         cell.trackNumLabel.text = playlist.description
         if let items = playlistLoader.itemsOfPlaylist[playlist] {
             if items.count > 0 { cell.trackNumLabel.text = "\(items.count) tracks" }
         }
-        cell.thumbImageView.sd_setImageWithURL(playlist.thumbnailURL, placeholderImage: UIImage(named: "default_thumb"))
+        cell.thumbImageView.sd_setImage(with: playlist.thumbnailURL, placeholderImage: UIImage(named: "default_thumb"))
         return cell
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         observer?.dispose()
         observer = nil
         let playlist = playlistLoader.playlists[indexPath.item]

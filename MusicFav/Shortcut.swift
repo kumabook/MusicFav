@@ -12,40 +12,40 @@ import MusicFeeder
 import PlayerKit
 
 class ShortcutPlayerObserver: PlayerObserver {
-    override func listen(event: PlayerEvent) {
+    override func listen(_ event: PlayerEvent) {
         switch event {
-        case .TimeUpdated:               break
-        case .DidPlayToEndTime:          break
-        case .StatusChanged:             break
-        case .TrackSelected:             update()
-        case .TrackUnselected:           update()
-        case .PreviousPlaylistRequested: update()
-        case .NextPlaylistRequested:     update()
-        case .ErrorOccured:              update()
-        case .PlaylistChanged:           update()
-        case .NextTrackAdded:            update()
+        case .timeUpdated:               break
+        case .didPlayToEndTime:          break
+        case .statusChanged:             break
+        case .trackSelected:             update()
+        case .trackUnselected:           update()
+        case .previousPlaylistRequested: update()
+        case .nextPlaylistRequested:     update()
+        case .errorOccured:              update()
+        case .playlistChanged:           update()
+        case .nextTrackAdded:            update()
         }
     }
     func update() {
-        Shortcut.updateShortcutItems(UIApplication.sharedApplication())
+        Shortcut.updateShortcutItems(UIApplication.shared)
     }
 }
 
 enum Shortcut: String {
     static let delaySec = 1.0
-    static let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    static let appDelegate = UIApplication.shared.delegate as! AppDelegate
     case Play     = "Play"
     case Pause    = "Pause"
     case Playlist = "Playlist"
     case Favorite = "Favorite"
 
     init?(fullType: String) {
-        guard let last = fullType.componentsSeparatedByString(".").last else { return nil }
+        guard let last = fullType.components(separatedBy: ".").last else { return nil }
         self.init(rawValue: last)
     }
 
     var type: String {
-        return NSBundle.mainBundle().bundleIdentifier! + ".\(self.rawValue)"
+        return Bundle.main.bundleIdentifier! + ".\(self.rawValue)"
     }
 
     var title: String {
@@ -83,8 +83,8 @@ enum Shortcut: String {
     @available(iOS 9.0, *)
     var icon: UIApplicationShortcutIcon {
         switch self {
-        case .Play:     return UIApplicationShortcutIcon(type: .Play)
-        case .Pause:    return UIApplicationShortcutIcon(type: .Pause)
+        case .Play:     return UIApplicationShortcutIcon(type: .play)
+        case .Pause:    return UIApplicationShortcutIcon(type: .pause)
         case .Playlist: return UIApplicationShortcutIcon(templateImageName: "playlist")
         case .Favorite: return UIApplicationShortcutIcon(templateImageName: "fav_playlist")
         }
@@ -101,7 +101,7 @@ enum Shortcut: String {
 
     @available(iOS 9.0, *)
     var currentItem: UIApplicationShortcutItem? {
-        for shortcut in UIApplication.sharedApplication().shortcutItems ?? [] where shortcut.type == type {
+        for shortcut in UIApplication.shared.shortcutItems ?? [] where shortcut.type == type {
             return shortcut
         }
         return nil
@@ -121,7 +121,7 @@ enum Shortcut: String {
             let vc = app.miniPlayerViewController
             if let playlist = app.playingPlaylist {
                 app.mainViewController?.showRightPanelAnimated(true) {
-                    vc?.playlistTableViewController.showPlaylist(playlist, animated: false)
+                    let _ = vc?.playlistTableViewController.showPlaylist(playlist, animated: false)
                     return
                 }
             } else {
@@ -130,7 +130,7 @@ enum Shortcut: String {
             return true
         case .Favorite:
             let vc = app.miniPlayerViewController
-            if let track = app.player?.currentTrack, playlist = app.playingPlaylist {
+            if let track = app.player?.currentTrack, let playlist = app.playingPlaylist {
                 app.mainViewController?.showRightPanelAnimated(false) {
                     if let tvc = vc?.playlistTableViewController.showPlaylist(playlist, animated: false) {
                         tvc.showSelectPlaylistViewController([track as! MusicFeeder.Track])
@@ -143,13 +143,13 @@ enum Shortcut: String {
         }
     }
 
-    static func updateShortcutItems(application: UIApplication) {
+    static func updateShortcutItems(_ application: UIApplication) {
         if #available(iOS 9.0, *) {
             application.shortcutItems = [Shortcut.Play.item, Shortcut.Pause.item, Shortcut.Playlist.item, Shortcut.Favorite.item]
         }
     }
 
-    static func observePlayer(player: Player) {
+    static func observePlayer(_ player: Player) {
         let observer = ShortcutPlayerObserver()
         appDelegate.player?.addObserver(observer)
     }

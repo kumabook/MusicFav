@@ -11,30 +11,30 @@ import JASidePanels
 
 extension JASidePanelController {
     func prepare() {
-        view.backgroundColor = UIColor.whiteColor()
+        view.backgroundColor = UIColor.white
         allowLeftSwipe       = true
         allowRightSwipe      = true
 
-        switch UIDevice.currentDevice().userInterfaceIdiom {
-        case .Phone:
+        switch UIDevice.current.userInterfaceIdiom {
+        case .phone:
             leftGapPercentage    = 0.8
             rightGapPercentage   = 0.8
-        case .Pad:
+        case .pad:
             leftGapPercentage    = 0.4
             rightGapPercentage   = 0.4
-        case .Unspecified:
+        case .unspecified:
             leftGapPercentage    = 0.8
             rightGapPercentage   = 0.8
-        case .TV:
+        case .tv:
             leftGapPercentage    = 0.8
             rightGapPercentage   = 0.8
         default:
             break
         }
     }
-    func showRightPanelAnimated(animated: Bool, completion: () -> Void) {
-        showRightPanelAnimated(true)
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.3 * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTime, dispatch_get_main_queue(), completion)
+    func showRightPanelAnimated(_ animated: Bool, completion: @escaping () -> Void) {
+        showRightPanel(animated: true)
+        let delayTime = DispatchTime.now() + Double(Int64(0.3 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+        DispatchQueue.main.asyncAfter(deadline: delayTime, execute: completion)
     }
 }

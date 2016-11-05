@@ -11,13 +11,13 @@ import SwiftyJSON
 import FeedlyKit
 import MusicFeeder
 
-public class GuideCategory: Hashable, Equatable {
-    public let etag:      String
-    public let id:        String
-    public let kind:      String
-    public let channelId: String!
-    public let title:     String!
-    public var hashValue: Int { return id.hashValue }
+open class GuideCategory: Hashable, Equatable {
+    open let etag:      String
+    open let id:        String
+    open let kind:      String
+    open let channelId: String!
+    open let title:     String!
+    open var hashValue: Int { return id.hashValue }
 
     public init(json: JSON) {
         etag = json["etag"].stringValue
@@ -43,18 +43,18 @@ protocol YouTubeResource {
     init(json: JSON)
 }
 
-public class ChannelResource: Stream {
-    public override var streamTitle: String { return title }
-    public override var streamId:    String { return "feed/https://www.youtube.com/feeds/videos.xml?channel_id=\(id)" }
-    public let etag:        String
-    public let id:          String
-    public let kind:        String
-    public let title:       String!
-    public let description: String!
-    public let publishedAt: String?
-    public let thumbnails: [String:String]
-    public let resourceId: [String:String]
-    public static func resourceId(snippet: [String: JSON]) -> [String:String] {
+open class ChannelResource: FeedlyKit.Stream {
+    open override var streamTitle: String { return title }
+    open override var streamId:    String { return "feed/https://www.youtube.com/feeds/videos.xml?channel_id=\(id)" }
+    open let etag:        String
+    open let id:          String
+    open let kind:        String
+    open let title:       String!
+    open let description: String!
+    open let publishedAt: String?
+    open let thumbnails: [String:String]
+    open let resourceId: [String:String]
+    open static func resourceId(_ snippet: [String: JSON]) -> [String:String] {
         var resId: [String:String] = [:]
         if let r = snippet["resourceId"]?.dictionary {
             for key in r.keys {
@@ -63,7 +63,7 @@ public class ChannelResource: Stream {
         }
         return resId
     }
-    public static func thumbnails(snippet: [String: JSON]) -> [String:String] {
+    open static func thumbnails(_ snippet: [String: JSON]) -> [String:String] {
         var thumbs: [String:String] = [:]
         if let d = snippet["thumbnails"]?.dictionary {
             for k in d.keys {
@@ -102,17 +102,17 @@ public class ChannelResource: Stream {
             self.resourceId  = resourceId
             super.init()
     }
-    public override var thumbnailURL: NSURL? {
-             if let url = thumbnails["default"] { return NSURL(string: url) }
-        else if let url = thumbnails["medium"]  { return NSURL(string: url) }
-        else if let url = thumbnails["high"]    { return NSURL(string: url) }
+    open override var thumbnailURL: URL? {
+             if let url = thumbnails["default"] { return URL(string: url) }
+        else if let url = thumbnails["medium"]  { return URL(string: url) }
+        else if let url = thumbnails["high"]    { return URL(string: url) }
         else                                    { return nil }
     }
 }
 
-public class Channel: ChannelResource, YouTubeResource {
-    public class var url: String { return "https://www.googleapis.com/youtube/v3/channels" }
-    public class var params: [String:String] { return [:] }
+open class Channel: ChannelResource, YouTubeResource {
+    open class var url: String { return "https://www.googleapis.com/youtube/v3/channels" }
+    open class var params: [String:String] { return [:] }
 
     public convenience init(subscription: YouTubeSubscription) {
         self.init(etag: subscription.etag,
@@ -126,12 +126,12 @@ public class Channel: ChannelResource, YouTubeResource {
     }
 }
 
-public class YouTubeSubscription: ChannelResource, YouTubeResource {
-    public class var url: String { return "https://www.googleapis.com/youtube/v3/subscriptions" }
-    public class var params: [String:String] { return ["mine": "true"] }
+open class YouTubeSubscription: ChannelResource, YouTubeResource {
+    open class var url: String { return "https://www.googleapis.com/youtube/v3/subscriptions" }
+    open class var params: [String:String] { return ["mine": "true"] }
 }
 
-public class MyChannel: Channel {
+open class MyChannel: Channel {
     var relatedPlaylists: [String: String]
 
     public required init(json: JSON) {

@@ -13,14 +13,14 @@ import MusicFeeder
 import FeedlyKit
 
 enum ListenItLaterResult {
-    case Success(Entry)
-    case AlreadyExists(Entry)
-    case Error
+    case success(Entry)
+    case alreadyExists(Entry)
+    case error
     var message: String {
         switch self {
-        case .Success(_):       return "Saved!".localize()
-        case .AlreadyExists(_): return "Saved!".localize()
-        case .Error(_):         return "Sorry, something wrong".localize()
+        case .success(_):       return "Saved!".localize()
+        case .alreadyExists(_): return "Saved!".localize()
+        case .error(_):         return "Sorry, something wrong".localize()
         }
     }
 }
@@ -42,8 +42,8 @@ class ListenItLaterViewController: UIViewController {
         super.didReceiveMemoryWarning()
     }
 
-    override func beginRequestWithExtensionContext(context: NSExtensionContext) {
-        super.beginRequestWithExtensionContext(context)
+    override func beginRequest(with context: NSExtensionContext) {
+        super.beginRequest(with: context)
     }
 
     func setupRealm() {
@@ -52,21 +52,21 @@ class ListenItLaterViewController: UIViewController {
     }
 
     func listenItLater() {
-        let fail = { self.notifyResult(ListenItLaterResult.Error) }
-        messageView.hidden = true
+        let fail = { self.notifyResult(ListenItLaterResult.error) }
+        messageView.isHidden = true
         self.extensionContext!.inputItems.forEach { inputItem in
-            inputItem.attachments.flatMap({ $0 })?.forEach { _itemProvider in
+            (inputItem as AnyObject).attachments.flatMap({ $0 })?.forEach { _itemProvider in
                 guard  let itemProvider = _itemProvider as? NSItemProvider                 else { fail(); return }
                 if itemProvider.hasItemConformingToTypeIdentifier(kUTTypeURL as String) {
-                    itemProvider.loadItemForTypeIdentifier(kUTTypeURL as String, options: nil) { (value, error) in
-                        guard let url = value as? NSURL else { fail(); return }
+                    itemProvider.loadItem(forTypeIdentifier: kUTTypeURL as String, options: nil) { (value, error) in
+                        guard let url = value as? URL else { fail(); return }
                         self.notifyResult(self.saveEntry(url: url.absoluteString, title: url.absoluteString))
                     }
                 } else if itemProvider.hasItemConformingToTypeIdentifier(kUTTypePropertyList as String) {
-                    itemProvider.loadItemForTypeIdentifier(kUTTypePropertyList as String, options: nil) { (item, error) in
+                    itemProvider.loadItem(forTypeIdentifier: kUTTypePropertyList as String, options: nil) { (item, error) in
                         guard let results: NSDictionary = item as? NSDictionary                                else { fail(); return }
                         guard let dic = results[NSExtensionJavaScriptPreprocessingResultsKey] as? NSDictionary else { fail(); return }
-                        guard let url = dic["url"] as? String, title = dic["title"] as? String                 else { fail(); return }
+                        guard let url = dic["url"] as? String, let title = dic["title"] as? String                 else { fail(); return }
                         self.notifyResult(self.saveEntry(url: url, title: title))
                     }
                 } else {
@@ -76,36 +76,36 @@ class ListenItLaterViewController: UIViewController {
         }
     }
     
-    func saveEntry(url url: String, title: String) -> ListenItLaterResult {
+    func saveEntry(url: String, title: String) -> ListenItLaterResult {
         let entry       = Entry(id: url)
         entry.title     = title
-        entry.crawled   = NSDate().timestamp
-        entry.recrawled = NSDate().timestamp
-        entry.published = NSDate().timestamp
+        entry.crawled   = Date().timestamp
+        entry.recrawled = Date().timestamp
+        entry.published = Date().timestamp
         entry.alternate = [Link(href: url, type: "text/html", length: 0)]
         
         if ListenItLaterEntryStore.create(entry) {
-            return ListenItLaterResult.Success(entry)
+            return ListenItLaterResult.success(entry)
         } else {
-            return ListenItLaterResult.AlreadyExists(entry)
+            return ListenItLaterResult.alreadyExists(entry)
         }
     }
 
-    func notifyResult(result: ListenItLaterResult) {
-        let queue = dispatch_get_main_queue()
-        dispatch_async(queue) {
-            self.messageView.hidden = false
+    func notifyResult(_ result: ListenItLaterResult) {
+        let queue = DispatchQueue.main
+        queue.async {
+            self.messageView.isHidden = false
             self.messabeLabel.text  = result.message
         }
-        let startTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delaySec * Double(NSEC_PER_SEC)))
-        dispatch_after(startTime, queue) {
+        let startTime = DispatchTime.now() + Double(Int64(delaySec * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+        queue.asyncAfter(deadline: startTime) {
             switch result {
-            case .Success(_):
-                self.extensionContext?.completeRequestReturningItems([], completionHandler: nil)
-            case .AlreadyExists(_):
-                self.extensionContext?.completeRequestReturningItems([], completionHandler: nil)
-            case .Error:
-                self.extensionContext?.completeRequestReturningItems([], completionHandler: nil)
+            case .success(_):
+                self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
+            case .alreadyExists(_):
+                self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
+            case .error:
+                self.extensionContext?.completeRequest(returningItems: [], completionHandler: nil)
             }
         }
     }

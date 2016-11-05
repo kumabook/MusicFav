@@ -9,14 +9,14 @@
 import UIKit
 
 enum UIUserInterfaceIdiom {
-    case Unspecified
-    case Phone
-    case Pad
+    case unspecified
+    case phone
+    case pad
 }
 
 struct ScreenSize {
-    static let SCREEN_WIDTH      = UIScreen.mainScreen().bounds.size.width
-    static let SCREEN_HEIGHT     = UIScreen.mainScreen().bounds.size.height
+    static let SCREEN_WIDTH      = UIScreen.main.bounds.size.width
+    static let SCREEN_HEIGHT     = UIScreen.main.bounds.size.height
     static let SCREEN_MAX_LENGTH = max(SCREEN_WIDTH, SCREEN_HEIGHT)
     static let SCREEN_MIN_LENGTH = min(SCREEN_WIDTH, SCREEN_HEIGHT)
 }
@@ -27,10 +27,10 @@ enum DeviceType {
     case iPhone6
     case iPhone6Plus
     case iPad
-    case Unknown
-    static func from(device device: UIDevice) -> DeviceType {
+    case unknown
+    static func from(_ device: UIDevice) -> DeviceType {
         switch device.userInterfaceIdiom {
-        case .Phone:
+        case .phone:
             if ScreenSize.SCREEN_MAX_LENGTH < 568.0 {
                 return iPhone4OrLess
             } else if ScreenSize.SCREEN_MAX_LENGTH  == 568.0 {
@@ -40,11 +40,11 @@ enum DeviceType {
             } else if ScreenSize.SCREEN_MAX_LENGTH  == 736.0 {
                 return iPhone6Plus
             }
-        case .Pad:
+        case .pad:
             return iPad
         default:
-            return Unknown
+            return unknown
         }
-        return Unknown
+        return unknown
     }
 }

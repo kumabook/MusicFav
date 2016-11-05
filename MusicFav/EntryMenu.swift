@@ -10,12 +10,12 @@ import UIKit
 import SnapKit
 
 public protocol EntryMenuDelegate: class {
-    func entryMenuSelected(item: EntryMenu.MenuItem)
+    func entryMenuSelected(_ item: EntryMenu.MenuItem)
 }
 
-public class EntryMenu: UIButton {
+open class EntryMenu: UIButton {
     static let arrowHeight:     CGFloat = 16
-    public class UpArrow: UIView {
+    open class UpArrow: UIView {
         let h: CGFloat = 44
         var color: UIColor!
         init(color: UIColor) {
@@ -29,24 +29,24 @@ public class EntryMenu: UIButton {
             super.init(coder: aDecoder)
         }
 
-        override public func drawRect(rect: CGRect) {
+        override open func draw(_ rect: CGRect) {
             let c = UIGraphicsGetCurrentContext()
-            CGContextBeginPath(c)
-            CGContextMoveToPoint(   c, CGRectGetMinX(rect), CGRectGetMaxY(rect))
-            CGContextAddLineToPoint(c, CGRectGetMidX(rect), CGRectGetMinY(rect))
-            CGContextAddLineToPoint(c, CGRectGetMaxX(rect), CGRectGetMaxY(rect))
-            CGContextClosePath(c)
+            c?.beginPath()
+            c?.move(to: CGPoint(x: rect.minX, y: rect.maxY))
+            c?.addLine(to: CGPoint(x: rect.midX, y: rect.minY))
+            c?.addLine(to: CGPoint(x: rect.maxX, y: rect.maxY))
+            c?.closePath()
             var red:   CGFloat = 0
             var green: CGFloat = 0
             var blue:  CGFloat = 0
             var alpha: CGFloat = 0
             self.color.getRed(&red, green: &green, blue: &blue, alpha: &alpha)
-            CGContextSetRGBFillColor(c, red, green, blue, alpha)
-            CGContextFillPath(c)
+            c?.setFillColor(red: red, green: green, blue: blue, alpha: alpha)
+            c?.fillPath()
         }
     }
     let iconMargin: CGFloat               = 16
-    let animationDuration: NSTimeInterval = 0.2
+    let animationDuration: TimeInterval = 0.2
     let menuItemHeight: CGFloat           = 60
     var isAnimating: Bool = false
     var menuView: UIView!
@@ -56,57 +56,57 @@ public class EntryMenu: UIButton {
     var items:    [MenuItem]!
     weak var delegate: EntryMenuDelegate?
     public enum MenuItem {
-        case OpenWithSafari
-        case Share
-        case Favorite
-        case SaveToFeedly
+        case openWithSafari
+        case share
+        case favorite
+        case saveToFeedly
 
         var title: String {
             switch self {
-            case OpenWithSafari: return "Open with Safari".localize()
-            case Share:          return "Share the Entry".localize()
-            case Favorite:       return "Favorite the Entry".localize()
-            case SaveToFeedly:   return "Save to Feedly".localize()
+            case .openWithSafari: return "Open with Safari".localize()
+            case .share:          return "Share the Entry".localize()
+            case .favorite:       return "Favorite the Entry".localize()
+            case .saveToFeedly:   return "Save to Feedly".localize()
             }
         }
 
         var icon: UIImage {
             switch self {
-            case OpenWithSafari: return UIImage(named: "browser")!.imageWithRenderingMode(.AlwaysTemplate)
-            case Share:          return UIImage(named: "share")!.imageWithRenderingMode(.AlwaysTemplate)
-            case Favorite:       return UIImage(named: "fav_entry")!.imageWithRenderingMode(.AlwaysTemplate)
-            case SaveToFeedly:   return UIImage(named: "saved")!.imageWithRenderingMode(.AlwaysTemplate)
+            case .openWithSafari: return UIImage(named: "browser")!.withRenderingMode(.alwaysTemplate)
+            case .share:          return UIImage(named: "share")!.withRenderingMode(.alwaysTemplate)
+            case .favorite:       return UIImage(named: "fav_entry")!.withRenderingMode(.alwaysTemplate)
+            case .saveToFeedly:   return UIImage(named: "saved")!.withRenderingMode(.alwaysTemplate)
             }
         }
 
         var normalColor: UIColor {
             switch self {
-            case OpenWithSafari: return UIColor.blue
-            case Share:          return UIColor.green
-            case Favorite:       return UIColor.theme
-            case SaveToFeedly:   return UIColor.blue
+            case .openWithSafari: return UIColor.blue
+            case .share:          return UIColor.green
+            case .favorite:       return UIColor.theme
+            case .saveToFeedly:   return UIColor.blue
             }
         }
         var highlightedColor: UIColor {
             switch self {
-            case OpenWithSafari: return UIColor.lightBlue
-            case Share:          return UIColor.lightGreen
-            case Favorite:       return UIColor.lightTheme
-            case SaveToFeedly:   return UIColor.lightBlue
+            case .openWithSafari: return UIColor.lightBlue
+            case .share:          return UIColor.lightGreen
+            case .favorite:       return UIColor.lightTheme
+            case .saveToFeedly:   return UIColor.lightBlue
             }
         }
         var normalBackgroundImage:    UIImage { return MenuItem.imageWithColor(normalColor) }
         var highlightedBackgroundImage: UIImage { return MenuItem.imageWithColor(highlightedColor) }
 
-        static func imageWithColor(color: UIColor) -> UIImage {
-            let rect = CGRectMake(0.0, 0.0, 1.0, 1.0)
+        static func imageWithColor(_ color: UIColor) -> UIImage {
+            let rect = CGRect(x: 0.0, y: 0.0, width: 1.0, height: 1.0)
             UIGraphicsBeginImageContext(rect.size)
             let context = UIGraphicsGetCurrentContext()
-            CGContextSetFillColorWithColor(context, color.CGColor)
-            CGContextFillRect(context, rect)
+            context?.setFillColor(color.cgColor)
+            context?.fill(rect)
             let image = UIGraphicsGetImageFromCurrentImageContext()
             UIGraphicsEndImageContext()
-            return image
+            return image!
         }
 
     }
@@ -130,29 +130,29 @@ public class EntryMenu: UIButton {
             let itemView    = UIButton(frame: CGRect(x: 0, y: CGFloat(i) * ch, width: w, height: ch))
             let label       = UILabel(frame: CGRect(x: 0, y: 0, width: w, height: ch))
             label.text      = item.title
-            label.textColor = UIColor.whiteColor()
-            label.font      = UIFont.boldSystemFontOfSize(16)
+            label.textColor = UIColor.white
+            label.font      = UIFont.boldSystemFont(ofSize: 16)
             let iconView    = UIImageView(frame: CGRect(x: 0, y: 0, width: iconSize, height: iconSize))
             iconView.image  = item.icon
-            iconView.tintColor = UIColor.whiteColor()
+            iconView.tintColor = UIColor.white
             itemView.addSubview(label)
             itemView.addSubview(iconView)
-            itemView.addTarget(self, action: #selector(EntryMenu.menuSelected(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-            itemView.setBackgroundImage(item.normalBackgroundImage, forState: UIControlState.Normal)
-            itemView.setBackgroundImage(item.highlightedBackgroundImage, forState: UIControlState.Highlighted)
+            itemView.addTarget(self, action: #selector(EntryMenu.menuSelected(_:)), for: UIControlEvents.touchUpInside)
+            itemView.setBackgroundImage(item.normalBackgroundImage, for: UIControlState())
+            itemView.setBackgroundImage(item.highlightedBackgroundImage, for: UIControlState.highlighted)
             itemView.tag = i
             menuView.addSubview(itemView)
-            label.snp_updateConstraints { make in
+            label.snp.updateConstraints { make in
                 make.center.equalTo(itemView)
             }
-            iconView.snp_updateConstraints { make in
-                make.right.equalTo(label.snp_left).offset(-iconMargin)
+            iconView.snp.updateConstraints { make in
+                make.right.equalTo(label.snp.left).offset(-iconMargin)
                 make.centerY.equalTo(itemView)
                 make.width.equalTo(iconSize)
                 make.height.equalTo(iconSize)
             }
         }
-        addTarget(self, action: #selector(EntryMenu.hide), forControlEvents: UIControlEvents.TouchUpInside)
+        addTarget(self, action: #selector(EntryMenu.hide), for: UIControlEvents.touchUpInside)
         upArrow = UpArrow(color: items[0].normalColor)
     }
 
@@ -160,58 +160,58 @@ public class EntryMenu: UIButton {
         super.init(coder: aDecoder)
     }
 
-    public override var hidden: Bool {
+    open override var isHidden: Bool {
         get {
-            return super.hidden
+            return super.isHidden
         }
         set(newValue) {
             if newValue {
                menuView.frame = minFrame
             }
-            super.hidden = newValue
+            super.isHidden = newValue
         }
     }
 
-    func showWithNavigationBar(navbar: UINavigationBar?) {
+    func showWithNavigationBar(_ navbar: UINavigationBar?) {
         if isAnimating { return }
-        hidden      = false
+        isHidden      = false
         isAnimating = true
         if let nh = navbar?.frame.height {
             upArrow.center = CGPoint(x: frame.width - nh * 1.65 - EntryMenu.arrowHeight / 2,
                                      y: nh - EntryMenu.arrowHeight / 2 + 1)
         }
 
-        UIView.animateWithDuration(animationDuration,
+        UIView.animate(withDuration: animationDuration,
             delay: 0,
-            options: UIViewAnimationOptions.CurveEaseInOut,
+            options: UIViewAnimationOptions(),
             animations: {
                 self.menuView.frame = self.maxFrame
             }, completion: { finished in
                 self.isAnimating = false
         })
-        let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.15 * Double(NSEC_PER_SEC)))
-        dispatch_after(delayTime, dispatch_get_main_queue()) {
+        let delayTime = DispatchTime.now() + Double(Int64(0.15 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+        DispatchQueue.main.asyncAfter(deadline: delayTime) {
             navbar?.addSubview(self.upArrow)
         }
-        superview?.bringSubviewToFront(self)
+        superview?.bringSubview(toFront: self)
     }
 
     func hide() {
         if isAnimating { return }
         isAnimating = true
-        UIView.animateWithDuration(animationDuration,
+        UIView.animate(withDuration: animationDuration,
             delay: 0,
-            options: UIViewAnimationOptions.CurveEaseInOut,
+            options: UIViewAnimationOptions(),
             animations: {
                 self.menuView.frame = self.minFrame
             }, completion: { finished in
-                self.hidden      = true
+                self.isHidden      = true
                 self.isAnimating = false
         })
         upArrow.removeFromSuperview()
     }
 
-    func menuSelected(sender: UIButton) {
+    func menuSelected(_ sender: UIButton) {
         hide()
         delegate?.entryMenuSelected(items[sender.tag])
     }

@@ -9,13 +9,13 @@
 import UIKit
 import AVFoundation
 import SwiftyJSON
-import ReactiveCocoa
+import ReactiveSwift
 import XCDYouTubeKit
-import WebImage
+import SDWebImage
 import MusicFeeder
 
 class TrackTableViewController: UITableViewController {
-    var appDelegate: AppDelegate { return UIApplication.sharedApplication().delegate as! AppDelegate }
+    var appDelegate: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
     var player:     Player? { get { return appDelegate.player }}
     let tableCellReuseIdentifier = "trackTableViewCell"
     let cellHeight: CGFloat      = 80
@@ -26,39 +26,39 @@ class TrackTableViewController: UITableViewController {
             vc = viewController
             super.init()
         }
-        override func listen(event: Event) {
+        override func listen(_ event: Event) {
             switch event {
-            case .StatusChanged, .ErrorOccured, .PlaylistChanged: vc.updateSelection()
-            case .TrackSelected:             vc.updateSelection()
-            case .TrackUnselected:           vc.updateSelection()
-            case .PreviousPlaylistRequested: break
-            case .NextPlaylistRequested:     break
-            case .TimeUpdated:               break
-            case .DidPlayToEndTime:          break
-            case .NextTrackAdded:            break
+            case .statusChanged, .errorOccured, .playlistChanged: vc.updateSelection()
+            case .trackSelected:             vc.updateSelection()
+            case .trackUnselected:           vc.updateSelection()
+            case .previousPlaylistRequested: break
+            case .nextPlaylistRequested:     break
+            case .timeUpdated:               break
+            case .didPlayToEndTime:          break
+            case .nextTrackAdded:            break
             }
         }
     }
 
     enum PlaylistType {
-        case Favorite
-        case Selected
-        case Playing
-        case ThirdParty
+        case favorite
+        case selected
+        case playing
+        case thirdParty
     }
 
     var playlistType: PlaylistType {
         if let p = appDelegate.selectedPlaylist {
-            if p.id == playlist.id { return .Selected }
+            if p.id == playlist.id { return .selected }
         } else if let p = appDelegate.selectedPlaylist {
-            if p.id == playlist.id { return .Playing }
+            if p.id == playlist.id { return .playing }
         }
-        return .Favorite
+        return .favorite
     }
 
     let playlistQueue = PlaylistQueue(playlists: [])
     var _playlist: Playlist!
-    var playlistLoader: PlaylistLoader!
+    var playlistLoader: PlaylistRepository!
     var indicator:  UIActivityIndicatorView!
     var playerObserver:   TrackTableViewPlayerObserver!
     var playlistObserver: Disposable?
@@ -74,7 +74,7 @@ class TrackTableViewController: UITableViewController {
 
     init(playlist: Playlist) {
         self._playlist  = playlist
-        playlistLoader = PlaylistLoader(playlist: playlist)
+        playlistLoader = PlaylistRepository(playlist: playlist)
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -91,9 +91,9 @@ class TrackTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let nib = UINib(nibName: "TrackTableViewCell", bundle: nil)
-        tableView?.registerNib(nib, forCellReuseIdentifier:self.tableCellReuseIdentifier)
+        tableView?.register(nib, forCellReuseIdentifier:self.tableCellReuseIdentifier)
         updateNavbar()
-        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
         indicator.bounds = CGRect(x: 0,
                                   y: 0,
                               width: indicator.bounds.width,
@@ -102,25 +102,25 @@ class TrackTableViewController: UITableViewController {
         indicator.stopAnimating()
         updateNavbar()
         observePlaylist()
-        if playlistType == .Favorite && tracks.count == 0 {
+        if playlistType == .favorite && tracks.count == 0 {
             showGuideMessage()
         }
         playlistQueue.enqueue(playlist)
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         observePlayer()
         observePlaylist()
         fetchTracks()
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         Logger.sendScreenView(self)
     }
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         if playerObserver != nil {
             appDelegate.player?.removeObserver(playerObserver)
@@ -134,22 +134,22 @@ class TrackTableViewController: UITableViewController {
 
     func updateNavbar() {
         let showFavListButton         = UIBarButtonItem(image: UIImage(named: "fav_list"),
-                                                        style: UIBarButtonItemStyle.Plain,
+                                                        style: UIBarButtonItemStyle.plain,
                                                        target: self,
                                                        action: #selector(TrackTableViewController.showFavoritePlaylist))
         let favPlaylistButton         = UIBarButtonItem(image: UIImage(named: "fav_playlist"),
-                                                        style: UIBarButtonItemStyle.Plain,
+                                                        style: UIBarButtonItemStyle.plain,
                                                        target: self,
                                                        action: #selector(TrackTableViewController.favPlaylist))
         let reorderButton             = UIBarButtonItem(image: UIImage(named: "edit"),
-                                                        style: UIBarButtonItemStyle.Plain,
+                                                        style: UIBarButtonItemStyle.plain,
                                                        target: self,
                                                        action: #selector(TrackTableViewController.reorder))
         navigationItem.rightBarButtonItems  = [showFavListButton]
-        if playlistType != .Playing {
+        if playlistType != .playing {
             navigationItem.rightBarButtonItems?.append(favPlaylistButton)
         }
-        if playlistType == .Favorite {
+        if playlistType == .favorite {
             navigationItem.rightBarButtonItems?.append(reorderButton)
         }
     }
@@ -158,10 +158,10 @@ class TrackTableViewController: UITableViewController {
         let size =  tableView.bounds.size
         let backgroundView = UIView(frame: view.frame)
         let messageView = UILabel(frame: CGRect(x: size.width * 0.3, y: 0, width: size.width * 0.6, height: size.height))
-        messageView.textAlignment      = NSTextAlignment.Center
+        messageView.textAlignment      = NSTextAlignment.center
         messageView.numberOfLines      = 0
         messageView.clipsToBounds      = true
-        tableView.separatorStyle       = UITableViewCellSeparatorStyle.None
+        tableView.separatorStyle       = UITableViewCellSeparatorStyle.none
         messageView.text = "Let's add your favorite tracks from ♥ button or swipe menu of a track".localize()
         tableView.backgroundView = backgroundView
         backgroundView.addSubview(messageView)
@@ -183,35 +183,36 @@ class TrackTableViewController: UITableViewController {
 
     func observePlaylist() {
         playlistObserver?.dispose()
-        playlistObserver = Playlist.shared.signal.observeNext({ event in
+        playlistObserver = Playlist.shared.signal.observeResult({ result in
+            guard let event = result.value else { return }
             switch event {
-            case .Created(_): break
-            case .Removed(_): break
-            case .Updated(let playlist):
+            case .created(_): break
+            case .removed(_): break
+            case .updated(let playlist):
                 if self.playlist == playlist {
                     self.tableView.reloadData()
                 }
-            case .TracksAdded(let playlist, let tracks):
+            case .tracksAdded(let playlist, let tracks):
                 if self.playlist == playlist {
                     let offset = playlist.tracks.count-tracks.count
-                    var indexes: [NSIndexPath] = []
+                    var indexes: [IndexPath] = []
                     for i in offset..<offset+tracks.count {
-                        indexes.append(NSIndexPath(forItem: i, inSection: 0))
+                        indexes.append(IndexPath(item: i, section: 0))
                     }
                     self.tableView.beginUpdates()
-                    self.tableView.insertRowsAtIndexPaths(indexes, withRowAnimation: UITableViewRowAnimation.Fade)
+                    self.tableView.insertRows(at: indexes as [IndexPath], with: UITableViewRowAnimation.fade)
                     self.tableView.endUpdates()
                 }
-            case .TrackRemoved(let playlist, _, let index):
+            case .trackRemoved(let playlist, _, let index):
                 if self.playlist == playlist {
-                    let indexPath = NSIndexPath(forItem: index, inSection: 0)
-                    self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+                    let indexPath = IndexPath(item: index, section: 0)
+                    self.tableView.deleteRows(at: [indexPath], with: .fade)
                 }
-            case .TrackUpdated(let playlist, _):
+            case .trackUpdated(let playlist, _):
                 if self.playlist == playlist {
                     self.tableView.reloadData()
                 }
-            case .SharedListUpdated: break
+            case .sharedListUpdated: break
             }
             return
         })
@@ -226,9 +227,9 @@ class TrackTableViewController: UITableViewController {
         return false
     }
 
-    func isTrackPlaying(track: Track) -> Bool {
+    func isTrackPlaying(_ track: Track) -> Bool {
         if isPlaylistPlaying() {
-            if let p = appDelegate.player, t = p.currentTrack as? Track {
+            if let p = appDelegate.player, let t = p.currentTrack as? Track {
                 return t == track
             }
         }
@@ -238,14 +239,14 @@ class TrackTableViewController: UITableViewController {
     func updateSelection() {
         if !isPlaylistPlaying() {
             if let i = tableView.indexPathForSelectedRow {
-                tableView.deselectRowAtIndexPath(i, animated: true)
+                tableView.deselectRow(at: i, animated: true)
             }
         } else {
             if let p = appDelegate.player {
                 if _playlist != p.currentPlaylist as? Playlist {
                 } else if let track = p.currentTrack as? Track {
-                    if let index = _playlist.getTracks().indexOf(track) {
-                        tableView.selectRowAtIndexPath(NSIndexPath(forRow: index, inSection: 0), animated: true, scrollPosition: UITableViewScrollPosition.None)
+                    if let index = _playlist.getTracks().index(of: track) {
+                        tableView.selectRow(at: IndexPath(row: index, section: 0), animated: true, scrollPosition: UITableViewScrollPosition.none)
                     }
                 }
             }
@@ -263,7 +264,7 @@ class TrackTableViewController: UITableViewController {
     }
 
     func showFavoritePlaylist() {
-        navigationController?.popViewControllerAnimated(true)
+        let _ = navigationController?.popViewController(animated: true)
     }
     
     func showPlayingPlaylist() {
@@ -282,28 +283,28 @@ class TrackTableViewController: UITableViewController {
     }
 
     func reorder() {
-        tableView.setEditing(!tableView.editing, animated: true)
+        tableView.setEditing(!tableView.isEditing, animated: true)
     }
 
-    func showSelectPlaylistViewController(tracks: [Track]) {
+    func showSelectPlaylistViewController(_ tracks: [Track]) {
         let ptc = SelectPlaylistTableViewController()
         ptc.callback = {(playlist: Playlist?) in
             if let p = playlist {
                 switch p.appendTracks(tracks) {
-                case .Success: break
-                case .Failure:
+                case .success: break
+                case .failure:
                     let message = "Failed to add tracks".localize()
-                    UIAlertController.show(self, title: "MusicFav", message: message, handler: { action in })
-                case .ExceedLimit:
+                    let _ = UIAlertController.show(self, title: "MusicFav", message: message, handler: { action in })
+                case .exceedLimit:
                     let message = String(format: "Track number of per playlist is limited to %d.".localize(), Playlist.trackNumberLimit) +
                             "Do you want to purchase \"Unlock Everything\".".localize()
-                    UIAlertController.showPurchaseAlert(self, title: "MusicFav", message: message, handler: {action in })
+                    let _ = UIAlertController.showPurchaseAlert(self, title: "MusicFav", message: message, handler: {action in })
                 }
             }
             ptc.callback = nil
         }
         let nvc = UINavigationController(rootViewController: ptc)
-        self.navigationController?.presentViewController(nvc, animated: true, completion: nil)
+        self.navigationController?.present(nvc, animated: true, completion: nil)
     }
 
     func fetchTracks() {
@@ -316,25 +317,25 @@ class TrackTableViewController: UITableViewController {
 
     // MARK: UITableViewDataSource
     
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tracks.count
     }
 
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.cellHeight
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(self.tableCellReuseIdentifier, forIndexPath: indexPath) as! TrackTableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: self.tableCellReuseIdentifier, for: indexPath) as! TrackTableViewCell
         let track = tracks[indexPath.item]
         switch track.status {
-        case .Loading:
+        case .loading:
             cell.trackNameLabel.text = "Loading...".localize()
-        case .Unavailable:
+        case .unavailable:
             cell.trackNameLabel.text = "Unavailable".localize()
         default:
             if let title = track.title {
@@ -347,69 +348,69 @@ class TrackTableViewController: UITableViewController {
         let seconds = Int(round(track.duration - Double(minutes) * 60))
         cell.durationLabel.text = String(format: "%.2d:%.2d", minutes, seconds)
         if let thumbnailUrl = track.thumbnailUrl {
-            cell.thumbImgView.sd_setImageWithURL(thumbnailUrl)
+            cell.thumbImgView.sd_setImage(with: thumbnailUrl)
         } else {
             cell.thumbImgView.image = UIImage(named: "default_thumb")
         }
         if isTrackPlaying(track) {
-            tableView.selectRowAtIndexPath(indexPath, animated: false, scrollPosition: UITableViewScrollPosition.None)
+            tableView.selectRow(at: indexPath, animated: false, scrollPosition: UITableViewScrollPosition.none)
         }
         return cell
     }
 
-    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        let remove = UITableViewRowAction(style: .Default, title: "Remove".localize()) {
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let remove = UITableViewRowAction(style: .default, title: "Remove".localize()) {
             (action, indexPath) in
             Logger.sendUIActionEvent(self, action: "removeTrack", label: "\(indexPath.item)")
             self.playlist.removeTrackAtIndex(UInt(indexPath.item))
         }
 
         remove.backgroundColor = UIColor.red
-        let copy = UITableViewRowAction(style: .Default, title: "Fav　　".localize()) {
+        let copy = UITableViewRowAction(style: .default, title: "Fav　　".localize()) {
             (action, indexPath) in
             Logger.sendUIActionEvent(self, action: "FavTrackAtIndex", label: "\(indexPath.item)")
             let track = self.playlist.getTracks()[indexPath.item]
             self.showSelectPlaylistViewController([track])
         }
         copy.backgroundColor = UIColor.green
-        if playlistType == .Favorite {
+        if playlistType == .favorite {
             return [copy, remove]
         } else {
             return [copy]
         }
     }
 
-    override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
-        playlist.moveTrackAtIndex(sourceIndexPath.item, toIndex: destinationIndexPath.item)
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let _ = playlist.moveTrackAtIndex(sourceIndexPath.item, toIndex: destinationIndexPath.item)
     }
 
-    override func tableView(tableView: UITableView, shouldIndentWhileEditingRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
         return false
     }
 
-    override func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
-        return tableView.editing ? UITableViewCellEditingStyle.None : UITableViewCellEditingStyle.Delete
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return tableView.isEditing ? UITableViewCellEditingStyle.none : UITableViewCellEditingStyle.delete
     }
 
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
 
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         return true
     }
 
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     }
 
     // MARK: UITableViewDelegate
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let track = playlist.tracks[indexPath.item]
         if track.streamUrl != nil {
             appDelegate.toggle(indexPath.item, playlist: playlist, playlistQueue: playlistQueue)
         } else {
-            tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            tableView.deselectRow(at: indexPath, animated: true)
         }
     }
 }

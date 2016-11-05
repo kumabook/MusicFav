@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import FeedlyKit
 import MusicFeeder
 import MBProgressHUD
@@ -15,20 +15,20 @@ import MBProgressHUD
 class CategoryTableViewController: UITableViewController {
     let client = CloudAPIClient.sharedInstance
 
-    var subscribables:    [Stream]
-    var streamListLoader: StreamListLoader!
+    var subscribables:    [FeedlyKit.Stream]
+    var streamRepository: StreamRepository!
     var observer:         Disposable?
 
     var categories: [FeedlyKit.Category] {
-        let _categories   = streamListLoader.streamListOfCategory.keys
-        var list          = [streamListLoader.uncategorized]
-        list.appendContentsOf(_categories.filter({$0 != self.streamListLoader.uncategorized }))
+        let _categories   = streamRepository.streamListOfCategory.keys
+        var list          = [streamRepository.uncategorized]
+        list.append(contentsOf: _categories.filter({$0 != self.streamRepository.uncategorized }))
         return list
     }
 
-    init(subscribables: [Stream], streamListLoader: StreamListLoader) {
+    init(subscribables: [FeedlyKit.Stream], streamRepository: StreamRepository) {
         self.subscribables    = subscribables
-        self.streamListLoader = streamListLoader
+        self.streamRepository = streamRepository
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -41,21 +41,21 @@ class CategoryTableViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
         navigationItem.title = "Select Category".localize()
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "add_stream"),
-                                                            style: UIBarButtonItemStyle.Plain,
+                                                            style: UIBarButtonItemStyle.plain,
                                                            target: self,
                                                            action: #selector(CategoryTableViewController.newCategory))
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         Logger.sendScreenView(self)
         observeStreamList()
     }
 
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         observer?.dispose()
     }
@@ -66,61 +66,63 @@ class CategoryTableViewController: UITableViewController {
 
     func observeStreamList() {
         observer?.dispose()
-        observer = streamListLoader.signal.observeNext({ event in
+        observer = streamRepository.signal.observeResult({ result in
+            guard let event = result.value else { return }
             switch event {
-            case .StartLoading: break
-            case .CompleteLoading:
+            case .create(_):    break
+            case .startLoading: break
+            case .completeLoading:
                 self.tableView.reloadData()
-            case .FailToLoad:    break
-            case .StartUpdating: break
-            case .FailToUpdate:  break
-            case .RemoveAt:      break
+            case .failToLoad:    break
+            case .startUpdating: break
+            case .failToUpdate:  break
+            case .remove(_):     break
             }
         })
     }
 
     func newCategory() {
         Logger.sendUIActionEvent(self, action: "newCategory", label: "")
-        let ac = UIAlertController(title: "New Category".localize(), message: nil, preferredStyle: UIAlertControllerStyle.Alert)
-        ac.addAction(UIAlertAction(title: "Cancel".localize(), style: UIAlertActionStyle.Cancel, handler: { (action) -> Void in
+        let ac = UIAlertController(title: "New Category".localize(), message: nil, preferredStyle: UIAlertControllerStyle.alert)
+        ac.addAction(UIAlertAction(title: "Cancel".localize(), style: UIAlertActionStyle.cancel, handler: { (action) -> Void in
             Logger.sendUIActionEvent(self, action: "Cancel", label: "")
         }))
-        ac.addAction(UIAlertAction(title: "OK".localize(), style: UIAlertActionStyle.Default, handler: { (action) -> Void in
+        ac.addAction(UIAlertAction(title: "OK".localize(), style: UIAlertActionStyle.default, handler: { (action) -> Void in
             if let text = ac.textFields?.first?.text {
                 Logger.sendUIActionEvent(self, action: "OK", label: "")
-                if let category = self.streamListLoader.createCategory(text) {
+                if let category = self.streamRepository.createCategory(text) {
                     self.subscribeTo(category)
                 }
             }
         }))
-        ac.addTextFieldWithConfigurationHandler({(text:UITextField) -> Void in
+        ac.addTextField(configurationHandler: {(text:UITextField) -> Void in
         })
-        presentViewController(ac, animated: true, completion: nil)
+        present(ac, animated: true, completion: nil)
     }
 
-    func _subscribeTo(category: FeedlyKit.Category) -> SignalProducer<[Subscription], NSError> {
+    func _subscribeTo(_ category: FeedlyKit.Category) -> SignalProducer<[Subscription], NSError> {
         return subscribables.reduce(SignalProducer(value: [])) {
-            combineLatest($0, streamListLoader.subscribeTo($1, categories: [category])).map {
+            SignalProducer.combineLatest($0, streamRepository.subscribeTo($1, categories: [category])).map {
                 var list = $0.0; list.append($0.1); return list
             }
         }
     }
 
-    func subscribeTo(category: FeedlyKit.Category) {
-        MBProgressHUD.showHUDAddedTo(self.navigationController!.view, animated: true)
+    func subscribeTo(_ category: FeedlyKit.Category) {
+        MBProgressHUD.showAdded(to: self.navigationController!.view, animated: true)
         _subscribeTo(category).on(
-            next: {subscriptions in
-                MBProgressHUD.hideHUDForView(self.navigationController!.view, animated:false)
+            value: {subscriptions in
+                let _ = MBProgressHUD.hide(for: self.navigationController!.view, animated:false)
             },
             failed: {e in
-                MBProgressHUD.hideHUDForView(self.navigationController!.view, animated:false)
+                let _ = MBProgressHUD.hide(for: self.navigationController!.view, animated:false)
                 let ac = CloudAPIClient.alertController(error: e, handler: { (action) in })
-                self.presentViewController(ac, animated: true, completion: nil)
+                self.present(ac, animated: true, completion: nil)
             },
             completed: {
-                MBProgressHUD.showCompletedHUDForView(self.navigationController!.view, animated: true, duration: 1.0, after: {
-                    self.streamListLoader.refresh().start()
-                    self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
+                let _ = MBProgressHUD.showCompletedHUDForView(self.navigationController!.view, animated: true, duration: 1.0, after: {
+                    self.streamRepository.refresh()
+                    self.navigationController?.dismiss(animated: true, completion: nil)
                 })
             },
             interrupted: {}
@@ -129,17 +131,17 @@ class CategoryTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return categories.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
-        if categories[indexPath.item] == streamListLoader.uncategorized {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
+        if categories[indexPath.item] == streamRepository.uncategorized {
             cell.textLabel?.text = categories[indexPath.item].label.localize()
         } else {
             cell.textLabel?.text = categories[indexPath.item].label
@@ -147,7 +149,7 @@ class CategoryTableViewController: UITableViewController {
         return cell
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         Logger.sendUIActionEvent(self, action: "didSelectRowAtIndexPath", label: String(indexPath.row))
         subscribeTo(categories[indexPath.item])
     }

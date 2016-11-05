@@ -30,12 +30,12 @@ class YouTubeOAuthViewController: OAuthViewController {
     }
 
     override func showAlert() {
-        UIAlertController.show(self, title: "Notice".localize(), message: "Login failed.", handler: { (action) -> Void in
+        let _ = UIAlertController.show(self, title: "Notice".localize(), message: "Login failed.", handler: { (action) -> Void in
             YouTubeAPIClient.clearAllAccount()
         })
     }
 
-    override func onLoggedIn(account: NXOAuth2Account) {
+    override func onLoggedIn(_ account: NXOAuth2Account) {
         super.onLoggedIn(account)
         self.appDelegate.reload()
     }

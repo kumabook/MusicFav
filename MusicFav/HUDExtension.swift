@@ -10,28 +10,29 @@ import Foundation
 import MBProgressHUD
 
 extension MBProgressHUD {
-    private class func createCompletedHUD(view: UIView) -> MBProgressHUD {
-        let HUD = MBProgressHUD(view: view)
-        HUD.customView = UIImageView(image:UIImage(named:"checkmark"))
-        HUD.mode = MBProgressHUDMode.CustomView
-        HUD.labelText = "Completed".localize()
-        return HUD
+    fileprivate class func createCompletedHUD(_ view: UIView) -> MBProgressHUD {
+        let hud = MBProgressHUD(view: view)
+        hud.customView = UIImageView(image:UIImage(named:"checkmark"))
+        hud.mode = MBProgressHUDMode.customView
+        hud.label.text = "Completed".localize()
+        return hud
     }
 
-    class func showCompletedHUDForView(view: UIView, animated: Bool, duration: NSTimeInterval, after: () -> Void) {
+    class func showCompletedHUDForView(_ view: UIView, animated: Bool, duration: TimeInterval, after: @escaping () -> Void) -> MBProgressHUD {
         let hud = MBProgressHUD.createCompletedHUD(view)
         view.addSubview(hud)
         hud.show(true, duration: duration, after: {
             hud.removeFromSuperview()
             after()
         })
+        return hud
     }
 
-    func show(animated:Bool, duration:NSTimeInterval, after:() -> Void) {
-        show(true)
-        let startTime = dispatch_time(DISPATCH_TIME_NOW, Int64(duration * Double(NSEC_PER_SEC)))
-        dispatch_after(startTime, dispatch_get_main_queue()) { () -> Void in
-            self.hide(true)
+    func show(_ animated:Bool, duration:TimeInterval, after:@escaping () -> Void) {
+        show(animated: true)
+        let startTime = DispatchTime.now() + Double(Int64(duration * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+        DispatchQueue.main.asyncAfter(deadline: startTime) { () -> Void in
+            self.hide(animated: true)
             after()
         }
     }

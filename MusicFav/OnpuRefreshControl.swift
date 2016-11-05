@@ -8,26 +8,26 @@
 
 import ISAlternativeRefreshControl
 
-class OnpuRefreshControl: ISAlternativeRefreshControl {
+class OnpuRefreshControl: ISAlternativeRefreshControl, CAAnimationDelegate {
     enum AnimationState {
-        case Normal
-        case Animating
-        case Completing
-        case Completed
+        case normal
+        case animating
+        case completing
+        case completed
     }
 
     let margin: CGFloat = 15.0
     var imageView: UIImageView!
-    var timer: NSTimer?
+    var timer: Timer?
     var prog: CGFloat = 0
-    var animationState: AnimationState = .Normal
+    var animationState: AnimationState = .normal
 
     override init(frame: CGRect) {
         super.init(frame: frame)
         let s                 = frame.size
         clipsToBounds         = false
         imageView             = UIImageView(image: UIImage(named: "loading_icon"))
-        imageView.contentMode = UIViewContentMode.ScaleAspectFit
+        imageView.contentMode = UIViewContentMode.scaleAspectFit
         let height            = s.height * 0.65
         imageView.frame       = CGRect(x: 0, y: (s.height - height) / 2, width: s.width, height: height)
         addSubview(imageView)
@@ -39,27 +39,27 @@ class OnpuRefreshControl: ISAlternativeRefreshControl {
 
     override func didChangeProgress() {
         switch refreshingState {
-        case .Normal:
-            prog = (2.0 * progress) % 2.0
+        case .normal:
+            prog = (2.0 * progress).truncatingRemainder(dividingBy: 2.0)
             updateView()
-        case .Refreshing:
+        case .refreshing:
             break
-        case .Refreshed:
+        case .refreshed:
             break
          }
     }
 
-    override func willChangeRefreshingState(refreshingState: ISRefreshingState) {
+    override func willChangeRefreshingState(_ refreshingState: ISRefreshingState) {
         switch refreshingState {
-        case .Normal:
+        case .normal:
             imageView.image = UIImage(named: "loading_icon")
             imageView.layer.removeAllAnimations()
-            animationState = .Normal
-        case .Refreshing:
-            animationState = .Animating
+            animationState = .normal
+        case .refreshing:
+            animationState = .animating
             startLayerAnimation(false)
-        case .Refreshed:
-            animationState = .Normal
+        case .refreshed:
+            animationState = .normal
         }
     }
 
@@ -68,10 +68,10 @@ class OnpuRefreshControl: ISAlternativeRefreshControl {
     }
 
     override func endRefreshing() {
-        animationState = .Completing
+        animationState = .completing
     }
 
-    func startLayerAnimation(returnNormal: Bool) {
+    func startLayerAnimation(_ returnNormal: Bool) {
         let layer              = imageView.layer;
         let animation          = CABasicAnimation(keyPath: "transform.rotation")
         let fromValue          = M_PI*Double(prog)
@@ -80,34 +80,34 @@ class OnpuRefreshControl: ISAlternativeRefreshControl {
         animation.repeatCount  = 0
         animation.beginTime    = CACurrentMediaTime()
         animation.autoreverses = false
-        animation.fromValue    = NSNumber(float: Float(fromValue))
-        animation.toValue      = NSNumber(float: Float(toValue))
-        animation.removedOnCompletion = false
+        animation.fromValue    = NSNumber(value: Float(fromValue) as Float)
+        animation.toValue      = NSNumber(value: Float(toValue) as Float)
+        animation.isRemovedOnCompletion = false
         animation.fillMode     = kCAFillModeForwards
         animation.delegate     = self
-        layer.addAnimation(animation , forKey:"rotate-animation")
+        layer.add(animation , forKey:"rotate-animation")
     }
 
-    override func animationDidStop(anim: CAAnimation, finished flag: Bool) {
+    func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
         switch animationState {
-        case .Normal:
+        case .normal:
             break
-        case .Animating:
-            animationState = .Completing
+        case .animating:
+            animationState = .completing
             startLayerAnimation(false)
-        case .Completing:
+        case .completing:
             startLayerAnimation(true)
-            animationState = .Completed
-        case .Completed:
+            animationState = .completed
+        case .completed:
             self.imageView.image = UIImage(named: "loading_icon_\(arc4random_uniform(4))")
-            let startTime = dispatch_time(DISPATCH_TIME_NOW, Int64(1.0 * Double(NSEC_PER_SEC)))
-            dispatch_after(startTime, dispatch_get_main_queue()) {
+            let startTime = DispatchTime.now() + Double(Int64(1.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: startTime) {
                 super.endRefreshing()
             }
         }
     }
 
     func updateView() {
-        imageView.layer.transform = CATransform3DMakeAffineTransform(CGAffineTransformMakeRotation(CGFloat(M_PI) * prog))
+        imageView.layer.transform = CATransform3DMakeAffineTransform(CGAffineTransform(rotationAngle: CGFloat(M_PI) * prog))
     }
 }

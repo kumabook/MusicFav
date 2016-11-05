@@ -1,4 +1,4 @@
 github "kumabook/MusicFeeder"
 github "Quick/Quick"
 github "Quick/Nimble"
-github "uacaps/PageMenu"
+github "orazz/PageMenu" "master"

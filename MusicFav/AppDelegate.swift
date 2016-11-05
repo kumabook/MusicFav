@@ -9,7 +9,7 @@
 import UIKit
 import CoreData
 import AVFoundation
-import ReactiveCocoa
+import ReactiveSwift
 import FeedlyKit
 import MusicFeeder
 import Fabric
@@ -22,18 +22,18 @@ import SoundCloudKit
 public typealias PlaylistQueue = PlayerKit.PlaylistQueue
 
 class AppPlayerObserver: PlayerObserver {
-    var appDelegate: AppDelegate { return UIApplication.sharedApplication().delegate as! AppDelegate }
-    internal override func listen(event: Event) {
+    var appDelegate: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
+    internal override func listen(_ event: Event) {
         guard let state = appDelegate.player?.currentState else { return }
         switch event {
-        case .TrackSelected(let track, _, _):
-            if state == .Play {
-                HistoryStore.add(track as! MusicFeeder.Track)
+        case .trackSelected(let track, _, _):
+            if state == .play {
+                let _ = HistoryStore.add(track as! MusicFeeder.Track)
             }
-        case .StatusChanged:
+        case .statusChanged:
             guard let track = appDelegate.player?.currentTrack else { return }
-            if state == .Play {
-                HistoryStore.add(track as! MusicFeeder.Track)
+            if state == .play {
+                let _ = HistoryStore.add(track as! MusicFeeder.Track)
             }
         default: break
         }
@@ -43,11 +43,11 @@ class AppPlayerObserver: PlayerObserver {
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
     enum Event {
-        case WillResignActive
-        case DidEnterBackground
-        case WillEnterForeground
-        case DidBecomeActive
-        case WillTerminate
+        case willResignActive
+        case didEnterBackground
+        case willEnterForeground
+        case didBecomeActive
+        case willTerminate
     }
     var appearanceManager:        AppearanceManager?
     var paymentManager:           PaymentManager?
@@ -70,22 +70,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var mainViewController: JASidePanelController? { return miniPlayerViewController?.mainViewController as? JASidePanelController }
     var leftVisibleWidth:   CGFloat? { return mainViewController?.leftVisibleWidth }
     var rightVisibleWidth:  CGFloat? { return mainViewController?.rightVisibleWidth }
-    var streamListLoader: StreamListLoader? {
-        return miniPlayerViewController?.streamTreeViewController?.streamListLoader
+    var streamRepository: StreamRepository? {
+        return miniPlayerViewController?.streamTreeViewController?.streamRepository
     }
 
-    var userDefaults:          NSUserDefaults { return NSUserDefaults.standardUserDefaults() }
-    var isFirstLaunch:         Bool           { return self.userDefaults.boolForKey("firstLaunch") }
-    var didFinishTutorial:     Bool           { return self.userDefaults.boolForKey("finishTutorial") }
-    var didFinishSelectStream: Bool           { return self.userDefaults.boolForKey("finishSelectStream") }
-    func markAsLaunched()     { NSUserDefaults.standardUserDefaults().setBool(false, forKey: "firstLaunch") }
-    func finishTutorial()     { NSUserDefaults.standardUserDefaults().setBool(true,  forKey: "finishTutorial") }
-    func finishSelectStream() { NSUserDefaults.standardUserDefaults().setBool(true,  forKey: "finishSelectStream") }
+    var userDefaults:          UserDefaults { return UserDefaults.standard }
+    var isFirstLaunch:         Bool           { return self.userDefaults.bool(forKey: "firstLaunch") }
+    var didFinishTutorial:     Bool           { return self.userDefaults.bool(forKey: "finishTutorial") }
+    var didFinishSelectStream: Bool           { return self.userDefaults.bool(forKey: "finishSelectStream") }
+    func markAsLaunched()     { UserDefaults.standard.set(false, forKey: "firstLaunch") }
+    func finishTutorial()     { UserDefaults.standard.set(true,  forKey: "finishTutorial") }
+    func finishSelectStream() { UserDefaults.standard.set(true,  forKey: "finishSelectStream") }
 
     func registerNSUserDefaults() {
-        userDefaults.registerDefaults(["firstLaunch":    true])
-        userDefaults.registerDefaults(["finishTutorial": false])
-        userDefaults.registerDefaults(["finishSelectStream": false])
+        userDefaults.register(defaults: ["firstLaunch":    true])
+        userDefaults.register(defaults: ["finishTutorial": false])
+        userDefaults.register(defaults: ["finishSelectStream": false])
     }
 
     func setupMainViewControllers() {
@@ -94,7 +94,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         appearanceManager?.apply()
         player?.addObserver(playerObserver)
         player?.addObserver(NowPlayingInfoCenter(player: player!))
-        window                       = UIWindow(frame: UIScreen.mainScreen().bounds)
+        window                       = UIWindow(frame: UIScreen.main.bounds)
         miniPlayerViewController     = MiniPlayerViewController(player: player!)
         let playerPageViewController = PlayerPageViewController<PlayerViewController, MiniPlayerView>(player: player!)
         coverViewController          = CoverViewController(ceilingViewController: playerPageViewController,
@@ -104,7 +104,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController  = self.coverViewController
     }
 
-    func setupAudioSession(application: UIApplication) {
+    func setupAudioSession(_ application: UIApplication) {
         let audioSession = AVAudioSession.sharedInstance()
         do {
             try audioSession.setCategory(AVAudioSessionCategoryPlayback)
@@ -123,30 +123,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func startTutorial() {
         let vc = TutorialViewController()
-        coverViewController?.presentViewController(vc, animated: true, completion: {})
+        coverViewController?.present(vc, animated: true, completion: {})
     }
 
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         let pipe = Signal<AppDelegate.Event, NSError>.pipe()
         signal   = pipe.0
         observer = pipe.1
-        let mainBundle = NSBundle.mainBundle()
-        let fabricConfig = FabricConfig(filePath: mainBundle.pathForResource("fabric", ofType: "json")!)
+        let mainBundle = Bundle.main
+        let fabricConfig = FabricConfig(filePath: mainBundle.path(forResource: "fabric", ofType: "json")!)
         if !fabricConfig.skip {
-            Crashlytics.startWithAPIKey(fabricConfig.apiKey)
+            Crashlytics.start(withAPIKey: fabricConfig.apiKey)
         }
         RealmMigration.groupIdentifier = "group.io.kumabook.MusicFav"
         RealmMigration.migrateAll()
-        if let path = mainBundle.pathForResource("google_analytics", ofType: "json") {
+        if let path = mainBundle.path(forResource: "google_analytics", ofType: "json") {
             GAIConfig.setup(path)
         }
         paymentManager = PaymentManager()
-        Playlist.sharedOrderBy = PlaylistStore.OrderBy.Number(.Asc)
+        Playlist.sharedOrderBy = OrderBy.number(.asc)
         setupAPIClient()
         registerNSUserDefaults()
         if isFirstLaunch {
             Playlist.createDefaultPlaylist()
-            Track.youTubeVideoQuality = YouTubeVideoQuality.Medium360
+            Track.youTubeVideoQuality = YouTubeVideoQuality.medium360
             CloudAPIClient.notificationDateComponents = UILocalNotification.defaultNotificationDateComponents
             markAsLaunched()
         }
@@ -166,49 +166,49 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         return true
     }
 
-    func applicationWillResignActive(application: UIApplication) {
-        observer?.sendNext(Event.WillResignActive)
+    func applicationWillResignActive(_ application: UIApplication) {
+        observer?.send(value: Event.willResignActive)
         playerPageViewController?.disablePlayerView()
         Shortcut.updateShortcutItems(application)
     }
 
-    func applicationDidEnterBackground(application: UIApplication) {
-        observer?.sendNext(Event.DidEnterBackground)
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        observer?.send(value: Event.didEnterBackground)
         playerPageViewController?.disablePlayerView()
         Shortcut.updateShortcutItems(application)
     }
 
-    func applicationWillEnterForeground(application: UIApplication) {
-        observer?.sendNext(Event.WillEnterForeground)
-        mainViewController?.centerPanel
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        observer?.send(value: Event.willEnterForeground)
+        let _ = mainViewController?.centerPanel
         playerPageViewController?.enablePlayerView()
         reloadExpiredTracks()
     }
 
-    func applicationDidBecomeActive(application: UIApplication) {
-        observer?.sendNext(Event.DidBecomeActive)
+    func applicationDidBecomeActive(_ application: UIApplication) {
+        observer?.send(value: Event.didBecomeActive)
         application.applicationIconBadgeNumber = 0
         ListenItLaterEntryStore.moveToSaved()
     }
 
-    func applicationWillTerminate(application: UIApplication) {
-        observer?.sendNext(Event.WillTerminate)
+    func applicationWillTerminate(_ application: UIApplication) {
+        observer?.send(value: Event.willTerminate)
         Logger.sendEndSession()
     }
 
-    func application(application: UIApplication, performFetchWithCompletionHandler completionHandler: (UIBackgroundFetchResult) -> Void) {
+    func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
         UpdateChecker().check(application, completionHandler: completionHandler)
     }
 
-    func application(application: UIApplication, didReceiveLocalNotification notification: UILocalNotification) {
+    func application(_ application: UIApplication, didReceive notification: UILocalNotification) {
     }
 
     @available(iOS 9.0, *)
-    func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
+    func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
         if let shortcut = Shortcut(fullType: shortcutItem.type) {
             if mainViewController?.centerPanel == nil {
-                let startTime = dispatch_time(DISPATCH_TIME_NOW, Int64(Shortcut.delaySec * Double(NSEC_PER_SEC)))
-                dispatch_after(startTime, dispatch_get_main_queue()) { () -> Void in
+                let startTime = DispatchTime.now() + Double(Int64(Shortcut.delaySec * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+                DispatchQueue.main.asyncAfter(deadline: startTime) { () -> Void in
                     completionHandler(shortcut.handleShortCutItem())
                 }
             } else {
@@ -217,18 +217,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
 
-    override func remoteControlReceivedWithEvent(event: UIEvent?) {
-        if let e = event where e.type == UIEventType.RemoteControl {
+    override func remoteControlReceived(with event: UIEvent?) {
+        if let e = event, e.type == UIEventType.remoteControl {
             switch e.subtype {
-            case UIEventSubtype.RemoteControlPlay:
+            case UIEventSubtype.remoteControlPlay:
                 self.miniPlayerViewController?.player?.toggle()
-            case UIEventSubtype.RemoteControlPause:
+            case UIEventSubtype.remoteControlPause:
                 self.miniPlayerViewController?.player?.toggle()
-            case UIEventSubtype.RemoteControlTogglePlayPause:
+            case UIEventSubtype.remoteControlTogglePlayPause:
                 self.miniPlayerViewController?.player?.toggle()
-            case UIEventSubtype.RemoteControlPreviousTrack:
+            case UIEventSubtype.remoteControlPreviousTrack:
                 self.miniPlayerViewController?.player?.previous()
-            case UIEventSubtype.RemoteControlNextTrack:
+            case UIEventSubtype.remoteControlNextTrack:
                 self.miniPlayerViewController?.player?.next()
             default:
                 break;
@@ -245,12 +245,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func showAddStreamMenuViewController() {
-        if let loader = streamListLoader {
-            loader.subscribeTo(RecommendFeed.sampleStream(), categories: [])
-            let stvc = AddStreamMenuViewController(streamListLoader: loader)
-            let delayTime = dispatch_time(DISPATCH_TIME_NOW, Int64(0.3 * Double(NSEC_PER_SEC)))
-            dispatch_after(delayTime, dispatch_get_main_queue()) {
-               self.miniPlayerViewController?.presentViewController(UINavigationController(rootViewController:stvc), animated: true, completion: nil)
+        if let repo = streamRepository {
+            let _ = repo.subscribeTo(RecommendFeed.sampleStream(), categories: [])
+            let stvc = AddStreamMenuViewController(streamRepository: repo)
+            let delayTime = DispatchTime.now() + Double(Int64(0.3 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+            DispatchQueue.main.asyncAfter(deadline: delayTime) {
+               self.miniPlayerViewController?.present(UINavigationController(rootViewController:stvc), animated: true, completion: nil)
                 return
             }
         }
@@ -264,19 +264,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // Player control functions
 
-    func toggle(trackIndex: Int, playlist: MusicFeeder.Playlist, playlistQueue: PlaylistQueue) {
-        setupAudioSession(UIApplication.sharedApplication())
+    func toggle(_ trackIndex: Int, playlist: MusicFeeder.Playlist, playlistQueue: PlaylistQueue) {
+        setupAudioSession(UIApplication.shared)
         if player?.toggle(trackIndex, playlist: playlist, playlistQueue: playlistQueue) ?? false {
             showMiniPlayer()
         }
     }
 
     func toggle() {
-        setupAudioSession(UIApplication.sharedApplication())
+        setupAudioSession(UIApplication.shared)
         player?.toggle()
     }
     func play()  {
-        setupAudioSession(UIApplication.sharedApplication())
+        setupAudioSession(UIApplication.shared)
 
         if player?.play() ?? false {
             showMiniPlayer()

@@ -14,8 +14,8 @@ class GAIConfigSpec: QuickSpec {
     override func spec() {
         describe("A GAIExtension") {
             it("should load settings from google_analytics.json") {
-                let bundle = NSBundle(forClass: SpecHelper.self)
-                GAIConfig.setup(bundle.pathForResource("google_analytics", ofType: "json")!)
+                let bundle = Bundle(for: SpecHelper.self)
+                GAIConfig.setup(bundle.path(forResource: "google_analytics", ofType: "json")!)
             }
         }
     }

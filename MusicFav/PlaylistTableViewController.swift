@@ -7,25 +7,25 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import MusicFeeder
 import SoundCloudKit
 import Breit
 
 class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     let NEW_PLAYLIST_INDEX = -1
-    var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as! AppDelegate } }
+    var appDelegate: AppDelegate { get { return UIApplication.shared.delegate as! AppDelegate } }
     enum Section: Int {
-        case Playing     = 0
-        case Selected    = 1
-        case YouTube     = 2
-        case SoundCloud  = 3
-        case Favorites   = 4
+        case playing     = 0
+        case selected    = 1
+        case youTube     = 2
+        case soundCloud  = 3
+        case favorites   = 4
         static let count = 5
         var title: String? {
             switch self {
-            case .YouTube:   return " "
-            case .Favorites: return " "
+            case .youTube:   return " "
+            case .favorites: return " "
             default:         return nil
             }
         }
@@ -36,21 +36,21 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             vc = playlistTableViewController
             super.init()
         }
-        override func listen(event: Event) {
+        override func listen(_ event: Event) {
             switch event {
-            case .TimeUpdated: break
-            case .DidPlayToEndTime: break
-            case .StatusChanged:
+            case .timeUpdated: break
+            case .didPlayToEndTime: break
+            case .statusChanged:
                 if let playlist = vc.appDelegate.playingPlaylist {
                     vc.updatePlaylist(playlist)
                 }
-            case .TrackSelected:             update()
-            case .TrackUnselected:           update()
-            case .PreviousPlaylistRequested: break
-            case .NextPlaylistRequested:     break
-            case .ErrorOccured:              break
-            case .PlaylistChanged:           break
-            case .NextTrackAdded:            break
+            case .trackSelected:             update()
+            case .trackUnselected:           update()
+            case .previousPlaylistRequested: break
+            case .nextPlaylistRequested:     break
+            case .errorOccured:              break
+            case .playlistChanged:           break
+            case .nextTrackAdded:            break
             }
         }
         func update() {
@@ -76,10 +76,10 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         super.viewDidLoad()
         clearsSelectionOnViewWillAppear = true
         let nib = UINib(nibName: "PlaylistTableViewCell", bundle: nil)
-        tableView?.registerNib(nib, forCellReuseIdentifier:self.tableCellReuseIdentifier)
+        tableView?.register(nib, forCellReuseIdentifier:self.tableCellReuseIdentifier)
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         Logger.sendScreenView(self)
         observePlaylists()
@@ -87,18 +87,18 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         updateNavbar()
     }
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         dispose()
     }
 
     func updateNavbar() {
         let newPlaylistButton = UIBarButtonItem(image: UIImage(named: "add_stream"),
-                                                style: UIBarButtonItemStyle.Plain,
+                                                style: UIBarButtonItemStyle.plain,
                                                target: self,
                                                action: #selector(PlaylistTableViewController.newPlaylist))
         newPlaylistButton.accessibilityLabel = AccessibilityLabel.NewPlaylistButton.s
         let reorderButton     = UIBarButtonItem(image: UIImage(named: "reorder"),
-                                                style: UIBarButtonItemStyle.Plain,
+                                                style: UIBarButtonItemStyle.plain,
                                                target: self,
                                                action: #selector(PlaylistTableViewController.reorder))
         navigationItem.rightBarButtonItems = [newPlaylistButton, reorderButton]
@@ -110,25 +110,29 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     }
 
     func reorder() {
-        tableView.setEditing(!tableView.editing, animated: true)
+        tableView.setEditing(!tableView.isEditing, animated: true)
     }
 
-    func showPlaylist(playlist: MusicFeeder.Playlist, animated: Bool) -> TrackTableViewController {
+    func showPlaylist(_ playlist: MusicFeeder.Playlist, animated: Bool) -> TrackTableViewController {
         Logger.sendUIActionEvent(self, action: "showPlaylist", label: "")
         let ttc = TrackTableViewController(playlist: playlist)
-        navigationController?.popToRootViewControllerAnimated(animated)
+        let _ = navigationController?.popToRootViewController(animated: animated)
         navigationController?.pushViewController(ttc, animated: animated)
         return ttc
     }
 
-    func showPlayingPlaylist(animated: Bool) {
+    func showPlayingPlaylist(_ animated: Bool) {
         Logger.sendUIActionEvent(self, action: "showPlayingPlaylist", label: "")
-        if let playlist = appDelegate.playingPlaylist { showPlaylist(playlist, animated: animated) }
+        if let playlist = appDelegate.playingPlaylist {
+            let _ = showPlaylist(playlist, animated: animated)
+        }
     }
 
-    func showSelectedPlaylist(animated: Bool) {
+    func showSelectedPlaylist(_ animated: Bool) {
         Logger.sendUIActionEvent(self, action: "showSelectedPlaylist", label: "")
-        if let playlist = appDelegate.selectedPlaylist { showPlaylist(playlist, animated: animated) }
+        if let playlist = appDelegate.selectedPlaylist {
+            let _ = showPlaylist(playlist, animated: animated)
+        }
     }
 
     func showYouTubePlaylists() {
@@ -157,162 +161,160 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
     func observePlaylists() {
         playlists = Playlist.shared.current
         tableView.reloadData()
-        playlistsObserver = Playlist.shared.signal.observeNext({ event in
-                switch event {
-                case .Created(let playlist):
-                    self.createPlaylist(playlist)
-                case .Updated(let playlist):
-                    self.updatePlaylist(playlist)
-                case .Removed(let playlist):
-                    self.removePlaylist(playlist)
-                case .TracksAdded(let playlist, _):
-                    self.updatePlaylist(playlist)
-                case .TrackRemoved(let playlist, _, _):
-                    self.updatePlaylist(playlist)
-                case .TrackUpdated(let playlist, _):
-                    self.updatePlaylist(playlist)
-                case .SharedListUpdated:
-                    self.playlists = Playlist.shared.current
-                    self.tableView.reloadData()
-                }
-                return
-            })
+        playlistsObserver = Playlist.shared.signal.observeResult({ result in
+            guard let event = result.value else { return }
+            switch event {
+            case .created(let playlist):
+                self.createPlaylist(playlist)
+            case .updated(let playlist):
+                self.updatePlaylist(playlist)
+            case .removed(let playlist):
+                self.removePlaylist(playlist)
+            case .tracksAdded(let playlist, _):
+                self.updatePlaylist(playlist)
+            case .trackRemoved(let playlist, _, _):
+                self.updatePlaylist(playlist)
+            case .trackUpdated(let playlist, _):
+                self.updatePlaylist(playlist)
+            case .sharedListUpdated:
+                self.playlists = Playlist.shared.current
+                self.tableView.reloadData()
+            }
+            return
+        })
     }
 
-    func createPlaylist(playlist: MusicFeeder.Playlist) {
-        let section = Section.Favorites.rawValue
+    func createPlaylist(_ playlist: MusicFeeder.Playlist) {
+        let section = Section.favorites.rawValue
         playlists = Playlist.shared.current
-        guard let index = playlists.indexOf(playlist) else {
+        guard let index = playlists.index(of: playlist) else {
             tableView.reloadData()
             return
         }
-        let indexPath = NSIndexPath(forItem: index, inSection: section)
-        tableView.insertRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+        let indexPath = IndexPath(item: index, section: section)
+        tableView.insertRows(at: [indexPath], with: .fade)
     }
 
-    func updatePlaylist(playlist: MusicFeeder.Playlist) {
-        let section = Section.Favorites.rawValue
+    func updatePlaylist(_ playlist: MusicFeeder.Playlist) {
+        let section = Section.favorites.rawValue
         if playlist == appDelegate.playingPlaylist {
-            let indexPath = NSIndexPath(forItem: 0, inSection: Section.Playing.rawValue)
-            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            let indexPath = IndexPath(item: 0, section: Section.playing.rawValue)
+            tableView.reloadRows(at: [indexPath], with: .fade)
         } else if playlist == appDelegate.selectedPlaylist {
-            let indexPath = NSIndexPath(forItem: 0, inSection: Section.Selected.rawValue)
-            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            let indexPath = IndexPath(item: 0, section: Section.selected.rawValue)
+            tableView.reloadRows(at: [indexPath], with: .fade)
         }
-        if let index = self.playlists.indexOf(playlist) {
-            let indexPath = NSIndexPath(forItem: index, inSection: section)
+        if let index = self.playlists.index(of: playlist) {
+            let indexPath = IndexPath(item: index, section: section)
             playlists[index] = playlist
-            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            tableView.reloadRows(at: [indexPath], with: .fade)
         }
     }
 
-    func removePlaylist(playlist: MusicFeeder.Playlist) {
-        let section = Section.Favorites.rawValue
-        if let index = playlists.indexOf(playlist) {
-            _ = playlists.removeAtIndex(index)
-            let indexPath = NSIndexPath(forItem: index, inSection: section)
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+    func removePlaylist(_ playlist: MusicFeeder.Playlist) {
+        let section = Section.favorites.rawValue
+        if let index = playlists.index(of: playlist) {
+            _ = playlists.remove(at: index)
+            let indexPath = IndexPath(item: index, section: section)
+            tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
 
-    func showTitleEditAlertViewAtIndex(index: Int) {
+    func showTitleEditAlertViewAtIndex(_ index: Int) {
         Logger.sendUIActionEvent(self, action: "showTitleEditAlertViewAtIndex", label: "")
         var title: String!
         if index >= 0 { title = "Edit playlist title".localize() }
         else          { title = "New playlist".localize() }
-        let alertView = UIAlertView(title: title,
-                                  message: "",
-                                 delegate: self,
-                        cancelButtonTitle: "Cancel".localize(),
-                        otherButtonTitles: "OK".localize())
-        alertView.alertViewStyle = UIAlertViewStyle.PlainTextInput
-        alertView.tag = index
-        alertView.textFieldAtIndex(0)?.accessibilityLabel = AccessibilityLabel.PlaylistName.s
-        if index >= 0 { alertView.textFieldAtIndex(0)?.text = playlists[index].title }
-        else          { alertView.textFieldAtIndex(0)?.text = "" }
-        alertView.show()
-    }
-
-    func alertView(alertView: UIAlertView, clickedButtonAtIndex buttonIndex: Int) {
-        if (buttonIndex == alertView.cancelButtonIndex) { tableView.reloadData(); return }
-        let index = alertView.tag
-        let newTitle = alertView.textFieldAtIndex(0)!.text!
-        if index >= 0 {
-            playlists[index].title = newTitle
-            playlists[index].save()
-        } else if index == NEW_PLAYLIST_INDEX {
-            let playlist = Playlist(title: newTitle)
-            switch playlist.create() {
-            case .Success: break
-            case .Failure:
-                UIAlertController.show(self, title: "MusicFav", message: "Failed to create playlist", handler: {action in })
-            case .ExceedLimit:
-                let message = String(format: "Playlist number is limited to %d.".localize(), Playlist.playlistNumberLimit) +
-                    "Do you want to purchase \"Unlock Everything\".".localize()
-                UIAlertController.showPurchaseAlert(self, title: "MusicFav", message: message, handler: {action in })
+        let alert = UIAlertController(title: title, message: "", preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "Cancel".localize(), style: UIAlertActionStyle.cancel, handler: { action in
+            self.tableView.reloadData()
+            return
+        }))
+        alert.addAction(UIAlertAction(title: "OK".localize(), style: UIAlertActionStyle.default, handler: { action in
+            guard let newTitle = alert.textFields?[0].text else { return }
+            if index >= 0 {
+                self.playlists[index].title = newTitle
+                let _ = self.playlists[index].save()
+            } else if index == self.NEW_PLAYLIST_INDEX {
+                let playlist = Playlist(title: newTitle)
+                switch playlist.create() {
+                case .success: break
+                case .failure:
+                    let _ = UIAlertController.show(self, title: "MusicFav", message: "Failed to create playlist", handler: {action in })
+                case .exceedLimit:
+                    let message = String(format: "Playlist number is limited to %d.".localize(), Playlist.playlistNumberLimit) +
+                        "Do you want to purchase \"Unlock Everything\".".localize()
+                    let _ = UIAlertController.showPurchaseAlert(self, title: "MusicFav", message: message, handler: {action in })
+                }
             }
+            self.tableView.reloadData()
+        }))
+        alert.addTextField { textField in
+            textField.accessibilityLabel = AccessibilityLabel.PlaylistName.s
+            if index >= 0 { textField.text = self.playlists[index].title }
+            else          { textField.text = "" }
         }
-        tableView.reloadData()
+        present(alert, animated: true, completion: nil)
     }
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return Section.count
     }
 
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return Section(rawValue: section)?.title
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch (Section(rawValue: section)!) {
-        case .Playing:    return 1
-        case .Selected:   return appDelegate.selectedPlaylist == nil ? 0 : 1
-        case .YouTube:    return 1
-        case .SoundCloud: return 1
-        case .Favorites:  return playlists.count
+        case .playing:    return 1
+        case .selected:   return appDelegate.selectedPlaylist == nil ? 0 : 1
+        case .youTube:    return 1
+        case .soundCloud: return 1
+        case .favorites:  return playlists.count
         }
     }
 
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.cellHeight
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(self.tableCellReuseIdentifier, forIndexPath: indexPath) as! PlaylistTableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: self.tableCellReuseIdentifier, for: indexPath) as! PlaylistTableViewCell
         var playlist: MusicFeeder.Playlist?
         switch (Section(rawValue: indexPath.section)!) {
-        case .Playing:
+        case .playing:
             playlist = appDelegate.playingPlaylist
             if let p = playlist {
                 cell.titleLabel.text = "Now playing".localize() + "(\(p.title))"
             } else {
                 cell.titleLabel.text = "Not playing".localize()
             }
-        case .Selected:
+        case .selected:
             playlist = appDelegate.selectedPlaylist
             if let p = playlist {
                 cell.titleLabel.text = "Selected".localize() + "(\(p.title))"
             } else {
                 cell.titleLabel.text = "Not selected".localize()
             }
-        case .Favorites:
+        case .favorites:
             playlist = playlists[indexPath.item]
             cell.titleLabel.text = playlists[indexPath.item].title
-        case .YouTube:
+        case .youTube:
             cell.titleLabel.text = "YouTube Playlists"
             cell.thumbImageView.image = UIImage(named: "youtube")
             cell.trackNumLabel.text = ""
             return cell
-        case .SoundCloud:
+        case .soundCloud:
             cell.titleLabel.text = "SoundCloud Playlists"
             cell.thumbImageView.image = UIImage(named: "soundcloud")
             cell.trackNumLabel.text = ""
             return cell
         }
-        if let p = playlist, thumbnailUrl = p.thumbnailUrl {
-            cell.thumbImageView.sd_setImageWithURL(thumbnailUrl)
+        if let p = playlist, let thumbnailUrl = p.thumbnailUrl {
+            cell.thumbImageView.sd_setImage(with: thumbnailUrl)
             cell.trackNumLabel.text = "\(p.tracks.count) tracks"
         } else {
             cell.thumbImageView.image = UIImage(named: "default_thumb")
@@ -321,82 +323,82 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         return cell
     }
 
-    override func tableView(tableView: UITableView, editActionsForRowAtIndexPath indexPath: NSIndexPath) -> [UITableViewRowAction]? {
-        let edit = UITableViewRowAction(style: .Default, title: "Edit title".localize()) {
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
+        let edit = UITableViewRowAction(style: .default, title: "Edit title".localize()) {
             (action, indexPath) in
             switch (Section(rawValue: indexPath.section)!) {
-            case .Favorites:
+            case .favorites:
                 self.showTitleEditAlertViewAtIndex(indexPath.item)
             default:
-                tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
+                tableView.reloadRows(at: [indexPath], with: .right)
             }
         }
         edit.backgroundColor = UIColor.green
-        let remove = UITableViewRowAction(style: .Default, title: "Remove".localize()) {
+        let remove = UITableViewRowAction(style: .default, title: "Remove".localize()) {
             (action, indexPath) in
             switch (Section(rawValue: indexPath.section)!) {
-            case .Favorites:
+            case .favorites:
                 self.playlists[indexPath.item].remove()
             default:
-                tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: .Right)
+                tableView.reloadRows(at: [indexPath], with: .right)
             }
         }
         remove.backgroundColor = UIColor.red
         return [edit, remove]
     }
 
-    override func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
-        Playlist.movePlaylistInSharedList(sourceIndexPath.item, toIndex: destinationIndexPath.item)
+    override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let _ = Playlist.movePlaylistInSharedList(sourceIndexPath.item, toIndex: destinationIndexPath.item)
     }
 
-    override func tableView(tableView: UITableView, shouldIndentWhileEditingRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
         return false
     }
 
-    override func tableView(tableView: UITableView, editingStyleForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCellEditingStyle {
-        return tableView.editing ? UITableViewCellEditingStyle.None : UITableViewCellEditingStyle.Delete
+    override func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
+        return tableView.isEditing ? UITableViewCellEditingStyle.none : UITableViewCellEditingStyle.delete
     }
 
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     }
 
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         switch (Section(rawValue: indexPath.section)!) {
-        case .Playing:    return false
-        case .Selected:   return false
-        case .YouTube:    return false
-        case .SoundCloud: return false
-        case .Favorites:  return tableView.editing
+        case .playing:    return false
+        case .selected:   return false
+        case .youTube:    return false
+        case .soundCloud: return false
+        case .favorites:  return tableView.isEditing
         }
     }
 
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         switch (Section(rawValue: indexPath.section)!) {
-        case .Playing:
+        case .playing:
             showPlayingPlaylist(true)
-        case .Selected:
+        case .selected:
             showSelectedPlaylist(true)
-        case .YouTube:
+        case .youTube:
             if YouTubeAPIClient.isLoggedIn {
                 showYouTubePlaylists()
             } else {
                 let vc = UINavigationController(rootViewController: YouTubeOAuthViewController())
-                presentViewController(vc, animated: true, completion: {})
+                present(vc, animated: true, completion: {})
             }
-        case .SoundCloud:
+        case .soundCloud:
             if SoundCloudKit.APIClient.isLoggedIn {
                 showSoundCloudPlaylists()
             } else {
                 let vc = SoundCloudOAuthViewController()
-                presentViewController(UINavigationController(rootViewController: vc), animated: true, completion: {})
+                present(UINavigationController(rootViewController: vc), animated: true, completion: {})
             }
-        case .Favorites:
-            showPlaylist(playlists[indexPath.item], animated: true)
+        case .favorites:
+            let _ = showPlaylist(playlists[indexPath.item], animated: true)
         }
     }
 }

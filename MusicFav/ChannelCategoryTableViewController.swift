@@ -7,53 +7,52 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import SwiftyJSON
 import FeedlyKit
-import PageMenu
 import MusicFeeder
 import MBProgressHUD
 
 class ChannelCategoryTableViewController: AddStreamTableViewController {
-    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
 
     enum Section: Int {
-        case Subscriptions = 0
-        case GuideCategory = 1
+        case subscriptions = 0
+        case guideCategory = 1
         static let count   = 2
         var title: String? {
             switch self {
-            case .Subscriptions:
+            case .subscriptions:
                 if YouTubeAPIClient.isLoggedIn {
                     return "Your subscriptions"
                 } else {
                     return nil
                 }
-            case .GuideCategory:
+            case .guideCategory:
                 return "Category"
             }
         }
         var tableCellReuseIdentifier: String {
             switch self {
-            case .Subscriptions:
+            case .subscriptions:
                 if YouTubeAPIClient.isLoggedIn {
                     return "Subscriptions"
                 } else {
                     return "Login"
                 }
-            case .GuideCategory:
+            case .guideCategory:
                 return "Category"
             }
         }
         var cellHeight: CGFloat {
             switch self {
-            case .Subscriptions:
+            case .subscriptions:
                 if YouTubeAPIClient.isLoggedIn {
                     return 100
                 } else {
                     return 60
                 }
-            case .GuideCategory:
+            case .guideCategory:
                 return 60
             }
         }
@@ -64,9 +63,9 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
     var indicator:           UIActivityIndicatorView!
     var reloadButton:        UIButton!
 
-    init(streamListLoader: StreamListLoader, channelLoader: ChannelLoader) {
+    init(streamRepository: StreamRepository, channelLoader: ChannelLoader) {
         self.channelLoader    = channelLoader
-        super.init(streamListLoader: streamListLoader)
+        super.init(streamRepository: streamRepository)
     }
 
     required init(coder aDecoder: NSCoder) {
@@ -74,7 +73,7 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
         super.init(coder: aDecoder)
     }
 
-    override func getSubscribables() -> [Stream] {
+    override func getSubscribables() -> [FeedlyKit.Stream] {
         if let indexPaths = tableView.indexPathsForSelectedRows {
             return indexPaths.map { Channel(subscription: self.channelLoader.subscriptions[$0.item]) }
         } else {
@@ -84,17 +83,17 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let nib = UINib(nibName: "StreamTableViewCell", bundle: NSBundle.mainBundle())
-        tableView.registerNib(nib, forCellReuseIdentifier: "Subscriptions")
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Login")
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: Section.GuideCategory.tableCellReuseIdentifier)
+        let nib = UINib(nibName: "StreamTableViewCell", bundle: Bundle.main)
+        tableView.register(nib, forCellReuseIdentifier: "Subscriptions")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Login")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: Section.guideCategory.tableCellReuseIdentifier)
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(title:"Add".localize(),
-                                                            style: UIBarButtonItemStyle.Plain,
+                                                            style: UIBarButtonItemStyle.plain,
                                                            target: self,
                                                            action: #selector(ChannelCategoryTableViewController.add))
 
-        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
         indicator.bounds = CGRect(x: 0,
                                   y: 0,
                               width: indicator.bounds.width,
@@ -103,11 +102,11 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
         indicator.stopAnimating()
 
         reloadButton = UIButton()
-        reloadButton.setImage(UIImage(named: "network_error"), forState: UIControlState.Normal)
-        reloadButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        reloadButton.addTarget(self, action:#selector(ChannelCategoryTableViewController.refresh), forControlEvents:UIControlEvents.TouchUpInside)
-        reloadButton.setTitle("Sorry, network error occured.".localize(), forState:UIControlState.Normal)
-        reloadButton.frame = CGRectMake(0, 0, tableView.frame.size.width, 44);
+        reloadButton.setImage(UIImage(named: "network_error"), for: UIControlState())
+        reloadButton.setTitleColor(UIColor.black, for: UIControlState())
+        reloadButton.addTarget(self, action:#selector(ChannelCategoryTableViewController.refresh), for:UIControlEvents.touchUpInside)
+        reloadButton.setTitle("Sorry, network error occured.".localize(), for:UIControlState.normal)
+        reloadButton.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 44);
         tableView.allowsMultipleSelection = true
     }
 
@@ -115,19 +114,19 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
         super.didReceiveMemoryWarning()
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         updateAddButton()
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         observeChannelLoader()
         channelLoader.fetchSubscriptions()
         channelLoader.fetchCategories()
     }
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         observer?.dispose()
         observer = nil
@@ -139,21 +138,22 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
 
     func observeChannelLoader() {
         observer?.dispose()
-        observer = channelLoader.signal.observeNext({ event in
+        observer = channelLoader.signal.observeResult({ result in
+            guard let event = result.value else { return }
             switch event {
-            case .StartLoading:
+            case .startLoading:
                 self.showIndicator()
-            case .CompleteLoading:
+            case .completeLoading:
                 self.hideIndicator()
-                self.reloadData(keepSelection: true)
-            case .FailToLoad:
+                self.reloadData(true)
+            case .failToLoad:
                 self.showReloadButton()
             }
         })
-        reloadData(keepSelection: true)
+        reloadData(true)
     }
 
-    override func scrollViewDidScroll(scrollView: UIScrollView) {
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if tableView.contentOffset.y >= tableView.contentSize.height - tableView.bounds.size.height {
             refresh()
         }
@@ -186,75 +186,75 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return Section.count
     }
 
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return Section(rawValue: section)?.title
     }
 
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return Section(rawValue: indexPath.section)!.cellHeight
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
-        case .Subscriptions:
+        case .subscriptions:
             if YouTubeAPIClient.isLoggedIn {
                 return channelLoader.subscriptions.count
             } else {
                 return 1
             }
-        case .GuideCategory:
+        case .guideCategory:
             return channelLoader.categories.count
         }
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let section = Section(rawValue: indexPath.section)!
         switch section {
-        case .Subscriptions:
+        case .subscriptions:
             if YouTubeAPIClient.isLoggedIn {
-                let cell = tableView.dequeueReusableCellWithIdentifier(section.tableCellReuseIdentifier, forIndexPath: indexPath) as! StreamTableViewCell
+                let cell = tableView.dequeueReusableCell(withIdentifier: section.tableCellReuseIdentifier, for: indexPath) as! StreamTableViewCell
                 setAccessoryView(cell, indexPath: indexPath)
                 let subscription = channelLoader.subscriptions[indexPath.item]
                 cell.titleLabel.text = subscription.title
-                if let url = NSURL(string: subscription.thumbnails["default"]!) {
-                    cell.thumbImageView.sd_setImageWithURL(url)
+                if let url = URL(string: subscription.thumbnails["default"]!) {
+                    cell.thumbImageView.sd_setImage(with: url)
                 }
                 cell.subtitle1Label.text          = ""
                 cell.subtitle2Label.text          = subscription.description
                 cell.subtitle2Label.numberOfLines = 2
-                cell.subtitle2Label.textAlignment = .Left
+                cell.subtitle2Label.textAlignment = .left
                 return cell
             } else {
-                let cell = tableView.dequeueReusableCellWithIdentifier(section.tableCellReuseIdentifier, forIndexPath: indexPath)
+                let cell = tableView.dequeueReusableCell(withIdentifier: section.tableCellReuseIdentifier, for: indexPath)
                 cell.textLabel?.text = "Connect with Your YouTube Account"
                 return cell
             }
-        case .GuideCategory:
-            let cell = tableView.dequeueReusableCellWithIdentifier(section.tableCellReuseIdentifier, forIndexPath: indexPath)
+        case .guideCategory:
+            let cell = tableView.dequeueReusableCell(withIdentifier: section.tableCellReuseIdentifier, for: indexPath)
             let category = channelLoader.categories[indexPath.item]
             cell.textLabel?.text = category.title
             return cell
         }
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch Section(rawValue: indexPath.section)! {
-        case .Subscriptions:
+        case .subscriptions:
             if YouTubeAPIClient.isLoggedIn {
-                super.tableView(tableView, didSelectRowAtIndexPath: indexPath)
+                super.tableView(tableView, didSelectRowAt: indexPath)
             } else {
                 showYouTubeLoginViewController()
             }
-        case .GuideCategory:
-            let vc = ChannelTableViewController(streamListLoader: streamListLoader,
+        case .guideCategory:
+            let vc = ChannelTableViewController(streamRepository: streamRepository,
                                                    channelLoader: channelLoader,
-                                                            type: .Category(channelLoader.categories[indexPath.item]))
+                                                            type: .category(channelLoader.categories[indexPath.item]))
             navigationController?.pushViewController(vc, animated: true)
-            tableView.deselectRowAtIndexPath(indexPath, animated: true)
+            tableView.deselectRow(at: indexPath, animated: true)
         }
     }
 }

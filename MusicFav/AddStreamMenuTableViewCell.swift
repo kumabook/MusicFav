@@ -18,27 +18,27 @@ class AddStreamMenuTableViewCell: UITableViewCell {
         super.awakeFromNib()
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
 
-    private func clearThumbListContainer() {
+    fileprivate func clearThumbListContainer() {
         for v in thumbListContainer.subviews {
             v.removeFromSuperview()
         }
     }
 
-    func setThumbnailImages(urls: [NSURL]) {
+    func setThumbnailImages(_ urls: [URL]) {
         clearThumbListContainer()
         let tw = thumbWidth
         for i in 0..<min(urls.count, thumbMaxNum) {
             let iv = UIImageView(frame: CGRect(x: i*tw, y: 0, width: tw, height: tw))
             thumbListContainer.addSubview(iv)
-            iv.sd_setImageWithURL(urls[i], placeholderImage: UIImage(named: "default_thumb"))
+            iv.sd_setImage(with: urls[i], placeholderImage: UIImage(named: "default_thumb"))
         }
     }
 
-    func setMessageLabel(message: String) {
+    func setMessageLabel(_ message: String) {
         clearThumbListContainer()
         let messageLabel = UILabel(frame: thumbListContainer.frame)
         messageLabel.text = "You can subscribe YouTube channel.".localize()

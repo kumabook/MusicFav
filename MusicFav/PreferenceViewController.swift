@@ -17,67 +17,67 @@ import StoreKit
 import MBProgressHUD
 
 class PreferenceViewController: UITableViewController {
-    var appDelegate: AppDelegate { get { return UIApplication.sharedApplication().delegate as! AppDelegate } }
+    var appDelegate: AppDelegate { get { return UIApplication.shared.delegate as! AppDelegate } }
     enum Section: Int {
-        case Account     = 0
-        case Behavior    = 1
-        case Feedback    = 2
-        case Other       = 3
+        case account     = 0
+        case behavior    = 1
+        case feedback    = 2
+        case other       = 3
         static let count = 4
         var rowCount: Int {
             switch self {
-            case .Account:  return AccountRow.count
-            case .Behavior: return BehaviorRow.count
-            case .Feedback: return FeedbackRow.count
-            case .Other:    return OtherRow.count
+            case .account:  return AccountRow.count
+            case .behavior: return BehaviorRow.count
+            case .feedback: return FeedbackRow.count
+            case .other:    return OtherRow.count
             }
         }
-        func rowTitle(rowIndex: Int) -> String? {
+        func rowTitle(_ rowIndex: Int) -> String? {
             switch self {
-            case .Account:  return AccountRow(rawValue: rowIndex)?.title
-            case .Behavior: return BehaviorRow(rawValue: rowIndex)?.title
-            case .Feedback: return FeedbackRow(rawValue: rowIndex)?.title
-            case .Other:    return OtherRow(rawValue: rowIndex)?.title
+            case .account:  return AccountRow(rawValue: rowIndex)?.title
+            case .behavior: return BehaviorRow(rawValue: rowIndex)?.title
+            case .feedback: return FeedbackRow(rawValue: rowIndex)?.title
+            case .other:    return OtherRow(rawValue: rowIndex)?.title
             }
         }
-        func rowDetail(rowIndex: Int) -> String? {
+        func rowDetail(_ rowIndex: Int) -> String? {
             switch self {
-            case .Account:  return nil
-            case .Behavior: return BehaviorRow(rawValue: rowIndex)?.detail
-            case .Feedback: return nil
-            case .Other:    return nil
+            case .account:  return nil
+            case .behavior: return BehaviorRow(rawValue: rowIndex)?.detail
+            case .feedback: return nil
+            case .other:    return nil
             }
         }
         var title: String {
             switch self {
-            case .Account:  return "ACCOUNT"
-            case .Behavior: return "BEHAVIOR"
-            case .Feedback: return "FEEDBACK"
-            case .Other:    return ""
+            case .account:  return "ACCOUNT"
+            case .behavior: return "BEHAVIOR"
+            case .feedback: return "FEEDBACK"
+            case .other:    return ""
             }
         }
     }
 
     enum AccountRow: Int {
-        case Feedly      = 0
-        case YouTube     = 1
-        case SoundCloud  = 2
+        case feedly      = 0
+        case youTube     = 1
+        case soundCloud  = 2
         static let count = 3
         var title: String {
             switch self {
-            case Feedly:
+            case .feedly:
                 if CloudAPIClient.isLoggedIn {
                     return "Disconnect with Feedly".localize()
                 } else {
                     return "Manage feeds with Feedly".localize()
                 }
-            case YouTube:
+            case .youTube:
                 if YouTubeAPIClient.isLoggedIn {
                     return "Disconnect with YouTube".localize()
                 } else {
                     return "Connect with YouTube".localize()
                 }
-            case SoundCloud:
+            case .soundCloud:
                 if SoundCloudKit.APIClient.isLoggedIn {
                     return "Disconnect with SoundCloud".localize()
                 } else {
@@ -88,69 +88,69 @@ class PreferenceViewController: UITableViewController {
     }
 
     enum BehaviorRow: Int {
-        case YouTubeVideoQuality = 0
-        case NotificationTime    = 1
-        case UnlockEverything    = 2
-        case RestorePurchase     = 3
+        case youTubeVideoQuality = 0
+        case notificationTime    = 1
+        case unlockEverything    = 2
+        case restorePurchase     = 3
         static var count: Int {
             if PaymentManager.isUnlockedEverything { return 2 }
             else                                   { return 4 }
         }
         var title: String {
             switch self {
-            case .YouTubeVideoQuality: return "Video Quality".localize()
-            case .NotificationTime:    return "Notification of new arrivals".localize()
-            case .UnlockEverything:    return "Unlock Everything".localize()
-            case .RestorePurchase:     return "Restore Purchase".localize()
+            case .youTubeVideoQuality: return "Video Quality".localize()
+            case .notificationTime:    return "Notification of new arrivals".localize()
+            case .unlockEverything:    return "Unlock Everything".localize()
+            case .restorePurchase:     return "Restore Purchase".localize()
             }
         }
         var detail: String {
             switch self {
-            case .YouTubeVideoQuality:
+            case .youTubeVideoQuality:
                 return Track.youTubeVideoQuality.label
-            case .NotificationTime:
-                if let components = CloudAPIClient.notificationDateComponents {
-                    if components.hour <= 11 {
-                        return String(format: "%02d:%02d AM", components.hour, components.minute)
+            case .notificationTime:
+                if let c = CloudAPIClient.notificationDateComponents, let h = c.hour, let m = c.minute {
+                    if h <= 11 {
+                        return String(format: "%02d:%02d AM", h, m)
                     } else {
-                        return String(format: "%02d:%02d PM", components.hour - 12, components.minute)
+                        return String(format: "%02d:%02d PM", h - 12, m)
                     }
                 }
                 return "No notification".localize()
-            case .UnlockEverything: return ""
-            case .RestorePurchase:  return ""
+            case .unlockEverything: return ""
+            case .restorePurchase:  return ""
             }
         }
     }
 
     enum FeedbackRow: Int {
-        case Feedback    = 0
-        case Rate        = 1
+        case feedback    = 0
+        case rate        = 1
         static let count = 2
         var title: String {
             switch self {
-            case .Feedback: return "Send Feedback".localize()
-            case .Rate:     return "Please Rate MusicFav".localize()
+            case .feedback: return "Send Feedback".localize()
+            case .rate:     return "Please Rate MusicFav".localize()
             }
         }
     }
     enum OtherRow: Int {
-        case Tutorial    = 0
-        case About       = 1
+        case tutorial    = 0
+        case about       = 1
         static let count = 2
         var title: String {
             switch self {
-            case .About:    return "About".localize()
-            case .Tutorial: return "Tutorial".localize()
+            case .about:    return "About".localize()
+            case .tutorial: return "Tutorial".localize()
             }
         }
     }
 
     init() {
-        super.init(style: UITableViewStyle.Grouped)
+        super.init(style: UITableViewStyle.grouped)
     }
 
-    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: NSBundle?) {
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nil, bundle:nil)
     }
 
@@ -167,24 +167,24 @@ class PreferenceViewController: UITableViewController {
         RMDateSelectionViewController.setLocalizedTitleForNowButton("No notification".localize())
         navigationItem.title             = "Preferences".localize()
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Close".localize(),
-                                                           style: UIBarButtonItemStyle.Plain,
+                                                           style: UIBarButtonItemStyle.plain,
                                                           target: self,
                                                           action: #selector(PreferenceViewController.close))
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         appDelegate.paymentManager?.viewController = self
         Logger.sendScreenView(self)
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(true)
         self.tableView.reloadData()
     }
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         appDelegate.paymentManager?.viewController = nil
     }
 
@@ -194,12 +194,12 @@ class PreferenceViewController: UITableViewController {
     }
     
     func close() {
-        self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
+        self.navigationController?.dismiss(animated: true, completion: nil)
     }
 
     func logout() {
         CloudAPIClient.logout()
-        self.dismissViewControllerAnimated(true) {
+        self.dismiss(animated: true) {
             self.appDelegate.didLogout()
         }
     }
@@ -217,16 +217,16 @@ class PreferenceViewController: UITableViewController {
         navigationController?.pushViewController(SoundCloudOAuthViewController(), animated: true)
     }
 
-    func showConfirmDialog(title: String, message: String, action: ((UIAlertAction!) -> Void)) {
+    func showConfirmDialog(_ title: String, message: String, action: @escaping ((UIAlertAction!) -> Void)) {
         let ac = UIAlertController(title: title.localize(),
             message: message.localize(),
-            preferredStyle: UIAlertControllerStyle.Alert)
-        let okAction = UIAlertAction(title: "OK".localize(), style: UIAlertActionStyle.Default, handler: action)
-        let cancelAction = UIAlertAction(title: "Cancel".localize(), style: UIAlertActionStyle.Cancel) { (action) in
+            preferredStyle: UIAlertControllerStyle.alert)
+        let okAction = UIAlertAction(title: "OK".localize(), style: UIAlertActionStyle.default, handler: action)
+        let cancelAction = UIAlertAction(title: "Cancel".localize(), style: UIAlertActionStyle.cancel) { (action) in
         }
         ac.addAction(okAction)
         ac.addAction(cancelAction)
-        presentViewController(ac, animated: true, completion: nil)
+        present(ac, animated: true, completion: nil)
     }
 
     func showLogoutDialog() {
@@ -253,26 +253,26 @@ class PreferenceViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return Section.count
     }
 
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if let section = Section(rawValue: section) {
             return section.title
         }
         return ""
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if let section = Section(rawValue: section) {
             return section.rowCount
         }
         return 0
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: UITableViewCellStyle.Value1, reuseIdentifier: "reuseIdentifier")
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: UITableViewCellStyle.value1, reuseIdentifier: "reuseIdentifier")
         if let section = Section(rawValue: indexPath.section) {
             if let rowTitle = section.rowTitle(indexPath.row) {
                 cell.textLabel?.text = rowTitle
@@ -284,87 +284,86 @@ class PreferenceViewController: UITableViewController {
         return cell
     }
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let section = Section(rawValue: indexPath.section)!
         switch section {
-        case .Account:
+        case .account:
             switch AccountRow(rawValue: indexPath.row)! {
-            case .Feedly:
+            case .feedly:
                 if CloudAPIClient.isLoggedIn {
                     showLogoutDialog()
                 } else {
                     showLoginViewController()
                 }
-            case .YouTube:
+            case .youTube:
                 if YouTubeAPIClient.isLoggedIn {
                     showDisonnectYouTubeDialog()
                 } else {
                     showYouTubeLoginController()
                 }
-            case .SoundCloud:
+            case .soundCloud:
                 if SoundCloudKit.APIClient.isLoggedIn {
                     showDisonnectSoundCloudDialog()
                 } else {
                     showSoundCloudLoginController()
                 }
             }
-        case .Behavior:
+        case .behavior:
             switch BehaviorRow(rawValue: indexPath.row)! {
-            case .YouTubeVideoQuality:
-                let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+            case .youTubeVideoQuality:
+                let actionSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
                 for action in YouTubeVideoQuality.buildAlertActions({ self.tableView.reloadData() }) {
                     actionSheet.addAction(action)
                 }
-                actionSheet.addAction(UIAlertAction(title: "Cancel".localize(), style: .Cancel, handler: { action in }))
-                presentViewController(actionSheet, animated: true, completion: {})
-            case .NotificationTime:
-                let dateSelectionVC = RMDateSelectionViewController.dateSelectionController()
-                dateSelectionVC.selectButtonAction = { (controller, date) in
-                    let calendar = NSCalendar.currentCalendar()
-                    CloudAPIClient.notificationDateComponents = calendar.components([NSCalendarUnit.Hour, NSCalendarUnit.Minute], fromDate: date)
+                actionSheet.addAction(UIAlertAction(title: "Cancel".localize(), style: .cancel, handler: { action in }))
+                present(actionSheet, animated: true, completion: {})
+            case .notificationTime:
+                let dateSelectionVC = RMDateSelectionViewController.dateSelection()
+                dateSelectionVC?.selectButtonAction = { (controller, date) in
+                    guard let d = date else { return }
+                    let calendar = Calendar.current
+                    let components: Set<Calendar.Component> = [Calendar.Component.hour, Calendar.Component.minute]
+                    CloudAPIClient.notificationDateComponents = calendar.dateComponents(components, from: d as Date)
                     tableView.reloadData()
-                    UpdateChecker().check(UIApplication.sharedApplication(), completionHandler: nil)
+                    UpdateChecker().check(UIApplication.shared, completionHandler: nil)
                 }
-                dateSelectionVC.cancelButtonAction = { controller in }
-                dateSelectionVC.nowButtonAction = { controller in
+                dateSelectionVC?.cancelButtonAction = { controller in }
+                dateSelectionVC?.nowButtonAction = { controller in
                     CloudAPIClient.notificationDateComponents = nil
                     self.tableView.reloadData()
-                    dateSelectionVC.dismissViewControllerAnimated(true, completion: {})
-                    UpdateChecker().check(UIApplication.sharedApplication(), completionHandler: nil)
+                    dateSelectionVC?.dismiss(animated: true, completion: {})
+                    UpdateChecker().check(UIApplication.shared, completionHandler: nil)
                 }
                 if let time = CloudAPIClient.notificationDateComponents {
-                    let calendar = NSCalendar.currentCalendar()
-                    let date = calendar.dateWithEra(1, year: 2015, month: 5, day: 11,
-                                                       hour: time.hour, minute: time.minute,
-                                                     second: 0, nanosecond: 0)!
-                    dateSelectionVC.datePicker.date = date
+                    let calendar = Calendar.current
+                    dateSelectionVC?.datePicker.date = calendar.date(from: time as DateComponents)!
                 }
-                dateSelectionVC.datePicker.datePickerMode = UIDatePickerMode.Time
-                dateSelectionVC.datePicker.minuteInterval = UILocalNotification.notificationTimeMinutesInterval
-                presentViewController(dateSelectionVC, animated:true, completion:{})
-            case .UnlockEverything:
+                dateSelectionVC?.datePicker.datePickerMode = UIDatePickerMode.time
+                dateSelectionVC?.datePicker.minuteInterval = UILocalNotification.notificationTimeMinutesInterval
+                present(dateSelectionVC!, animated:true, completion:{})
+            case .unlockEverything:
                 appDelegate.paymentManager?.purchaseUnlockEverything()
-            case .RestorePurchase:
+            case .restorePurchase:
                 appDelegate.paymentManager?.restorePurchase()
             }
-        case .Feedback:
+        case .feedback:
             switch FeedbackRow(rawValue: indexPath.row)! {
-            case .Feedback:
+            case .feedback:
                 let vc = FeedbackWebViewController()
                 navigationController?.pushViewController(vc, animated: true)
-            case .Rate:
+            case .rate:
                 let appleId = "957250852";
-                let url = NSURL(string: "itms-apps://itunes.apple.com/app/id\(appleId)")!
-                UIApplication.sharedApplication().openURL(url)
+                let url = URL(string: "itms-apps://itunes.apple.com/app/id\(appleId)")!
+                UIApplication.shared.openURL(url)
             }
-        case .Other:
+        case .other:
             switch OtherRow(rawValue: indexPath.row)! {
-            case .About:
+            case .about:
                 let vc = IASKAppSettingsViewController()
                 vc.showCreditsFooter = false
                 navigationController?.pushViewController(vc, animated: true)
                 vc.navigationItem.rightBarButtonItems = []
-            case .Tutorial:
+            case .tutorial:
                 let vc = TutorialViewController()
                 navigationController?.pushViewController(vc, animated: true)
             }

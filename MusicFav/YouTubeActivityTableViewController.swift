@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import SoundCloudKit
 import MusicFeeder
 
@@ -42,7 +42,7 @@ class YouTubeActivityTableViewController: TimelineTableViewController {
         var items: [TimelineItem] = []
         if let vals = activityLoader.itemsOfPlaylist[playlist] {
             for i in 0..<vals.count {
-                items.append(TimelineItem.YouTubePlaylist(vals[i], activityLoader.playlistsOfYouTubePlaylist[playlist]?[i]))
+                items.append(TimelineItem.youTubePlaylist(vals[i], activityLoader.playlistsOfYouTubePlaylist[playlist]?[i]))
             }
         }
         return items
@@ -58,14 +58,15 @@ class YouTubeActivityTableViewController: TimelineTableViewController {
     }
 
     override func observeTimelineLoader() -> Disposable? {
-        return activityLoader.signal.observeNext({ event in
+        return activityLoader.signal.observeResult({ result in
+            guard let event = result.value else { return }
             switch event {
-            case .StartLoading:
+            case .startLoading:
                 self.showIndicator()
-            case .CompleteLoading:
+            case .completeLoading:
                 self.hideIndicator()
                 self.tableView.reloadData()
-            case .FailToLoad:
+            case .failToLoad:
                 self.showReloadButton()
             }
         })

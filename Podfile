@@ -1,9 +1,9 @@
 source 'https://github.com/CocoaPods/Specs.git'
 
-platform :ios, '8.0'
+platform :ios, '9.0'
 use_frameworks!
 
-xcodeproj 'MusicFav'
+project 'MusicFav'
 
 target "MusicFav" do
   pod 'NXOAuth2Client',       '>= 1.2.2'
@@ -20,4 +20,8 @@ target "MusicFav" do
   pod 'ISAlternativeRefreshControl'
   pod 'RATreeView',           :git => 'https://github.com/kumabook/RATreeView.git',
                            :branch => 'pull_to_refresh'
+
+  target "UnitTests" do
+    inherit! :search_paths
+  end
 end

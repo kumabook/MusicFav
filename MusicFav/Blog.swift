@@ -7,22 +7,22 @@
 //
 
 import SwiftyJSON
-import ReactiveCocoa
+import ReactiveSwift
 import FeedlyKit
 import MusicFeeder
 
-public class SiteInfo {
-    public let siteId:         Int64
-    public let siteName:       String
-    public let siteUrl:        String
-    public let blogImage:      String?
-    public let blogImageSmall: String?
-    public let firstPosted:    Int64?
-    public let lastPosted:     Int64?
-    public let followers:      Int?
-    public let isFavorite:     Bool?
-    public let regionName:     String?
-    public let totalTracks:    Int?
+open class SiteInfo {
+    open let siteId:         Int64
+    open let siteName:       String
+    open let siteUrl:        String
+    open let blogImage:      String?
+    open let blogImageSmall: String?
+    open let firstPosted:    Int64?
+    open let lastPosted:     Int64?
+    open let followers:      Int?
+    open let isFavorite:     Bool?
+    open let regionName:     String?
+    open let totalTracks:    Int?
     public init(json: JSON) {
         self.siteId         = json["siteid"].int64Value
         self.siteName       = json["sitename"].stringValue
@@ -38,22 +38,22 @@ public class SiteInfo {
     }
 }
 
-public class Blog: Stream {
-    public override var streamId:    String { return "feed/\(syndUrl)" }
-    public override var streamTitle: String { return siteName }
-    public let siteId:         Int64
-    public let siteName:       String
-    public let siteUrl:        String
-    public let blogImage:      String?
-    public let blogImageSmall: String?
-    public var syndUrl:        String
-    public let city:           String?
-    public let country:        String?
-    public var region:         String?
-    public let locStr:         String?
-    public let email:          String
+open class Blog: FeedlyKit.Stream {
+    open override var streamId:    String { return "feed/\(syndUrl)" }
+    open override var streamTitle: String { return siteName }
+    open let siteId:         Int64
+    open let siteName:       String
+    open let siteUrl:        String
+    open let blogImage:      String?
+    open let blogImageSmall: String?
+    open var syndUrl:        String
+    open let city:           String?
+    open let country:        String?
+    open var region:         String?
+    open let locStr:         String?
+    open let email:          String
 
-    public var siteInfo:       SiteInfo?
+    open var siteInfo:       SiteInfo?
 
     public init(json: JSON) {
         self.siteId         = json["siteid"].int64Value
@@ -69,14 +69,14 @@ public class Blog: Stream {
         self.email          = json["email"].stringValue
     }
 
-    public func fetchSiteInfo() -> SignalProducer<Blog, NSError> {
+    open func fetchSiteInfo() -> SignalProducer<Blog, NSError> {
         return HypemAPIClient.sharedInstance.getSiteInfo(siteId).map({
             self.siteInfo = $0
             return self
         })
     }
 
-    public override var thumbnailURL: NSURL? {
-        return blogImageSmall.map { NSURL(string: $0) }.flatMap { $0 }
+    open override var thumbnailURL: URL? {
+        return blogImageSmall.map { URL(string: $0) }.flatMap { $0 }
     }
 }

@@ -11,7 +11,7 @@ import EAIntroView
 import NXOAuth2Client
 
 class TutorialViewController: UIViewController, TutorialViewDelegate, OAuthViewDelegate {
-    var appDelegate: AppDelegate { return UIApplication.sharedApplication().delegate as! AppDelegate }
+    var appDelegate: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
     var tutorialView: TutorialView!
 
     deinit {}
@@ -19,10 +19,10 @@ class TutorialViewController: UIViewController, TutorialViewDelegate, OAuthViewD
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.theme
-        modalTransitionStyle = UIModalTransitionStyle.CrossDissolve
+        modalTransitionStyle = UIModalTransitionStyle.crossDissolve
         tutorialView = TutorialView.tutorialView(view.frame, delegate: self)
-        tutorialView.skipButton.hidden = true
-        tutorialView.skipButton.addTarget(self, action: #selector(TutorialViewController.skipButtonTapped), forControlEvents: UIControlEvents.TouchUpInside)
+        tutorialView.skipButton.isHidden = true
+        tutorialView.skipButton.addTarget(self, action: #selector(TutorialViewController.skipButtonTapped), for: UIControlEvents.touchUpInside)
         view.addSubview(tutorialView)
     }
 
@@ -30,14 +30,14 @@ class TutorialViewController: UIViewController, TutorialViewDelegate, OAuthViewD
         super.didReceiveMemoryWarning()
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         Logger.sendScreenView(self)
-        navigationController?.navigationBarHidden = true
+        navigationController?.isNavigationBarHidden = true
     }
 
-    override func viewWillDisappear(animated: Bool) {
-        navigationController?.navigationBarHidden = false
+    override func viewWillDisappear(_ animated: Bool) {
+        navigationController?.isNavigationBarHidden = false
     }
 
     func close() {
@@ -46,9 +46,9 @@ class TutorialViewController: UIViewController, TutorialViewDelegate, OAuthViewD
             appDelegate.showAddStreamMenuViewController()
         }
         if let nav = navigationController {
-            nav.popViewControllerAnimated(true)
+            nav.popViewController(animated: true)
         } else {
-            dismissViewControllerAnimated(true, completion: {})
+            dismiss(animated: true, completion: {})
         }
     }
 
@@ -58,7 +58,7 @@ class TutorialViewController: UIViewController, TutorialViewDelegate, OAuthViewD
 
     // MARK: - FeedlyOAuthViewDelegate
 
-    func onLoggedIn(account: NXOAuth2Account) {
+    func onLoggedIn(_ account: NXOAuth2Account) {
         Logger.sendUIActionEvent(self, action: "onLoggedIn", label: "")
         close()
     }
@@ -70,15 +70,15 @@ class TutorialViewController: UIViewController, TutorialViewDelegate, OAuthViewD
         let oauthvc = FeedlyOAuthViewController()
         oauthvc.delegate = self
         let vc = UINavigationController(rootViewController: oauthvc)
-        self.presentViewController(vc, animated: true, completion: {})
+        self.present(vc, animated: true, completion: {})
     }
 
     // MARK: - EAIntroDelegate
 
-    func introDidFinish(introView: EAIntroView!) { close() }
-    func intro(introView: EAIntroView!, pageAppeared page: EAIntroPage!, withIndex pageIndex: UInt) {
-        tutorialView.skipButton.hidden = tutorialView.pages.count-1 != Int(pageIndex)
+    func introDidFinish(_ introView: EAIntroView!) { close() }
+    func intro(_ introView: EAIntroView!, pageAppeared page: EAIntroPage!, with pageIndex: UInt) {
+        tutorialView.skipButton.isHidden = tutorialView.pages.count-1 != Int(pageIndex)
     }
-    func intro(introView: EAIntroView!, pageStartScrolling page: EAIntroPage!, withIndex pageIndex: UInt) {}
-    func intro(introView: EAIntroView!, pageEndScrolling page: EAIntroPage!, withIndex pageIndex: UInt) {}
+    func intro(_ introView: EAIntroView!, pageStartScrolling page: EAIntroPage!, with pageIndex: UInt) {}
+    func intro(_ introView: EAIntroView!, pageEndScrolling page: EAIntroPage!, with pageIndex: UInt) {}
 }

@@ -7,13 +7,13 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import SwiftyJSON
 import FeedlyKit
 import MusicFeeder
 
 class TimelineTableViewController: UITableViewController, TimelineTableViewCellDelegate {
-    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     var player:     Player? { return appDelegate.player }
     let cellHeight: CGFloat = 190
     let reuseIdentifier = "TimelineTableViewCell"
@@ -31,22 +31,22 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
             vc = viewController
             super.init()
         }
-        override func listen(event: Event) {
+        override func listen(_ event: Event) {
             switch event {
-            case .StatusChanged, .ErrorOccured, .PlaylistChanged:
-                vc.updateSelection(UITableViewScrollPosition.None)
+            case .statusChanged, .errorOccured, .playlistChanged:
+                vc.updateSelection(UITableViewScrollPosition.none)
                 vc.updateCurrentTrack()
-            case .TrackSelected(let track, let index, let playlist):
+            case .trackSelected(let track, let index, let playlist):
                 vc.updateTrack(track, index: index, playlist: playlist, playerState: vc.player!.currentState)
                 vc.tableView?.reloadData()
-            case .TrackUnselected(let track, let index, let playlist):
-                vc.updateTrack(track, index: index, playlist: playlist, playerState: PlayerState.Init)
+            case .trackUnselected(let track, let index, let playlist):
+                vc.updateTrack(track, index: index, playlist: playlist, playerState: PlayerState.init)
                 vc.tableView?.reloadData()
-            case .PreviousPlaylistRequested: vc.playPlaylist(vc.previousPlaylist())
-            case .NextPlaylistRequested:     vc.playPlaylist(vc.nextPlaylist())
-            case .TimeUpdated:               break
-            case .DidPlayToEndTime:          break
-            case .NextTrackAdded:            break
+            case .previousPlaylistRequested: vc.playPlaylist(vc.previousPlaylist())
+            case .nextPlaylistRequested:     vc.playPlaylist(vc.nextPlaylist())
+            case .timeUpdated:               break
+            case .didPlayToEndTime:          break
+            case .nextTrackAdded:            break
             }
         }
     }
@@ -81,17 +81,17 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         super.viewDidLoad()
         observeApp()
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "playlist"),
-                                                            style: UIBarButtonItemStyle.Plain,
+                                                            style: UIBarButtonItemStyle.plain,
                                                            target: self,
                                                            action: #selector(TimelineTableViewController.showPlaylist as (TimelineTableViewController) -> () -> ()))
         navigationItem.title                            = timelineTitle.localize()
-        navigationController?.toolbar.translucent       = false
-        navigationController?.navigationBar.translucent = false
+        navigationController?.toolbar.isTranslucent       = false
+        navigationController?.navigationBar.isTranslucent = false
         let nib = UINib(nibName: "TimelineTableViewCell", bundle: nil)
-        tableView.registerNib(nib, forCellReuseIdentifier: reuseIdentifier)
+        tableView.register(nib, forCellReuseIdentifier: reuseIdentifier)
         clearsSelectionOnViewWillAppear = true
 
-        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
         indicator.bounds = CGRect(x: 0,
                                   y: 0,
                               width: indicator.bounds.width,
@@ -100,22 +100,22 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         indicator.stopAnimating()
 
         reloadButton = UIButton()
-        reloadButton.setImage(UIImage(named: "network_error"), forState: UIControlState.Normal)
-        reloadButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        reloadButton.addTarget(self, action:#selector(TimelineTableViewController.fetchNext), forControlEvents:UIControlEvents.TouchUpInside)
-        reloadButton.setTitle("Sorry, network error occured.".localize(), forState:UIControlState.Normal)
-        reloadButton.frame = CGRectMake(0, 0, tableView.frame.size.width, 44);
+        reloadButton.setImage(UIImage(named: "network_error"), for: UIControlState())
+        reloadButton.setTitleColor(UIColor.black, for: UIControlState())
+        reloadButton.addTarget(self, action:#selector(TimelineTableViewController.fetchNext), for:UIControlEvents.touchUpInside)
+        reloadButton.setTitle("Sorry, network error occured.".localize(), for:UIControlState.normal)
+        reloadButton.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 44);
 
         let controlFrame   = CGRect(x: 0, y:0, width: view.frame.size.width, height: 80)
         onpuRefreshControl = OnpuRefreshControl(frame: controlFrame)
-        onpuRefreshControl.addTarget(self, action: #selector(TimelineTableViewController.fetchLatest), forControlEvents:UIControlEvents.ValueChanged)
+        onpuRefreshControl.addTarget(self, action: #selector(TimelineTableViewController.fetchLatest), for:UIControlEvents.valueChanged)
         tableView.addSubview(onpuRefreshControl)
         observer?.dispose()
         observer = observeTimelineLoader()
         fetchNext()
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         Logger.sendScreenView(self)
         observer?.dispose()
@@ -123,17 +123,17 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         reloadExpiredTracks()
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if playerObserver != nil {
             appDelegate.player?.removeObserver(playerObserver)
         }
         playerObserver = TimelinePlayerObserver(viewController: self)
         appDelegate.player?.addObserver(playerObserver)
-        updateSelection(UITableViewScrollPosition.None)
+        updateSelection(UITableViewScrollPosition.none)
     }
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         observer?.dispose()
         appObserver?.dispose()
@@ -145,14 +145,15 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
 
     func reloadExpiredTracks() {
         for item in getItems() {
-            item.playlist?.reloadExpiredTracks().on(next: {_ in self.tableView?.reloadData() }).start()
+            item.playlist?.reloadExpiredTracks().on(value: {_ in self.tableView?.reloadData() }).start()
         }
         self.tableView?.reloadData()
     }
 
     func observeApp() {
-        appObserver = appDelegate.signal?.observeNext({ event in
-            if event == AppDelegate.Event.WillEnterForeground {
+        appObserver = appDelegate.signal?.observeResult({ result in
+            guard let event = result.value else { return }
+            if event == AppDelegate.Event.willEnterForeground {
                 self.restorePlayerIcon()
                 self.reloadExpiredTracks()
             }
@@ -161,7 +162,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
 
     func restorePlayerIcon() {
         for visibleCell in tableView.visibleCells {
-            if let cell = visibleCell as? TimelineTableViewCell, indexPath = tableView.indexPathForCell(visibleCell) {
+            if let cell = visibleCell as? TimelineTableViewCell, let indexPath = tableView.indexPath(for: visibleCell) {
                 if let playlist = getItems()[indexPath.item].playlist {
                     updatePlayerIcon(cell, playlist: playlist)
                 }
@@ -169,45 +170,45 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         }
     }
 
-    func indexPathOfPlaylist(playlist: Playlist) -> NSIndexPath? {
+    func indexPathOfPlaylist(_ playlist: Playlist) -> IndexPath? {
         let items = getItems()
         for i in 0..<items.count {
             if let p = items[i].playlist {
-                if p == playlist { return NSIndexPath(forRow: i, inSection: 0) }
+                if p == playlist { return IndexPath(row: i, section: 0) }
             }
         }
         return nil
     }
 
-    func updateSelection(scrollPosition: UITableViewScrollPosition) {
-        if let p = appDelegate.player, pl = p.currentPlaylist as? Playlist {
+    func updateSelection(_ scrollPosition: UITableViewScrollPosition) {
+        if let p = appDelegate.player, let pl = p.currentPlaylist as? Playlist {
             if let index = indexPathOfPlaylist(pl) {
-                tableView.selectRowAtIndexPath(index, animated: true, scrollPosition: scrollPosition)
-                tableView.deselectRowAtIndexPath(index, animated: false)
+                tableView.selectRow(at: index, animated: true, scrollPosition: scrollPosition)
+                tableView.deselectRow(at: index, animated: false)
             }
         }
     }
 
     func updateCurrentTrack() {
-        if let p = appDelegate.player, pl = p.currentPlaylist, t = p.currentTrack, i = p.currentTrackIndex {
+        if let p = appDelegate.player, let pl = p.currentPlaylist, let t = p.currentTrack, let i = p.currentTrackIndex {
             updateTrack(t, index: i, playlist: pl, playerState: p.currentState)
         }
     }
 
-    func updateTrack(track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist, playerState: PlayerState) {
-        if let p = playlist as? Playlist, indexPath = indexPathOfPlaylist(p) {
-            getItems()[indexPath.item].playlist?.observer.sendNext(PlaylistEvent.ChangePlayState(index: index, playerState: playerState))
+    func updateTrack(_ track: PlayerKitTrack, index: Int, playlist: PlayerKitPlaylist, playerState: PlayerState) {
+        if let p = playlist as? Playlist, let indexPath = indexPathOfPlaylist(p) {
+            getItems()[indexPath.item].playlist?.observer.send(value: PlaylistEvent.changePlayState(index: index, playerState: playerState))
         }
     }
 
-    func showPlaylist(playlist: Playlist?) {
+    func showPlaylist(_ playlist: Playlist?) {
         let vc = appDelegate.miniPlayerViewController
         if let _playlist = playlist {
             appDelegate.selectedPlaylist = _playlist
             vc?.playlistTableViewController.updateNavbar()
             vc?.playlistTableViewController.tableView.reloadData()
             appDelegate.mainViewController?.showRightPanelAnimated(true, completion: {
-                vc?.playlistTableViewController.showPlaylist(_playlist, animated: true)
+                let _ = vc?.playlistTableViewController.showPlaylist(_playlist, animated: true)
                 return
             })
         }
@@ -270,32 +271,32 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         return nil
     }
 
-    func playPlaylist(playlist: PlayerKitPlaylist?) {
+    func playPlaylist(_ playlist: PlayerKitPlaylist?) {
         if let p = playlist as? Playlist {
             appDelegate.toggle(0, playlist: p, playlistQueue: getPlaylistQueue())
         }
     }
 
     func showPlaylist() {
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        appDelegate.mainViewController?.showRightPanelAnimated(true)
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        appDelegate.mainViewController?.showRightPanel(animated: true)
     }
 
     // MARK: - PlaylistStreamTableViewDelegate
 
-    func trackSelected(sender: TimelineTableViewCell, index: Int, track: Track, playlist: Playlist) {
+    func trackSelected(_ sender: TimelineTableViewCell, index: Int, track: Track, playlist: Playlist) {
         appDelegate.toggle(index, playlist: playlist, playlistQueue: getPlaylistQueue())
         tableView.reloadData()
     }
 
-    func trackScrollViewMarginTouched(sender: TimelineTableViewCell, playlist: Playlist?) {
-        if let playlist = playlist where playlist.validTracksCount > 0 {
+    func trackScrollViewMarginTouched(_ sender: TimelineTableViewCell, playlist: Playlist?) {
+        if let playlist = playlist, playlist.validTracksCount > 0 {
             showPlaylist(playlist)
         }
     }
 
-    func playButtonTouched(sender: TimelineTableViewCell) {
-        if let indexPath = tableView.indexPathForCell(sender), playlist = getItems()[indexPath.item].playlist {
+    func playButtonTouched(_ sender: TimelineTableViewCell) {
+        if let indexPath = tableView.indexPath(for: sender), let playlist = getItems()[indexPath.item].playlist {
             if let current = appDelegate.player?.currentPlaylist {
                 if playlist.id == current.id {
                     appDelegate.toggle()
@@ -304,13 +305,13 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
                 }
             }
             appDelegate.toggle(0, playlist: playlist, playlistQueue: getPlaylistQueue())
-            tableView.reloadRowsAtIndexPaths([indexPath], withRowAnimation: UITableViewRowAnimation.None)
+            tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
             showPlaylist(playlist)
         }
     }
 
-    func articleButtonTouched(sender: TimelineTableViewCell) {
-        if let indexPath = tableView.indexPathForCell(sender), entry = getItems()[indexPath.item].entry {
+    func articleButtonTouched(_ sender: TimelineTableViewCell) {
+        if let indexPath = tableView.indexPath(for: sender), let entry = getItems()[indexPath.item].entry {
             let vc = EntryWebViewController(entry: entry, playlist: getItems()[indexPath.item].playlist)
             appDelegate.selectedPlaylist = vc.playlist
             appDelegate.miniPlayerViewController?.playlistTableViewController.updateNavbar()
@@ -319,41 +320,41 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         }
     }
 
-    func updatePlayerIcon(cell: TimelineTableViewCell, playlist: Playlist) {
-        if let p = self.player, cp = p.currentPlaylist as? Playlist, i = p.currentTrackIndex {
+    func updatePlayerIcon(_ cell: TimelineTableViewCell, playlist: Playlist) {
+        if let p = self.player, let cp = p.currentPlaylist as? Playlist, let i = p.currentTrackIndex {
             if cp == playlist {
                 cell.updatePlayerIcon(i, playerState: p.currentState)
-                updateSelection(UITableViewScrollPosition.None)
+                updateSelection(UITableViewScrollPosition.none)
             } else {
-                cell.updatePlayerIcon(0, playerState: PlayerState.Init)
+                cell.updatePlayerIcon(0, playerState: PlayerState.init)
             }
         } else {
-            cell.updatePlayerIcon(0, playerState: PlayerState.Init)
+            cell.updatePlayerIcon(0, playerState: PlayerState.init)
         }
     }
 
     // MARK: - Table view data source
 
-    override func scrollViewDidScroll(scrollView: UIScrollView) {
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if tableView.contentOffset.y >= tableView.contentSize.height - tableView.bounds.size.height {
             fetchNext()
         }
     }
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return getItems().count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(reuseIdentifier, forIndexPath:indexPath) as! TimelineTableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: reuseIdentifier, for:indexPath) as! TimelineTableViewCell
         let item = getItems()[indexPath.item]
         if let url = item.thumbnailURL {
-            cell.backgroundImageView.sd_setImageWithURL(url)
-            cell.backgroundImageView.backgroundColor = UIColor.clearColor()
+            cell.backgroundImageView.sd_setImage(with: url)
+            cell.backgroundImageView.backgroundColor = UIColor.clear
         } else {
             cell.backgroundImageView.image = nil
             cell.backgroundImageView.backgroundColor = UIColor.slateGray
@@ -361,8 +362,8 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         cell.titleLabel.text       = item.title
         cell.descriptionLabel.text = item.description
         cell.dateLabel.text        = item.dateString
-        cell.playButton.hidden     = item.playlist?.tracks.count <= 0
-        cell.articleButton.hidden  = item.entry == nil
+        cell.playButton.isHidden     = (item.playlist?.tracks.count)! <= 0
+        cell.articleButton.isHidden  = item.entry == nil
         cell.trackNumLabel.text    = item.trackNumString
         cell.timelineDelegate      = self
         if let playlist = item.playlist {
@@ -371,16 +372,16 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
             cell.observePlaylist(playlist)
         } else {
             cell.clearThumbnails()
-            cell.updatePlayerIcon(0, playerState: PlayerState.Init)
+            cell.updatePlayerIcon(0, playerState: PlayerState.init)
         }
         return cell
     }
 
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return false
     }
 
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.cellHeight
     }
 }

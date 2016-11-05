@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import SoundCloudKit
 import MusicFeeder
 
@@ -36,7 +36,7 @@ class SoundCloudActivityTableViewController: TimelineTableViewController {
     override func getItems() -> [TimelineItem] {
         var items: [TimelineItem] = []
         for i in 0..<activityLoader.activities.count {
-            items.append(TimelineItem.Activity(activityLoader.activities[i], activityLoader.playlists[i]))
+            items.append(TimelineItem.activity(activityLoader.activities[i], activityLoader.playlists[i]))
         }
         return items
     }
@@ -50,24 +50,24 @@ class SoundCloudActivityTableViewController: TimelineTableViewController {
     }
 
     override func observeTimelineLoader() -> Disposable? {
-        return activityLoader.signal.observeNext({ event in
+        return activityLoader.signal.observeResult({ result in
+            guard let event = result.value else { return }
             switch event {
-            case .StartLoadingLatest:
+            case .startLoadingLatest:
                 self.onpuRefreshControl.beginRefreshing()
-            case .CompleteLoadingLatest:
-                let startTime = dispatch_time(DISPATCH_TIME_NOW, Int64(2.0 * Double(NSEC_PER_SEC)))
-                dispatch_after(startTime, dispatch_get_main_queue()) {
+            case .completeLoadingLatest:
+                DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
                     self.tableView.reloadData()
                     self.onpuRefreshControl.endRefreshing()
                 }
-            case .StartLoadingNext:
+            case .startLoadingNext:
                 self.showIndicator()
-            case .CompleteLoadingNext:
+            case .completeLoadingNext:
                 self.hideIndicator()
                 self.tableView.reloadData()
-            case .FailToLoadNext:
+            case .failToLoadNext:
                 self.showReloadButton()
-            case .FailToLoadLatest:
+            case .failToLoadLatest:
                 self.showReloadButton()
             }
         })

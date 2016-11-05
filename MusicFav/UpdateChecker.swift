@@ -7,52 +7,52 @@
 //
 
 import Foundation
-import ReactiveCocoa
+import ReactiveSwift
 import FeedlyKit
 import MusicFeeder
 
 class UpdateChecker {
     let apiClient = CloudAPIClient.sharedInstance
     let perPage   = 3
-    let newerThan: NSDate
+    let newerThan: Date
     init() {
         if let fromDate = CloudAPIClient.lastChecked {
             newerThan = fromDate
         } else {
-            newerThan = NSDate().yesterDay
+            newerThan = Date().yesterDay
         }
     }
-    var nextNotificationDate: NSDate? {
+    var nextNotificationDate: Date? {
         if let components = CloudAPIClient.notificationDateComponents {
-            return NSDate.nextDateFromComponents(components)
+            return Date.nextDateFromComponents(components as DateComponents)
         }
         return nil
     }
-    func check(application: UIApplication, completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
+    func check(_ application: UIApplication, completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
         if let fireDate = nextNotificationDate {
             fetchNewTracks().on(
-                next: { tracks in
+                value: { tracks in
                     UIScheduler().schedule {
                         let tracksInfo = UILocalNotification.buildNewTracksInfo(application, tracks: tracks)
                         application.cancelAllLocalNotifications()
                         if tracksInfo.count > 0 {
                             let notification = UILocalNotification.newTracksNotification(tracksInfo, fireDate: fireDate)
                             application.scheduleLocalNotification(notification)
-                            completionHandler?(UIBackgroundFetchResult.NewData)
+                            completionHandler?(UIBackgroundFetchResult.newData)
                         } else {
-                            completionHandler?(UIBackgroundFetchResult.NoData)
+                            completionHandler?(UIBackgroundFetchResult.noData)
                         }
                     }
-                    CloudAPIClient.lastChecked = NSDate()
+                    CloudAPIClient.lastChecked = Date()
                 }, failed: { error in
-                    UIScheduler().schedule { completionHandler?(UIBackgroundFetchResult.Failed) }
+                    UIScheduler().schedule { completionHandler?(UIBackgroundFetchResult.failed) }
                 }, completed: {
                 }, interrupted: {
-                    UIScheduler().schedule { completionHandler?(UIBackgroundFetchResult.Failed) }
+                    UIScheduler().schedule { completionHandler?(UIBackgroundFetchResult.failed) }
             }).start()
         } else {
             application.cancelAllLocalNotifications()
-            completionHandler?(UIBackgroundFetchResult.NoData)
+            completionHandler?(UIBackgroundFetchResult.noData)
         }
     }
     func fetchNewTracks() -> SignalProducer<[Track], NSError> {
@@ -64,8 +64,8 @@ class UpdateChecker {
                                                     perPage: perPage)
                 .map { $0.items }
         } else {
-            entriesSignal = StreamListLoader().fetchLocalSubscrptions()
-                .map { (table: [FeedlyKit.Category: [Stream]]) -> [Stream] in
+            entriesSignal = StreamRepository().loadLocalSubscriptions()
+                .map { (table: [FeedlyKit.Category: [FeedlyKit.Stream]]) -> [FeedlyKit.Stream] in
                     return table.values.flatMap { $0 }
                 }.map { streams in
                     return streams.map { stream in
@@ -74,22 +74,22 @@ class UpdateChecker {
                                                          unreadOnly: true,
                                                             perPage: self.perPage).map { $0.items }
                         }.reduce(SignalProducer<[Entry], NSError>(value: [])) {
-                            combineLatest($0, $1).map {
-                                var list = $0.0; list.appendContentsOf($0.1); return list
+                            SignalProducer.combineLatest($0, $1).map {
+                                var list = $0.0; list.append(contentsOf: $0.1); return list
                             }
                     }
-            }.flatten(FlattenStrategy.Concat)
+            }.flatten(FlattenStrategy.concat)
         }
         return entriesSignal.map { entries in
             entries.reduce(SignalProducer<[Track], NSError>(value: [])) {
-                combineLatest($0, self.fetchPlaylistOfEntry($1)).map {
-                    var list = $0.0; list.appendContentsOf($0.1.getTracks()); return list
+                SignalProducer.combineLatest($0, self.fetchPlaylistOfEntry($1)).map {
+                    var list = $0.0; list.append(contentsOf: $0.1.getTracks()); return list
                 }
             }
-        }.flatten(.Concat)
+        }.flatten(.concat)
     }
 
-    func fetchPlaylistOfEntry(entry: Entry) -> SignalProducer<Playlist, NSError> {
+    func fetchPlaylistOfEntry(_ entry: Entry) -> SignalProducer<Playlist, NSError> {
         if let url = entry.url {
             return PinkSpiderAPIClient.sharedInstance.playlistify(url, errorOnFailure: false)
         } else {

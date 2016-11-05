@@ -1,48 +1,57 @@
 [submodule "Carthage/Checkouts/Alamofire"]
 	path = Carthage/Checkouts/Alamofire
-	url = ssh://git@github.com/Alamofire/Alamofire.git
+	url = https://github.com/Alamofire/Alamofire.git
 [submodule "Carthage/Checkouts/Breit"]
 	path = Carthage/Checkouts/Breit
-	url = ssh://git@github.com/kumabook/Breit.git
+	url = https://github.com/kumabook/Breit.git
 [submodule "Carthage/Checkouts/Nimble"]
 	path = Carthage/Checkouts/Nimble
-	url = ssh://git@github.com/Quick/Nimble.git
+	url = https://github.com/Quick/Nimble.git
 [submodule "Carthage/Checkouts/Quick"]
 	path = Carthage/Checkouts/Quick
-	url = ssh://git@github.com/Quick/Quick.git
-[submodule "Carthage/Checkouts/SDWebImage"]
-	path = Carthage/Checkouts/SDWebImage
-	url = ssh://git@github.com/rs/SDWebImage.git
-[submodule "Carthage/Checkouts/SnapKit"]
-	path = Carthage/Checkouts/SnapKit
-	url = ssh://git@github.com/SnapKit/SnapKit.git
-[submodule "Carthage/Checkouts/SwiftyJSON"]
-	path = Carthage/Checkouts/SwiftyJSON
-	url = ssh://git@github.com/SwiftyJSON/SwiftyJSON.git
-[submodule "Carthage/Checkouts/XCDYouTubeKit"]
-	path = Carthage/Checkouts/XCDYouTubeKit
-	url = ssh://git@github.com/kumabook/XCDYouTubeKit.git
+	url = https://github.com/Quick/Quick.git
 [submodule "Carthage/Checkouts/realm-cocoa"]
 	path = Carthage/Checkouts/realm-cocoa
-	url = ssh://git@github.com/realm/realm-cocoa.git
+	url = https://github.com/realm/realm-cocoa.git
 [submodule "Carthage/Checkouts/Result"]
 	path = Carthage/Checkouts/Result
-	url = ssh://git@github.com/antitypical/Result.git
+	url = https://github.com/antitypical/Result.git
+[submodule "Carthage/Checkouts/ReactiveSwift"]
+	path = Carthage/Checkouts/ReactiveSwift
+	url = https://github.com/ReactiveCocoa/ReactiveSwift.git
 [submodule "Carthage/Checkouts/ReactiveCocoa"]
 	path = Carthage/Checkouts/ReactiveCocoa
-	url = ssh://git@github.com/ReactiveCocoa/ReactiveCocoa.git
+	url = https://github.com/ReactiveCocoa/ReactiveCocoa.git
+[submodule "Carthage/Checkouts/SDWebImage"]
+	path = Carthage/Checkouts/SDWebImage
+	url = https://github.com/rs/SDWebImage.git
+[submodule "Carthage/Checkouts/SnapKit"]
+	path = Carthage/Checkouts/SnapKit
+	url = https://github.com/SnapKit/SnapKit.git
 [submodule "Carthage/Checkouts/PlayerKit"]
 	path = Carthage/Checkouts/PlayerKit
-	url = ssh://git@github.com/kumabook/PlayerKit.git
+	url = https://github.com/kumabook/PlayerKit.git
+[submodule "Carthage/Checkouts/SwiftyJSON"]
+	path = Carthage/Checkouts/SwiftyJSON
+	url = https://github.com/SwiftyJSON/SwiftyJSON.git
 [submodule "Carthage/Checkouts/FeedlyKit"]
 	path = Carthage/Checkouts/FeedlyKit
-	url = ssh://git@github.com/kumabook/FeedlyKit.git
+	url = https://github.com/kumabook/FeedlyKit.git
 [submodule "Carthage/Checkouts/SoundCloudKit"]
 	path = Carthage/Checkouts/SoundCloudKit
-	url = ssh://git@github.com/Spincoaster/SoundCloudKit.git
+	url = https://github.com/Spincoaster/SoundCloudKit.git
+[submodule "Carthage/Checkouts/XCDYouTubeKit"]
+	path = Carthage/Checkouts/XCDYouTubeKit
+	url = https://github.com/0xced/XCDYouTubeKit.git
 [submodule "Carthage/Checkouts/MusicFeeder"]
-	url = ssh://git@github.com/kumabook/MusicFeeder.git
 	path = Carthage/Checkouts/MusicFeeder
+	url = https://github.com/kumabook/MusicFeeder.git
+[submodule "Carthage/Checkouts/DrawerController"]
+	path = Carthage/Checkouts/DrawerController
+	url = https://github.com/sascha/DrawerController.git
+[submodule "Carthage/Checkouts/FLAnimatedImage"]
+	path = Carthage/Checkouts/FLAnimatedImage
+	url = https://github.com/Flipboard/FLAnimatedImage.git
 [submodule "Carthage/Checkouts/PageMenu"]
 	path = Carthage/Checkouts/PageMenu
-	url = ssh://git@github.com/uacaps/PageMenu.git
+	url = https://github.com/orazz/PageMenu.git

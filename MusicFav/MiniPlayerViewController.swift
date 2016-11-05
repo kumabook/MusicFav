@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 import JASidePanels
 import MediaPlayer
-import WebImage
+import SDWebImage
 import FeedlyKit
 import MusicFeeder
 import PlayerKit
@@ -21,7 +21,7 @@ class MiniPlayerViewController: PlayerKit.MiniPlayerViewController<PlayerKit.Min
     var streamTreeViewController:    StreamTreeViewController!
     var currentPlaylist:             MusicFeeder.Playlist? { get { return player?.currentPlaylist as? MusicFeeder.Playlist }}
     var currentTrack:                MusicFeeder.Track?    { get { return player?.currentTrack as? MusicFeeder.Track }}
-    var app:                         UIApplication { get { return UIApplication.sharedApplication() }}
+    var app:                         UIApplication { get { return UIApplication.shared }}
     var appDelegate:                 AppDelegate   { get { return app.delegate as! AppDelegate }}
 
     var marqueeTitleLabel: MarqueeLabel!
@@ -29,7 +29,7 @@ class MiniPlayerViewController: PlayerKit.MiniPlayerViewController<PlayerKit.Min
     override init(player: Player) {
         super.init(player: player)
         let vc                      = JASidePanelController()
-        vc.shouldResizeRightPanel   = DeviceType.from(device: UIDevice.currentDevice()) == .iPad
+        vc.shouldResizeRightPanel   = DeviceType.from(UIDevice.current) == .iPad
         mainViewController          = vc
         playlistTableViewController = PlaylistTableViewController()
         streamTreeViewController    = StreamTreeViewController()
@@ -45,7 +45,7 @@ class MiniPlayerViewController: PlayerKit.MiniPlayerViewController<PlayerKit.Min
     override func viewDidLoad() {
         super.viewDidLoad()
         if let vc = mainViewController as? JASidePanelController {
-            vc.centerPanelContainer.backgroundColor = UIColor.whiteColor()
+            vc.centerPanelContainer.backgroundColor = UIColor.white
         }
     }
 
@@ -63,11 +63,11 @@ class MiniPlayerViewController: PlayerKit.MiniPlayerViewController<PlayerKit.Min
 
     }
 
-    func setCenterViewController(viewController: UIViewController) {
+    func setCenterViewController(_ viewController: UIViewController) {
         if let vc = mainViewController as? JASidePanelController {
             vc.centerPanelContainer.backgroundColor = UIColor.transparent
             vc.centerPanel = UINavigationController(rootViewController: viewController)
-            vc.showCenterPanelAnimated(true)
+            vc.showCenterPanel(animated: true)
         }
     }
 
@@ -80,13 +80,13 @@ class MiniPlayerViewController: PlayerKit.MiniPlayerViewController<PlayerKit.Min
 
     func showMenu() {
         if let vc = mainViewController as? JASidePanelController {
-            vc.showLeftPanelAnimated(true)
+            vc.showLeftPanel(animated: true)
         }
     }
 
     func showPlaylist() {
         if let vc = mainViewController as? JASidePanelController {
-            vc.showRightPanelAnimated(true)
+            vc.showRightPanel(animated: true)
         }
     }
 }

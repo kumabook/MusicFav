@@ -8,8 +8,8 @@
 
 import FeedlyKit
 
-public class RecommendFeed {
-    public class var ids: [String] {
+open class RecommendFeed {
+    open class var ids: [String] {
         struct Static {
             static let ids: [String] = ["feed/http://matome.naver.jp/feed/topic/1Hinb",
                                         "feed/http://spincoaster.com/feed",
@@ -24,7 +24,7 @@ public class RecommendFeed {
         return Static.ids
     }
 
-    public class func sampleStream() -> Stream {
+    open class func sampleStream() -> FeedlyKit.Stream {
         return Subscription(id: "feed/http://spincoaster.com/feed",
                          title: "Spincoaster (sample)",
                      visualUrl: nil,

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		3BCF16D076714FA237AE56AB /* Pods_MusicFav.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E743F12F73FBBB38FC638D0B /* Pods_MusicFav.framework */; };
+		4EA1F353E60E4D8258F613C0 /* Pods_UnitTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77B9835662C78055957941F4 /* Pods_UnitTests.framework */; };
 		6701D4A81A93A3D5006BFEC6 /* CategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6701D4A71A93A3D5006BFEC6 /* CategoryTableViewController.swift */; };
 		6701D4AD1A95048C006BFEC6 /* HUDExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6701D4AC1A95048C006BFEC6 /* HUDExtension.swift */; };
 		670505B61B6E2348006EAA84 /* Blog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 670505B41B6E2348006EAA84 /* Blog.swift */; };
@@ -48,7 +49,6 @@
 		6732B51D1C1100BB005559A6 /* Breit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67428D491B80C23F002FFA1A /* Breit.framework */; };
 		6732B51E1C1100BB005559A6 /* FeedlyKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671664271A738E2A005FE005 /* FeedlyKit.framework */; };
 		6732B51F1C1100BB005559A6 /* MusicFeeder.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6725420B1B784E3300EDA2C3 /* MusicFeeder.framework */; };
-		6732B5201C1100BB005559A6 /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4881A625A4F00A5AE68 /* ReactiveCocoa.framework */; };
 		6732B5211C1100BB005559A6 /* Realm.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 676629B61A85AA3100F3FD33 /* Realm.framework */; };
 		6732B5221C1100BB005559A6 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6720B9B51B27A08F000C4D3A /* Result.framework */; };
 		6732B5231C1100BB005559A6 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */; };
@@ -68,7 +68,6 @@
 		673DCC8D1AF531210043E51D /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 673DCC8C1AF531210043E51D /* libsqlite3.dylib */; };
 		673DCC9A1AF53AE80043E51D /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 673DCC841AF530C30043E51D /* CoreData.framework */; };
 		673DCC9B1AF53AEF0043E51D /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 673DCC8A1AF531090043E51D /* SystemConfiguration.framework */; };
-		673DCC9C1AF53AF60043E51D /* AdSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 673DCC861AF530F50043E51D /* AdSupport.framework */; };
 		673DCC9D1AF53AFB0043E51D /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 673DCC881AF530FF0043E51D /* libz.dylib */; };
 		673DCC9E1AF53B010043E51D /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 673DCC8C1AF531210043E51D /* libsqlite3.dylib */; };
 		673DCCA01AF53B860043E51D /* google_analytics.json in Resources */ = {isa = PBXBuildFile; fileRef = 673DCC9F1AF53B860043E51D /* google_analytics.json */; };
@@ -80,6 +79,10 @@
 		67428D571B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67428D561B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift */; };
 		67428D591B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67428D581B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift */; };
 		674AAC891B02D64E00C1FC18 /* UINotificationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */; };
+		674DF1281DD6BE36000C1B08 /* ReactiveSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 674DF1271DD6BE36000C1B08 /* ReactiveSwift.framework */; };
+		674DF1291DD6BE45000C1B08 /* ReactiveSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 674DF1271DD6BE36000C1B08 /* ReactiveSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		674DF12B1DD6BE6F000C1B08 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 674DF12A1DD6BE6F000C1B08 /* SDWebImage.framework */; };
+		674DF12C1DD6BE78000C1B08 /* SDWebImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 674DF12A1DD6BE6F000C1B08 /* SDWebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6751509D1BA8542C00035DE6 /* SpecHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6751509C1BA8542C00035DE6 /* SpecHelper.swift */; };
 		67527B6F1C04C3F900CE1C27 /* PageMenu.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67527B6E1C04C3F900CE1C27 /* PageMenu.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		67527B701C04C43400CE1C27 /* PageMenu.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67527B6E1C04C3F900CE1C27 /* PageMenu.framework */; };
@@ -97,11 +100,14 @@
 		675BEC031AEAF84600BD853D /* Nimble.framework in Copy carthage Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4861A625A4F00A5AE68 /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		675BEC041AEAF84600BD853D /* Quick.framework in Copy carthage Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4871A625A4F00A5AE68 /* Quick.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		675BEC061AEAF84600BD853D /* SwiftyJSON.framework in Copy carthage Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		6762EE091BCAC10100EA90DC /* ErrorCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6762EE081BCAC10100EA90DC /* ErrorCode.swift */; };
+		6762EE091BCAC10100EA90DC /* MusicFavError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6762EE081BCAC10100EA90DC /* MusicFavError.swift */; };
 		6762EE0B1BCB36C700EA90DC /* SavedStreamTimelineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6762EE0A1BCB36C700EA90DC /* SavedStreamTimelineTableViewController.swift */; };
 		6767AE541ADAC70500A92497 /* IASKAppSettingsViewControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6767AE531ADAC70500A92497 /* IASKAppSettingsViewControllerExtension.swift */; };
 		6767AE5D1ADBECCC00A92497 /* StreamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6767AE5B1ADBECCC00A92497 /* StreamTableViewCell.swift */; };
 		6767AE5E1ADBECCC00A92497 /* StreamTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6767AE5C1ADBECCC00A92497 /* StreamTableViewCell.xib */; };
+		676C7EAB1DD7413D0050C337 /* ReactiveSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 674DF1271DD6BE36000C1B08 /* ReactiveSwift.framework */; };
+		676C7EAD1DD7436D0050C337 /* FLAnimatedImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 676C7EAC1DD7436D0050C337 /* FLAnimatedImage.framework */; };
+		676C7EAE1DD743780050C337 /* FLAnimatedImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 676C7EAC1DD7436D0050C337 /* FLAnimatedImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6783057F1B95DDC000A83F52 /* StreamTimelineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6783057E1B95DDC000A83F52 /* StreamTimelineTableViewController.swift */; };
 		678305871B9AA24C00A83F52 /* YouTubeActivityLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678305861B9AA24C00A83F52 /* YouTubeActivityLoader.swift */; };
 		67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */; };
@@ -118,9 +124,7 @@
 		67B777A81B6E3CE0001B777B /* Realm.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67B777A71B6E3CE0001B777B /* Realm.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		67BE4F371AE7D95800E40E98 /* DeviceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67BE4F361AE7D95800E40E98 /* DeviceType.swift */; };
 		67C0BC681B7741A400243AE8 /* SnapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67C0BC661B7741A400243AE8 /* SnapKit.framework */; };
-		67C0BC691B7741A400243AE8 /* WebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67C0BC671B7741A400243AE8 /* WebImage.framework */; };
 		67C0BC6A1B7749B800243AE8 /* SnapKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67C0BC661B7741A400243AE8 /* SnapKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		67C0BC6B1B7749B800243AE8 /* WebImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67C0BC671B7741A400243AE8 /* WebImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		67C1A7FC1B7B83A5002A604C /* PlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C1A7FB1B7B83A5002A604C /* PlayerViewController.swift */; };
 		67C1A7FF1B7B8712002A604C /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C1A7FD1B7B8712002A604C /* Channel.swift */; };
 		67C1A8001B7B8712002A604C /* ChannelLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C1A7FE1B7B8712002A604C /* ChannelLoader.swift */; };
@@ -199,13 +203,15 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				674DF12C1DD6BE78000C1B08 /* SDWebImage.framework in Embed Frameworks */,
+				674DF1291DD6BE45000C1B08 /* ReactiveSwift.framework in Embed Frameworks */,
 				67527B6F1C04C3F900CE1C27 /* PageMenu.framework in Embed Frameworks */,
+				676C7EAE1DD743780050C337 /* FLAnimatedImage.framework in Embed Frameworks */,
 				671D07191B94782500DC99A5 /* SoundCloudKit.framework in Embed Frameworks */,
 				67428D4D1B8174E7002FFA1A /* Breit.framework in Embed Frameworks */,
 				6725420C1B784E3300EDA2C3 /* MusicFeeder.framework in Embed Frameworks */,
 				6725420A1B784E2100EDA2C3 /* PlayerKit.framework in Embed Frameworks */,
 				67C0BC6A1B7749B800243AE8 /* SnapKit.framework in Embed Frameworks */,
-				67C0BC6B1B7749B800243AE8 /* WebImage.framework in Embed Frameworks */,
 				67B777A81B6E3CE0001B777B /* Realm.framework in Embed Frameworks */,
 				6720B9B71B27A08F000C4D3A /* Result.framework in Embed Frameworks */,
 				675AB3351AD390790003824C /* XCDYouTubeKit.framework in Embed Frameworks */,
@@ -244,6 +250,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0A157F86C1964A4C83DD9E18 /* Pods-UnitTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UnitTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-UnitTests/Pods-UnitTests.debug.xcconfig"; sourceTree = "<group>"; };
 		1C231C8D483ACF959FE482B6 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		55D874842A0020EE0F3BB2F6 /* Pods-MusicFav.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicFav.release.xcconfig"; path = "Pods/Target Support Files/Pods-MusicFav/Pods-MusicFav.release.xcconfig"; sourceTree = "<group>"; };
 		6701D4A71A93A3D5006BFEC6 /* CategoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryTableViewController.swift; sourceTree = "<group>"; };
@@ -307,6 +314,8 @@
 		67428D561B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubePlaylistTableViewController.swift; sourceTree = "<group>"; };
 		67428D581B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubePlaylistItemTableViewController.swift; sourceTree = "<group>"; };
 		674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINotificationExtension.swift; sourceTree = "<group>"; };
+		674DF1271DD6BE36000C1B08 /* ReactiveSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveSwift.framework; path = Carthage/Build/iOS/ReactiveSwift.framework; sourceTree = "<group>"; };
+		674DF12A1DD6BE6F000C1B08 /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = Carthage/Build/iOS/SDWebImage.framework; sourceTree = "<group>"; };
 		6751509C1BA8542C00035DE6 /* SpecHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecHelper.swift; sourceTree = "<group>"; };
 		67527B6E1C04C3F900CE1C27 /* PageMenu.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = PageMenu.framework; path = Carthage/Build/iOS/PageMenu.framework; sourceTree = "<group>"; };
 		67554F071A4F127400F7AE72 /* TrackTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TrackTableViewCell.swift; sourceTree = "<group>"; };
@@ -317,7 +326,7 @@
 		675AB3401AD3E3DA0003824C /* StringExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtension.swift; sourceTree = "<group>"; };
 		675AB3511AD4334D0003824C /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; };
 		675F055F1AF3502C001CD799 /* Objective-C-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Objective-C-Bridging-Header.h"; sourceTree = "<group>"; };
-		6762EE081BCAC10100EA90DC /* ErrorCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorCode.swift; sourceTree = "<group>"; };
+		6762EE081BCAC10100EA90DC /* MusicFavError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicFavError.swift; sourceTree = "<group>"; };
 		6762EE0A1BCB36C700EA90DC /* SavedStreamTimelineTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SavedStreamTimelineTableViewController.swift; sourceTree = "<group>"; };
 		676629B61A85AA3100F3FD33 /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
 		6767AE531ADAC70500A92497 /* IASKAppSettingsViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IASKAppSettingsViewControllerExtension.swift; sourceTree = "<group>"; };
@@ -340,7 +349,6 @@
 		67B777A71B6E3CE0001B777B /* Realm.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Realm.framework; path = Carthage/Build/iOS/Realm.framework; sourceTree = "<group>"; };
 		67BE4F361AE7D95800E40E98 /* DeviceType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceType.swift; sourceTree = "<group>"; };
 		67C0BC661B7741A400243AE8 /* SnapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SnapKit.framework; path = Carthage/Build/iOS/SnapKit.framework; sourceTree = "<group>"; };
-		67C0BC671B7741A400243AE8 /* WebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebImage.framework; path = Carthage/Build/iOS/WebImage.framework; sourceTree = "<group>"; };
 		67C1A7FB1B7B83A5002A604C /* PlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerViewController.swift; sourceTree = "<group>"; };
 		67C1A7FD1B7B8712002A604C /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Channel.swift; path = MusicFav/Channel.swift; sourceTree = "<group>"; };
 		67C1A7FE1B7B8712002A604C /* ChannelLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChannelLoader.swift; path = MusicFav/ChannelLoader.swift; sourceTree = "<group>"; };
@@ -393,7 +401,9 @@
 		67F846681BA46DB60005E78A /* MiniPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
 		67FA09661AF8CA570086AA45 /* AccessibilityLabel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccessibilityLabel.swift; sourceTree = "<group>"; };
 		67FBBDF81B6CD46B00B567CB /* UpdateChecker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UpdateChecker.swift; path = MusicFav/UpdateChecker.swift; sourceTree = "<group>"; };
+		77B9835662C78055957941F4 /* Pods_UnitTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_UnitTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A42BC384E3F84D84E190E010 /* Pods-MusicFav.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MusicFav.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MusicFav/Pods-MusicFav.debug.xcconfig"; sourceTree = "<group>"; };
+		E677E76ED30ED1BFD77BD0A3 /* Pods-UnitTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-UnitTests.release.xcconfig"; path = "Pods/Target Support Files/Pods-UnitTests/Pods-UnitTests.release.xcconfig"; sourceTree = "<group>"; };
 		E743F12F73FBBB38FC638D0B /* Pods_MusicFav.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_MusicFav.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -407,10 +417,11 @@
 				671D07181B9477F500DC99A5 /* SoundCloudKit.framework in Frameworks */,
 				67428D4A1B80C23F002FFA1A /* Breit.framework in Frameworks */,
 				67C0BC681B7741A400243AE8 /* SnapKit.framework in Frameworks */,
-				67C0BC691B7741A400243AE8 /* WebImage.framework in Frameworks */,
+				676C7EAD1DD7436D0050C337 /* FLAnimatedImage.framework in Frameworks */,
 				67B777A61B6E3CBC001B777B /* Realm.framework in Frameworks */,
 				673DCC891AF530FF0043E51D /* libz.dylib in Frameworks */,
 				673DCC8D1AF531210043E51D /* libsqlite3.dylib in Frameworks */,
+				674DF1281DD6BE36000C1B08 /* ReactiveSwift.framework in Frameworks */,
 				679F405A1B05091D0070602D /* StoreKit.framework in Frameworks */,
 				673DCC871AF530F50043E51D /* AdSupport.framework in Frameworks */,
 				673DCC8B1AF531090043E51D /* SystemConfiguration.framework in Frameworks */,
@@ -420,6 +431,7 @@
 				6716642A1A738E36005FE005 /* Alamofire.framework in Frameworks */,
 				67F7D4921A625A4F00A5AE68 /* SwiftyJSON.framework in Frameworks */,
 				67F7D4901A625A4F00A5AE68 /* ReactiveCocoa.framework in Frameworks */,
+				674DF12B1DD6BE6F000C1B08 /* SDWebImage.framework in Frameworks */,
 				3BCF16D076714FA237AE56AB /* Pods_MusicFav.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -430,12 +442,12 @@
 			files = (
 				673DCC9E1AF53B010043E51D /* libsqlite3.dylib in Frameworks */,
 				673DCC9D1AF53AFB0043E51D /* libz.dylib in Frameworks */,
-				673DCC9C1AF53AF60043E51D /* AdSupport.framework in Frameworks */,
 				673DCC9B1AF53AEF0043E51D /* SystemConfiguration.framework in Frameworks */,
 				673DCC9A1AF53AE80043E51D /* CoreData.framework in Frameworks */,
 				675BEBF71AEAF81900BD853D /* Nimble.framework in Frameworks */,
 				675BEBF81AEAF81900BD853D /* Quick.framework in Frameworks */,
 				675BEBFB1AEAF81900BD853D /* SwiftyJSON.framework in Frameworks */,
+				4EA1F353E60E4D8258F613C0 /* Pods_UnitTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -448,7 +460,7 @@
 				6732B51D1C1100BB005559A6 /* Breit.framework in Frameworks */,
 				6732B51E1C1100BB005559A6 /* FeedlyKit.framework in Frameworks */,
 				6732B51F1C1100BB005559A6 /* MusicFeeder.framework in Frameworks */,
-				6732B5201C1100BB005559A6 /* ReactiveCocoa.framework in Frameworks */,
+				676C7EAB1DD7413D0050C337 /* ReactiveSwift.framework in Frameworks */,
 				6732B5221C1100BB005559A6 /* Result.framework in Frameworks */,
 				6732B5231C1100BB005559A6 /* SwiftyJSON.framework in Frameworks */,
 				6732B5241C1100BB005559A6 /* XCDYouTubeKit.framework in Frameworks */,
@@ -476,7 +488,7 @@
 				674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */,
 				679F405B1B0574DD0070602D /* PaymentManager.swift */,
 				6729DE5D1BC160FD00543E84 /* Shortcut.swift */,
-				6762EE081BCAC10100EA90DC /* ErrorCode.swift */,
+				6762EE081BCAC10100EA90DC /* MusicFavError.swift */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -742,6 +754,8 @@
 		7472929E5548D8618A0DE458 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				674DF12A1DD6BE6F000C1B08 /* SDWebImage.framework */,
+				674DF1271DD6BE36000C1B08 /* ReactiveSwift.framework */,
 				6732B5251C1100BB005559A6 /* RealmSwift.framework */,
 				6732B4F61C10FDF9005559A6 /* JavaScriptCore.framework */,
 				67527B6E1C04C3F900CE1C27 /* PageMenu.framework */,
@@ -750,7 +764,6 @@
 				6725420B1B784E3300EDA2C3 /* MusicFeeder.framework */,
 				672542091B784E2100EDA2C3 /* PlayerKit.framework */,
 				67C0BC661B7741A400243AE8 /* SnapKit.framework */,
-				67C0BC671B7741A400243AE8 /* WebImage.framework */,
 				67B777A71B6E3CE0001B777B /* Realm.framework */,
 				6720B9B51B27A08F000C4D3A /* Result.framework */,
 				679F40591B05091D0070602D /* StoreKit.framework */,
@@ -770,6 +783,7 @@
 				673DCC881AF530FF0043E51D /* libz.dylib */,
 				6701FB221AF90AF50054F091 /* KIF.framework */,
 				E743F12F73FBBB38FC638D0B /* Pods_MusicFav.framework */,
+				77B9835662C78055957941F4 /* Pods_UnitTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -779,6 +793,8 @@
 			children = (
 				A42BC384E3F84D84E190E010 /* Pods-MusicFav.debug.xcconfig */,
 				55D874842A0020EE0F3BB2F6 /* Pods-MusicFav.release.xcconfig */,
+				0A157F86C1964A4C83DD9E18 /* Pods-UnitTests.debug.xcconfig */,
+				E677E76ED30ED1BFD77BD0A3 /* Pods-UnitTests.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -828,10 +844,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 67277CCD1A434304002FD3E0 /* Build configuration list for PBXNativeTarget "UnitTests" */;
 			buildPhases = (
+				A7C661EA18E387204A802143 /* [CP] Check Pods Manifest.lock */,
 				67277CBC1A434304002FD3E0 /* Sources */,
 				67277CBD1A434304002FD3E0 /* Frameworks */,
 				67277CBE1A434304002FD3E0 /* Resources */,
 				675BEBFD1AEAF82000BD853D /* Copy carthage Frameworks */,
+				231FD7ECC17BB5C510258D74 /* [CP] Embed Pods Frameworks */,
+				CE5641755A5437FAAE8E2D43 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -868,12 +887,13 @@
 			attributes = {
 				LastSwiftMigration = 0700;
 				LastSwiftUpdateCheck = 0700;
-				LastUpgradeCheck = 0700;
+				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = "Hiroki Kumamoto";
 				TargetAttributes = {
 					67277CA71A434304002FD3E0 = {
 						CreatedOnToolsVersion = 6.1.1;
 						DevelopmentTeam = 7AK92UN63W;
+						LastSwiftMigration = 0810;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -885,11 +905,13 @@
 					};
 					67277CBF1A434304002FD3E0 = {
 						CreatedOnToolsVersion = 6.1.1;
+						LastSwiftMigration = 0810;
 						TestTargetID = 67277CA71A434304002FD3E0;
 					};
 					6732B50D1C11003B005559A6 = {
 						CreatedOnToolsVersion = 7.0.1;
 						DevelopmentTeam = 7AK92UN63W;
+						LastSwiftMigration = 0810;
 						SystemCapabilities = {
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
@@ -984,7 +1006,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+		231FD7ECC17BB5C510258D74 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-UnitTests/Pods-UnitTests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		6709D8AC1ADA5A970003F469 /* Update Setting Bundle */ = {
@@ -1007,7 +1044,7 @@
 			files = (
 			);
 			inputPaths = (
-				"$(SRCROOT)/Carthage/Build/iOS/ReactiveCocoa.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/ReactiveSwift.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SwiftyJSON.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Alamofire.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/FeedlyKit.framework",
@@ -1015,12 +1052,13 @@
 				"$(SRCROOT)/Carthage/Build/iOS/Result.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Realm.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SnapKit.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/WebImage.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/SDWebImage.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/Breit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/MusicFeeder.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/PlayerKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SoundCloudKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/PageMenu.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/FLAnimatedImage.framework",
 			);
 			name = "Carthage copy-frameworks";
 			outputPaths = (
@@ -1042,6 +1080,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "if [ -e config/fabric.json ]; then\n    ruby scripts/fabric.rb\nelse\n    echo \"Running config/fabric.json is not found, do nothing.\"\nfi\n";
+		};
+		A7C661EA18E387204A802143 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
 		};
 		B2A019171A144C54021F6BE7 /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -1071,6 +1124,21 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-MusicFav/Pods-MusicFav-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CE5641755A5437FAAE8E2D43 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-UnitTests/Pods-UnitTests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		E3C04DBDDED10EE8A1B8C7BA /* Embed Pods Frameworks */ = {
@@ -1132,7 +1200,7 @@
 				674AAC891B02D64E00C1FC18 /* UINotificationExtension.swift in Sources */,
 				67277CDB1A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift in Sources */,
 				6783057F1B95DDC000A83F52 /* StreamTimelineTableViewController.swift in Sources */,
-				6762EE091BCAC10100EA90DC /* ErrorCode.swift in Sources */,
+				6762EE091BCAC10100EA90DC /* MusicFavError.swift in Sources */,
 				67DA465F1A8656A90048B29C /* PlaylistTableViewCell.swift in Sources */,
 				6731BCA01AD8F069004F488D /* JASidePanelControllerExtension.swift in Sources */,
 				6701D4AD1A95048C006BFEC6 /* HUDExtension.swift in Sources */,
@@ -1252,6 +1320,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1261,8 +1330,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer: hiroki kumamoto (354XT663D2)";
@@ -1274,6 +1345,7 @@
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1286,7 +1358,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				PROVISIONING_PROFILE = "";
@@ -1301,6 +1373,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -1310,8 +1383,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution: hiroki kumamoto (7AK92UN63W)";
@@ -1322,16 +1397,18 @@
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
 				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -1342,20 +1419,17 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = A42BC384E3F84D84E190E010 /* Pods-MusicFav.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MusicFav/MusicFav.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = MusicFav/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.kumabook.$(PRODUCT_NAME:rfc1034identifier)";
@@ -1363,6 +1437,7 @@
 				PROVISIONING_PROFILE = "";
 				PUBLIC_HEADERS_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/PublicHeaders";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/MusicFav/Objective-C-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -1371,11 +1446,11 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 55D874842A0020EE0F3BB2F6 /* Pods-MusicFav.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = MusicFav/MusicFav.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				ENABLE_BITCODE = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1384,7 +1459,6 @@
 					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = MusicFav/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_BUNDLE_IDENTIFIER = "io.kumabook.$(PRODUCT_NAME:rfc1034identifier)";
@@ -1392,21 +1466,20 @@
 				PROVISIONING_PROFILE = "";
 				PUBLIC_HEADERS_FOLDER_PATH = "$(CONTENTS_FOLDER_PATH)/PublicHeaders";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/MusicFav/Objective-C-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
 		67277CCE1A434304002FD3E0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0A157F86C1964A4C83DD9E18 /* Pods-UnitTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(PROJECT_DIR)",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -1415,7 +1488,6 @@
 				HEADER_SEARCH_PATHS = (
 					"$(CONTENTS_FOLDER_PATH)/PublicHeaders",
 					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(BUILT_PRODUCTS_DIR)/MusicFav.app/PublicHeaders",
 				);
 				INFOPLIST_FILE = UnitTests/Info.plist;
@@ -1424,6 +1496,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "io.kumabook.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/MusicFav/Objective-C-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MusicFav.app/MusicFav";
 				USER_HEADER_SEARCH_PATHS = "";
 			};
@@ -1431,18 +1504,17 @@
 		};
 		67277CCF1A434304002FD3E0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = E677E76ED30ED1BFD77BD0A3 /* Pods-UnitTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/iOS",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(CONTENTS_FOLDER_PATH)/PublicHeaders",
 					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"$(BUILT_PRODUCTS_DIR)/MusicFav.app/PublicHeaders",
 				);
 				INFOPLIST_FILE = UnitTests/Info.plist;
@@ -1452,6 +1524,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "io.kumabook.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "$(SRCROOT)/MusicFav/Objective-C-Bridging-Header.h";
+				SWIFT_VERSION = 3.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MusicFav.app/MusicFav";
 				USER_HEADER_SEARCH_PATHS = "";
 			};
@@ -1472,11 +1545,11 @@
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = ListenItLater/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.kumabook.MusicFav.ListenItLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -1496,11 +1569,11 @@
 				);
 				GCC_NO_COMMON_BLOCKS = YES;
 				INFOPLIST_FILE = ListenItLater/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = io.kumabook.MusicFav.ListenItLater;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

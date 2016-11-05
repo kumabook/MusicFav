@@ -25,9 +25,9 @@ class FeedbackWebViewController: UIViewController {
         navigationItem.backBarButtonItem?.title = ""
         webView = UIWebView(frame: view.frame)
         view.addSubview(webView)
-        let mainBundle = NSBundle.mainBundle()
-        if let file = mainBundle.pathForResource("feedback_en".localize(), ofType:"html"), let data = NSData(contentsOfFile: file) {
-            webView.loadData(data, MIMEType: "text/html", textEncodingName: "UTF-8", baseURL: NSURL(fileURLWithPath: file))
+        let mainBundle = Bundle.main
+        if let file = mainBundle.path(forResource: "feedback_en".localize(), ofType:"html"), let data = NSData(contentsOfFile: file) {
+            webView.load(data as Data, mimeType: "text/html", textEncodingName: "UTF-8", baseURL: URL(fileURLWithPath: file))
         }
     }
 
@@ -36,6 +36,6 @@ class FeedbackWebViewController: UIViewController {
     }
 
     func back() {
-        navigationController?.popViewControllerAnimated(true)
+        let _ = navigationController?.popViewController(animated: true)
     }
 }

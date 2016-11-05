@@ -22,15 +22,15 @@ class StreamTableViewCell: UITableViewCell {
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
     }
 
-    func updateView(blog blog: Blog) {
+    func updateView(blog: Blog) {
         if let imageUrl = blog.blogImageSmall {
-            thumbImageView.sd_setImageWithURL(NSURL(string: imageUrl))
+            thumbImageView.sd_setImage(with: URL(string: imageUrl))
         }
         titleLabel.text         = blog.siteName
         if let totalTracks = blog.siteInfo?.totalTracks {
@@ -41,8 +41,8 @@ class StreamTableViewCell: UITableViewCell {
         }
     }
 
-    func updateView(feed feed: Feed) {
-        thumbImageView.sd_setImageWithURL(feed.thumbnailURL, placeholderImage: UIImage(named: "default_thumb"))
+    func updateView(feed: Feed) {
+        thumbImageView.sd_setImage(with: feed.thumbnailURL, placeholderImage: UIImage(named: "default_thumb"))
         titleLabel.text = feed.title
         if let desc = feed.description {
             subtitle1Label.text = desc

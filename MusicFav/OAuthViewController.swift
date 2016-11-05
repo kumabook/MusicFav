@@ -14,15 +14,16 @@ import NXOAuth2Client
 import MBProgressHUD
 
 protocol OAuthViewDelegate: class {
-    func onLoggedIn(account: NXOAuth2Account)
+    func onLoggedIn(_ account: NXOAuth2Account)
 }
 
 class OAuthViewController: UIViewController, UIWebViewDelegate {
-    var appDelegate:  AppDelegate    { return UIApplication.sharedApplication().delegate as! AppDelegate }
+    var appDelegate:  AppDelegate    { return UIApplication.shared.delegate as! AppDelegate }
     weak var delegate: OAuthViewDelegate?
     var observers: [NSObjectProtocol]!
 
     var loginWebView: UIWebView!
+    var progressHUD: MBProgressHUD?
 
     let clientId:      String!
     let clientSecret:  String!
@@ -64,7 +65,7 @@ class OAuthViewController: UIViewController, UIWebViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationItem.leftBarButtonItem = UIBarButtonItem(title:"Close".localize(),
-                                                                style: UIBarButtonItemStyle.Plain,
+                                                                style: UIBarButtonItemStyle.plain,
                                                                target: self,
                                                                action: #selector(OAuthViewController.close))
         loginWebView = UIWebView(frame: view.frame)
@@ -74,13 +75,13 @@ class OAuthViewController: UIViewController, UIWebViewDelegate {
         requestOAuth2Access()
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         Logger.sendScreenView(self)
         addObservers()
     }
 
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         removeObservers()
         cleanOAuth2AccountStore()
@@ -92,55 +93,54 @@ class OAuthViewController: UIViewController, UIWebViewDelegate {
 
     func close() {
         if self.navigationController?.childViewControllers.count == 1 {
-            self.navigationController?.dismissViewControllerAnimated(true, completion: nil)
+            self.navigationController?.dismiss(animated: true, completion: nil)
         } else {
-            self.navigationController?.popViewControllerAnimated(true)
+           let _ =  self.navigationController?.popViewController(animated: true)
         }
     }
 
     func setupOAuth2AccountStore() {
-        NXOAuth2AccountStore.sharedStore().setClientID(clientId,
+        (NXOAuth2AccountStore.sharedStore() as AnyObject).setClientID(clientId,
                                                secret: clientSecret,
                                                 scope: scope,
-                                     authorizationURL: NSURL(string: authUrl),
-                                             tokenURL: NSURL(string: tokenUrl),
-                                          redirectURL: NSURL(string: redirectUrl),
+                                     authorizationURL: URL(string: authUrl),
+                                             tokenURL: URL(string: tokenUrl),
+                                          redirectURL: URL(string: redirectUrl),
                                         keyChainGroup: keyChainGroup,
                                        forAccountType: accountType)
     }
 
     func cleanOAuth2AccountStore() {
-        NXOAuth2AccountStore.sharedStore().setClientID("",
+        (NXOAuth2AccountStore.sharedStore() as AnyObject).setClientID("",
                                                secret: "",
                                                 scope: scope,
-                                     authorizationURL: NSURL(string: "http://dummy.com"),
-                                             tokenURL: NSURL(string: "http://dummy.com"),
-                                          redirectURL: NSURL(string: "http://dummy.com"),
+                                     authorizationURL: URL(string: "http://dummy.com"),
+                                             tokenURL: URL(string: "http://dummy.com"),
+                                          redirectURL: URL(string: "http://dummy.com"),
                                         keyChainGroup: "",
                                        forAccountType: accountType)
     }
 
     func addObservers() {
-        let dc = NSNotificationCenter.defaultCenter()
-        observers.append(dc.addObserverForName(NXOAuth2AccountStoreAccountsDidChangeNotification,
+        let dc = NotificationCenter.default
+        observers.append(dc.addObserver(forName: NSNotification.Name.NXOAuth2AccountStoreAccountsDidChange,
             object: NXOAuth2AccountStore.sharedStore(),
             queue: nil) { (notification) -> Void in
-                if let account = notification.userInfo?[NXOAuth2AccountStoreNewAccountUserInfoKey] as? NXOAuth2Account
-                    where account.accountType == self.accountType {
+                if let account = notification.userInfo?[NXOAuth2AccountStoreNewAccountUserInfoKey] as? NXOAuth2Account, account.accountType == self.accountType {
                         self.onLoggedIn(account)
                 }
             })
-        observers.append(dc.addObserverForName(NXOAuth2AccountStoreDidFailToRequestAccessNotification,
+        observers.append(dc.addObserver(forName: NSNotification.Name.NXOAuth2AccountStoreDidFailToRequestAccess,
             object: NXOAuth2AccountStore.sharedStore(),
             queue: nil) { (notification) -> Void in
-                if let type = notification.userInfo?[kNXOAuth2AccountStoreAccountType] as? String where type == self.accountType {
+                if let type = notification.userInfo?[kNXOAuth2AccountStoreAccountType] as? String, type == self.accountType {
                     self.showAlert()
                 }
             })
     }
 
     func removeObservers() {
-        let dc = NSNotificationCenter.defaultCenter()
+        let dc = NotificationCenter.default
         for observer in observers {
             dc.removeObserver(observer)
         }
@@ -148,40 +148,42 @@ class OAuthViewController: UIViewController, UIWebViewDelegate {
     }
 
     func showAlert() {
-        UIAlertController.show(self, title: "Notice".localize(), message: "Login failed.", handler: { (action) -> Void in
+        let _ = UIAlertController.show(self, title: "Notice".localize(), message: "Login failed.", handler: { (action) -> Void in
         })
     }
 
-    func onLoggedIn(account: NXOAuth2Account) {
+    func onLoggedIn(_ account: NXOAuth2Account) {
         delegate?.onLoggedIn(account)
         close()
     }
 
     func requestOAuth2Access() {
-        let store: AnyObject! = NXOAuth2AccountStore.sharedStore()
-        store.requestAccessToAccountWithType(accountType, withPreparedAuthorizationURLHandler: { (preparedURL) -> Void in
-            self.loginWebView.loadRequest(NSURLRequest(URL: preparedURL))
+        let store: AnyObject! = NXOAuth2AccountStore.sharedStore() as AnyObject!
+        store.requestAccessToAccount(withType: accountType, withPreparedAuthorizationURLHandler: { (preparedURL) -> Void in
+            self.loginWebView.loadRequest(URLRequest(url: preparedURL!))
         })
     }
 
     // MARK: - UIWebViewDelegate
 
-    func webView(webView: UIWebView, shouldStartLoadWithRequest request: NSURLRequest, navigationType: UIWebViewNavigationType) -> Bool {
-        if NXOAuth2AccountStore.sharedStore().handleRedirectURL(request.URL) {
+    func webView(_ webView: UIWebView, shouldStartLoadWith request: URLRequest, navigationType: UIWebViewNavigationType) -> Bool {
+        if (NXOAuth2AccountStore.sharedStore() as AnyObject).handleRedirectURL(request.url) {
             return false
         }
         return true
     }
 
-    func webViewDidStartLoad(webView: UIWebView) {
-        MBProgressHUD.showHUDAddedTo(view, animated: true)
+    func webViewDidStartLoad(_ webView: UIWebView) {
+        progressHUD = MBProgressHUD.showAdded(to: view, animated: true)
     }
 
-    func webViewDidFinishLoad(webView: UIWebView) {
-        MBProgressHUD.hideAllHUDsForView(view, animated: true)
+    func webViewDidFinishLoad(_ webView: UIWebView) {
+        progressHUD?.hide(animated: true)
+        progressHUD = nil
     }
 
-    func webView(webView: UIWebView, didFailLoadWithError error: NSError?) {
-        MBProgressHUD.hideAllHUDsForView(view, animated: true)
+    func webView(_ webView: UIWebView, didFailLoadWithError error: Error) {
+        progressHUD?.hide(animated: true)
+        progressHUD = nil
     }
 }

@@ -17,7 +17,7 @@ class StreamTreeViewCell: UITableViewCell {
 
     override func layoutSubviews() {
         super.layoutSubviews()
-        self.imageView?.contentMode = UIViewContentMode.ScaleAspectFit
+        self.imageView?.contentMode = UIViewContentMode.scaleAspectFit
         if let f = self.imageView?.frame {
             self.imageView?.frame = CGRect(x: f.origin.x , y: f.origin.y, width: thumbWidth, height: f.height)
         }

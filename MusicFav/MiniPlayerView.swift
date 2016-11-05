@@ -10,9 +10,9 @@ import Foundation
 import PlayerKit
 import MarqueeLabel
 
-public class MiniPlayerView: PlayerKit.SimpleMiniPlayerView {
+open class MiniPlayerView: PlayerKit.SimpleMiniPlayerView {
     let duration = 7.5
-    override public func createSubviews() {
+    override open func createSubviews() {
         super.createSubviews();
         titleLabel = MarqueeLabel(frame: titleLabel.frame, duration: duration, andFadeLength: 0)
     }

@@ -7,57 +7,57 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import SwiftyJSON
 import FeedlyKit
 import PageMenu
 import MusicFeeder
 
 class ChannelTableViewController: AddStreamTableViewController {
-    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     let cellReuseIdentifier = "ChannelTableViewCell"
 
-    enum Type {
-        case Category(GuideCategory)
-        case Search(String)
+    enum ChannelType {
+        case category(GuideCategory)
+        case search(String)
     }
 
     var observer:            Disposable?
-    var type:                Type
+    var type:                ChannelType
     let channelLoader:       ChannelLoader!
     var indicator:           UIActivityIndicatorView!
     var reloadButton:        UIButton!
     var channels:            [Channel] {
         switch type {
-        case .Category(let category):
+        case .category(let category):
             if let list = channelLoader.channelsOf(category) { return list }
             else                                             { return [] }
-        case .Search:
+        case .search:
             return channelLoader.searchResults
         }
     }
 
-    init(streamListLoader: StreamListLoader, channelLoader: ChannelLoader, type: Type) {
+    init(streamRepository: StreamRepository, channelLoader: ChannelLoader, type: ChannelType) {
         self.channelLoader = channelLoader
         self.type          = type
-        super.init(streamListLoader: streamListLoader)
+        super.init(streamRepository: streamRepository)
     }
 
     required init(coder aDecoder: NSCoder) {
-        self.type          = .Search("music")
+        self.type          = .search("music")
         self.channelLoader = nil
         super.init(coder: aDecoder)
     }
 
-    func refresh(type: Type) {
+    func refresh(_ type: ChannelType) {
         self.type = type
         channelLoader.clearSearch()
-        reloadData(keepSelection: false)
+        reloadData(false)
         observeChannelLoader()
         fetchNext()
     }
 
-    override func getSubscribables() -> [Stream] {
+    override func getSubscribables() -> [FeedlyKit.Stream] {
         if let indexPaths = tableView.indexPathsForSelectedRows {
             return indexPaths.map { self.channels[$0.item] }
         } else {
@@ -67,10 +67,10 @@ class ChannelTableViewController: AddStreamTableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let nib = UINib(nibName: "StreamTableViewCell", bundle: NSBundle.mainBundle())
-        tableView.registerNib(nib, forCellReuseIdentifier: cellReuseIdentifier)
+        let nib = UINib(nibName: "StreamTableViewCell", bundle: Bundle.main)
+        tableView.register(nib, forCellReuseIdentifier: cellReuseIdentifier)
 
-        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
         indicator.bounds = CGRect(x: 0,
                                   y: 0,
                               width: indicator.bounds.width,
@@ -79,20 +79,20 @@ class ChannelTableViewController: AddStreamTableViewController {
         indicator.stopAnimating()
 
         reloadButton = UIButton()
-        reloadButton.setImage(UIImage(named: "network_error"), forState: UIControlState.Normal)
-        reloadButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        reloadButton.addTarget(self, action:#selector(ChannelTableViewController.fetchNext), forControlEvents:UIControlEvents.TouchUpInside)
-        reloadButton.setTitle("Sorry, network error occured.".localize(), forState:UIControlState.Normal)
-        reloadButton.frame = CGRectMake(0, 0, tableView.frame.size.width, 44);
+        reloadButton.setImage(UIImage(named: "network_error"), for: UIControlState())
+        reloadButton.setTitleColor(UIColor.black, for: UIControlState())
+        reloadButton.addTarget(self, action:#selector(ChannelTableViewController.fetchNext), for:UIControlEvents.touchUpInside)
+        reloadButton.setTitle("Sorry, network error occured.".localize(), for:UIControlState.normal)
+        reloadButton.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 44);
         refresh(type)
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         observeChannelLoader()
     }
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         observer?.dispose()
         observer = nil
@@ -100,14 +100,15 @@ class ChannelTableViewController: AddStreamTableViewController {
 
     func observeChannelLoader() {
         observer?.dispose()
-        observer = channelLoader.signal.observeNext({ event in
+        observer = channelLoader.signal.observeResult({ result in
+            guard let event = result.value else { return }
             switch event {
-            case .StartLoading:
+            case .startLoading:
                 self.showIndicator()
-            case .CompleteLoading:
+            case .completeLoading:
                 self.hideIndicator()
-                self.reloadData(keepSelection: true)
-            case .FailToLoad:
+                self.reloadData(true)
+            case .failToLoad:
                 self.showReloadButton()
             }
         })
@@ -117,7 +118,7 @@ class ChannelTableViewController: AddStreamTableViewController {
         super.didReceiveMemoryWarning()
     }
 
-    override func scrollViewDidScroll(scrollView: UIScrollView) {
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if tableView.contentOffset.y >= tableView.contentSize.height - tableView.bounds.size.height {
             fetchNext()
         }
@@ -143,38 +144,38 @@ class ChannelTableViewController: AddStreamTableViewController {
 
     func fetchNext() {
         switch type {
-        case .Category(let category):
+        case .category(let category):
             channelLoader.fetchChannels(category)
-        case .Search(let query):
+        case .search(let query):
             channelLoader.searchChannels(query)
         }
     }
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return cellHeight
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return channels.count
     }
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseIdentifier, forIndexPath: indexPath) as! StreamTableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! StreamTableViewCell
         setAccessoryView(cell, indexPath: indexPath)
         let channel = channels[indexPath.item]
         cell.titleLabel.text = channel.title
-        if let url = NSURL(string: channel.thumbnails["default"]!) {
-            cell.thumbImageView.sd_setImageWithURL(url)
+        if let url = URL(string: channel.thumbnails["default"]!) {
+            cell.thumbImageView.sd_setImage(with: url)
         }
         cell.subtitle1Label.text          = ""
         cell.subtitle2Label.text          = channel.description
         cell.subtitle2Label.numberOfLines = 2
-        cell.subtitle2Label.textAlignment = .Left
+        cell.subtitle2Label.textAlignment = .left
         return cell
     }
 }

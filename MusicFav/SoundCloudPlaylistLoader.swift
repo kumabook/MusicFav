@@ -1,3 +1,4 @@
+
 //
 //  SoundCloudPlaylistLoader.swift
 //  MusicFav
@@ -8,7 +9,7 @@
 
 import Foundation
 import SoundCloudKit
-import ReactiveCocoa
+import ReactiveSwift
 import MusicFeeder
 import Breit
 
@@ -43,16 +44,16 @@ extension SoundCloudKit.Playlist {
 
 class SoundCloudPlaylistLoader {
     enum State {
-        case Init
-        case Fetching
-        case Normal
-        case Error
+        case `init`
+        case fetching
+        case normal
+        case error
     }
 
     enum Event {
-        case StartLoading
-        case CompleteLoading
-        case FailToLoad
+        case startLoading
+        case completeLoading
+        case failToLoad
     }
 
     let user: User
@@ -74,7 +75,7 @@ class SoundCloudPlaylistLoader {
         self.user                  = user
         playlists                  = []
         favorites                  = []
-        self.state                 = .Init
+        self.state                 = State.init
         let pipe                   = Signal<Event, NSError>.pipe()
         signal                     = pipe.0
         observer                   = pipe.1
@@ -84,18 +85,18 @@ class SoundCloudPlaylistLoader {
         hasNextFavorites           = true
     }
 
-    private func fetchNextPlaylists() -> SignalProducer<Void, NSError> {
-        state = State.Fetching
-        observer.sendNext(.StartLoading)
+    fileprivate func fetchNextPlaylists() -> SignalProducer<Void, NSError> {
+        state = State.fetching
+        observer.send(value: .startLoading)
         return APIClient.sharedInstance.fetchPlaylistsOf(user).map {
             self.hasNextPlaylists = false
-            self.playlists.appendContentsOf($0)
-            self.observer.sendNext(.CompleteLoading)
-            self.state = State.Normal
+            self.playlists.append(contentsOf: $0)
+            self.observer.send(value: .completeLoading)
+            self.state = State.normal
         }.mapError {
             self.hasNextPlaylists = true
-            self.observer.sendFailed($0)
-            self.state = State.Error
+            self.observer.send(error: $0)
+            self.state = State.error
             return $0
         }
     }
@@ -107,27 +108,27 @@ class SoundCloudPlaylistLoader {
     func fetchPlaylists() {
         if !needFetchPlaylists() { return }
         switch state {
-        case .Init:     playlistsDisposable = fetchNextPlaylists().start()
-        case .Fetching: break
-        case .Normal:   playlistsDisposable = fetchNextPlaylists().start()
-        case .Error:    playlistsDisposable = fetchNextPlaylists().start()
+        case .init:     playlistsDisposable = fetchNextPlaylists().start()
+        case .fetching: break
+        case .normal:   playlistsDisposable = fetchNextPlaylists().start()
+        case .error:    playlistsDisposable = fetchNextPlaylists().start()
         }
     }
 
-    private func fetchNextFavorites() -> SignalProducer<Void, NSError> {
-        state = State.Fetching
-        observer.sendNext(.StartLoading)
+    fileprivate func fetchNextFavorites() -> SignalProducer<Void, NSError> {
+        state = State.fetching
+        observer.send(value: .startLoading)
         return APIClient.sharedInstance.fetchFavoritesOf(user)
             .map {
                 self.hasNextFavorites = false
-                self.favorites.appendContentsOf($0)
-                self.observer.sendNext(.CompleteLoading)
-                self.state = State.Normal
+                self.favorites.append(contentsOf: $0)
+                self.observer.send(value: .completeLoading)
+                self.state = State.normal
                 self.fetchPlaylists()
             }.mapError {
                 self.hasNextFavorites = true
-                self.observer.sendFailed($0)
-                self.state = State.Error
+                self.observer.send(error: $0)
+                self.state = State.error
                 return $0
         }
     }
@@ -138,10 +139,10 @@ class SoundCloudPlaylistLoader {
 
     func fetchFavorites() {
         switch state {
-        case .Init:     playlistsDisposable = fetchNextFavorites().start()
-        case .Fetching: break
-        case .Normal:   playlistsDisposable = fetchNextFavorites().start()
-        case .Error:    playlistsDisposable = fetchNextFavorites().start()
+        case .init:     playlistsDisposable = fetchNextFavorites().start()
+        case .fetching: break
+        case .normal:   playlistsDisposable = fetchNextFavorites().start()
+        case .error:    playlistsDisposable = fetchNextFavorites().start()
         }
     }
 }

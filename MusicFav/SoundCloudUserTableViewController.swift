@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import SwiftyJSON
 import FeedlyKit
 import PageMenu
@@ -15,12 +15,12 @@ import MusicFeeder
 import SoundCloudKit
 
 class SoundCloudUserTableViewController: AddStreamTableViewController {
-    let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
     let cellReuseIdentifier = "ChannelTableViewCell"
 
-    enum Type {
-        case Followings
-        case Search(String)
+    enum `Type` {
+        case followings
+        case search(String)
     }
 
     var observer:            Disposable?
@@ -30,36 +30,36 @@ class SoundCloudUserTableViewController: AddStreamTableViewController {
     var reloadButton:        UIButton!
     var users:               [SoundCloudKit.User] {
         switch type {
-        case .Followings:
+        case .followings:
             return userLoader.followings
-        case .Search:
+        case .search:
             return userLoader.searchResults
         }
     }
 
-    init(streamListLoader: StreamListLoader, userLoader: SoundCloudUserLoader, type: Type) {
+    init(streamRepository: StreamRepository, userLoader: SoundCloudUserLoader, type: Type) {
         self.userLoader = userLoader
         self.type       = type
-        super.init(streamListLoader: streamListLoader)
+        super.init(streamRepository: streamRepository)
     }
 
     required init(coder aDecoder: NSCoder) {
         self.userLoader    = nil
-        self.type          = .Search("music")
+        self.type          = .search("music")
         super.init(coder: aDecoder)
     }
 
-    func refresh(type: Type) {
+    func refresh(_ type: Type) {
         self.type = type
         userLoader.clearSearch()
-        reloadData(keepSelection: false)
+        reloadData(false)
         observeUserLoader()
         fetchNext()
     }
 
-    override func getSubscribables() -> [Stream] {
+    override func getSubscribables() -> [FeedlyKit.Stream] {
         if let indexPaths = tableView.indexPathsForSelectedRows {
-            return indexPaths.map { return self.users[$0.item].toSubscription() as Stream }
+            return indexPaths.map { return self.users[$0.item].toSubscription() as FeedlyKit.Stream }
         } else {
             return []
         }
@@ -67,10 +67,10 @@ class SoundCloudUserTableViewController: AddStreamTableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let nib = UINib(nibName: "StreamTableViewCell", bundle: NSBundle.mainBundle())
-        tableView.registerNib(nib, forCellReuseIdentifier: cellReuseIdentifier)
+        let nib = UINib(nibName: "StreamTableViewCell", bundle: Bundle.main)
+        tableView.register(nib, forCellReuseIdentifier: cellReuseIdentifier)
 
-        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
         indicator.bounds = CGRect(x: 0,
                                   y: 0,
                               width: indicator.bounds.width,
@@ -79,20 +79,20 @@ class SoundCloudUserTableViewController: AddStreamTableViewController {
         indicator.stopAnimating()
 
         reloadButton = UIButton()
-        reloadButton.setImage(UIImage(named: "network_error"), forState: UIControlState.Normal)
-        reloadButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        reloadButton.addTarget(self, action:#selector(SoundCloudUserTableViewController.fetchNext), forControlEvents:UIControlEvents.TouchUpInside)
-        reloadButton.setTitle("Sorry, network error occured.".localize(), forState:UIControlState.Normal)
-        reloadButton.frame = CGRectMake(0, 0, tableView.frame.size.width, 44);
+        reloadButton.setImage(UIImage(named: "network_error"), for: UIControlState())
+        reloadButton.setTitleColor(UIColor.black, for: UIControlState())
+        reloadButton.addTarget(self, action:#selector(SoundCloudUserTableViewController.fetchNext), for:UIControlEvents.touchUpInside)
+        reloadButton.setTitle("Sorry, network error occured.".localize(), for:UIControlState.normal)
+        reloadButton.frame = CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 44);
         refresh(type)
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         observeUserLoader()
     }
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         observer?.dispose()
         observer = nil
@@ -100,14 +100,15 @@ class SoundCloudUserTableViewController: AddStreamTableViewController {
 
     func observeUserLoader() {
         observer?.dispose()
-        observer = userLoader.signal.observeNext({ event in
+        observer = userLoader.signal.observeResult({ result in
+            guard let event = result.value else { return }
             switch event {
-            case .StartLoading:
+            case .startLoading:
                 self.showIndicator()
-            case .CompleteLoading:
+            case .completeLoading:
                 self.hideIndicator()
-                self.reloadData(keepSelection: true)
-            case .FailToLoad:
+                self.reloadData(true)
+            case .failToLoad:
                 self.showReloadButton()
             }
         })
@@ -117,7 +118,7 @@ class SoundCloudUserTableViewController: AddStreamTableViewController {
         super.didReceiveMemoryWarning()
     }
 
-    override func scrollViewDidScroll(scrollView: UIScrollView) {
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if tableView.contentOffset.y >= tableView.contentSize.height - tableView.bounds.size.height {
             fetchNext()
         }
@@ -143,9 +144,9 @@ class SoundCloudUserTableViewController: AddStreamTableViewController {
 
     func fetchNext() {
         switch type {
-        case .Followings:
+        case .followings:
             userLoader.fetchFollowings()
-        case .Search(let query):
+        case .search(let query):
             userLoader.searchUsers(query)
         }
     }
@@ -158,30 +159,30 @@ class SoundCloudUserTableViewController: AddStreamTableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return cellHeight
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return users.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(cellReuseIdentifier, forIndexPath: indexPath) as! StreamTableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! StreamTableViewCell
         setAccessoryView(cell, indexPath: indexPath)
         let user = users[indexPath.item]
         cell.titleLabel.text = user.username
         if let url = user.thumbnailURL {
-            cell.thumbImageView.sd_setImageWithURL(url)
+            cell.thumbImageView.sd_setImage(with: url)
         }
         cell.subtitle1Label.text          = ""
         cell.subtitle2Label.text          = user.description
         cell.subtitle2Label.numberOfLines = 2
-        cell.subtitle2Label.textAlignment = .Left
+        cell.subtitle2Label.textAlignment = .left
         return cell
     }
 }

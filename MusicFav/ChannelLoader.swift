@@ -6,26 +6,26 @@
 //  Copyright (c) 2015 Hiroki Kumamoto. All rights reserved.
 //
 
-import ReactiveCocoa
+import ReactiveSwift
 import Result
 import FeedlyKit
 
 class ChannelLoader {
     enum State {
-        case Init
-        case Fetching
-        case Normal
-        case Error
+        case `init`
+        case fetching
+        case normal
+        case error
     }
 
     enum Event {
-        case StartLoading
-        case CompleteLoading
-        case FailToLoad
+        case startLoading
+        case completeLoading
+        case failToLoad
     }
 
     var categories: [GuideCategory]
-    private var channelsOfCategory: [GuideCategory:[Channel]]
+    fileprivate var channelsOfCategory: [GuideCategory:[Channel]]
     var offset  = 0
     var perPage = 5
     var state:          State
@@ -52,7 +52,7 @@ class ChannelLoader {
         subscriptions                 = []
         channels                      = []
         searchResults                 = []
-        self.state                    = .Init
+        self.state                    = .init
         let pipe                      = Signal<Event, NSError>.pipe()
         signal                        = pipe.0
         observer                      = pipe.1
@@ -66,71 +66,73 @@ class ChannelLoader {
     func clearSearch() {
         searchResults   = []
         searchPageToken = ""
-        state           = .Normal
+        state           = .normal
         searchDisposable?.dispose()
     }
 
-    func channelsOf(category: GuideCategory) -> [Channel]? {
+    func channelsOf(_ category: GuideCategory) -> [Channel]? {
         return channelsOfCategory[category]
     }
 
-    private func fetchNextGuideCategory() -> SignalProducer<Void, NSError> {
-        state = State.Fetching
-        observer.sendNext(.StartLoading)
+    fileprivate func fetchNextGuideCategory() -> SignalProducer<Void, NSError> {
+        state = State.fetching
+        observer.send(value: .startLoading)
         return YouTubeAPIClient.sharedInstance.fetchGuideCategories(categoriesPageToken).map {
-            self.categories.appendContentsOf($0.items)
+            self.categories.append(contentsOf: $0.items)
             self.categoriesPageToken = $0.nextPageToken
             for c in $0.items {
                 self.channelsOfCategory[c]          = []
                 self.channelsPageTokenOfCategory[c] = ""
             }
-            self.observer.sendNext(.CompleteLoading)
-            self.state = State.Normal
+        
+            
+            self.observer.send(value: .completeLoading)
+            self.state = State.normal
             if self.categoriesPageToken == nil {
-                self.state = .Normal
+                self.state = .normal
             }
         }
     }
 
-    private func fetchNextChannels(category: GuideCategory) -> SignalProducer<Void, NSError> {
-        state = State.Fetching
-        observer.sendNext(.StartLoading)
+    fileprivate func fetchNextChannels(_ category: GuideCategory) -> SignalProducer<Void, NSError> {
+        state = State.fetching
+        observer.send(value: .startLoading)
         return YouTubeAPIClient.sharedInstance.fetchChannels(category, pageToken: channelsPageTokenOfCategory[category]).map {
-                self.channelsOfCategory[category]?.appendContentsOf($0.items)
+                self.channelsOfCategory[category]?.append(contentsOf: $0.items)
                 self.channelsPageTokenOfCategory[category] = $0.nextPageToken
-                self.observer.sendNext(.CompleteLoading)
-                self.state = State.Normal
+                self.observer.send(value: .completeLoading)
+                self.state = State.normal
             }
     }
 
-    private func fetchNextSubscriptions() -> SignalProducer<Void, NSError> {
-        state = State.Fetching
-        observer.sendNext(.StartLoading)
+    fileprivate func fetchNextSubscriptions() -> SignalProducer<Void, NSError> {
+        state = State.fetching
+        observer.send(value: .startLoading)
         return YouTubeAPIClient.sharedInstance.fetchSubscriptions(subscriptionPageToken)
             .map {
-                self.subscriptions.appendContentsOf($0.items)
+                self.subscriptions.append(contentsOf: $0.items)
                 self.subscriptionPageToken = $0.nextPageToken
-                self.observer.sendNext(.CompleteLoading)
-                self.state = State.Normal
+                self.observer.send(value: .completeLoading)
+                self.state = State.normal
             }.mapError { e in
-                self.observer.sendNext(.FailToLoad)
-                self.state = State.Error
+                self.observer.send(value: .failToLoad)
+                self.state = State.error
                 return e
         }
     }
 
-    private func searchNextChannels(query: String) -> SignalProducer<Void, NSError> {
-        state = State.Fetching
-        observer.sendNext(.StartLoading)
+    fileprivate func searchNextChannels(_ query: String) -> SignalProducer<Void, NSError> {
+        state = State.fetching
+        observer.send(value: .startLoading)
         return YouTubeAPIClient.sharedInstance.searchChannel(query, pageToken: searchPageToken)
             .map {
-                self.searchResults.appendContentsOf($0.items)
+                self.searchResults.append(contentsOf: $0.items)
                 self.searchPageToken = $0.nextPageToken
-                self.observer.sendNext(.CompleteLoading)
-                self.state = State.Normal
+                self.observer.send(value: .completeLoading)
+                self.state = State.normal
             }.mapError { e in
-                self.observer.sendNext(.FailToLoad)
-                self.state = State.Error
+                self.observer.send(value: .failToLoad)
+                self.state = State.error
                 return e
         }
     }
@@ -142,24 +144,24 @@ class ChannelLoader {
     func fetchCategories() {
         if !needFetchCategories() { return }
         switch state {
-        case .Init:     categoriesDisposable = fetchNextGuideCategory().start()
-        case .Fetching: break
-        case .Normal:   categoriesDisposable = fetchNextGuideCategory().start()
-        case .Error:    categoriesDisposable = fetchNextGuideCategory().start()
+        case .init:     categoriesDisposable = fetchNextGuideCategory().start()
+        case .fetching: break
+        case .normal:   categoriesDisposable = fetchNextGuideCategory().start()
+        case .error:    categoriesDisposable = fetchNextGuideCategory().start()
         }
     }
 
-    func needFetchChannels(category: GuideCategory) -> Bool {
+    func needFetchChannels(_ category: GuideCategory) -> Bool {
         return channelsPageTokenOfCategory[category] != nil
     }
 
-    func fetchChannels(category: GuideCategory) {
+    func fetchChannels(_ category: GuideCategory) {
         if !needFetchChannels(category) { return }
         switch state {
-        case .Init:     channelDisposableOfCategory[category] = fetchNextChannels(category).start()
-        case .Fetching: break
-        case .Normal:   channelDisposableOfCategory[category] = fetchNextChannels(category).start()
-        case .Error:    channelDisposableOfCategory[category] = fetchNextChannels(category).start()
+        case .init:     channelDisposableOfCategory[category] = fetchNextChannels(category).start()
+        case .fetching: break
+        case .normal:   channelDisposableOfCategory[category] = fetchNextChannels(category).start()
+        case .error:    channelDisposableOfCategory[category] = fetchNextChannels(category).start()
         }
     }
 
@@ -170,10 +172,10 @@ class ChannelLoader {
     func fetchSubscriptions() {
         if !needFetchSubscriptions() { return }
         switch state {
-        case .Init:     subscriptionDisposable = fetchNextSubscriptions().start()
-        case .Fetching: break
-        case .Normal:   subscriptionDisposable = fetchNextSubscriptions().start()
-        case .Error:    subscriptionDisposable = fetchNextSubscriptions().start()
+        case .init:     subscriptionDisposable = fetchNextSubscriptions().start()
+        case .fetching: break
+        case .normal:   subscriptionDisposable = fetchNextSubscriptions().start()
+        case .error:    subscriptionDisposable = fetchNextSubscriptions().start()
         }
     }
 
@@ -181,13 +183,13 @@ class ChannelLoader {
         return searchPageToken != nil
     }
 
-    func searchChannels(query: String) {
+    func searchChannels(_ query: String) {
         if query.isEmpty || !needFetchSearchResults() { return }
         switch state {
-        case .Init:     searchDisposable = searchNextChannels(query).start()
-        case .Fetching: break
-        case .Normal:   searchDisposable = searchNextChannels(query).start()
-        case .Error:    searchDisposable = searchNextChannels(query).start()
+        case .init:     searchDisposable = searchNextChannels(query).start()
+        case .fetching: break
+        case .normal:   searchDisposable = searchNextChannels(query).start()
+        case .error:    searchDisposable = searchNextChannels(query).start()
         }
     }
 }

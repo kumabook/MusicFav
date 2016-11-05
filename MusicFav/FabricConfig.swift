@@ -9,16 +9,16 @@
 import UIKit
 import SwiftyJSON
 
-public class FabricConfig {
-    private static let defaultApiKey = "api_key"
-    public let apiKey:      String
-    public let buildSecret: String
-    public var skip: Bool {
+open class FabricConfig {
+    fileprivate static let defaultApiKey = "api_key"
+    open let apiKey:      String
+    open let buildSecret: String
+    open var skip: Bool {
         return apiKey == FabricConfig.defaultApiKey
     }
     public init(filePath: String) {
-        let data                   = NSData(contentsOfFile: filePath)
-        let jsonObject: AnyObject? = try? NSJSONSerialization.JSONObjectWithData(data!, options: NSJSONReadingOptions.MutableContainers)
+        let data                   = try? Data(contentsOf: URL(fileURLWithPath: filePath))
+        let jsonObject: AnyObject? = try! JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as AnyObject?
         let json                   = JSON(jsonObject!)
         apiKey                     = json["api_key"].stringValue
         buildSecret                = json["build_secret"].stringValue

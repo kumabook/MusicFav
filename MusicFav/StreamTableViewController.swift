@@ -7,67 +7,67 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import FeedlyKit
 import MusicFeeder
 import MBProgressHUD
 
 class StreamTableViewController: AddStreamTableViewController, UISearchBarDelegate {
-    enum Type {
-        case Search(String)
-        case Recommend([Feed])
-        case Hypem(BlogLoader)
+    enum ListType {
+        case search(String)
+        case recommend([Feed])
+        case hypem(BlogLoader)
     }
 
     var indicator: UIActivityIndicatorView!
 
     let client = CloudAPIClient.sharedInstance
-    var _streams: [Stream]
+    var _streams: [FeedlyKit.Stream]
     var observer: Disposable?
     var disposable: Disposable?
 
-    var streams: [Stream] {
+    var streams: [FeedlyKit.Stream] {
         switch type {
-        case .Recommend:             return _streams
-        case .Hypem(let blogLoader): return blogLoader.blogs
-        case .Search:                return _streams
+        case .recommend:             return _streams
+        case .hypem(let blogLoader): return blogLoader.blogs
+        case .search:                return _streams
         }
     }
 
     let streamTableViewCellReuseIdentifier = "StreamTableViewCell"
-    var type: Type
+    var type: ListType
 
-    init(streamListLoader: StreamListLoader, type: Type) {
+    init(streamRepository: StreamRepository, type: ListType) {
         self.type     = type
         self._streams = []
-        super.init(streamListLoader: streamListLoader)
+        super.init(streamRepository: streamRepository)
     }
 
     required init(coder aDecoder: NSCoder) {
-        type     = .Recommend([])
+        type     = .recommend([])
         _streams = []
         super.init(coder: aDecoder)
     }
 
     deinit {}
 
-    func refresh(type: Type) {
+    func refresh(_ type: ListType) {
         self.type = type
         _streams  = []
-        reloadData(keepSelection: false)
+        reloadData(false)
         observeBlogs()
         fetchNext()
     }
 
-    override func getSubscribables() -> [Stream] {
+    override func getSubscribables() -> [FeedlyKit.Stream] {
         if let indexPaths = tableView.indexPathsForSelectedRows {
             return indexPaths.map({
                 switch self.type {
-                case .Recommend:
+                case .recommend:
                     return self.streams[$0.item]
-                case .Hypem(let blogLoader):
+                case .hypem(let blogLoader):
                     return blogLoader.blogs[$0.item]
-                case .Search:
+                case .search:
                     return self.streams[$0.item]
                 }
             })
@@ -78,10 +78,10 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        let nib = UINib(nibName: "StreamTableViewCell", bundle: NSBundle.mainBundle())
-        tableView.registerNib(nib, forCellReuseIdentifier: streamTableViewCellReuseIdentifier)
+        let nib = UINib(nibName: "StreamTableViewCell", bundle: Bundle.main)
+        tableView.register(nib, forCellReuseIdentifier: streamTableViewCellReuseIdentifier)
         navigationItem.title      = "Import Feed".localize()
-        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
         indicator.bounds = CGRect(x: 0,
                                   y: 0,
                               width: indicator.bounds.width,
@@ -95,17 +95,17 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
         super.didReceiveMemoryWarning()
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         Logger.sendScreenView(self)
         switch (type) {
-        case .Recommend: break
-        case .Hypem:     observeBlogs()
-        case .Search:    break
+        case .recommend: break
+        case .hypem:     observeBlogs()
+        case .search:    break
         }
     }
 
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         observer?.dispose()
         disposable?.dispose()
@@ -123,76 +123,77 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
 
     func fetchNext() {
         switch type {
-        case .Recommend:
+        case .recommend:
             fetchRecommendFeeds()
-        case .Hypem(let blogLoader):
+        case .hypem(let blogLoader):
             blogLoader.fetchBlogs()
-        case .Search(let query):
+        case .search(let query):
             searchFeeds(query)
         }
     }
 
     func fetchRecommendFeeds() {
         if let d = disposable {
-            if !d.disposed { d.dispose() }
+            if !d.isDisposed { d.dispose() }
         }
-        disposable = CloudAPIClient.sharedInstance.fetchFeedsByIds(RecommendFeed.ids).on(
-            next: { feeds in
+        disposable = CloudAPIClient.sharedInstance.fetchFeedsByIds(feedIds: RecommendFeed.ids).on(
+            value: { feeds in
                 self._streams = feeds
             }, failed: { error in
             }, completed: {
-                self.reloadData(keepSelection: true)
+                self.reloadData(true)
         }).start()
     }
 
-    func searchFeeds(query: String) {
+    func searchFeeds(_ query: String) {
         if let d = disposable {
-            if !d.disposed { d.dispose() }
+            if !d.isDisposed { d.dispose() }
         }
         if query.isEmpty || !_streams.isEmpty { return }
         let query = SearchQueryOfFeed(query: query)
         query.count = 20
         Logger.sendUIActionEvent(self, action: "searchFeeds", label: "")
-        disposable = CloudAPIClient.sharedInstance.searchFeeds(query)
-            .startOn(UIScheduler())
+        disposable = CloudAPIClient.sharedInstance.searchFeeds(query: query)
+            .start(on: UIScheduler())
             .on(
-                next: { feeds in
+                value: { feeds in
                     self._streams = feeds
                 },
                 failed: { error in
                     let ac = CloudAPIClient.alertController(error: error, handler: { (action) in })
-                    self.presentViewController(ac, animated: true, completion: nil)
+                    self.present(ac, animated: true, completion: nil)
                 },
                 completed: {
-                    self.reloadData(keepSelection: true)
+                    self.reloadData(true)
             }).start()
     }
 
     func observeBlogs() {
         observer?.dispose()
         switch type {
-        case .Recommend:
+        case .recommend:
             break
-        case .Hypem(let blogLoader):
-            observer = blogLoader.signal.observeNext({ event in
+        case .hypem(let blogLoader):
+            observer = blogLoader.signal.observeResult({ result in
+                guard let event = result.value else { return }
                 switch event {
-                case .StartLoading:
+                case .startLoading:
                     self.showIndicator()
-                case .CompleteLoading:
+                case .completeLoading:
                     self.hideIndicator()
-                    self.reloadData(keepSelection: true)
-                case .FailToLoad:
+                    self.reloadData(true)
+                case .failToLoad:
                     self.hideIndicator()
                 }
             })
-        case .Search:
+        case .search:
             break
         }
     }
 
     // MARK: - UIScrollView delegate
 
-    override func scrollViewDidScroll(scrollView: UIScrollView) {
+    override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if tableView.contentOffset.y >= tableView.contentSize.height - tableView.bounds.size.height {
             fetchNext()
         }
@@ -200,16 +201,16 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return streams.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(streamTableViewCellReuseIdentifier, forIndexPath: indexPath) as! StreamTableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: streamTableViewCellReuseIdentifier, for: indexPath) as! StreamTableViewCell
         setAccessoryView(cell, indexPath: indexPath)
         switch streams[indexPath.item] {
         case let feed as Feed:
@@ -223,7 +224,7 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
         }
     }
 
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.cellHeight
     }
 }

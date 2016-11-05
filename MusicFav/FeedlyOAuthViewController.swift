@@ -9,7 +9,7 @@
 import UIKit
 import FeedlyKit
 import MusicFeeder
-import ReactiveCocoa
+import ReactiveSwift
 import NXOAuth2Client
 
 class FeedlyOAuthViewController: OAuthViewController {
@@ -31,24 +31,24 @@ class FeedlyOAuthViewController: OAuthViewController {
     }
 
     override func showAlert() {
-        UIAlertController.show(self, title: "Notice".localize(), message: "Login failed.", handler: { (action) -> Void in
+        let _ = UIAlertController.show(self, title: "Notice".localize(), message: "Login failed.", handler: { (action) -> Void in
             CloudAPIClient.logout()
         })
     }
     
-    override func onLoggedIn(account: NXOAuth2Account) {
+    override func onLoggedIn(_ account: NXOAuth2Account) {
         feedlyClient.setAccessToken(account.accessToken.accessToken)
         feedlyClient.fetchProfile()
-            .startOn(UIScheduler())
+            .start(on: UIScheduler())
             .on(
-                next: {profile in
-                    CloudAPIClient.login(profile, token: account.accessToken.accessToken)
+                value: {profile in
+                    CloudAPIClient.login(profile: profile, token: account.accessToken.accessToken)
                 },
                 failed: {error in
                     self.showAlert()
                 },
                 completed: {
-                    self.dismissViewControllerAnimated(true, completion: nil)
+                    self.dismiss(animated: true, completion: nil)
                     self.delegate?.onLoggedIn(account)
                     self.appDelegate.didLogin()
             }).start()

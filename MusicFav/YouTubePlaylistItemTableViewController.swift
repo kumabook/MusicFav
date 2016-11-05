@@ -8,7 +8,7 @@
 
 import UIKit
 import MusicFeeder
-import ReactiveCocoa
+import ReactiveSwift
 
 class YouTubePlaylistItemTableViewController: TrackTableViewController {
     var youtubePlaylist:       YouTubePlaylist!
@@ -16,7 +16,7 @@ class YouTubePlaylistItemTableViewController: TrackTableViewController {
     var observer:              Disposable?
 
     override var playlistType: PlaylistType {
-        return .ThirdParty
+        return .thirdParty
     }
 
     init(playlist: YouTubePlaylist, playlistLoader: YouTubePlaylistLoader) {
@@ -41,7 +41,7 @@ class YouTubePlaylistItemTableViewController: TrackTableViewController {
         super.viewDidLoad()
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         observePlaylistLoader()
     }
@@ -52,17 +52,18 @@ class YouTubePlaylistItemTableViewController: TrackTableViewController {
 
     func observePlaylistLoader() {
         observer?.dispose()
-        observer = youtubePlaylistLoader.signal.observeNext({ event in
+        observer = youtubePlaylistLoader.signal.observeResult({ result in
+            guard let event = result.value else { return }
             switch event {
-            case .StartLoading:
+            case .startLoading:
                 self.showIndicator()
-            case .CompleteLoading:
+            case .completeLoading:
                 self.hideIndicator()
                 self.updateTracks()
                 self.playlistQueue.enqueue(self.playlist)
                 self.tableView.reloadData()
                 self.fetchTrackDetails()
-            case .FailToLoad:
+            case .failToLoad:
                 break
             }
         })
@@ -80,12 +81,12 @@ class YouTubePlaylistItemTableViewController: TrackTableViewController {
 
     override func fetchTrackDetails() {
         for track in tracks {
-            track.fetchPropertiesFromProvider(false).on(
-                next: { (track: Track?) in
+            track.fetchPropertiesFromProviderIfNeed().on(
+                value: { (track: Track?) in
                     if let t = track {
-                        if let index = self.tracks.indexOf(t) {
-                            self.tableView?.reloadRowsAtIndexPaths([NSIndexPath(forItem: index, inSection: 0)],
-                                withRowAnimation: UITableViewRowAnimation.None)
+                        if let index = self.tracks.index(of: t) {
+                            self.tableView?.reloadRows(at: [IndexPath(item: index, section: 0)],
+                                                       with: UITableViewRowAnimation.none)
                         }
                     }
                     return

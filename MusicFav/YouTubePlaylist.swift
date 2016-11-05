@@ -10,18 +10,18 @@ import Foundation
 import SwiftyJSON
 import MusicFeeder
 
-public class YouTubePlaylist: YouTubeResource, Hashable, Equatable {
-    public class var url: String { return "https://www.googleapis.com/youtube/v3/playlists" }
-    public class var params: [String:String] { return ["mine": "true"] }
-    public var hashValue: Int { return id.hashValue }
-    public let etag:        String
-    public let id:          String
-    public let kind:        String
-    public let title:       String!
-    public let description: String!
-    public let publishedAt: String?
-    public let thumbnails:  [String:String]
-    public let resourceId:  [String:String]
+open class YouTubePlaylist: YouTubeResource, Hashable, Equatable {
+    open class var url: String { return "https://www.googleapis.com/youtube/v3/playlists" }
+    open class var params: [String:String] { return ["mine": "true"] }
+    open var hashValue: Int { return id.hashValue }
+    open let etag:        String
+    open let id:          String
+    open let kind:        String
+    open let title:       String!
+    open let description: String!
+    open let publishedAt: String?
+    open let thumbnails:  [String:String]
+    open let resourceId:  [String:String]
 
     public required init(json: JSON) {
         let snippet = json["snippet"].dictionaryValue
@@ -46,10 +46,10 @@ public class YouTubePlaylist: YouTubeResource, Hashable, Equatable {
         self.resourceId  = [:]
     }
 
-    public var thumbnailURL: NSURL? {
-             if let url = thumbnails["default"] { return NSURL(string: url) }
-        else if let url = thumbnails["medium"]  { return NSURL(string: url) }
-        else if let url = thumbnails["high"]    { return NSURL(string: url) }
+    open var thumbnailURL: URL? {
+             if let url = thumbnails["default"] { return URL(string: url) }
+        else if let url = thumbnails["medium"]  { return URL(string: url) }
+        else if let url = thumbnails["high"]    { return URL(string: url) }
         else                                    { return nil }
     }
 }
@@ -58,28 +58,28 @@ public func ==(lhs: YouTubePlaylist, rhs: YouTubePlaylist) -> Bool {
     return lhs.id == rhs.id
 }
 
-public class YouTubePlaylistItem: YouTubeResource, Hashable, Equatable {
-    public class var url: String { return "https://www.googleapis.com/youtube/v3/playlistItems" }
-    public class var params: [String:String] { return [:] }
-    public let etag:        String
-    public let id:          String
-    public let kind:        String
-    public let title:       String!
-    public let description: String!
-    public let publishedAt: String?
-    public let thumbnails: [String:String]
-    public let resourceId: [String:String]
+open class YouTubePlaylistItem: YouTubeResource, Hashable, Equatable {
+    open class var url: String { return "https://www.googleapis.com/youtube/v3/playlistItems" }
+    open class var params: [String:String] { return [:] }
+    open let etag:        String
+    open let id:          String
+    open let kind:        String
+    open let title:       String!
+    open let description: String!
+    open let publishedAt: String?
+    open let thumbnails: [String:String]
+    open let resourceId: [String:String]
 
-    public let position:      UInt
-    public let videoId:       String
-    public let startAt:       String?
-    public let endAt:         String?
-    public let note:          String?
-    public let privacyStatus: String?
+    open let position:      UInt
+    open let videoId:       String
+    open let startAt:       String?
+    open let endAt:         String?
+    open let note:          String?
+    open let privacyStatus: String?
 
-    public var track:         Track
+    open var track:         Track
 
-    public var hashValue: Int { return id.hashValue }
+    open var hashValue: Int { return id.hashValue }
 
     public required init(json: JSON) {
         let snippet        = json["snippet"].dictionaryValue
@@ -108,10 +108,10 @@ public class YouTubePlaylistItem: YouTubeResource, Hashable, Equatable {
                                       title: title)
     }
 
-    public var thumbnailURL: NSURL? {
-        if let url = thumbnails["default"] { return NSURL(string: url) }
-        else if let url = thumbnails["medium"] { return NSURL(string: url) }
-        else if let url = thumbnails["high"]   { return NSURL(string: url) }
+    open var thumbnailURL: URL? {
+        if let url = thumbnails["default"] { return URL(string: url) }
+        else if let url = thumbnails["medium"] { return URL(string: url) }
+        else if let url = thumbnails["high"]   { return URL(string: url) }
         else                                   { return nil }
     }
 

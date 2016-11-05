@@ -10,7 +10,7 @@ import Foundation
 import InAppSettingsKit
 
 extension IASKAppSettingsViewController {
-    public override func viewWillAppear(animated: Bool) {
+    open override func viewWillAppear(_ animated: Bool) {
         navigationItem.rightBarButtonItems = []
     }
 }

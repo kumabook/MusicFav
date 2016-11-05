@@ -9,20 +9,20 @@
 import Foundation
 
 extension String {
-    static func tutorialString(key: String) -> String {
+    static func tutorialString(_ key: String) -> String {
         return NSLocalizedString(key, tableName: "Tutorial",
-                                          bundle: NSBundle.mainBundle(),
+                                          bundle: Bundle.main,
                                            value: key,
                                          comment: key)
 
     }
-    func toDate() -> NSDate? {
-        let dateFormatter = NSDateFormatter()
+    func toDate() -> Date? {
+        let dateFormatter = DateFormatter()
         let formats = ["yyyy/MM/dd HH:mm:ssZ",
                        "yyyy-MM-dd'T'HH:mm:ss.sssZ"]
         for f in formats {
             dateFormatter.dateFormat = f
-            if let date = dateFormatter.dateFromString(self) {
+            if let date = dateFormatter.date(from: self) {
                 return date
             }
         }
@@ -30,10 +30,10 @@ extension String {
     }
 }
 
-extension NSDate {
+extension Date {
     public var elapsedTime: String {
-        let now           = NSDate()
-        let passed        = now.timeIntervalSinceDate(self)
+        let now           = Date()
+        let passed        = now.timeIntervalSince(self)
         let minute: Int  = Int(passed) / 60
         if minute <= 1 {
             return "1 minute ago"

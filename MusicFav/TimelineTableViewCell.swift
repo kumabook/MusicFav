@@ -7,15 +7,15 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import MusicFeeder
 import MCSwipeTableViewCell
 
 protocol TimelineTableViewCellDelegate: class {
-    func trackSelected(sender: TimelineTableViewCell, index: Int, track: Track, playlist: Playlist)
-    func trackScrollViewMarginTouched(sender: TimelineTableViewCell, playlist: Playlist?)
-    func playButtonTouched(sender: TimelineTableViewCell)
-    func articleButtonTouched(sender: TimelineTableViewCell)
+    func trackSelected(_ sender: TimelineTableViewCell, index: Int, track: Track, playlist: Playlist)
+    func trackScrollViewMarginTouched(_ sender: TimelineTableViewCell, playlist: Playlist?)
+    func playButtonTouched(_ sender: TimelineTableViewCell)
+    func articleButtonTouched(_ sender: TimelineTableViewCell)
 }
 
 class TimelineTableViewCell: MCSwipeTableViewCell {
@@ -51,16 +51,16 @@ class TimelineTableViewCell: MCSwipeTableViewCell {
                                                     y: 0,
                                                 width: iconWidth,
                                                height: iconWidth))
-        indicator.hidden           = true
+        indicator.isHidden           = true
         thumbListContainer.addSubview(indicator)
-        indicator.userInteractionEnabled = true
-        playButton.addTarget(self, action: #selector(TimelineTableViewCell.playButtonTouched), forControlEvents: UIControlEvents.TouchUpInside)
-        articleButton.addTarget(self, action: #selector(TimelineTableViewCell.articleButtonTouched), forControlEvents: UIControlEvents.TouchUpInside)
-        selectionStyle = UITableViewCellSelectionStyle.None
-        playerState = .Init
+        indicator.isUserInteractionEnabled = true
+        playButton.addTarget(self, action: #selector(TimelineTableViewCell.playButtonTouched), for: UIControlEvents.touchUpInside)
+        articleButton.addTarget(self, action: #selector(TimelineTableViewCell.articleButtonTouched), for: UIControlEvents.touchUpInside)
+        selectionStyle = UITableViewCellSelectionStyle.none
+        playerState = PlayerState.init
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
 
@@ -74,28 +74,25 @@ class TimelineTableViewCell: MCSwipeTableViewCell {
         imageViews = []
     }
 
-    func loadThumbnail(imageView: UIImageView, track: Track) {
+    func loadThumbnail(_ imageView: UIImageView, track: Track) {
         if let thumbnailUrl = track.thumbnailUrl {
-            imageView.sd_setImageWithURL(thumbnailUrl,
-                placeholderImage: UIImage(named: "default_thumb"),
-                completed: { (image, error, cactypeType, url) -> Void in
-            })
+            imageView.sd_setImage(with: thumbnailUrl, placeholderImage: UIImage(named: "default_thumb"))
         } else {
             imageView.image = UIImage(named: "default_thumb")
         }
     }
 
-    func loadThumbnails(playlist: Playlist) {
+    func loadThumbnails(_ playlist: Playlist) {
         let tw = thumbnailWidth
         clearThumbnails()
         self.playlist = playlist
-        for (i, track) in playlist.getTracks().enumerate() {
+        for (i, track) in playlist.getTracks().enumerated() {
             let rect = CGRect(x: margin + (tw + padding) * CGFloat(i),
                               y: margin,
                           width: tw,
                          height: tw)
             let imageView = UIImageView(frame: rect)
-            imageView.userInteractionEnabled = true
+            imageView.isUserInteractionEnabled = true
             imageView.addGestureRecognizer(UITapGestureRecognizer(target:self, action:#selector(TimelineTableViewCell.thumbImageTapped(_:))))
             imageViews.append(imageView)
             thumbListContainer.addSubview(imageView)
@@ -111,38 +108,38 @@ class TimelineTableViewCell: MCSwipeTableViewCell {
         thumbListContainer.contentSize = CGSize(width: contentWidth, height: thumbnailWidth)
     }
 
-    func updatePlayerIcon(index: Int, playerState: PlayerState) {
+    func updatePlayerIcon(_ index: Int, playerState: PlayerState) {
         let tw = thumbnailWidth
         let htw = thumbnailWidth * 0.5
         indicator.center = CGPoint(x: margin + (tw + padding) * CGFloat(index) + htw, y: htw + margin)
-        thumbListContainer.bringSubviewToFront(indicator)
+        thumbListContainer.bringSubview(toFront: indicator)
         self.playerState = playerState
         switch playerState {
-        case .Init:
-            indicator.hidden = true
+        case .init:
+            indicator.isHidden = true
             indicator.stopAnimating()
-            indicator.setColor(.Blue)
-        case .Load:
-            indicator.hidden = false
-            indicator.startAnimating(.ColorSwitch)
-        case .LoadToPlay:
-            indicator.hidden = false
-            indicator.startAnimating(.ColorSwitch)
-        case .Play:
-            indicator.hidden = false
-            indicator.startAnimating(.Rotate)
-        case .Pause:
-            indicator.hidden = false
+            indicator.setColor(.blue)
+        case .load:
+            indicator.isHidden = false
+            indicator.startAnimating(.colorSwitch)
+        case .loadToPlay:
+            indicator.isHidden = false
+            indicator.startAnimating(.colorSwitch)
+        case .play:
+            indicator.isHidden = false
+            indicator.startAnimating(.rotate)
+        case .pause:
+            indicator.isHidden = false
             indicator.stopAnimating()
-            indicator.setColor(.Blue)
+            indicator.setColor(.blue)
         }
     }
 
-    func thumbImageTapped(sender: UITapGestureRecognizer) {
+    func thumbImageTapped(_ sender: UITapGestureRecognizer) {
         if let playlist = self.playlist {
             if let d = timelineDelegate {
                 if let view = sender.view as? UIImageView {
-                    if let i = imageViews.indexOf(view) {
+                    if let i = imageViews.index(of: view) {
                         d.trackSelected(self, index: i, track: playlist.getTracks()[i], playlist: playlist)
                     }
                 }
@@ -150,7 +147,7 @@ class TimelineTableViewCell: MCSwipeTableViewCell {
         }
     }
 
-    func trackScrollViewMarginTouched(sender: UITapGestureRecognizer) {
+    func trackScrollViewMarginTouched(_ sender: UITapGestureRecognizer) {
         timelineDelegate?.trackScrollViewMarginTouched(self, playlist: self.playlist)
     }
 
@@ -162,14 +159,15 @@ class TimelineTableViewCell: MCSwipeTableViewCell {
         timelineDelegate?.articleButtonTouched(self)
     }
 
-    func observePlaylist(playlist: Playlist) {
+    func observePlaylist(_ playlist: Playlist) {
         observer?.dispose()
-        observer = playlist.signal.observeNext({ event in
+        observer = playlist.signal.observeResult({ result in
+            guard let event = result.value else { return }
             UIScheduler().schedule {
                 switch event {
-                case .Load(let index):
+                case .load(let index):
                     self.loadThumbnail(self.imageViews[index], track: playlist.getTracks()[index])
-                case .ChangePlayState(let index, let playerState):
+                case .changePlayState(let index, let playerState):
                     self.updatePlayerIcon(index, playerState: playerState)
                 }
             }
@@ -177,83 +175,83 @@ class TimelineTableViewCell: MCSwipeTableViewCell {
         })
     }
 
-    func imageView(markAs markAs: StreamLoader.RemoveMark) -> UIView {
+    func buildImageView(markAs: EntryRepository.RemoveMark) -> UIView {
         let view              = UIView()
         let label             = UILabel()
         let imageView         = UIImageView(image: UIImage(named: "checkmark"))
         label.text            = cellText(markAs)
-        label.textColor       = UIColor.whiteColor()
-        label.font            = UIFont.boldSystemFontOfSize(swipeCellLabelFontSize)
-        imageView.contentMode = UIViewContentMode.Center
+        label.textColor       = UIColor.white
+        label.font            = UIFont.boldSystemFont(ofSize: swipeCellLabelFontSize)
+        imageView.contentMode = UIViewContentMode.center
 
         view.addSubview(label)
         view.addSubview(imageView)
         
-        label.snp_makeConstraints { make in
-            make.right.equalTo(imageView.snp_left).offset(-self.padding)
-            make.centerY.equalTo(view.snp_centerY)
+        label.snp.makeConstraints { make in
+            make.right.equalTo(imageView.snp.left).offset(-self.padding)
+            make.centerY.equalTo(view.snp.centerY)
         }
-        imageView.snp_makeConstraints { make in
-            make.centerX.equalTo(view.snp_centerX)
-            make.centerY.equalTo(view.snp_centerY)
+        imageView.snp.makeConstraints { make in
+            make.centerX.equalTo(view.snp.centerX)
+            make.centerY.equalTo(view.snp.centerY)
         }
         return view
     }
 
-    func cellText(markAs: StreamLoader.RemoveMark) -> String {
+    func cellText(_ markAs: EntryRepository.RemoveMark) -> String {
         switch markAs {
-        case .Read:   return "Mark as Read".localize()
-        case .Unread: return "Mark as Unread".localize()
-        case .Unsave: return "Mark as Unsaved".localize()
+        case .read:   return "Mark as Read".localize()
+        case .unread: return "Mark as Unread".localize()
+        case .unsave: return "Mark as Unsaved".localize()
         }
     }
 
-    var markAsReadImageView:    UIView  { return imageView(markAs: .Read) }
-    var markAsUnreadImageView:  UIView  { return imageView(markAs: .Unread) }
-    var markAsUnsavedImageView: UIView  { return imageView(markAs: .Unsave) }
+    var markAsReadImageView:    UIView  { return buildImageView(markAs: .read) }
+    var markAsUnreadImageView:  UIView  { return buildImageView(markAs: .unread) }
+    var markAsUnsavedImageView: UIView  { return buildImageView(markAs: .unsave) }
     var markAsReadColor:        UIColor { return UIColor.red }
     var markAsUnreadColor:      UIColor { return UIColor.green }
     var markAsUnsavedColor:     UIColor { return UIColor.blue }
 
-    func prepareSwipeViews(markAs: StreamLoader.RemoveMark, onSwipe: (MCSwipeTableViewCell) -> Void) {
-        if respondsToSelector(Selector("setSeparatorInset:")) {
-            separatorInset = UIEdgeInsetsZero
+    func prepareSwipeViews(_ markAs: EntryRepository.RemoveMark, onSwipe: @escaping (MCSwipeTableViewCell) -> Void) {
+        if responds(to: #selector(setter: UITableViewCell.separatorInset)) {
+            separatorInset = UIEdgeInsets.zero
         }
-        contentView.backgroundColor = UIColor.whiteColor()
+        contentView.backgroundColor = UIColor.white
         defaultColor   = swipeCellBackgroundColor
         switch markAs {
-        case .Read:
-            setSwipeGestureWithView(markAsReadImageView,
+        case .read:
+            setSwipeGestureWith(markAsReadImageView,
                 color: markAsReadColor,
-                mode: .Switch,
-                state: .State1) { (cell, state, mode) in }
-            setSwipeGestureWithView(markAsReadImageView,
+                mode: .switch,
+                state: .state1) { (cell, state, mode) in }
+            setSwipeGestureWith(markAsReadImageView,
                 color: markAsReadColor,
-                mode: MCSwipeTableViewCellMode.Exit,
-                state: MCSwipeTableViewCellState.State2) { (cell, state, mode) in
-                    onSwipe(cell)
+                mode: MCSwipeTableViewCellMode.exit,
+                state: MCSwipeTableViewCellState.state2) { (cell, state, mode) in
+                    onSwipe(cell!)
             }
-        case .Unread:
-            setSwipeGestureWithView(markAsUnreadImageView,
+        case .unread:
+            setSwipeGestureWith(markAsUnreadImageView,
                 color: markAsUnreadColor,
-                mode: .Switch,
-                state: .State1) { (cell, state, mode) in }
-            setSwipeGestureWithView(markAsUnreadImageView,
+                mode: .switch,
+                state: .state1) { (cell, state, mode) in }
+            setSwipeGestureWith(markAsUnreadImageView,
                 color: markAsUnreadColor,
-                mode: MCSwipeTableViewCellMode.Exit,
-                state: MCSwipeTableViewCellState.State2) { (cell, state, mode) in
-                    onSwipe(cell)
+                mode: MCSwipeTableViewCellMode.exit,
+                state: MCSwipeTableViewCellState.state2) { (cell, state, mode) in
+                    onSwipe(cell!)
             }
-        case .Unsave:
-            setSwipeGestureWithView(markAsUnsavedImageView,
+        case .unsave:
+            setSwipeGestureWith(markAsUnsavedImageView,
                 color: markAsUnsavedColor,
-                mode: .Switch,
-                state: .State1) { (cell, state, mode) in }
-            setSwipeGestureWithView(markAsUnsavedImageView,
+                mode: .switch,
+                state: .state1) { (cell, state, mode) in }
+            setSwipeGestureWith(markAsUnsavedImageView,
                 color: markAsUnsavedColor,
-                mode: MCSwipeTableViewCellMode.Exit,
-                state: MCSwipeTableViewCellState.State2) { (cell, state, mode) in
-                    onSwipe(cell)
+                mode: MCSwipeTableViewCellMode.exit,
+                state: MCSwipeTableViewCellState.state2) { (cell, state, mode) in
+                    onSwipe(cell!)
             }
         }
     }

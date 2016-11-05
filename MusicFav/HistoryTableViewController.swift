@@ -13,41 +13,41 @@ import MusicFeeder
 import Breit
 
 class HistoryTableViewController: StreamTimelineTableViewController {
-    var historyLoader: HistoryLoader {
-        return streamLoader as! HistoryLoader
+    var historyRepository: HistoryRepository {
+        return entryRepository as! HistoryRepository
     }
 
     override func getItems() -> [TimelineItem] {
-        return historyLoader.histories.flatMap {
+        return historyRepository.histories.flatMap {
             switch $0.type {
             case .Entry:
                 guard let entry = $0.entry else { return nil }
-                return TimelineItem.Entry(entry, historyLoader.playlistsOfHistory[$0])
+                return TimelineItem.entry(entry, historyRepository.playlistsOfHistory[$0])
             case .Track:
-                return TimelineItem.TrackHistory($0, historyLoader.playlistsOfHistory[$0])
+                return TimelineItem.trackHistory($0, historyRepository.playlistsOfHistory[$0])
             }
         }
     }
     override func getPlaylistQueue() -> PlaylistQueue {
-        return historyLoader.playlistQueue
+        return historyRepository.playlistQueue
     }
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = super.tableView(tableView, cellForRowAtIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         if let timelineTableViewCell = cell as? TimelineTableViewCell {
-            timelineTableViewCell.prepareSwipeViews(StreamLoader.RemoveMark.Unsave) { cell in
-                self.markAsUnsaved(tableView.indexPathForCell(cell)!)
+            timelineTableViewCell.prepareSwipeViews(EntryRepository.RemoveMark.unsave) { cell in
+                self.markAsUnsaved(tableView.indexPath(for: cell)!)
                 return
             }
-            let history = historyLoader.histories[indexPath.item]
+            let history = historyRepository.histories[indexPath.item]
             timelineTableViewCell.dateLabel.text = "\(history.type.actionName) \(history.timestamp.date.passedTime)"
         }
         return cell
     }
 
-    func markAsUnsaved(indexPath: NSIndexPath) {
-        let history = historyLoader.histories[indexPath.item]
+    func markAsUnsaved(_ indexPath: IndexPath) {
+        let history = historyRepository.histories[indexPath.item]
         HistoryStore.remove(history.toStoreObject())
-        historyLoader.histories.removeAtIndex(indexPath.item)
-        streamLoader.observer.sendNext(.RemoveAt(indexPath.item))
+        historyRepository.histories.remove(at: indexPath.item)
+        entryRepository.observer.send(value: .removeAt(indexPath.item))
     }
 }

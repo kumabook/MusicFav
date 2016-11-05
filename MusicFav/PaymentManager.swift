@@ -17,13 +17,14 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
         case UnlockEverything = "io.kumabook.MusicFav.UnlockEverything"
     }
 
-    private static let userDefaults = NSUserDefaults.standardUserDefaults()
+    fileprivate static let userDefaults = UserDefaults.standard
     var productDic: [String:SKProduct] = [:]
     weak var viewController: UIViewController?
+    weak var progressHUD: MBProgressHUD?
     static var isUnlockedEverything: Bool {
-        get      { return userDefaults.boolForKey("is_unlocked_everything") }
+        get      { return userDefaults.bool(forKey: "is_unlocked_everything") }
         set(val) {
-            userDefaults.setBool(val, forKey: "is_unlocked_everything")
+            userDefaults.set(val, forKey: "is_unlocked_everything")
             updateLimitValues()
         }
     }
@@ -40,11 +41,24 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
 
     override init() {
         super.init()
-        SKPaymentQueue.defaultQueue().addTransactionObserver(self)
+        SKPaymentQueue.default().add(self)
     }
 
     func dispose() {
-        SKPaymentQueue.defaultQueue().removeTransactionObserver(self)
+        SKPaymentQueue.default().remove(self)
+    }
+
+    func showProgressHUD(for view: UIView) {
+        progressHUD = MBProgressHUD.showAdded(to: view, animated: true)
+    }
+    func showCompleteHUD(for view: UIView) {
+        progressHUD?.hide(animated: true)
+        progressHUD = MBProgressHUD.showCompletedHUDForView(view, animated: true, duration: 1.0, after: {})
+    }
+
+    func hideProgressHUD() {
+        progressHUD?.hide(animated: true)
+        progressHUD = nil
     }
 
     func purchaseUnlockEverything() {
@@ -53,31 +67,31 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
             productsRequest.delegate = self
             productsRequest.start()
             if let view = viewController?.navigationController?.view {
-                MBProgressHUD.showHUDAddedTo(view, animated: true)
+                MBProgressHUD.showAdded(to: view, animated: true)
             }
         } else {
             let message = "Sorry. In-App Purchase is restricted".localize()
             if let vc = viewController {
-                UIAlertController.show(vc, title: "MusicFav", message: message, handler: { action in })
+                let _ = UIAlertController.show(vc, title: "MusicFav", message: message, handler: { action in })
             }
         }
     }
 
     func restorePurchase() {
         if SKPaymentQueue.canMakePayments() {
-            SKPaymentQueue.defaultQueue().restoreCompletedTransactions()
+            SKPaymentQueue.default().restoreCompletedTransactions()
             if let view = viewController?.navigationController?.view {
-                MBProgressHUD.showHUDAddedTo(view, animated: true)
+                MBProgressHUD.showAdded(to: view, animated: true)
             }
         } else {
             let message = "Sorry. In-App Purchase is restricted".localize()
             if let vc = viewController {
-                UIAlertController.show(vc, title: "MusicFav", message: message, handler: { action in })
+                let _ = UIAlertController.show(vc, title: "MusicFav", message: message, handler: { action in })
             }
         }
     }
 
-    private func purchaseProduct(productIdentifier: String) {
+    fileprivate func purchaseProduct(_ productIdentifier: String) {
         if let type = ProductType(rawValue: productIdentifier) {
             switch type {
             case .UnlockEverything:
@@ -87,15 +101,15 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
     }
 
     // MARK: - SKProductsRequestDelegate
-    func productsRequest(request: SKProductsRequest, didReceiveResponse response: SKProductsResponse) {
+    func productsRequest(_ request: SKProductsRequest, didReceive response: SKProductsResponse) {
         if response.invalidProductIdentifiers.count > 0 {
             if let vc = viewController {
-                UIAlertController.show(vc, title: "MusicFav", message: "Invalid item identifier", handler: { action in })
+                let _ = UIAlertController.show(vc, title: "MusicFav", message: "Invalid item identifier", handler: { action in })
             }
             return
         }
 
-        let queue: SKPaymentQueue = SKPaymentQueue.defaultQueue()
+        let queue: SKPaymentQueue = SKPaymentQueue.default()
         for product in response.products {
             productDic[product.productIdentifier] = product
         }
@@ -104,86 +118,82 @@ class PaymentManager: NSObject, SKProductsRequestDelegate, SKPaymentTransactionO
             let description = "・Unlimited number of playlists\n・Unlimited number of tracks of per playlist".localize()
             let alert = UIAlertController(title: title,
                                         message: description,
-                                 preferredStyle: .Alert)
-            alert.addAction(UIAlertAction(title: "Purchase".localize(), style: UIAlertActionStyle.Default, handler: { action in
-                queue.addPayment(SKPayment(product: unlockEverything))
+                                 preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Purchase".localize(), style: UIAlertActionStyle.default, handler: { action in
+                queue.add(SKPayment(product: unlockEverything))
             }))
             alert.addAction(UIAlertAction(title: "Cancel".localize(),
-                                          style: UIAlertActionStyle.Cancel,
+                                          style: UIAlertActionStyle.cancel,
                                         handler: { action in
-                                            if let vc = self.viewController, view = vc.navigationController?.view {
-                                                MBProgressHUD.hideAllHUDsForView(view, animated: true)
-                                            }
+                                            self.hideProgressHUD()
             }))
-            viewController?.presentViewController(alert, animated: true, completion: {})
+            viewController?.present(alert, animated: true, completion: {})
         }
     }
     // MARK: - SKPaymentTransactionObserver
-    func paymentQueue(queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
+    func paymentQueue(_ queue: SKPaymentQueue, updatedTransactions transactions: [SKPaymentTransaction]) {
         for transaction in transactions {
             let identifier = transaction.payment.productIdentifier
             switch transaction.transactionState {
-            case .Purchasing:
-                if let vc = viewController, view = vc.navigationController?.view {
-                    MBProgressHUD.showHUDAddedTo(view, animated: true)
+            case .purchasing:
+                if let vc = viewController, let view = vc.navigationController?.view {
+                    MBProgressHUD.showAdded(to: view, animated: true)
                 }
-            case .Purchased:
+            case .purchased:
                 purchaseProduct(identifier)
                 queue.finishTransaction(transaction)
-                if let vc = viewController, view = vc.navigationController?.view {
-                    MBProgressHUD.hideAllHUDsForView(view, animated: true)
+                if let vc = viewController, let view = vc.navigationController?.view {
+                    self.hideProgressHUD()
                     if let tvc = vc as? UITableViewController {
                         tvc.tableView.reloadData()
                     }
-                    MBProgressHUD.showCompletedHUDForView(view, animated: true, duration: 1.0, after: {})
+                    showCompleteHUD(for: view)
                 }
-            case .Failed:
+            case .failed:
                 queue.finishTransaction(transaction)
-                if let vc = viewController, view = vc.navigationController?.view {
-                    MBProgressHUD.hideAllHUDsForView(view, animated: true)
-                    if let code = transaction.error?.code where code != SKErrorCode.PaymentCancelled.rawValue {
+                if let vc = viewController {
+                    hideProgressHUD()
+                    if let _ = transaction.error?.localizedDescription {
                         if let product = productDic[identifier] {
                             let title = product.localizedTitle
                             let message = String(format: "Sorry. Failed to purchase \"%@\".".localize(), title)
-                            let alert = UIAlertController(title: "MusicFav", message: message, preferredStyle: .Alert)
-                            alert.addAction(UIAlertAction(title: "OK".localize(), style: .Cancel, handler: {action in }))
-                            vc.presentViewController(alert, animated: true, completion: {})
+                            let alert = UIAlertController(title: "MusicFav", message: message, preferredStyle: .alert)
+                            alert.addAction(UIAlertAction(title: "OK".localize(), style: .cancel, handler: {action in }))
+                            vc.present(alert, animated: true, completion: {})
                         }
                     }
                 }
-            case .Restored:
+            case .restored:
                 purchaseProduct(identifier)
                 queue.finishTransaction(transaction)
-                if let vc = viewController, view = vc.navigationController?.view {
-                    MBProgressHUD.hideAllHUDsForView(view, animated: true)
+                if let vc = viewController, let view = vc.navigationController?.view {
+                    hideProgressHUD()
                     if let tvc = vc as? UITableViewController {
                         tvc.tableView.reloadData()
                     }
-                    MBProgressHUD.showCompletedHUDForView(view, animated: true, duration: 1.0, after: {})
+                    showCompleteHUD(for: view)
                 }
-            case .Deferred:
-                if let vc = viewController, view = vc.navigationController?.view {
-                    MBProgressHUD.hideAllHUDsForView(view, animated: true)
-                }
+            case .deferred:
+                hideProgressHUD()
             }
         }
     }
 
     // Sent when an error is encountered while adding transactions from the user's purchase history back to the queue.
-    func paymentQueue(queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: NSError) {
-        if let vc = viewController, view = vc.navigationController?.view {
-            MBProgressHUD.hideAllHUDsForView(view, animated: true)
+    func paymentQueue(_ queue: SKPaymentQueue, restoreCompletedTransactionsFailedWithError error: Error) {
+        if let vc = viewController {
+            hideProgressHUD()
             let message = String(format: "Sorry. Failed to restore.".localize())
-            let alert = UIAlertController(title: "MusicFav", message: message, preferredStyle: .Alert)
-            alert.addAction(UIAlertAction(title: "OK".localize(), style: .Cancel, handler: {action in }))
-            vc.presentViewController(alert, animated: true, completion: {})
+            let alert = UIAlertController(title: "MusicFav", message: message, preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "OK".localize(), style: .cancel, handler: {action in }))
+            vc.present(alert, animated: true, completion: {})
         }
     }
 
     // Sent when all transactions from the user's purchase history have successfully been added back to the queue.
-    func paymentQueueRestoreCompletedTransactionsFinished(queue: SKPaymentQueue) {
-        if let vc = viewController, view = vc.navigationController?.view {
-            MBProgressHUD.hideAllHUDsForView(view, animated: true)
+    func paymentQueueRestoreCompletedTransactionsFinished(_ queue: SKPaymentQueue) {
+        if let vc = viewController {
+            hideProgressHUD()
             if let tvc = vc as? UITableViewController {
                 tvc.tableView.reloadData()
             }

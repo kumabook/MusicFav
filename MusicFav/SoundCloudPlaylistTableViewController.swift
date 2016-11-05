@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import SoundCloudKit
 
 class SoundCloudPlaylistTableViewController: UITableViewController {
@@ -20,8 +20,8 @@ class SoundCloudPlaylistTableViewController: UITableViewController {
     var observer:       Disposable?
 
     enum Section: Int {
-        case Favorites   = 0
-        case Playlists   = 1
+        case favorites   = 0
+        case playlists   = 1
         static var count = 2
     }
 
@@ -37,8 +37,8 @@ class SoundCloudPlaylistTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         let nib = UINib(nibName: "PlaylistTableViewCell", bundle: nil)
-        tableView?.registerNib(nib, forCellReuseIdentifier: tableCellReuseIdentifier)
-        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.Gray)
+        tableView?.register(nib, forCellReuseIdentifier: tableCellReuseIdentifier)
+        indicator = UIActivityIndicatorView(activityIndicatorStyle: UIActivityIndicatorViewStyle.gray)
         indicator.bounds = CGRect(x: 0,
                                   y: 0,
                               width: indicator.bounds.width,
@@ -54,12 +54,12 @@ class SoundCloudPlaylistTableViewController: UITableViewController {
         super.didReceiveMemoryWarning()
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         observePlaylistLoader()
     }
 
-    override func viewWillDisappear(animated: Bool) {
+    override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         observer?.dispose()
         observer = nil
@@ -67,14 +67,14 @@ class SoundCloudPlaylistTableViewController: UITableViewController {
 
     func updateNavbar() {
         let showFavListButton = UIBarButtonItem(image: UIImage(named: "fav_list"),
-                                                style: UIBarButtonItemStyle.Plain,
+                                                style: UIBarButtonItemStyle.plain,
                                                target: self,
                                                action: #selector(SoundCloudPlaylistTableViewController.showFavoritePlaylist))
         navigationItem.rightBarButtonItems = [showFavListButton]
     }
 
     func showFavoritePlaylist() {
-        navigationController?.popToRootViewControllerAnimated(true)
+        let _ = navigationController?.popToRootViewController(animated: true)
     }
 
     func showIndicator() {
@@ -89,16 +89,17 @@ class SoundCloudPlaylistTableViewController: UITableViewController {
 
     func observePlaylistLoader() {
         observer?.dispose()
-        observer = playlistLoader.signal.observeNext({ event in
+        observer = playlistLoader.signal.observeResult({ result in
+            guard let event = result.value else { return }
             switch event {
-            case .StartLoading:
-                if self.playlistLoader.state == .Fetching {
+            case .startLoading:
+                if self.playlistLoader.state == .fetching {
                     self.showIndicator()
                 }
-            case .CompleteLoading:
+            case .completeLoading:
                 self.hideIndicator()
                 self.tableView.reloadData()
-            case .FailToLoad:
+            case .failToLoad:
                 break
             }
         })
@@ -107,36 +108,36 @@ class SoundCloudPlaylistTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return Section.count
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
-        case .Favorites: return 1
-        case .Playlists: return playlistLoader.playlists.count
+        case .favorites: return 1
+        case .playlists: return playlistLoader.playlists.count
         }
     }
 
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.cellHeight
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier(self.tableCellReuseIdentifier, forIndexPath: indexPath) as! PlaylistTableViewCell
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: self.tableCellReuseIdentifier, for: indexPath) as! PlaylistTableViewCell
         switch Section(rawValue: indexPath.section)! {
-        case .Favorites:
+        case .favorites:
             cell.titleLabel.text    = "Favorites"
             cell.trackNumLabel.text = ""
             cell.thumbImageView.image = UIImage(named: "soundcloud")
-        case .Playlists:
+        case .playlists:
             let playlist = playlistLoader.playlists[indexPath.item]
             cell.titleLabel.text    = playlist.title
             cell.trackNumLabel.text = playlist.description
             if let url = playlist.artworkUrl?.toURL() {
-                cell.thumbImageView.sd_setImageWithURL(url, placeholderImage: UIImage(named: "souncloud"))
+                cell.thumbImageView.sd_setImage(with: url, placeholderImage: UIImage(named: "souncloud"))
             } else if let url = playlist.tracks.first?.thumbnailURLString.toURL() {
-                cell.thumbImageView.sd_setImageWithURL(url, placeholderImage: UIImage(named: "soundcloud"))
+                cell.thumbImageView.sd_setImage(with: url, placeholderImage: UIImage(named: "soundcloud"))
             } else {
                 cell.thumbImageView.image = UIImage(named: "soundcloud")
             }
@@ -144,14 +145,14 @@ class SoundCloudPlaylistTableViewController: UITableViewController {
         return cell
     }
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         observer?.dispose()
         observer = nil
         switch Section(rawValue: indexPath.section)! {
-        case .Favorites:
+        case .favorites:
             let vc = SoundCloudTrackTableViewController(tracks: playlistLoader.favorites)
             navigationController?.pushViewController(vc, animated: true)
-        case .Playlists:
+        case .playlists:
             let playlist = playlistLoader.playlists[indexPath.item]
             let vc = SoundCloudTrackTableViewController(tracks: playlist.tracks)
             navigationController?.pushViewController(vc, animated: true)

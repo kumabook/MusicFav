@@ -6,46 +6,46 @@
 //  Copyright (c) 2015 Hiroki Kumamoto. All rights reserved.
 //
 
-import ReactiveCocoa
+import ReactiveSwift
 import Result
 import FeedlyKit
 
-public class BlogLoader {
+open class BlogLoader {
     public enum State {
-        case Init
-        case FetchingAllBlogs
-        case Normal
-        case FetchingDetails
-        case Complete
-        case Error
+        case `init`
+        case fetchingAllBlogs
+        case normal
+        case fetchingDetails
+        case complete
+        case error
     }
 
     public enum Event {
-        case StartLoading
-        case CompleteLoading
-        case FailToLoad
+        case startLoading
+        case completeLoading
+        case failToLoad
     }
 
-    private var _blogs: [Blog]
-    public var blogs:          [Blog]
+    fileprivate var _blogs: [Blog]
+    open var blogs:          [Blog]
     var offset  = 0
     var perPage = 5
-    public var state:          State
-    public var signal:         Signal<Event, NSError>
-    public var observer:       Signal<Event, NSError>.Observer
+    open var state:          State
+    open var signal:         Signal<Event, NSError>
+    open var observer:       Signal<Event, NSError>.Observer
 
     public init() {
         self._blogs = []
         self.blogs  = []
-        self.state  = .Init
+        self.state  = .init
         let pipe    = Signal<Event, NSError>.pipe()
         signal      = pipe.0
         observer    = pipe.1
     }
 
-    private func fetchAllBlogs() -> SignalProducer<Void, NSError> {
-        state = State.FetchingAllBlogs
-        observer.sendNext(.StartLoading)
+    fileprivate func fetchAllBlogs() -> SignalProducer<Void, NSError> {
+        state = State.fetchingAllBlogs
+        observer.send(value: .startLoading)
         return HypemAPIClient.sharedInstance.getAllBlogs().map {
             self._blogs = $0
             self.fetchNextDetails()
@@ -53,54 +53,54 @@ public class BlogLoader {
         }
     }
 
-    public func fetchBlogs() {
+    open func fetchBlogs() {
         switch state {
-        case .Init:             fetchAllBlogs().on(next: {}, failed: {e in}, completed: {}).start()
-        case .FetchingAllBlogs: break
-        case .Normal:           fetchNextDetails()
-        case .FetchingDetails:  break
-        case .Complete:         break
-        case .Error:            break
+        case .init:             fetchAllBlogs().on(value: {}, failed: {e in}, completed: {}).start()
+        case .fetchingAllBlogs: break
+        case .normal:           fetchNextDetails()
+        case .fetchingDetails:  break
+        case .complete:         break
+        case .error:            break
         }
     }
 
-    private func fetchNextDetails() {
-        self.state  = State.FetchingDetails
-        observer.sendNext(.StartLoading)
-        fetchDetails(start: offset, length: perPage).on(
-            next: { blog in
+    fileprivate func fetchNextDetails() {
+        self.state  = State.fetchingDetails
+        observer.send(value: .startLoading)
+        fetchDetails(offset, length: perPage).on(
+            value: { blog in
                 self.offset += self.perPage
-                self.observer.sendNext(.CompleteLoading)
+                self.observer.send(value: .completeLoading)
             }, failed: { error in
-                self.observer.sendNext(.FailToLoad)
+                self.observer.send(value: .failToLoad)
             }, completed: {
                 if self.offset >= self._blogs.count {
-                    self.state = .Complete
+                    self.state = .complete
                 } else {
-                    self.state = .Normal
+                    self.state = .normal
                 }
                 return
         }).start()
     }
 
-    private func fetchDetails(start start: Int, length: Int) -> SignalProducer<[Blog], NSError> {
+    fileprivate func fetchDetails(_ start: Int, length: Int) -> SignalProducer<[Blog], NSError> {
         return (start..<start+length).map({$0}).reduce(SignalProducer(value: [])) {
-            combineLatest($0, self.fetchSiteInfo($1)).map {
+            SignalProducer.combineLatest($0, self.fetchSiteInfo($1)).map {
                 var list = $0.0; list.append($0.1); return list
             }
         }
     }
 
-    private func fetchSiteInfo(index: Int) -> SignalProducer<Blog, NSError> {
+    fileprivate func fetchSiteInfo(_ index: Int) -> SignalProducer<Blog, NSError> {
         return SignalProducer<Blog, NSError> { (blogObserver, disposable) in
             self._blogs[index].fetchSiteInfo().on(
-                next: { blog in
+                value: { blog in
                     self.blogs.append(blog)
-                    blogObserver.sendNext(blog)
+                    blogObserver.send(value: blog)
                     blogObserver.sendCompleted()
                 },
                 failed: { error in
-                    blogObserver.sendFailed(error)
+                    blogObserver.send(error: error)
                     return
                 },
                 completed: {

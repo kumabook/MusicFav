@@ -7,16 +7,16 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import SwiftyJSON
 import FeedlyKit
 import MusicFeeder
 
 class StreamTimelineTableViewController: TimelineTableViewController {
-    var streamLoader: StreamLoader!
+    var entryRepository: EntryRepository!
 
-    init(streamLoader: StreamLoader) {
-        self.streamLoader = streamLoader
+    init(entryRepository: EntryRepository) {
+        self.entryRepository = entryRepository
         super.init()
     }
 
@@ -28,66 +28,71 @@ class StreamTimelineTableViewController: TimelineTableViewController {
         observer?.dispose()
     }
 
-    override var timelineTitle: String { return streamLoader.stream.streamTitle }
+    override var timelineTitle: String { return entryRepository.stream.streamTitle }
 
     override func getItems() -> [TimelineItem] {
-        return streamLoader.entries.map { TimelineItem.Entry($0, self.streamLoader.playlistsOfEntry[$0]) }
+        return entryRepository.items.map { TimelineItem.entry($0, self.entryRepository.playlistsOfEntry[$0]) }
     }
     override func getPlaylistQueue() -> PlaylistQueue {
-        return streamLoader.playlistQueue
+        return entryRepository.playlistQueue
     }
 
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
-        if streamLoader.state == StreamLoader.State.Error {
-            streamLoader.fetchLatestEntries()
+        if entryRepository.state == EntryRepository.State.error {
+            entryRepository.fetchLatestItems()
         }
-        streamLoader.fetchAllPlaylists()
+        entryRepository.fetchAllPlaylists()
     }
 
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
     }
 
     override func fetchLatest() {
-        streamLoader.fetchLatestEntries()
+        entryRepository.fetchLatestItems()
     }
 
     override func fetchNext() {
-        streamLoader.fetchEntries()
+        entryRepository.fetchItems()
     }
 
     override func observeTimelineLoader() -> Disposable? {
-        return streamLoader.signal.observeNext({ event in
+        return entryRepository.signal.observeResult({ result in
+            guard let event = result.value else { return }
             switch event {
-            case .StartLoadingLatest:
+            case .startLoadingCache:
+                self.showIndicator()
+            case .completeLoadingCache:
+                self.tableView.reloadData()
+            case .startLoadingLatest:
                 self.onpuRefreshControl.beginRefreshing()
-            case .CompleteLoadingLatest:
+            case .completeLoadingLatest:
                 self.tableView.reloadData()
                 self.onpuRefreshControl.endRefreshing()
-                self.updateSelection(UITableViewScrollPosition.None)
-            case .StartLoadingNext:
+                self.updateSelection(UITableViewScrollPosition.none)
+            case .startLoadingNext:
                 self.showIndicator()
-            case .CompleteLoadingNext:
+            case .completeLoadingNext:
                 self.hideIndicator()
                 self.tableView.reloadData()
-                self.updateSelection(UITableViewScrollPosition.None)
-            case .FailToLoadNext:
+                self.updateSelection(UITableViewScrollPosition.none)
+            case .failToLoadNext:
                 self.showReloadButton()
-            case .CompleteLoadingPlaylist(_, let entry):
+            case .completeLoadingPlaylist(_, let entry):
                 let items = self.getItems()
                 for i in 0..<items.count {
-                    if entry == items[i].entry && i < self.tableView.numberOfRowsInSection(0) {
-                        let index = NSIndexPath(forItem: i, inSection: 0)
-                        self.tableView.reloadRowsAtIndexPaths([index], withRowAnimation: .None)
+                    if entry == items[i].entry && i < self.tableView.numberOfRows(inSection: 0) {
+                        let index = IndexPath(item: i, section: 0)
+                        self.tableView.reloadRows(at: [index], with: .none)
                     }
                 }
-                self.updateSelection(UITableViewScrollPosition.None)
-            case .RemoveAt(let index):
-                let indexPath = NSIndexPath(forItem: index, inSection: 0)
-                self.tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-            case .CompleteLoadingTrackDetail(_):
+                self.updateSelection(UITableViewScrollPosition.none)
+            case .removeAt(let index):
+                let indexPath = IndexPath(item: index, section: 0)
+                self.tableView.deleteRows(at: [indexPath], with: .fade)
+            case .completeLoadingTrackDetail(_):
                 break
             }
         })

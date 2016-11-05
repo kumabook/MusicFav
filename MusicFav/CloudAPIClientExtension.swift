@@ -13,28 +13,28 @@ import FeedlyKit
 import NXOAuth2Client
 
 public extension CloudAPIClient {
-    private static let userDefaults = NSUserDefaults.standardUserDefaults()
-    private static var oauth2clientDelegate = FeedlyOAuth2ClientDelegate()
-    private static var _account:                    NXOAuth2Account?
-    private static var _profile:                    Profile?
-    private static var _notificationDateComponents: NSDateComponents?
-    private static var _lastChecked:                NSDate?
+    fileprivate static let userDefaults = UserDefaults.standard
+    fileprivate static var oauth2clientDelegate = FeedlyOAuth2ClientDelegate()
+    fileprivate static var _account:                    NXOAuth2Account?
+    fileprivate static var _profile:                    Profile?
+    fileprivate static var _notificationDateComponents: DateComponents?
+    fileprivate static var _lastChecked:                Date?
     public static var profile: Profile? {
         get {
             if let p = _profile {
                 return p
             }
-            if let data: NSData = userDefaults.objectForKey("profile") as? NSData {
-                _profile = NSKeyedUnarchiver.unarchiveObjectWithData(data) as? Profile
+            if let data: NSData = userDefaults.object(forKey: "profile") as? NSData {
+                _profile = NSKeyedUnarchiver.unarchiveObject(with: data as Data) as? Profile
                 return _profile
             }
             return nil
         }
         set(profile) {
             if let p = profile {
-                userDefaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(p), forKey: "profile")
+                userDefaults.set(NSKeyedArchiver.archivedData(withRootObject: p), forKey: "profile")
             } else {
-                userDefaults.removeObjectForKey("profile")
+                userDefaults.removeObject(forKey: "profile")
             }
             _profile = profile
         }
@@ -58,74 +58,74 @@ public extension CloudAPIClient {
 
     public static var isExpired: Bool {
         if let expiresAt = account?.accessToken.expiresAt {
-            return NSDate().compare(expiresAt) != NSComparisonResult.OrderedAscending
+            return NSDate().compare(expiresAt) != ComparisonResult.orderedAscending
         }
         return false
     }
 
-    public static func refreshAccessToken(account: NXOAuth2Account) {
+    public static func refreshAccessToken(_ account: NXOAuth2Account) {
         typealias C = CloudAPIClient
         let oauth2client = NXOAuth2Client(clientID: C.clientId,
                                       clientSecret: C.clientSecret,
-                                      authorizeURL: NSURL(string: C.sharedInstance.authUrl)!,
-                                          tokenURL: NSURL(string: C.sharedInstance.tokenUrl)!,
+                                      authorizeURL: NSURL(string: C.sharedInstance.authUrl)! as URL!,
+                                          tokenURL: NSURL(string: C.sharedInstance.tokenUrl)! as URL!,
                                        accessToken: account.accessToken,
                                      keyChainGroup: C.keyChainGroup,
                                         persistent: true,
                                           delegate: CloudAPIClient.oauth2clientDelegate)
-        oauth2client.refreshAccessToken()
+        oauth2client?.refreshAccessToken()
     }
 
-    static func refreshAccount(account: NXOAuth2Account) {
+    static func refreshAccount(_ account: NXOAuth2Account) {
         clearAllAccount()
         let store = NXOAuth2AccountStore.sharedStore() as! NXOAuth2AccountStore
         store.addAccount(account)
-        if let p = profile, token = account.accessToken.accessToken {
-            CloudAPIClient.login(p, token: token)
+        if let p = profile, let token = account.accessToken.accessToken {
+            CloudAPIClient.login(profile: p, token: token)
         }
     }
 
-    public static var notificationDateComponents: NSDateComponents? {
+    public static var notificationDateComponents: DateComponents? {
         get {
             if let components = _notificationDateComponents {
                 return components
             }
-            if let data: NSData = userDefaults.objectForKey("notification_date_components") as? NSData {
-                return NSKeyedUnarchiver.unarchiveObjectWithData(data) as? NSDateComponents
+            if let data: Data = userDefaults.object(forKey: "notification_date_components") as? Data {
+                return NSKeyedUnarchiver.unarchiveObject(with: data as Data) as? DateComponents
             }
             return nil
         }
         set(notificationDateComponents) {
             if let components = notificationDateComponents {
-                userDefaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(components), forKey: "notification_date_components")
+                userDefaults.set(NSKeyedArchiver.archivedData(withRootObject: components), forKey: "notification_date_components")
             } else {
-                userDefaults.removeObjectForKey("notification_date_components")
+                userDefaults.removeObject(forKey: "notification_date_components")
             }
             _notificationDateComponents = notificationDateComponents
         }
     }
     
-    public static var lastChecked: NSDate? {
+    public static var lastChecked: Date? {
         get {
             if let time = _lastChecked {
-                return time
+                return time as Date
             }
-            if let data: NSData = userDefaults.objectForKey("last_checked") as? NSData {
-                return NSKeyedUnarchiver.unarchiveObjectWithData(data) as? NSDate
+            if let data: Data = userDefaults.object(forKey: "last_checked") as? Data {
+                return NSKeyedUnarchiver.unarchiveObject(with: data) as? Date
             }
             return nil
         }
         set(lastChecked) {
             if let date = lastChecked {
-                userDefaults.setObject(NSKeyedArchiver.archivedDataWithRootObject(date), forKey: "last_checked")
+                userDefaults.set(NSKeyedArchiver.archivedData(withRootObject: date), forKey: "last_checked")
             } else {
-                userDefaults.removeObjectForKey("last_checked")
+                userDefaults.removeObject(forKey: "last_checked")
             }
             _lastChecked = lastChecked
         }
     }
 
-    private static func clearAllAccount() {
+    fileprivate static func clearAllAccount() {
         guard let store    = NXOAuth2AccountStore.sharedStore() as? NXOAuth2AccountStore else { return }
         guard let accounts = store.accounts as? [NXOAuth2Account]                        else { return }
         for account in accounts {
@@ -137,18 +137,18 @@ public extension CloudAPIClient {
         profile = nil
     }
     
-    private static func loadConfig() {
-        let bundle = NSBundle.mainBundle()
-        if let path = bundle.pathForResource("feedly", ofType: "json") {
+    fileprivate static func loadConfig() {
+        let bundle = Bundle.main
+        if let path = bundle.path(forResource: "feedly", ofType: "json") {
             let data     = NSData(contentsOfFile: path)
-            let jsonObject: AnyObject? = try? NSJSONSerialization.JSONObjectWithData(data!,
-                options: NSJSONReadingOptions.MutableContainers)
+            let jsonObject: AnyObject? = try! JSONSerialization.jsonObject(with: data! as Data,
+                options: JSONSerialization.ReadingOptions.mutableContainers) as AnyObject?
             if let obj: AnyObject = jsonObject {
                 let json = JSON(obj)
                 if json["target"].stringValue == "production" {
-                    CloudAPIClient.sharedInstance = CloudAPIClient(target: .Production)
+                    CloudAPIClient.sharedInstance = CloudAPIClient(target: .production)
                 } else {
-                    CloudAPIClient.sharedInstance = CloudAPIClient(target: .Sandbox)
+                    CloudAPIClient.sharedInstance = CloudAPIClient(target: .sandbox)
                 }
                 if let clientId = json["client_id"].string {
                     CloudAPIClient.clientId = clientId
@@ -162,8 +162,8 @@ public extension CloudAPIClient {
 
     public static func setup() {
         loadConfig()
-        if let p = profile, a = account, token = a.accessToken.accessToken {
-            CloudAPIClient.login(p, token: token)
+        if let p = profile, let a = account, let token = a.accessToken.accessToken {
+            CloudAPIClient.login(profile: p, token: token)
             if isExpired {
                 refreshAccessToken(a)
             }
@@ -171,7 +171,8 @@ public extension CloudAPIClient {
             profile = nil
             clearAllAccount()
         }
-        CloudAPIClient.sharedPipe.0.observeNext({ event in
+        CloudAPIClient.sharedPipe.0.observeResult({ result in
+            guard let event = result.value else { return }
             switch event {
             case .Login(let profile):
                 self.profile = profile
@@ -186,17 +187,17 @@ public extension CloudAPIClient {
     }
 }
 
-public class FeedlyOAuth2ClientDelegate: NSObject, NXOAuth2ClientDelegate {
+open class FeedlyOAuth2ClientDelegate: NSObject, NXOAuth2ClientDelegate {
     public override init() {
     }
-    public func oauthClientNeedsAuthentication(client: NXOAuth2Client!) {}
-    public func oauthClientDidGetAccessToken(client: NXOAuth2Client!) {}
-    public func oauthClient(client: NXOAuth2Client!, didFailToGetAccessTokenWithError error: NSError!) {
+    open func oauthClientNeedsAuthentication(_ client: NXOAuth2Client!) {}
+    open func oauthClientDidGetAccessToken(_ client: NXOAuth2Client!) {}
+    open func oauthClient(_ client: NXOAuth2Client!, didFailToGetAccessTokenWithError error: Error!) {
     }
-    public func oauthClientDidLoseAccessToken(client: NXOAuth2Client!) {
+    open func oauthClientDidLoseAccessToken(_ client: NXOAuth2Client!) {
     }
-    public func oauthClientDidRefreshAccessToken(client: NXOAuth2Client!) {
-        CloudAPIClient.refreshAccount(NXOAuth2Account(accountWithAccessToken: client.accessToken,
+    open func oauthClientDidRefreshAccessToken(_ client: NXOAuth2Client!) {
+        CloudAPIClient.refreshAccount(NXOAuth2Account(accountWith: client.accessToken,
             accountType: CloudAPIClient.accountType))
     }
 }
