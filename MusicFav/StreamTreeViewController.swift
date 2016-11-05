@@ -307,7 +307,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             case .FailToUpdate(let e):
                 MBProgressHUD.hideHUDForView(self.view, animated: true)
                 CloudAPIClient.alertController(error: e, handler: { (action) -> Void in })
-            case .RemoveAt(let index, let subscription, let category):
+            case .RemoveAt(let subscription, let category):
                 MBProgressHUD.hideHUDForView(self.view, animated: true)
                 MBProgressHUD.showCompletedHUDForView(self.navigationController!.view, animated: true, duration: 1.0, after: {
                     let l = self.streamListLoader
@@ -319,11 +319,13 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
                         self.sections.removeAtIndex(i)
                         self.treeView!.reloadData()
                     } else {
-                        self.treeView!.deleteItemsAtIndexes(NSIndexSet(index: index),
-                                 inParent: self.treeView!.parentForItem(subscription),
-                            withAnimation: RATreeViewRowAnimationRight)
-                        self.treeView!.reloadRowsForItems([self.indexOfCategory(category)],
-                                                withRowAnimation: RATreeViewRowAnimationRight)
+                        if let i = streamListLoader.uncategorizedStreams.indexOf(subscription) {
+                            self.treeView!.deleteItemsAtIndexes(NSIndexSet(index: i),
+                                    inParent: self.treeView!.parentForItem(subscription),
+                                withAnimation: RATreeViewRowAnimationRight)
+                            self.treeView!.reloadRowsForItems([self.indexOfCategory(category)],
+                                                    withRowAnimation: RATreeViewRowAnimationRight)
+                        }
                     }
                 })
             }
