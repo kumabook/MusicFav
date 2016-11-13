@@ -283,6 +283,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             switch event {
             case .create(_):
                 self.treeView?.reloadData()
+                MBProgressHUD.hide(for: self.view, animated: true)
             case .startLoading:
                 self.refreshControl?.beginRefreshing()
             case .completeLoading:
@@ -302,6 +303,11 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
                 })
                 self.refreshControl?.endRefreshing()
                 self.treeView?.reloadData()
+                if let miniPlayerVC = self.appDelegate.miniPlayerViewController {
+                    if !miniPlayerVC.hasCenterViewController() {
+                        self.showDefaultStream()
+                    }
+                }
             case .failToLoad(let e):
                 let _ = CloudAPIClient.alertController(error: e, handler: { (action) -> Void in })
                 self.refreshControl?.endRefreshing()
@@ -382,15 +388,6 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         youtubeActivityLoader.fetchChannels()
         treeView?.reloadData()
         streamRepository.refresh()
-            /*.on(
-            next: {
-                if let miniPlayerVC = self.appDelegate.miniPlayerViewController {
-                    if !miniPlayerVC.hasCenterViewController() {
-                        self.showDefaultStream()
-                    }
-                }
-            }
-        ).start()*/
     }
 
     func unsubscribeTo(_ subscription: Subscription, index: Int, category: FeedlyKit.Category) {

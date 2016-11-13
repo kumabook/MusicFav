@@ -81,11 +81,13 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
     override func viewDidLoad() {
         super.viewDidLoad()
         observeApp()
+        navigationItem.leftBarButtonItem = DrawerBarButtonItem(target: self,
+                                                               action: #selector(TimelineTableViewController.showMenu))
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "playlist"),
                                                             style: UIBarButtonItemStyle.plain,
                                                            target: self,
-                                                           action: #selector(TimelineTableViewController.showPlaylist as (TimelineTableViewController) -> () -> ()))
-        navigationItem.title                            = timelineTitle.localize()
+                                                           action: #selector(TimelineTableViewController.showPlaylistList))
+        navigationItem.title                              = timelineTitle.localize()
         navigationController?.toolbar.isTranslucent       = false
         navigationController?.navigationBar.isTranslucent = false
         let nib = UINib(nibName: "TimelineTableViewCell", bundle: nil)
@@ -365,13 +367,13 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
             cell.backgroundImageView.image = nil
             cell.backgroundImageView.backgroundColor = UIColor.slateGray
         }
-        cell.titleLabel.text       = item.title
-        cell.descriptionLabel.text = item.description
-        cell.dateLabel.text        = item.dateString
-        cell.playButton.isHidden     = (item.playlist?.tracks.count)! <= 0
-        cell.articleButton.isHidden  = item.entry == nil
-        cell.trackNumLabel.text    = item.trackNumString
-        cell.timelineDelegate      = self
+        cell.titleLabel.text        = item.title
+        cell.descriptionLabel.text  = item.description
+        cell.dateLabel.text         = item.dateString
+        cell.playButton.isHidden    = (item.playlist?.tracks.count) ?? 0 <= 0
+        cell.articleButton.isHidden = item.entry == nil
+        cell.trackNumLabel.text     = item.trackNumString
+        cell.timelineDelegate       = self
         if let playlist = item.playlist {
             cell.loadThumbnails(playlist)
             updatePlayerIcon(cell, playlist: playlist)

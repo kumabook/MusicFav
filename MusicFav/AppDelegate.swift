@@ -160,7 +160,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         player?.addObserver(HistoryManager())
         window?.makeKeyAndVisible()
         if !didFinishTutorial { startTutorial() }
-        reload()
         UILocalNotification.setup(application)
         Logger.sendStartSession()
         return true
@@ -180,7 +179,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func applicationWillEnterForeground(_ application: UIApplication) {
         observer?.send(value: Event.willEnterForeground)
-        let _ = mainViewController?.centerPanel
         playerPageViewController?.enablePlayerView()
         reloadExpiredTracks()
     }
