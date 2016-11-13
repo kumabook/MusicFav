@@ -43,7 +43,6 @@
 		67311E301AF63BD500711DAC /* FeedbackWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67311E2F1AF63BD500711DAC /* FeedbackWebViewController.swift */; };
 		67311E321AF7BBA800711DAC /* feedback_ja.html in Resources */ = {isa = PBXBuildFile; fileRef = 67311E311AF7BBA800711DAC /* feedback_ja.html */; };
 		6731BC9E1AD82321004F488D /* UIAlertControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6731BC9D1AD82321004F488D /* UIAlertControllerExtension.swift */; };
-		6731BCA01AD8F069004F488D /* JASidePanelControllerExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6731BC9F1AD8F069004F488D /* JASidePanelControllerExtension.swift */; };
 		6732B5181C11003B005559A6 /* ListenItLater.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 6732B50E1C11003B005559A6 /* ListenItLater.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		6732B51C1C1100BB005559A6 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671664291A738E36005FE005 /* Alamofire.framework */; };
 		6732B51D1C1100BB005559A6 /* Breit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67428D491B80C23F002FFA1A /* Breit.framework */; };
@@ -106,8 +105,8 @@
 		6767AE5D1ADBECCC00A92497 /* StreamTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6767AE5B1ADBECCC00A92497 /* StreamTableViewCell.swift */; };
 		6767AE5E1ADBECCC00A92497 /* StreamTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6767AE5C1ADBECCC00A92497 /* StreamTableViewCell.xib */; };
 		676C7EAB1DD7413D0050C337 /* ReactiveSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 674DF1271DD6BE36000C1B08 /* ReactiveSwift.framework */; };
-		676C7EAD1DD7436D0050C337 /* FLAnimatedImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 676C7EAC1DD7436D0050C337 /* FLAnimatedImage.framework */; };
-		676C7EAE1DD743780050C337 /* FLAnimatedImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 676C7EAC1DD7436D0050C337 /* FLAnimatedImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		676CB8761DD7E8B50010EA30 /* DrawerController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 676CB8751DD7E8B50010EA30 /* DrawerController.framework */; };
+		676CB8771DD7E8CD0010EA30 /* DrawerController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 676CB8751DD7E8B50010EA30 /* DrawerController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6783057F1B95DDC000A83F52 /* StreamTimelineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6783057E1B95DDC000A83F52 /* StreamTimelineTableViewController.swift */; };
 		678305871B9AA24C00A83F52 /* YouTubeActivityLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678305861B9AA24C00A83F52 /* YouTubeActivityLoader.swift */; };
 		67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */; };
@@ -203,10 +202,10 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				676CB8771DD7E8CD0010EA30 /* DrawerController.framework in Embed Frameworks */,
 				674DF12C1DD6BE78000C1B08 /* SDWebImage.framework in Embed Frameworks */,
 				674DF1291DD6BE45000C1B08 /* ReactiveSwift.framework in Embed Frameworks */,
 				67527B6F1C04C3F900CE1C27 /* PageMenu.framework in Embed Frameworks */,
-				676C7EAE1DD743780050C337 /* FLAnimatedImage.framework in Embed Frameworks */,
 				671D07191B94782500DC99A5 /* SoundCloudKit.framework in Embed Frameworks */,
 				67428D4D1B8174E7002FFA1A /* Breit.framework in Embed Frameworks */,
 				6725420C1B784E3300EDA2C3 /* MusicFeeder.framework in Embed Frameworks */,
@@ -290,7 +289,6 @@
 		67311E2F1AF63BD500711DAC /* FeedbackWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedbackWebViewController.swift; sourceTree = "<group>"; };
 		67311E311AF7BBA800711DAC /* feedback_ja.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = feedback_ja.html; sourceTree = "<group>"; };
 		6731BC9D1AD82321004F488D /* UIAlertControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIAlertControllerExtension.swift; sourceTree = "<group>"; };
-		6731BC9F1AD8F069004F488D /* JASidePanelControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JASidePanelControllerExtension.swift; sourceTree = "<group>"; };
 		6732B4F61C10FDF9005559A6 /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		6732B50E1C11003B005559A6 /* ListenItLater.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = ListenItLater.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		6732B5151C11003B005559A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -332,6 +330,7 @@
 		6767AE531ADAC70500A92497 /* IASKAppSettingsViewControllerExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IASKAppSettingsViewControllerExtension.swift; sourceTree = "<group>"; };
 		6767AE5B1ADBECCC00A92497 /* StreamTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTableViewCell.swift; sourceTree = "<group>"; };
 		6767AE5C1ADBECCC00A92497 /* StreamTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StreamTableViewCell.xib; sourceTree = "<group>"; };
+		676CB8751DD7E8B50010EA30 /* DrawerController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DrawerController.framework; path = Carthage/Build/iOS/DrawerController.framework; sourceTree = "<group>"; };
 		6783057E1B95DDC000A83F52 /* StreamTimelineTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTimelineTableViewController.swift; sourceTree = "<group>"; };
 		678305861B9AA24C00A83F52 /* YouTubeActivityLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = YouTubeActivityLoader.swift; path = MusicFav/YouTubeActivityLoader.swift; sourceTree = "<group>"; };
 		67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTableViewController.swift; sourceTree = "<group>"; };
@@ -417,7 +416,6 @@
 				671D07181B9477F500DC99A5 /* SoundCloudKit.framework in Frameworks */,
 				67428D4A1B80C23F002FFA1A /* Breit.framework in Frameworks */,
 				67C0BC681B7741A400243AE8 /* SnapKit.framework in Frameworks */,
-				676C7EAD1DD7436D0050C337 /* FLAnimatedImage.framework in Frameworks */,
 				67B777A61B6E3CBC001B777B /* Realm.framework in Frameworks */,
 				673DCC891AF530FF0043E51D /* libz.dylib in Frameworks */,
 				673DCC8D1AF531210043E51D /* libsqlite3.dylib in Frameworks */,
@@ -431,6 +429,7 @@
 				6716642A1A738E36005FE005 /* Alamofire.framework in Frameworks */,
 				67F7D4921A625A4F00A5AE68 /* SwiftyJSON.framework in Frameworks */,
 				67F7D4901A625A4F00A5AE68 /* ReactiveCocoa.framework in Frameworks */,
+				676CB8761DD7E8B50010EA30 /* DrawerController.framework in Frameworks */,
 				674DF12B1DD6BE6F000C1B08 /* SDWebImage.framework in Frameworks */,
 				3BCF16D076714FA237AE56AB /* Pods_MusicFav.framework in Frameworks */,
 			);
@@ -478,7 +477,6 @@
 				6724E1C81A9CA19800D8E0FA /* AppearanceManager.swift */,
 				675AB3401AD3E3DA0003824C /* StringExtension.swift */,
 				6731BC9D1AD82321004F488D /* UIAlertControllerExtension.swift */,
-				6731BC9F1AD8F069004F488D /* JASidePanelControllerExtension.swift */,
 				6767AE531ADAC70500A92497 /* IASKAppSettingsViewControllerExtension.swift */,
 				67BE4F361AE7D95800E40E98 /* DeviceType.swift */,
 				67E5DEE21AEC4CEA000E016F /* FabricConfig.swift */,
@@ -754,6 +752,7 @@
 		7472929E5548D8618A0DE458 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				676CB8751DD7E8B50010EA30 /* DrawerController.framework */,
 				674DF12A1DD6BE6F000C1B08 /* SDWebImage.framework */,
 				674DF1271DD6BE36000C1B08 /* ReactiveSwift.framework */,
 				6732B5251C1100BB005559A6 /* RealmSwift.framework */,
@@ -1058,7 +1057,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/PlayerKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/SoundCloudKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/PageMenu.framework",
-				"$(SRCROOT)/Carthage/Build/iOS/FLAnimatedImage.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/DrawerController.framework",
 			);
 			name = "Carthage copy-frameworks";
 			outputPaths = (
@@ -1202,7 +1201,6 @@
 				6783057F1B95DDC000A83F52 /* StreamTimelineTableViewController.swift in Sources */,
 				6762EE091BCAC10100EA90DC /* MusicFavError.swift in Sources */,
 				67DA465F1A8656A90048B29C /* PlaylistTableViewCell.swift in Sources */,
-				6731BCA01AD8F069004F488D /* JASidePanelControllerExtension.swift in Sources */,
 				6701D4AD1A95048C006BFEC6 /* HUDExtension.swift in Sources */,
 				67D41D051B878DCB0082454F /* SoundCloudPlaylistLoader.swift in Sources */,
 				67277CAE1A434304002FD3E0 /* AppDelegate.swift in Sources */,

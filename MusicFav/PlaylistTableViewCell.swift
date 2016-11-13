@@ -12,12 +12,11 @@ class PlaylistTableViewCell: UITableViewCell {
     @IBOutlet weak var thumbImageView: UIImageView!
     @IBOutlet weak var titleLabel: UILabel!
     @IBOutlet weak var trackNumLabel: UILabel!
-    let leftMarginPercent: CGFloat = 0.2
+    let leftMarginPercent: CGFloat = 0.05
 
     override func awakeFromNib() {
         super.awakeFromNib()
         contentView.constraints.filter { $0.identifier == "left_margin" }.forEach {
-            print("constance \($0.constant) to \(self.frame.width * leftMarginPercent)")
             $0.constant = self.frame.width * leftMarginPercent
         }
     }

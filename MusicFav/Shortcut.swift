@@ -10,6 +10,7 @@ import Foundation
 import UIKit
 import MusicFeeder
 import PlayerKit
+import DrawerController
 
 class ShortcutPlayerObserver: PlayerObserver {
     override func listen(_ event: PlayerEvent) {
@@ -120,24 +121,24 @@ enum Shortcut: String {
         case .Playlist:
             let vc = app.miniPlayerViewController
             if let playlist = app.playingPlaylist {
-                app.mainViewController?.showRightPanelAnimated(true) {
+                app.mainViewController?.openDrawerSide(DrawerSide.right, animated: true, completion: { animated in
                     let _ = vc?.playlistTableViewController.showPlaylist(playlist, animated: false)
                     return
-                }
+                })
             } else {
-                app.mainViewController?.showRightPanelAnimated(true) {}
+                app.mainViewController?.openDrawerSide(DrawerSide.right, animated: true, completion: nil)
             }
             return true
         case .Favorite:
             let vc = app.miniPlayerViewController
             if let track = app.player?.currentTrack, let playlist = app.playingPlaylist {
-                app.mainViewController?.showRightPanelAnimated(false) {
+                app.mainViewController?.openDrawerSide(DrawerSide.right, animated: false, completion: { animated in
                     if let tvc = vc?.playlistTableViewController.showPlaylist(playlist, animated: false) {
                         tvc.showSelectPlaylistViewController([track as! MusicFeeder.Track])
                     }
-                }
+                })
             } else {
-                app.mainViewController?.showRightPanelAnimated(true) {}
+                app.mainViewController?.openDrawerSide(DrawerSide.right, animated: true, completion: nil)
             }
             return true
         }

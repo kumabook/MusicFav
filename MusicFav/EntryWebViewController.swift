@@ -12,6 +12,7 @@ import SwiftyJSON
 import FeedlyKit
 import MusicFeeder
 import MBProgressHUD
+import DrawerController
 
 class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMessageHandler, EntryMenuDelegate {
     let indicatorSize = 48
@@ -169,7 +170,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
 
     func showPlaylist() {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.mainViewController?.showRightPanel(animated: true)
+        appDelegate.mainViewController?.openDrawerSide(DrawerSide.right, animated: true, completion: nil)
     }
 
     func historyBack() {

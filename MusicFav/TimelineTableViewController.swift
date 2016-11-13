@@ -11,6 +11,7 @@ import ReactiveSwift
 import SwiftyJSON
 import FeedlyKit
 import MusicFeeder
+import DrawerController
 
 class TimelineTableViewController: UITableViewController, TimelineTableViewCellDelegate {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -201,14 +202,19 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         }
     }
 
+    func showMenu() {
+        let vc = appDelegate.miniPlayerViewController
+        vc?.showMenu()
+    }
+
     func showPlaylist(_ playlist: Playlist?) {
         let vc = appDelegate.miniPlayerViewController
-        if let _playlist = playlist {
-            appDelegate.selectedPlaylist = _playlist
+        if let playlist = playlist {
+            appDelegate.selectedPlaylist = playlist
             vc?.playlistTableViewController.updateNavbar()
             vc?.playlistTableViewController.tableView.reloadData()
-            appDelegate.mainViewController?.showRightPanelAnimated(true, completion: {
-                let _ = vc?.playlistTableViewController.showPlaylist(_playlist, animated: true)
+            appDelegate.mainViewController?.openDrawerSide(DrawerSide.right, animated: true, completion: { animated in
+                let _ = vc?.playlistTableViewController.showPlaylist(playlist, animated: true)
                 return
             })
         }
@@ -277,9 +283,9 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         }
     }
 
-    func showPlaylist() {
+    func showPlaylistList() {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        appDelegate.mainViewController?.showRightPanel(animated: true)
+        appDelegate.mainViewController?.openDrawerSide(DrawerSide.right, animated: true, completion: nil)
     }
 
     // MARK: - PlaylistStreamTableViewDelegate

@@ -16,8 +16,8 @@ import Fabric
 import Crashlytics
 import XCDYouTubeKit
 import PlayerKit
-import JASidePanels
 import SoundCloudKit
+import DrawerController
 
 public typealias PlaylistQueue = PlayerKit.PlaylistQueue
 
@@ -67,9 +67,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var playerPageViewController: PlayerPageViewController<PlayerViewController, MiniPlayerView>? {
         get { return coverViewController?.ceilingViewController as? PlayerPageViewController<PlayerViewController, MiniPlayerView> }
     }
-    var mainViewController: JASidePanelController? { return miniPlayerViewController?.mainViewController as? JASidePanelController }
-    var leftVisibleWidth:   CGFloat? { return mainViewController?.leftVisibleWidth }
-    var rightVisibleWidth:  CGFloat? { return mainViewController?.rightVisibleWidth }
+    var mainViewController: DrawerController? { return miniPlayerViewController?.drawlerController }
+    var leftVisibleWidth:   CGFloat? { return mainViewController?.visibleLeftDrawerWidth}
+    var rightVisibleWidth:  CGFloat? { return mainViewController?.visibleRightDrawerWidth }
     var streamRepository: StreamRepository? {
         return miniPlayerViewController?.streamTreeViewController?.streamRepository
     }
@@ -206,7 +206,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     @available(iOS 9.0, *)
     func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
         if let shortcut = Shortcut(fullType: shortcutItem.type) {
-            if mainViewController?.centerPanel == nil {
+            if mainViewController?.centerViewController == nil {
                 let startTime = DispatchTime.now() + Double(Int64(Shortcut.delaySec * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
                 DispatchQueue.main.asyncAfter(deadline: startTime) { () -> Void in
                     completionHandler(shortcut.handleShortCutItem())
