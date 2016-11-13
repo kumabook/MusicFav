@@ -6,11 +6,16 @@ import Foundation
 extension String {
     func trim() -> String
     {
-        return self.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+        return self.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
     }
 }
 
-let version = "0.4.7"
+let git        = "/usr/local/bin/"
+let cp         = "/bin/cp"
+let xcodebuild = "/usr/bin/xcodebuild"
+let carthage   = "/usr/local/bin/carthage"
+let agvtool    = "/usr/bin/agvtool"
+let version    = "0.4.8"
 
 enum Task: String {
     case Config  = "config"
@@ -53,61 +58,74 @@ enum Target: String {
     var appfileDst:          String { return "fastlane/Appfile" }
     func config() {
         print("------ setup config files for \(self) --------")
-        run("cp \(feedlyConfig) \(feedlyConfigDst)")
-        run("cp \(youtubeConfig) \(youtubeConfigDst)")
-        run("cp \(soundCloudConfig) \(soundCloudConfigDst)")
-        run("cp \(fabricConfig) \(fabricConfigDst)")
-        run("cp \(deliverfile) \(deliverfileDst)")
-        run("cp \(appfile) \(appfileDst)")
+        let _ = shell(cp, args: "\(feedlyConfig)"    , "\(feedlyConfigDst)")
+        let _ = shell(cp, args: "\(youtubeConfig)"   , "\(youtubeConfigDst)")
+        let _ = shell(cp, args: "\(soundCloudConfig)", "\(soundCloudConfigDst)")
+        let _ = shell(cp, args: "\(fabricConfig)"    , "\(fabricConfigDst)")
+        let _ = shell(cp, args: "\(deliverfile)"     , "\(deliverfileDst)")
+        let _ = shell(cp, args: "\(appfile)"         , "\(appfileDst)")
     }
     func prepare() {
         install_lib()
     }
     func clean() {
-        run("git checkout HEAD \(feedlyConfigDst)")
-        run("git checkout HEAD \(youtubeConfigDst)")
-        run("git checkout HEAD \(soundCloudConfigDst)")
-        run("git checkout HEAD \(fabricConfigDst)")
-        run("git checkout HEAD \(gaConfigDst)")
-        run("git checkout HEAD \(deliverfileDst)")
-        run("git checkout HEAD \(appfileDst)")
+        let _ = shell(git, args: "checkout", "HEAD", "\(feedlyConfigDst)")
+        let _ = shell(git, args: "checkout", "HEAD", "\(youtubeConfigDst)")
+        let _ = shell(git, args: "checkout", "HEAD", "\(soundCloudConfigDst)")
+        let _ = shell(git, args: "checkout", "HEAD", "\(fabricConfigDst)")
+        let _ = shell(git, args: "checkout", "HEAD", "\(gaConfigDst)")
+        let _ = shell(git, args: "checkout", "HEAD", "\(deliverfileDst)")
+        let _ = shell(git, args: "checkout", "HEAD", "\(appfileDst)")
     }
     func build() {
-        run("xctool -workspace MusicFav.xcworkspace -scheme MusicFav archive -archivePath archives/MusicFav-`date +%Y%m%d%H%M`")
+        let _ = shell(xcodebuild, args: "-workspace", "MusicFav.xcworkspace", "-scheme", "MusicFav", "archive", "-archivePath", "archives/MusicFav-`date +%Y%m%d%H%M`")
     }
     func test() {
-        run("xctool -workspace MusicFav.xcworkspace -scheme UnitTests test")
+        let _ = shell(xcodebuild, args: "-workspace", "MusicFav.xcworkspace", "-scheme", "UnitTests", "test")
     }
     func install_lib() {
-        run("bundle install")
-        run("bundle exec pod install")
-        let options = "--use-submodules --use-ssh --no-use-binaries"
+        let _ = shell("bundle", args: "install")
+        let _ = shell("bundle", args: "exec", "pod", "install")
         switch self {
         case .Production:
-          run("carthage checkout \(options)")
-          run("carthage build --platform iOS --configuration Release")
+          let _ = shell(carthage, args: "checkout", "--use-submodules", "--use-ssh", "--no-use-binaries")
+          let _ = shell(carthage, args: "build", "--platform", "iOS", "--configuration", "Release")
         case .Sandbox:
-          run("carthage checkout \(options)")
-          run("carthage build --platform iOS --configuration Debug")
+          let _ = shell(carthage, args: "checkout", "--use-submodules", "--use-ssh", "--no-use-binaries")
+          let _ = shell(carthage, args: "build", "--platform", "iOS", "--configuration", "Debug")
         }
     }
 }
 
-func shell(command: String) -> String {
-    let fp = popen(command, "r")
-    var buf = Array<CChar>(count: 128, repeatedValue: 0)
-    var result = ""
-    while fgets(&buf, CInt(buf.count), fp) != nil,
-          let str = String.fromCString(buf) {
-              result.appendContentsOf(str)
+func shell(_ command : String, args : String...) -> String {
+    var output: [String] = []
+    
+    let task = Process()
+    task.launchPath = command
+    task.arguments = args
+    
+    let outpipe = Pipe()
+    task.standardOutput = outpipe
+    let errpipe = Pipe()
+    task.standardError = errpipe
+    
+    task.launch()
+    
+    let outdata = outpipe.fileHandleForReading.readDataToEndOfFile()
+    if var string = String(data: outdata, encoding: .utf8) {
+        string = string.trimmingCharacters(in: .newlines)
+        output = string.components(separatedBy: "\n")
     }
-    fclose(fp)
-    return result
-}
-
-func run(command: String, silent: Bool = false) {
-    if !silent { print(command) }
-    system(command)
+    
+    let errdata = errpipe.fileHandleForReading.readDataToEndOfFile()
+    if var string = String(data: errdata, encoding: .utf8) {
+        string = string.trimmingCharacters(in: .newlines)
+    }
+    
+    task.waitUntilExit()
+    let _ = task.terminationStatus
+    
+    return output[0]
 }
 
 func showUsage() {
@@ -119,17 +137,17 @@ func showUsage() {
 
 func nextVersion() {
     print("-------- increment versions --------")
-    guard let currentVersion = Int(shell("agvtool what-version -terse").trim()) else {
+    guard let currentVersion = Int(shell(agvtool, args: "what-version", "-terse").trim()) else {
       print("Failed to get currentVersion")
       return
     }
-    run("agvtool next-version -all", silent: true)
+    let _ = shell(agvtool, args: "next-version", "-all")
     print("update bundle version: \(currentVersion) -> \(currentVersion + 1)")
     print("-------- update version strings  --------")
-    run("agvtool new-marketing-version \(version)", silent: true)
+    let _ = shell(agvtool, args: "new-marketing-version", "\(version)")
 }
 
-func main(task task: Task, target: Target) {
+func main(task: Task, target: Target) {
     switch task {
     case .Config:  target.config()
     case .Prepare: target.prepare()
@@ -146,7 +164,7 @@ let soundCloudConfig = "config/soundcloud.json"
 let fabricConfig     = "config/fabric.json"
 let gaConfig         = "config/google_analytics.json"
 
-let args = NSProcessInfo.processInfo().arguments as [String]
+let args = ProcessInfo.processInfo.arguments as [String]
 var _task   = args[args.count - 2]
 var _target = args[args.count - 1]
 if _task == "--" {
