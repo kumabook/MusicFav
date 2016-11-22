@@ -256,7 +256,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
     }
 
     func showSavedStream() {
-        let vc = SavedStreamTimelineTableViewController(entryRepository: SavedStreamRepository())
+        let vc = SavedStreamTimelineTableViewController(entryRepository: SavedEntryRepository())
         appDelegate.miniPlayerViewController?.setCenterViewController(vc)
     }
 
