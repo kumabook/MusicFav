@@ -116,6 +116,8 @@
 		679F405A1B05091D0070602D /* StoreKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 679F40591B05091D0070602D /* StoreKit.framework */; };
 		679F405C1B0574DD0070602D /* PaymentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679F405B1B0574DD0070602D /* PaymentManager.swift */; };
 		679F453D1AF104F7008D1B7F /* OnpuRefreshControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 679F453C1AF104F7008D1B7F /* OnpuRefreshControl.swift */; };
+		67A4BDC41DD86CF7005F4F28 /* FLAnimatedImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A4BDC31DD86CF7005F4F28 /* FLAnimatedImage.framework */; };
+		67A4BDC51DD86D07005F4F28 /* FLAnimatedImage.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67A4BDC31DD86CF7005F4F28 /* FLAnimatedImage.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		67AF8E231A922AB80043DF33 /* FeedlyKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 671664271A738E2A005FE005 /* FeedlyKit.framework */; };
 		67B366DC1AE168E200E089B2 /* soundcloud.json in Resources */ = {isa = PBXBuildFile; fileRef = 67B366DB1AE168E200E089B2 /* soundcloud.json */; };
 		67B366DE1AE1CBA800E089B2 /* TutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67B366DD1AE1CBA800E089B2 /* TutorialViewController.swift */; };
@@ -169,8 +171,6 @@
 		67EFB1551B933B46008A84DF /* TimelineItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67EFB1541B933B46008A84DF /* TimelineItem.swift */; };
 		67F530891B7F518500D8EEF1 /* AddStreamTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F530881B7F518500D8EEF1 /* AddStreamTableViewController.swift */; };
 		67F530901B7F815B00D8EEF1 /* StreamTreeViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F5308F1B7F815B00D8EEF1 /* StreamTreeViewCell.swift */; };
-		67F7D4901A625A4F00A5AE68 /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4881A625A4F00A5AE68 /* ReactiveCocoa.framework */; };
-		67F7D4911A625A4F00A5AE68 /* ReactiveCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4881A625A4F00A5AE68 /* ReactiveCocoa.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		67F7D4921A625A4F00A5AE68 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */; };
 		67F7D4931A625A4F00A5AE68 /* SwiftyJSON.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67F7D4891A625A4F00A5AE68 /* SwiftyJSON.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		67F846691BA46DB60005E78A /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67F846681BA46DB60005E78A /* MiniPlayerView.swift */; };
@@ -202,6 +202,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				67A4BDC51DD86D07005F4F28 /* FLAnimatedImage.framework in Embed Frameworks */,
 				676CB8771DD7E8CD0010EA30 /* DrawerController.framework in Embed Frameworks */,
 				674DF12C1DD6BE78000C1B08 /* SDWebImage.framework in Embed Frameworks */,
 				674DF1291DD6BE45000C1B08 /* ReactiveSwift.framework in Embed Frameworks */,
@@ -214,7 +215,6 @@
 				67B777A81B6E3CE0001B777B /* Realm.framework in Embed Frameworks */,
 				6720B9B71B27A08F000C4D3A /* Result.framework in Embed Frameworks */,
 				675AB3351AD390790003824C /* XCDYouTubeKit.framework in Embed Frameworks */,
-				67F7D4911A625A4F00A5AE68 /* ReactiveCocoa.framework in Embed Frameworks */,
 				67F7D4931A625A4F00A5AE68 /* SwiftyJSON.framework in Embed Frameworks */,
 				6716642E1A738E3E005FE005 /* FeedlyKit.framework in Embed Frameworks */,
 				6716642C1A738E3E005FE005 /* Alamofire.framework in Embed Frameworks */,
@@ -341,6 +341,7 @@
 		679F40591B05091D0070602D /* StoreKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = StoreKit.framework; path = System/Library/Frameworks/StoreKit.framework; sourceTree = SDKROOT; };
 		679F405B1B0574DD0070602D /* PaymentManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PaymentManager.swift; sourceTree = "<group>"; };
 		679F453C1AF104F7008D1B7F /* OnpuRefreshControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnpuRefreshControl.swift; sourceTree = "<group>"; };
+		67A4BDC31DD86CF7005F4F28 /* FLAnimatedImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FLAnimatedImage.framework; path = Carthage/Build/iOS/FLAnimatedImage.framework; sourceTree = "<group>"; };
 		67AD46921C0F35B30058E176 /* ListenItLaterViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ListenItLaterViewController.swift; sourceTree = "<group>"; };
 		67AD46931C0F35B30058E176 /* ListenItLaterViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ListenItLaterViewController.xib; sourceTree = "<group>"; };
 		67B366DB1AE168E200E089B2 /* soundcloud.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = soundcloud.json; path = ../config/soundcloud.json; sourceTree = "<group>"; };
@@ -427,8 +428,8 @@
 				675AB3341AD3903B0003824C /* XCDYouTubeKit.framework in Frameworks */,
 				67AF8E231A922AB80043DF33 /* FeedlyKit.framework in Frameworks */,
 				6716642A1A738E36005FE005 /* Alamofire.framework in Frameworks */,
+				67A4BDC41DD86CF7005F4F28 /* FLAnimatedImage.framework in Frameworks */,
 				67F7D4921A625A4F00A5AE68 /* SwiftyJSON.framework in Frameworks */,
-				67F7D4901A625A4F00A5AE68 /* ReactiveCocoa.framework in Frameworks */,
 				676CB8761DD7E8B50010EA30 /* DrawerController.framework in Frameworks */,
 				674DF12B1DD6BE6F000C1B08 /* SDWebImage.framework in Frameworks */,
 				3BCF16D076714FA237AE56AB /* Pods_MusicFav.framework in Frameworks */,
@@ -752,6 +753,7 @@
 		7472929E5548D8618A0DE458 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				67A4BDC31DD86CF7005F4F28 /* FLAnimatedImage.framework */,
 				676CB8751DD7E8B50010EA30 /* DrawerController.framework */,
 				674DF12A1DD6BE6F000C1B08 /* SDWebImage.framework */,
 				674DF1271DD6BE36000C1B08 /* ReactiveSwift.framework */,
@@ -885,7 +887,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftMigration = 0700;
-				LastSwiftUpdateCheck = 0700;
+				LastSwiftUpdateCheck = 0810;
 				LastUpgradeCheck = 0810;
 				ORGANIZATIONNAME = "Hiroki Kumamoto";
 				TargetAttributes = {
@@ -1058,6 +1060,7 @@
 				"$(SRCROOT)/Carthage/Build/iOS/SoundCloudKit.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/PageMenu.framework",
 				"$(SRCROOT)/Carthage/Build/iOS/DrawerController.framework",
+				"$(SRCROOT)/Carthage/Build/iOS/FLAnimatedImage.framework",
 			);
 			name = "Carthage copy-frameworks";
 			outputPaths = (
