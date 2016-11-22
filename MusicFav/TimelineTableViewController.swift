@@ -81,8 +81,10 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
     override func viewDidLoad() {
         super.viewDidLoad()
         observeApp()
-        navigationItem.leftBarButtonItem = DrawerBarButtonItem(target: self,
-                                                               action: #selector(TimelineTableViewController.showMenu))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(image: UIImage(named: "menu"),
+                                                           style: UIBarButtonItemStyle.plain,
+                                                           target: self,
+                                                           action: #selector(TimelineTableViewController.showMenu))
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(named: "playlist"),
                                                             style: UIBarButtonItemStyle.plain,
                                                            target: self,

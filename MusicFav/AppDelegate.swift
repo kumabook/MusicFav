@@ -68,8 +68,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         get { return coverViewController?.ceilingViewController as? PlayerPageViewController<PlayerViewController, MiniPlayerView> }
     }
     var mainViewController: DrawerController? { return miniPlayerViewController?.drawlerController }
-    var leftVisibleWidth:   CGFloat? { return mainViewController?.visibleLeftDrawerWidth}
-    var rightVisibleWidth:  CGFloat? { return mainViewController?.visibleRightDrawerWidth }
+    var leftVisibleWidth:   CGFloat? { return mainViewController?.maximumLeftDrawerWidth }
+    var rightVisibleWidth:  CGFloat? { return mainViewController?.maximumRightDrawerWidth }
     var streamRepository: StreamRepository? {
         return miniPlayerViewController?.streamTreeViewController?.streamRepository
     }

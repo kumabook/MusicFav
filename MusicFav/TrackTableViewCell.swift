@@ -14,7 +14,7 @@ class TrackTableViewCell: UITableViewCell {
     @IBOutlet weak var thumbImgView:   UIImageView!
     @IBOutlet weak var trackNameLabel: UILabel!
     @IBOutlet weak var durationLabel:  UILabel!
-    let leftMarginPercent: CGFloat = 0.2
+    let leftMarginPercent: CGFloat = 0.05
     override func awakeFromNib() {
         super.awakeFromNib()
         contentView.constraints.filter { $0.identifier == "left_margin" }.forEach {

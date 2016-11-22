@@ -169,12 +169,11 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         treeView?.delegate = self
         treeView?.dataSource = self
         treeView?.register(StreamTreeViewCell.self, forCellReuseIdentifier: "reuseIdentifier")
-        view.addSubview(self.treeView!)
+        view.addSubview(treeView!)
 
         refreshControl = UIRefreshControl()
         refreshControl?.addTarget(self, action:#selector(StreamTreeViewController.refresh), for:UIControlEvents.valueChanged)
         treeView?.addResreshControl(refreshControl!)
-
         refresh()
     }
 

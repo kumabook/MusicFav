@@ -157,7 +157,7 @@ class TrackTableViewController: UITableViewController {
     func showGuideMessage() {
         let size =  tableView.bounds.size
         let backgroundView = UIView(frame: view.frame)
-        let messageView = UILabel(frame: CGRect(x: size.width * 0.3, y: 0, width: size.width * 0.6, height: size.height))
+        let messageView = UILabel(frame: CGRect(x: size.width * 0.05, y: 0, width: size.width * 0.6, height: size.height))
         messageView.textAlignment      = NSTextAlignment.center
         messageView.numberOfLines      = 0
         messageView.clipsToBounds      = true
