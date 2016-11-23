@@ -136,6 +136,7 @@
 		67C1A80C1B7CCAB0002A604C /* AddStreamMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C1A80B1B7CCAB0002A604C /* AddStreamMenuViewController.swift */; };
 		67C2921E1B7DCE8200EDA865 /* AddStreamMenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C2921C1B7DCE8200EDA865 /* AddStreamMenuTableViewCell.swift */; };
 		67C2921F1B7DCE8200EDA865 /* AddStreamMenuTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67C2921D1B7DCE8200EDA865 /* AddStreamMenuTableViewCell.xib */; };
+		67C4146C1DE518F90013DC5D /* AnimatedLaunchScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C4146B1DE518F90013DC5D /* AnimatedLaunchScreen.swift */; };
 		67CB43F01A4ECD470010465E /* playlistify-userscript.js in Resources */ = {isa = PBXBuildFile; fileRef = 67CB43EF1A4ECD470010465E /* playlistify-userscript.js */; };
 		67CB43F21A4ED6D50010465E /* main.js in Resources */ = {isa = PBXBuildFile; fileRef = 67CB43F11A4ED6D50010465E /* main.js */; };
 		67CC023A1AF328EE005F5F3F /* GAIConfig.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67CC02391AF328EE005F5F3F /* GAIConfig.swift */; };
@@ -359,6 +360,7 @@
 		67C1A80B1B7CCAB0002A604C /* AddStreamMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddStreamMenuViewController.swift; sourceTree = "<group>"; };
 		67C2921C1B7DCE8200EDA865 /* AddStreamMenuTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddStreamMenuTableViewCell.swift; sourceTree = "<group>"; };
 		67C2921D1B7DCE8200EDA865 /* AddStreamMenuTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddStreamMenuTableViewCell.xib; sourceTree = "<group>"; };
+		67C4146B1DE518F90013DC5D /* AnimatedLaunchScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnimatedLaunchScreen.swift; sourceTree = "<group>"; };
 		67CB43EF1A4ECD470010465E /* playlistify-userscript.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = "playlistify-userscript.js"; path = "UserScript/playlistify-userscript.js"; sourceTree = "<group>"; };
 		67CB43F11A4ED6D50010465E /* main.js */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.javascript; name = main.js; path = UserScript/main.js; sourceTree = "<group>"; };
 		67CC02391AF328EE005F5F3F /* GAIConfig.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GAIConfig.swift; sourceTree = "<group>"; };
@@ -645,6 +647,7 @@
 				679F453C1AF104F7008D1B7F /* OnpuRefreshControl.swift */,
 				673C81BD1BC8C4A700EE6F70 /* OnpuIndicatorView.swift */,
 				675553041C0743BE00E3241C /* EntryMenu.swift */,
+				67C4146B1DE518F90013DC5D /* AnimatedLaunchScreen.swift */,
 			);
 			name = View;
 			sourceTree = "<group>";
@@ -1168,6 +1171,7 @@
 				6736D00E1B86341000CCDD80 /* YouTubePlaylistLoader.swift in Sources */,
 				67C2921E1B7DCE8200EDA865 /* AddStreamMenuTableViewCell.swift in Sources */,
 				67C1A7FF1B7B8712002A604C /* Channel.swift in Sources */,
+				67C4146C1DE518F90013DC5D /* AnimatedLaunchScreen.swift in Sources */,
 				67554F091A4F127400F7AE72 /* TrackTableViewCell.swift in Sources */,
 				67311E301AF63BD500711DAC /* FeedbackWebViewController.swift in Sources */,
 				67CC023A1AF328EE005F5F3F /* GAIConfig.swift in Sources */,

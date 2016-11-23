@@ -102,6 +102,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         miniPlayerViewController?.hideMiniPlayer(false)
         coverViewController?.hideCoverViewController(false)
         window?.rootViewController  = self.coverViewController
+        startAnimationLaunchScreen()
+    }
+
+    func startAnimationLaunchScreen() {
+        guard let superView = coverViewController?.view else { return }
+        let animiatedLaunchScreen = AnimatedLaunchScreen(frame: superView.frame)
+        animiatedLaunchScreen.startAnimation(superView: superView)
     }
 
     func setupAudioSession(_ application: UIApplication) {
