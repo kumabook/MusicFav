@@ -52,6 +52,9 @@
 [submodule "Carthage/Checkouts/FLAnimatedImage"]
 	path = Carthage/Checkouts/FLAnimatedImage
 	url = https://github.com/Flipboard/FLAnimatedImage.git
+[submodule "Carthage/Checkouts/AMScrollingNavbar"]
+	path = Carthage/Checkouts/AMScrollingNavbar
+	url = https://github.com/andreamazz/AMScrollingNavbar.git
 [submodule "Carthage/Checkouts/PageMenu"]
 	path = Carthage/Checkouts/PageMenu
 	url = https://github.com/orazz/PageMenu.git
