@@ -126,6 +126,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         observer?.dispose()
         observer = observeTimelineLoader()
         reloadExpiredTracks()
+        navigationBarFollowsToScrollView()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -146,6 +147,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
             appDelegate.player?.removeObserver(playerObserver)
         }
         playerObserver = nil
+        navigationBarStopsFollowingScrollView()
     }
 
     func reloadExpiredTracks() {

@@ -109,6 +109,7 @@
 		676CB8771DD7E8CD0010EA30 /* DrawerController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 676CB8751DD7E8B50010EA30 /* DrawerController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		677AB6791DE74DD600879B00 /* AMScrollingNavbar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 677AB6781DE74DD600879B00 /* AMScrollingNavbar.framework */; };
 		677AB67A1DE8FB2200879B00 /* AMScrollingNavbar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 677AB6781DE74DD600879B00 /* AMScrollingNavbar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		677AB67C1DE8FFCA00879B00 /* NavigationBarScrollable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 677AB67B1DE8FFCA00879B00 /* NavigationBarScrollable.swift */; };
 		6783057F1B95DDC000A83F52 /* StreamTimelineTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6783057E1B95DDC000A83F52 /* StreamTimelineTableViewController.swift */; };
 		678305871B9AA24C00A83F52 /* YouTubeActivityLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 678305861B9AA24C00A83F52 /* YouTubeActivityLoader.swift */; };
 		67871CA21A62EBB1005D2174 /* StreamTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */; };
@@ -336,6 +337,7 @@
 		6767AE5C1ADBECCC00A92497 /* StreamTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StreamTableViewCell.xib; sourceTree = "<group>"; };
 		676CB8751DD7E8B50010EA30 /* DrawerController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DrawerController.framework; path = Carthage/Build/iOS/DrawerController.framework; sourceTree = "<group>"; };
 		677AB6781DE74DD600879B00 /* AMScrollingNavbar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AMScrollingNavbar.framework; path = Carthage/Build/iOS/AMScrollingNavbar.framework; sourceTree = "<group>"; };
+		677AB67B1DE8FFCA00879B00 /* NavigationBarScrollable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationBarScrollable.swift; sourceTree = "<group>"; };
 		6783057E1B95DDC000A83F52 /* StreamTimelineTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTimelineTableViewController.swift; sourceTree = "<group>"; };
 		678305861B9AA24C00A83F52 /* YouTubeActivityLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = YouTubeActivityLoader.swift; path = MusicFav/YouTubeActivityLoader.swift; sourceTree = "<group>"; };
 		67871CA01A62EBB1005D2174 /* StreamTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTableViewController.swift; sourceTree = "<group>"; };
@@ -495,6 +497,7 @@
 				679F405B1B0574DD0070602D /* PaymentManager.swift */,
 				6729DE5D1BC160FD00543E84 /* Shortcut.swift */,
 				6762EE081BCAC10100EA90DC /* MusicFavError.swift */,
+				677AB67B1DE8FFCA00879B00 /* NavigationBarScrollable.swift */,
 			);
 			name = Util;
 			sourceTree = "<group>";
@@ -1185,6 +1188,7 @@
 				67DA46651A87B49C0048B29C /* SelectPlaylistTableViewCell.swift in Sources */,
 				67D41D111B8B48960082454F /* SoundCloudUserLoader.swift in Sources */,
 				6728FA3E1A60B9FD00F693B3 /* TrackTableViewController.swift in Sources */,
+				677AB67C1DE8FFCA00879B00 /* NavigationBarScrollable.swift in Sources */,
 				6729DE5E1BC160FD00543E84 /* Shortcut.swift in Sources */,
 				6736D00D1B86341000CCDD80 /* YouTubePlaylist.swift in Sources */,
 				67FBBDF91B6CD46B00B567CB /* UpdateChecker.swift in Sources */,

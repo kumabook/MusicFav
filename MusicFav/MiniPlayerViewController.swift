@@ -15,6 +15,7 @@ import MusicFeeder
 import PlayerKit
 import MarqueeLabel
 import DrawerController
+import AMScrollingNavbar
 
 class MiniPlayerViewController: PlayerKit.MiniPlayerViewController<PlayerKit.MiniPlayerView> {
     var playlistTableViewController: PlaylistTableViewController!
@@ -75,7 +76,8 @@ class MiniPlayerViewController: PlayerKit.MiniPlayerViewController<PlayerKit.Min
 
     func setCenterViewController(_ viewController: UIViewController) {
         if let vc = mainViewController as? DrawerController {
-            vc.centerViewController = UINavigationController(rootViewController: viewController)
+            let scrollingNavigationController = ScrollingNavigationController(rootViewController: viewController)
+            vc.centerViewController = scrollingNavigationController
             vc.closeDrawer(animated: true, completion: nil)
         }
     }

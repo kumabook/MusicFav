@@ -98,11 +98,13 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         webView?.navigationDelegate = self
         webView?.configuration.userContentController.removeScriptMessageHandler(forName: "MusicFav")
         webView?.configuration.userContentController.add(self, name: "MusicFav")
+        navigationBarFollowsToScrollView()
     }
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         entryMenu?.hide()
+        navigationBarStopsFollowingScrollView()
     }
 
     override func viewDidDisappear(_ animated: Bool) {
