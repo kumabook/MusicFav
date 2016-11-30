@@ -29,7 +29,9 @@ DerivedData
 Pods/
 
 # Carthage
+Carthage/Checkouts
 Carthage/Build
+Carthage/Cartfile.resolved
 
 # Config
 MusicFav/feedly.json.*
