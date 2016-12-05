@@ -30,6 +30,14 @@
 				<string>com.googleusercontent.apps.1011620229391-g421vgia6anono7egfm2e1d7jsplth7b</string>
 			</array>
 		</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>io.kumabook.musicfav.spotify-auth</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleVersion</key>
 	<string>77</string>

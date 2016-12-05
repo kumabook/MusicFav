@@ -20,6 +20,7 @@ import SoundCloudKit
 import YouTubeKit
 import DrawerController
 import OAuthSwift
+import Spotify
 
 public typealias PlaylistQueue = PlayerKit.PlaylistQueue
 
@@ -134,6 +135,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         SoundCloudKit.APIClient.setup()
         YouTubeKit.APIClient.setup()
         MusicFeeder.Track.youtubeAPIClient = YouTubeKit.APIClient.shared
+        SpotifyAPIClient.setup()
     }
 
     func startTutorial() {
@@ -144,6 +146,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
         if url.absoluteString.hasPrefix(YouTubeKit.APIClient.redirectUri) {
             OAuthSwift.handle(url: url)
+        }
+        if url.absoluteString.hasPrefix(SpotifyAPIClient.shared.auth.redirectURL.absoluteString) {
+            return SpotifyAPIClient.shared.handleURL(url: url)
         }
         return true
     }

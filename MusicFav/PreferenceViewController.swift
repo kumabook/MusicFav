@@ -64,7 +64,8 @@ class PreferenceViewController: UITableViewController {
         case feedly      = 0
         case youTube     = 1
         case soundCloud  = 2
-        static let count = 3
+        case spotify     = 3
+        static let count = 4
         var title: String {
             switch self {
             case .feedly:
@@ -84,6 +85,12 @@ class PreferenceViewController: UITableViewController {
                     return "Disconnect with SoundCloud".localize()
                 } else {
                     return "Connect with SoundCloud".localize()
+                }
+            case .spotify:
+                if SpotifyAPIClient.shared.isLoggedIn {
+                    return "Disconnect with Spotify".localize()
+                } else {
+                    return "Connect with Spotify".localize()
                 }
             }
         }
@@ -224,6 +231,10 @@ class PreferenceViewController: UITableViewController {
         }
     }
 
+    func showSpotifyLoginController() {
+        SpotifyAPIClient.shared.startAuthenticationFlow(viewController: self)
+    }
+
     func showConfirmDialog(_ title: String, message: String, action: @escaping ((UIAlertAction!) -> Void)) {
         let ac = UIAlertController(title: title.localize(),
             message: message.localize(),
@@ -253,6 +264,14 @@ class PreferenceViewController: UITableViewController {
     func showDisonnectSoundCloudDialog() {
         showConfirmDialog("Disconnect with SoundCloud", message: "Are you sure you want to disconnect with SoundCloud?") { (action) in
             SoundCloudKit.APIClient.clearAllAccount()
+            self.tableView?.reloadData()
+            self.appDelegate.reload()
+        }
+    }
+
+    func showDisonnectSpotifyDialog() {
+        showConfirmDialog("Disconnect with Spotify", message: "Are you sure you want to disconnect with Spotify?") { (action) in
+            SpotifyAPIClient.shared.logout()
             self.tableView?.reloadData()
             self.appDelegate.reload()
         }
@@ -313,6 +332,12 @@ class PreferenceViewController: UITableViewController {
                     showDisonnectSoundCloudDialog()
                 } else {
                     showSoundCloudLoginController()
+                }
+            case .spotify:
+                if SpotifyAPIClient.sharedInstance.isLoggedIn {
+                    showDisonnectSpotifyDialog()
+                } else {
+                    showSpotifyLoginController()
                 }
             }
         case .behavior:
