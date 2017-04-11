@@ -55,7 +55,7 @@ open class BlogLoader {
 
     open func fetchBlogs() {
         switch state {
-        case .init:             fetchAllBlogs().on(value: {}, failed: {e in}, completed: {}).start()
+        case .init:             fetchAllBlogs().on(failed: {e in}, completed: {}, value: {}).start()
         case .fetchingAllBlogs: break
         case .normal:           fetchNextDetails()
         case .fetchingDetails:  break
@@ -68,18 +68,18 @@ open class BlogLoader {
         self.state  = State.fetchingDetails
         observer.send(value: .startLoading)
         fetchDetails(offset, length: perPage).on(
-            value: { blog in
-                self.offset += self.perPage
-                self.observer.send(value: .completeLoading)
-            }, failed: { error in
+            failed: { error in
                 self.observer.send(value: .failToLoad)
-            }, completed: {
-                if self.offset >= self._blogs.count {
-                    self.state = .complete
-                } else {
-                    self.state = .normal
-                }
-                return
+        }, completed: {
+            if self.offset >= self._blogs.count {
+                self.state = .complete
+            } else {
+                self.state = .normal
+            }
+            return
+        }, value: { blog in
+            self.offset += self.perPage
+            self.observer.send(value: .completeLoading)
         }).start()
     }
 
@@ -94,16 +94,16 @@ open class BlogLoader {
     fileprivate func fetchSiteInfo(_ index: Int) -> SignalProducer<Blog, NSError> {
         return SignalProducer<Blog, NSError> { (blogObserver, disposable) in
             self._blogs[index].fetchSiteInfo().on(
+                failed: { error in
+                    blogObserver.send(error: error)
+                    return
+            },
+                completed: {
+            },
                 value: { blog in
                     self.blogs.append(blog)
                     blogObserver.send(value: blog)
                     blogObserver.sendCompleted()
-                },
-                failed: { error in
-                    blogObserver.send(error: error)
-                    return
-                },
-                completed: {
             }).start()
             return
         }

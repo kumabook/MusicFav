@@ -137,11 +137,11 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
             if !d.isDisposed { d.dispose() }
         }
         disposable = CloudAPIClient.sharedInstance.fetchFeedsByIds(feedIds: RecommendFeed.ids).on(
-            value: { feeds in
-                self._streams = feeds
-            }, failed: { error in
-            }, completed: {
-                self.reloadData(true)
+            failed: { error in
+        }, completed: {
+            self.reloadData(true)
+        }, value: { feeds in
+            self._streams = feeds
         }).start()
     }
 
@@ -156,15 +156,15 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
         disposable = CloudAPIClient.sharedInstance.searchFeeds(query: query)
             .start(on: UIScheduler())
             .on(
-                value: { feeds in
-                    self._streams = feeds
-                },
                 failed: { error in
                     let ac = CloudAPIClient.alertController(error: error, handler: { (action) in })
                     self.present(ac, animated: true, completion: nil)
-                },
+            },
                 completed: {
                     self.reloadData(true)
+            },
+                value: { feeds in
+                    self._streams = feeds
             }).start()
     }
 

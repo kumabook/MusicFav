@@ -139,11 +139,11 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
 
     func fetchRecommendFeeds() {
         CloudAPIClient.sharedInstance.fetchFeedsByIds(feedIds: RecommendFeed.ids).on(
-            value: { feeds in
-                self.recommendFeeds = feeds
-            }, failed: { error in
-            }, completed: {
-                self.tableView?.reloadData()
+            failed: { error in
+        }, completed: {
+            self.tableView?.reloadData()
+        }, value: { feeds in
+            self.recommendFeeds = feeds
         }).start()
     }
 

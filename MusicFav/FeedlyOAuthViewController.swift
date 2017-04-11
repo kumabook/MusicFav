@@ -41,16 +41,16 @@ class FeedlyOAuthViewController: OAuthViewController {
         feedlyClient.fetchProfile()
             .start(on: UIScheduler())
             .on(
-                value: {profile in
-                    CloudAPIClient.login(profile: profile, token: account.accessToken.accessToken)
-                },
                 failed: {error in
                     self.showAlert()
-                },
+            },
                 completed: {
                     self.dismiss(animated: true, completion: nil)
                     self.delegate?.onLoggedIn(account)
                     self.appDelegate.didLogin()
+            },
+                value: {profile in
+                    CloudAPIClient.login(profile: profile, token: account.accessToken.accessToken)
             }).start()
     }
 }

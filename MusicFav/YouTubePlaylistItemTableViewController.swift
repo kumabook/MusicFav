@@ -82,18 +82,18 @@ class YouTubePlaylistItemTableViewController: TrackTableViewController {
     override func fetchTrackDetails() {
         for track in tracks {
             track.fetchPropertiesFromProviderIfNeed().on(
-                value: { (track: Track?) in
-                    if let t = track {
-                        if let index = self.tracks.index(of: t) {
-                            self.tableView?.reloadRows(at: [IndexPath(item: index, section: 0)],
-                                                       with: UITableViewRowAnimation.none)
-                        }
+                failed: { error in
+                    self.tableView.reloadData()
+            }, completed: {
+                self.tableView.reloadData()
+            }, value: { (track: Track?) in
+                if let t = track {
+                    if let index = self.tracks.index(of: t) {
+                        self.tableView?.reloadRows(at: [IndexPath(item: index, section: 0)],
+                                                   with: UITableViewRowAnimation.none)
                     }
-                    return
-                }, failed: { error in
-                    self.tableView.reloadData()
-                }, completed: {
-                    self.tableView.reloadData()
+                }
+                return
             }).start()
         }
     }

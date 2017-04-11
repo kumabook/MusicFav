@@ -31,24 +31,24 @@ class UpdateChecker {
     func check(_ application: UIApplication, completionHandler: ((UIBackgroundFetchResult) -> Void)?) {
         if let fireDate = nextNotificationDate {
             fetchNewTracks().on(
-                value: { tracks in
-                    UIScheduler().schedule {
-                        let tracksInfo = UILocalNotification.buildNewTracksInfo(application, tracks: tracks)
-                        application.cancelAllLocalNotifications()
-                        if tracksInfo.count > 0 {
-                            let notification = UILocalNotification.newTracksNotification(tracksInfo, fireDate: fireDate)
-                            application.scheduleLocalNotification(notification)
-                            completionHandler?(UIBackgroundFetchResult.newData)
-                        } else {
-                            completionHandler?(UIBackgroundFetchResult.noData)
-                        }
+                failed: { error in
+                    UIScheduler().schedule { completionHandler?(UIBackgroundFetchResult.failed) }
+            }, completed: {
+            }, interrupted: {
+                UIScheduler().schedule { completionHandler?(UIBackgroundFetchResult.failed) }
+            }, value: { tracks in
+                UIScheduler().schedule {
+                    let tracksInfo = UILocalNotification.buildNewTracksInfo(application, tracks: tracks)
+                    application.cancelAllLocalNotifications()
+                    if tracksInfo.count > 0 {
+                        let notification = UILocalNotification.newTracksNotification(tracksInfo, fireDate: fireDate)
+                        application.scheduleLocalNotification(notification)
+                        completionHandler?(UIBackgroundFetchResult.newData)
+                    } else {
+                        completionHandler?(UIBackgroundFetchResult.noData)
                     }
-                    CloudAPIClient.lastChecked = Date()
-                }, failed: { error in
-                    UIScheduler().schedule { completionHandler?(UIBackgroundFetchResult.failed) }
-                }, completed: {
-                }, interrupted: {
-                    UIScheduler().schedule { completionHandler?(UIBackgroundFetchResult.failed) }
+                }
+                CloudAPIClient.lastChecked = Date()
             }).start()
         } else {
             application.cancelAllLocalNotifications()

@@ -111,21 +111,21 @@ class CategoryTableViewController: UITableViewController {
     func subscribeTo(_ category: FeedlyKit.Category) {
         MBProgressHUD.showAdded(to: self.navigationController!.view, animated: true)
         _subscribeTo(category).on(
-            value: {subscriptions in
-                let _ = MBProgressHUD.hide(for: self.navigationController!.view, animated:false)
-            },
             failed: {e in
                 let _ = MBProgressHUD.hide(for: self.navigationController!.view, animated:false)
                 let ac = CloudAPIClient.alertController(error: e, handler: { (action) in })
                 self.present(ac, animated: true, completion: nil)
-            },
+        },
             completed: {
                 let _ = MBProgressHUD.showCompletedHUDForView(self.navigationController!.view, animated: true, duration: 1.0, after: {
                     self.subscriptionRepository.refresh()
                     self.navigationController?.dismiss(animated: true, completion: nil)
                 })
-            },
-            interrupted: {}
+        },
+            interrupted: {},
+            value: {subscriptions in
+                let _ = MBProgressHUD.hide(for: self.navigationController!.view, animated:false)
+        }
         ).start()
     }
 

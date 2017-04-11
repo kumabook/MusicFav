@@ -83,20 +83,20 @@ open class SoundCloudActivityLoader {
         producer
             .start(on: UIScheduler())
             .on(
+                failed: { error in
+                    SoundCloudKit.APIClient.handleError(error)
+                    self.state = State.error
+                    self.observer.send(value: .failToLoadLatest)
+            },
+                completed: {
+                    self.observer.send(value: .completeLoadingLatest)
+                    self.state = .normal
+            },
                 value: { activityList in
                     self.activities.append(contentsOf: activityList.collection)
                     self.playlists.append(contentsOf: activityList.collection.map { $0.toPlaylist() })
                     self.nextHref   = activityList.nextHref
                     self.futureHref = activityList.futureHref
-                },
-                failed: { error in
-                    SoundCloudKit.APIClient.handleError(error)
-                    self.state = State.error
-                    self.observer.send(value: .failToLoadLatest)
-                },
-                completed: {
-                    self.observer.send(value: .completeLoadingLatest)
-                    self.state = .normal
             }).start()
     }
 
@@ -121,19 +121,26 @@ open class SoundCloudActivityLoader {
         producer
             .start(on: UIScheduler())
             .on(
+                failed: {error in
+                    SoundCloudKit.APIClient.handleError(error)
+                    self.state = State.error
+                    self.observer.send(value: .failToLoadNext)
+            },
+                completed: {
+            },
                 value: { activityList in
                     for i in 0..<activityList.collection.count {
                         let activity = activityList.collection[i]
                         self.fetchPlaylist(activity).on(
-                            value: { playlist in
-                                self.activities.append(activity)
-                                self.playlists.append(playlist)
-                                self.playlistQueue.enqueue(playlist)
-                                self.observer.send(value: .completeLoadingNext)
-                                return
-                            }, failed: { e in
-                            }, completed: {
-                            }).start()
+                            failed: { e in
+                        }, completed: {
+                        }, value: { playlist in
+                            self.activities.append(activity)
+                            self.playlists.append(playlist)
+                            self.playlistQueue.enqueue(playlist)
+                            self.observer.send(value: .completeLoadingNext)
+                            return
+                        }).start()
                     }
                     self.nextHref   = activityList.nextHref
                     self.futureHref = activityList.futureHref
@@ -143,13 +150,6 @@ open class SoundCloudActivityLoader {
                     } else {
                         self.state = .normal
                     }
-                },
-                failed: {error in
-                    SoundCloudKit.APIClient.handleError(error)
-                    self.state = State.error
-                    self.observer.send(value: .failToLoadNext)
-                },
-                completed: {
             }).start()
     }
 

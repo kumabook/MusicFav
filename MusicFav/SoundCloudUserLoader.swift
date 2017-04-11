@@ -107,15 +107,15 @@ class SoundCloudUserLoader {
         state = State.fetching
         observer.send(value: .startLoading)
         APIClient.sharedInstance.fetchUsers(query).on(
-            value: { users in
-                self.hasNextSearch = false
-                self.searchResults.append(contentsOf: users)
-                self.observer.send(value: .completeLoading)
-                self.state = State.normal
-        }, failed: { e in
-            self.hasNextSearch = true
-            self.observer.send(error: e)
-            self.state = State.error
+            failed: { e in
+                self.hasNextSearch = true
+                self.observer.send(error: e)
+                self.state = State.error
+        }, value: { users in
+            self.hasNextSearch = false
+            self.searchResults.append(contentsOf: users)
+            self.observer.send(value: .completeLoading)
+            self.state = State.normal
         }).start()
     }
 }
