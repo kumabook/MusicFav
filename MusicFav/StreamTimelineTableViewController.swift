@@ -81,6 +81,7 @@ class StreamTimelineTableViewController: TimelineTableViewController {
             case .failToLoadNext:
                 self.showReloadButton()
             case .completeLoadingPlaylist(_, let entry):
+                UIView.setAnimationsEnabled(false)
                 let items = self.getItems()
                 for i in 0..<items.count {
                     if entry == items[i].entry && i < self.tableView.numberOfRows(inSection: 0) {
@@ -89,6 +90,7 @@ class StreamTimelineTableViewController: TimelineTableViewController {
                     }
                 }
                 self.updateSelection(UITableViewScrollPosition.none)
+                UIView.setAnimationsEnabled(true)
             case .removeAt(let index):
                 let indexPath = IndexPath(item: index, section: 0)
                 self.tableView.deleteRows(at: [indexPath], with: .fade)
