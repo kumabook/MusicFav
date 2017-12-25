@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import FeedlyKit
 import MusicFeeder
 import MBProgressHUD

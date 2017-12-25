@@ -25,7 +25,7 @@ extension XCDYouTubeClient {
                     observer.sendCompleted()
                 }
             })
-            disposable.add {
+            disposable.observeEnded {
                 operation.cancel()
             }
             return
@@ -193,7 +193,7 @@ open class YouTubeAPIClient {
                     observer.sendCompleted()
                 }
             }
-            disposable.add {
+            disposable.observeEnded {
                 request.cancel()
             }
         }
@@ -250,7 +250,7 @@ open class YouTubeAPIClient {
                     observer.sendCompleted()
                 }
             }
-            disposable.add {
+            disposable.observeEnded {
                 request.cancel()
             }
         }
@@ -275,7 +275,7 @@ open class YouTubeAPIClient {
                     observer.sendCompleted()
                 }
             }
-            disposable.add {
+            disposable.observeEnded {
                 request.cancel()
             }
         }

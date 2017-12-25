@@ -32,7 +32,7 @@ open class HypemAPIClient {
                         observer.sendCompleted()
                     }
             }
-            disposable.add {
+            disposable.observeEnded {
                 request.cancel()
             }
         }
@@ -55,7 +55,7 @@ open class HypemAPIClient {
                         }
                     }
             }
-            disposable.add {
+            disposable.observeEnded {
                 request.cancel()
             }
         }

@@ -9,7 +9,7 @@
 import UIKit
 import FeedlyKit
 import MusicFeeder
-import ReactiveCocoa
+import ReactiveSwift
 import NXOAuth2Client
 import SoundCloudKit
 

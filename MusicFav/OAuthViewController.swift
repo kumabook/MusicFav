@@ -9,7 +9,7 @@
 import UIKit
 
 import UIKit
-import ReactiveCocoa
+import ReactiveSwift
 import NXOAuth2Client
 import MBProgressHUD
 
