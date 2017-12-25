@@ -226,7 +226,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
 
     func saveToFeedly() {
         Logger.sendUIActionEvent(self, action: "saveToFeedly", label: "")
-        let feedlyClient = CloudAPIClient.sharedInstance
+        let feedlyClient = CloudAPIClient.shared
         if CloudAPIClient.isLoggedIn {
             MBProgressHUD.showAdded(to: view, animated: true)
             let _ = feedlyClient.markEntriesAsSaved([entry.id], completionHandler: { response in

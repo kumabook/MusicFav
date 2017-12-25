@@ -13,7 +13,7 @@ import MusicFeeder
 import MBProgressHUD
 
 class CategoryTableViewController: UITableViewController {
-    let client = CloudAPIClient.sharedInstance
+    let client = CloudAPIClient.shared
 
     var subscribables:          [FeedlyKit.Stream]
     var subscriptionRepository: SubscriptionRepository!

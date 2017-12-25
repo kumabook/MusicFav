@@ -67,8 +67,8 @@ public extension CloudAPIClient {
         typealias C = CloudAPIClient
         let oauth2client = NXOAuth2Client(clientID: C.clientId,
                                       clientSecret: C.clientSecret,
-                                      authorizeURL: NSURL(string: C.sharedInstance.authUrl)! as URL!,
-                                          tokenURL: NSURL(string: C.sharedInstance.tokenUrl)! as URL!,
+                                      authorizeURL: NSURL(string: C.shared.authUrl)! as URL!,
+                                          tokenURL: NSURL(string: C.shared.tokenUrl)! as URL!,
                                        accessToken: account.accessToken,
                                      keyChainGroup: C.keyChainGroup,
                                         persistent: true,
@@ -146,9 +146,9 @@ public extension CloudAPIClient {
             if let obj: AnyObject = jsonObject {
                 let json = JSON(obj)
                 if json["target"].stringValue == "production" {
-                    CloudAPIClient.sharedInstance = CloudAPIClient(target: .production)
+                    CloudAPIClient.shared = CloudAPIClient(target: .production)
                 } else {
-                    CloudAPIClient.sharedInstance = CloudAPIClient(target: .sandbox)
+                    CloudAPIClient.shared = CloudAPIClient(target: .sandbox)
                 }
                 if let clientId = json["client_id"].string {
                     CloudAPIClient.clientId = clientId

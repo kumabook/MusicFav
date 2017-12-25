@@ -13,14 +13,14 @@ import ReactiveSwift
 import NXOAuth2Client
 
 class FeedlyOAuthViewController: OAuthViewController {
-    var feedlyClient: CloudAPIClient { return CloudAPIClient.sharedInstance }
+    var feedlyClient: CloudAPIClient { return CloudAPIClient.shared }
 
     init() {
         super.init(clientId: CloudAPIClient.clientId,
                clientSecret: CloudAPIClient.clientSecret,
                       scope: CloudAPIClient.scope,
-                    authUrl: CloudAPIClient.sharedInstance.authUrl,
-                   tokenUrl: CloudAPIClient.sharedInstance.tokenUrl,
+                    authUrl: CloudAPIClient.shared.authUrl,
+                   tokenUrl: CloudAPIClient.shared.tokenUrl,
                 redirectUrl: CloudAPIClient.redirectUrl,
                 accountType: CloudAPIClient.accountType,
               keyChainGroup: CloudAPIClient.keyChainGroup)

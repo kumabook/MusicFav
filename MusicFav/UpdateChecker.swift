@@ -12,7 +12,7 @@ import FeedlyKit
 import MusicFeeder
 
 class UpdateChecker {
-    let apiClient = CloudAPIClient.sharedInstance
+    let apiClient = CloudAPIClient.shared
     let perPage   = 3
     let newerThan: Date
     init() {

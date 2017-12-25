@@ -21,7 +21,7 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
 
     var indicator: UIActivityIndicatorView!
 
-    let client = CloudAPIClient.sharedInstance
+    let client = CloudAPIClient.shared
     var _streams: [FeedlyKit.Stream]
     var observer: Disposable?
     var disposable: Disposable?
@@ -136,7 +136,7 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
         if let d = disposable {
             if !d.isDisposed { d.dispose() }
         }
-        disposable = CloudAPIClient.sharedInstance.fetchFeedsByIds(feedIds: RecommendFeed.ids).on(
+        disposable = CloudAPIClient.shared.fetchFeedsByIds(feedIds: RecommendFeed.ids).on(
             failed: { error in
         }, completed: {
             self.reloadData(true)
@@ -153,7 +153,7 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
         let query = SearchQueryOfFeed(query: query)
         query.count = 20
         Logger.sendUIActionEvent(self, action: "searchFeeds", label: "")
-        disposable = CloudAPIClient.sharedInstance.searchFeeds(query: query)
+        disposable = CloudAPIClient.shared.searchFeeds(query: query)
             .start(on: UIScheduler())
             .on(
                 failed: { error in

@@ -116,7 +116,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
     var youtubeActivityLoader:  YouTubeActivityLoader
     var youtubeObserver:        Disposable?
 
-    var apiClient:   CloudAPIClient    { return CloudAPIClient.sharedInstance }
+    var apiClient:   CloudAPIClient    { return CloudAPIClient.shared }
     var appDelegate: AppDelegate       { return UIApplication.shared.delegate as! AppDelegate }
     var root:        UIViewController? { return view.window?.rootViewController }
 
