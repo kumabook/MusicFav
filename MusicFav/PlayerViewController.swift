@@ -22,9 +22,9 @@ class PlayerViewController: PlayerKit.SimplePlayerViewController {
         var angle: CGFloat {
             switch self {
             case .portrait:           return 0
-            case .landscapeLeft:      return CGFloat(M_PI_2)
-            case .portraitUpsideDown: return CGFloat(M_PI)
-            case .landscapeRight:     return CGFloat(M_PI_2 * 3)
+            case .landscapeLeft:      return CGFloat(Double.pi / 2)
+            case .portraitUpsideDown: return CGFloat(Double.pi)
+            case .landscapeRight:     return CGFloat(Double.pi / 2 * 3)
             }
         }
 

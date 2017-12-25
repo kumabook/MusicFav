@@ -159,7 +159,7 @@ class OnpuIndicatorView: UIView, CAAnimationDelegate {
         imageView.image               = UIImage(named: color.imageName)
         subImageView.image            = UIImage(named: color.imageName)
         let rotationAnimation         = CABasicAnimation(keyPath: "transform.rotation.z")
-        rotationAnimation.toValue     = NSNumber(value: Float(2.0 * M_PI) as Float)
+        rotationAnimation.toValue     = NSNumber(value: Float(2.0 * Double.pi) as Float)
         rotationAnimation.duration    = duration
         rotationAnimation.isCumulative  = true
         rotationAnimation.repeatCount = Float.infinity

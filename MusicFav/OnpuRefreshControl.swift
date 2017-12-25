@@ -74,9 +74,9 @@ class OnpuRefreshControl: ISAlternativeRefreshControl, CAAnimationDelegate {
     func startLayerAnimation(_ returnNormal: Bool) {
         let layer              = imageView.layer;
         let animation          = CABasicAnimation(keyPath: "transform.rotation")
-        let fromValue          = M_PI*Double(prog)
-        let toValue            = returnNormal ? (2*M_PI) : (fromValue + 2*M_PI)
-        animation.duration     = 0.64 * (toValue - fromValue) / (2*M_PI)
+        let fromValue          = Double.pi * Double(prog)
+        let toValue            = returnNormal ? (2 * Double.pi) : (fromValue + 2 * Double.pi)
+        animation.duration     = 0.64 * (toValue - fromValue) / (2 * Double.pi)
         animation.repeatCount  = 0
         animation.beginTime    = CACurrentMediaTime()
         animation.autoreverses = false
@@ -108,6 +108,6 @@ class OnpuRefreshControl: ISAlternativeRefreshControl, CAAnimationDelegate {
     }
 
     func updateView() {
-        imageView.layer.transform = CATransform3DMakeAffineTransform(CGAffineTransform(rotationAngle: CGFloat(M_PI) * prog))
+        imageView.layer.transform = CATransform3DMakeAffineTransform(CGAffineTransform(rotationAngle: CGFloat(Double.pi) * prog))
     }
 }
