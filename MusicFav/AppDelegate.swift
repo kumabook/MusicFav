@@ -128,6 +128,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         CloudAPIClient.setup()
         SoundCloudKit.APIClient.setup()
         YouTubeAPIClient.setup()
+        MusicFeeder.Track.youtubeAPIClient = YouTubeAPIClient.sharedInstance
     }
 
     func startTutorial() {

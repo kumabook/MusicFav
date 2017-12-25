@@ -12,6 +12,7 @@ import Result
 import Alamofire
 import SwiftyJSON
 import NXOAuth2Client
+import MusicFeeder
 
 extension XCDYouTubeClient {
     func fetchVideo(_ identifier: String) -> SignalProducer<XCDYouTubeVideo, NSError> {
@@ -33,7 +34,15 @@ extension XCDYouTubeClient {
     }
 }
 
-open class YouTubeAPIClient {
+extension XCDYouTubeVideo: YouTubeVideo {
+}
+
+open class YouTubeAPIClient: MusicFeeder.YouTubeAPIClient {
+    public func fetchVideo(_ identifier: String) -> SignalProducer<YouTubeVideo, NSError> {
+        return XCDYouTubeClient().fetchVideo(identifier).map {
+            $0 as YouTubeVideo
+        }
+    }
     static var sharedInstance = YouTubeAPIClient()
     static var clientId       = ""
     static var clientSecret   = ""
