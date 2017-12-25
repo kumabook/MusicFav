@@ -76,8 +76,7 @@ class MiniPlayerViewController: PlayerKit.MiniPlayerViewController<PlayerKit.Min
 
     func setCenterViewController(_ viewController: UIViewController) {
         if let vc = mainViewController as? DrawerController {
-            let scrollingNavigationController = ScrollingNavigationController(rootViewController: viewController)
-            vc.centerViewController = scrollingNavigationController
+            vc.centerViewController = UINavigationController(rootViewController: viewController)
             vc.closeDrawer(animated: true, completion: nil)
         }
     }
