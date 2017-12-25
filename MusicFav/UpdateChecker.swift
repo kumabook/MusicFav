@@ -58,7 +58,7 @@ class UpdateChecker {
     func fetchNewTracks() -> SignalProducer<[Track], NSError> {
         var entriesSignal: SignalProducer<[Entry], NSError>!
         if let profile = CloudAPIClient.profile {
-            entriesSignal = apiClient.fetchEntries(streamId: FeedlyKit.Category.All(profile.id).streamId,
+            entriesSignal = apiClient.fetchEntries(streamId: FeedlyKit.Category.all(profile.id).streamId,
                                                   newerThan: newerThan.timestamp,
                                                  unreadOnly: true,
                                                     perPage: perPage)

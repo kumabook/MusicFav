@@ -19,8 +19,8 @@ extension SoundCloudKit.Track {
         else                    { return user.avatarUrl }
     }
     func toTrack() -> MusicFeeder.Track {
-        let track = MusicFeeder.Track(      id: "\(Provider.SoundCloud.rawValue)/\(id)",
-                                      provider: Provider.SoundCloud,
+        let track = MusicFeeder.Track(      id: "\(Provider.soundCloud.rawValue)/\(id)",
+                                      provider: Provider.soundCloud,
                                            url: uri,
                                     identifier: "\(id)",
                                          title: title)

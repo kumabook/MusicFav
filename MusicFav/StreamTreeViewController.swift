@@ -125,9 +125,9 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
     func defaultSections() -> [Section] {
         var sections: [Section] = []
         if let userId = CloudAPIClient.profile?.id {
-            sections.append(.globalResource(FeedlyKit.Category.All(userId)))
-            sections.append(.globalResource(FeedlyKit.Tag.Saved(userId)))
-            sections.append(.globalResource(FeedlyKit.Tag.Read(userId)))
+            sections.append(.globalResource(FeedlyKit.Category.all(userId)))
+            sections.append(.globalResource(FeedlyKit.Tag.saved(userId)))
+            sections.append(.globalResource(FeedlyKit.Tag.read(userId)))
         }
         sections.append(.favorite)
         sections.append(.history)
@@ -209,7 +209,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
 
     func showDefaultStream() {
         if let profile = CloudAPIClient.profile {
-            showStream(stream: FeedlyKit.Category.All(profile.id))
+            showStream(stream: FeedlyKit.Category.all(profile.id))
         } else {
             let streams: [FeedlyKit.Stream] = subscriptionRepository.streamListOfCategory.values.flatMap { $0 }
             if streams.count > 0 {
