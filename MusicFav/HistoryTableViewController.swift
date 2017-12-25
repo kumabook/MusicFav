@@ -39,7 +39,7 @@ class HistoryTableViewController: StreamTimelineTableViewController {
                 return
             }
             let history = historyRepository.histories[indexPath.item]
-            timelineTableViewCell.dateLabel.text = "\(history.type.actionName) \(history.timestamp.date.passedTime)"
+            timelineTableViewCell.dateLabel.text = "\(history.type.actionName) \(history.timestamp.date.elapsedTime)"
         }
         return cell
     }

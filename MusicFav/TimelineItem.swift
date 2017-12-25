@@ -84,7 +84,7 @@ enum TimelineItem {
             return activity.createdAt.toDate()!.elapsedTime
         case .youTubePlaylist(let playlistItem, _):
             return playlistItem.publishedAt?.toDate()?.elapsedTime
-        case .trackHistory(let history, _): return history.timestamp.date.passedTime
+        case .trackHistory(let history, _): return history.timestamp.date.elapsedTime
         }
     }
 
