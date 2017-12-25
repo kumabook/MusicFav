@@ -30,7 +30,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             }
         }
     }
-    class PlaylistTableViewPlayerObserver: PlayerObserver {
+    class PlaylistTableViewPlayerObserver: QueuePlayerObserver {
         let vc: PlaylistTableViewController
         init(playlistTableViewController: PlaylistTableViewController) {
             vc = playlistTableViewController

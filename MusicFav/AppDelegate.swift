@@ -21,10 +21,10 @@ import DrawerController
 
 public typealias PlaylistQueue = PlayerKit.PlaylistQueue
 
-class AppPlayerObserver: PlayerObserver {
+class AppPlayerObserver: QueuePlayerObserver {
     var appDelegate: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
     internal override func listen(_ event: Event) {
-        guard let state = appDelegate.player?.currentState else { return }
+        guard let state = appDelegate.player?.state else { return }
         switch event {
         case .trackSelected(let track, _, _):
             if state == .play {
@@ -54,7 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window:                   UIWindow?
     var coverViewController:      CoverViewController?
     var miniPlayerViewController: MiniPlayerViewController?
-    var player:                   Player?
+    var player:                   QueuePlayer?
     var signal:                   Signal<AppDelegate.Event, NSError>?
     var observer:                 Signal<AppDelegate.Event, NSError>.Observer?
     var playerObserver:           AppPlayerObserver = AppPlayerObserver()
@@ -89,7 +89,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func setupMainViewControllers() {
-        player                       = Player()
+        player                       = QueuePlayer()
         appearanceManager            = AppearanceManager()
         appearanceManager?.apply()
         player?.addObserver(playerObserver)
@@ -114,8 +114,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func setupAudioSession(_ application: UIApplication) {
         let audioSession = AVAudioSession.sharedInstance()
         do {
-            try audioSession.setCategory(AVAudioSessionCategoryPlayback)
-            try audioSession.setActive(true)
+            if audioSession.category != AVAudioSessionCategoryPlayback {
+                try audioSession.setCategory(AVAudioSessionCategoryPlayback)
+                try audioSession.setActive(true)
+            }
         } catch _ {
             Logger.error("failed to set")
         }
@@ -269,9 +271,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     // Player control functions
 
-    func toggle(_ trackIndex: Int, playlist: MusicFeeder.Playlist, playlistQueue: PlaylistQueue) {
+    func toggle(at i: Index, in queue: PlaylistQueue) {
         setupAudioSession(UIApplication.shared)
-        if player?.toggle(trackIndex, playlist: playlist, playlistQueue: playlistQueue) ?? false {
+        player?.toggle(at: i, in: queue)
+        if let _ = player?.currentTrack {
             showMiniPlayer()
         }
     }
@@ -282,8 +285,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     func play()  {
         setupAudioSession(UIApplication.shared)
-
-        if player?.play() ?? false {
+        player?.play()
+        if let _ = player?.currentTrack {
             showMiniPlayer()
         }
     }

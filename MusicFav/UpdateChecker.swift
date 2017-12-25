@@ -83,17 +83,17 @@ class UpdateChecker {
         return entriesSignal.map { entries in
             entries.reduce(SignalProducer<[Track], NSError>(value: [])) {
                 SignalProducer.combineLatest($0, self.fetchPlaylistOfEntry($1)).map {
-                    var list = $0.0; list.append(contentsOf: $0.1.getTracks()); return list
+                    var list = $0.0; list.append(contentsOf: $0.1.tracks); return list
                 }
             }
         }.flatten(.concat)
     }
 
-    func fetchPlaylistOfEntry(_ entry: Entry) -> SignalProducer<Playlist, NSError> {
+    func fetchPlaylistOfEntry(_ entry: Entry) -> SignalProducer<PlaylistifiedEntry, NSError> {
         if let url = entry.url {
-            return PinkSpiderAPIClient.sharedInstance.playlistify(url, errorOnFailure: false)
+            return PinkSpiderAPIClient.shared.playlistify(url, errorOnFailure: false)
         } else {
-            return SignalProducer<Playlist, NSError>.empty
+            return SignalProducer<PlaylistifiedEntry, NSError>.empty
         }
     }
 }

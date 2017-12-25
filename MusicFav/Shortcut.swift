@@ -12,8 +12,8 @@ import MusicFeeder
 import PlayerKit
 import DrawerController
 
-class ShortcutPlayerObserver: PlayerObserver {
-    override func listen(_ event: PlayerEvent) {
+class ShortcutPlayerObserver: QueuePlayerObserver {
+    override func listen(_ event: QueuePlayerEvent) {
         switch event {
         case .timeUpdated:               break
         case .didPlayToEndTime:          break
@@ -150,7 +150,7 @@ enum Shortcut: String {
         }
     }
 
-    static func observePlayer(_ player: Player) {
+    static func observePlayer(_ player: QueuePlayer) {
         let observer = ShortcutPlayerObserver()
         appDelegate.player?.addObserver(observer)
     }

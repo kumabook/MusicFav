@@ -28,7 +28,7 @@ class MiniPlayerViewController: PlayerKit.MiniPlayerViewController<PlayerKit.Min
 
     var marqueeTitleLabel: MarqueeLabel!
 
-    override init(player: Player) {
+    override init(player: QueuePlayer) {
         super.init(player: player)
         playlistTableViewController = PlaylistTableViewController()
         streamTreeViewController    = StreamTreeViewController()

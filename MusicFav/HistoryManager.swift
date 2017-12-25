@@ -10,7 +10,7 @@ import Foundation
 import PlayerKit
 import MusicFeeder
 
-class HistoryManager: PlayerObserver {
+class HistoryManager: QueuePlayerObserver {
     func notify(_ event: Event) {
         switch event {
         case .trackSelected(let track, _, _):

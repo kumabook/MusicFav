@@ -12,10 +12,12 @@ import SwiftyJSON
 import FeedlyKit
 import MusicFeeder
 import DrawerController
+import MBProgressHUD
+import MediaPlayer
 
 class TimelineTableViewController: UITableViewController, TimelineTableViewCellDelegate {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    var player:     Player? { return appDelegate.player }
+    var player:     QueuePlayer? { return appDelegate.player }
     let cellHeight: CGFloat = 190
     let reuseIdentifier = "TimelineTableViewCell"
 
@@ -26,7 +28,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
     var onpuRefreshControl:  OnpuRefreshControl!
     var playerObserver: TimelinePlayerObserver!
 
-    class TimelinePlayerObserver: PlayerObserver {
+    class TimelinePlayerObserver: QueuePlayerObserver {
         let vc: TimelineTableViewController
         init(viewController: TimelineTableViewController) {
             vc = viewController
@@ -38,7 +40,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
                 vc.updateSelection(UITableViewScrollPosition.none)
                 vc.updateCurrentTrack()
             case .trackSelected(let track, let index, let playlist):
-                vc.updateTrack(track, index: index, playlist: playlist, playerState: vc.player!.currentState)
+                vc.updateTrack(track, index: index, playlist: playlist, playerState: vc.player!.state)
                 vc.tableView?.reloadData()
             case .trackUnselected(let track, let index, let playlist):
                 vc.updateTrack(track, index: index, playlist: playlist, playerState: PlayerState.init)
@@ -197,8 +199,8 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
     }
 
     func updateCurrentTrack() {
-        if let p = appDelegate.player, let pl = p.currentPlaylist, let t = p.currentTrack, let i = p.currentTrackIndex {
-            updateTrack(t, index: i, playlist: pl, playerState: p.currentState)
+        if let p = appDelegate.player, let pl = p.currentPlaylist, let t = p.currentTrack, let i = p.index {
+            updateTrack(t, index: i.track, playlist: pl, playerState: p.state)
         }
     }
 
@@ -284,9 +286,10 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
     }
 
     func playPlaylist(_ playlist: PlayerKitPlaylist?) {
-        if let p = playlist as? Playlist {
-            appDelegate.toggle(0, playlist: p, playlistQueue: getPlaylistQueue())
-        }
+        guard let p = playlist as? Playlist else { return }
+        let queue = getPlaylistQueue()
+        guard let index = queue.indexOf(p) else { return }
+        appDelegate.toggle(at: Index(track: 0, playlist: index), in: queue)
     }
 
     func showPlaylistList() {
@@ -297,7 +300,9 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
     // MARK: - PlaylistStreamTableViewDelegate
 
     func trackSelected(_ sender: TimelineTableViewCell, index: Int, track: Track, playlist: Playlist) {
-        appDelegate.toggle(index, playlist: playlist, playlistQueue: getPlaylistQueue())
+        let queue = getPlaylistQueue()
+        guard let playlistIndex = queue.indexOf(playlist) else { return }
+        appDelegate.toggle(at: Index(track: index, playlist: playlistIndex), in: queue)
         tableView.reloadData()
     }
 
@@ -308,34 +313,32 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
     }
 
     func playButtonTouched(_ sender: TimelineTableViewCell) {
-        if let indexPath = tableView.indexPath(for: sender), let playlist = getItems()[indexPath.item].playlist {
-            if let current = appDelegate.player?.currentPlaylist {
-                if playlist.id == current.id {
-                    appDelegate.toggle()
-                    tableView.reloadData()
-                    return
-                }
-            }
-            appDelegate.toggle(0, playlist: playlist, playlistQueue: getPlaylistQueue())
-            tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
-            showPlaylist(playlist)
+        guard let indexPath = tableView.indexPath(for: sender), let playlist = getItems()[indexPath.item].playlist else { return }
+        if playlist.id == appDelegate.player?.currentPlaylist?.id {
+            appDelegate.toggle()
+            tableView.reloadData()
+            return
         }
+        let queue = getPlaylistQueue()
+        guard let index = queue.indexOf(playlist) else { return }
+        appDelegate.toggle(at: Index(track: 0, playlist: index), in: queue)
+        tableView.reloadRows(at: [indexPath], with: UITableViewRowAnimation.none)
+        showPlaylist(playlist)
     }
 
     func articleButtonTouched(_ sender: TimelineTableViewCell) {
-        if let indexPath = tableView.indexPath(for: sender), let entry = getItems()[indexPath.item].entry {
-            let vc = EntryWebViewController(entry: entry, playlist: getItems()[indexPath.item].playlist)
-            appDelegate.selectedPlaylist = vc.playlist
-            appDelegate.miniPlayerViewController?.playlistTableViewController.updateNavbar()
-            appDelegate.miniPlayerViewController?.playlistTableViewController.tableView.reloadData()
-            navigationController?.pushViewController(vc, animated: true)
-        }
+        guard let indexPath = tableView.indexPath(for: sender), let entry = getItems()[indexPath.item].entry else { return }
+        let vc = EntryWebViewController(entry: entry, playlist: getItems()[indexPath.item].playlist)
+        appDelegate.selectedPlaylist = vc.playlist
+        appDelegate.miniPlayerViewController?.playlistTableViewController.updateNavbar()
+        appDelegate.miniPlayerViewController?.playlistTableViewController.tableView.reloadData()
+        navigationController?.pushViewController(vc, animated: true)
     }
 
     func updatePlayerIcon(_ cell: TimelineTableViewCell, playlist: Playlist) {
-        if let p = self.player, let cp = p.currentPlaylist as? Playlist, let i = p.currentTrackIndex {
+        if let p = self.player, let cp = p.currentPlaylist as? Playlist, let i = p.index?.track {
             if cp == playlist {
-                cell.updatePlayerIcon(i, playerState: p.currentState)
+                cell.updatePlayerIcon(i, playerState: p.state)
                 updateSelection(UITableViewScrollPosition.none)
             } else {
                 cell.updatePlayerIcon(0, playerState: PlayerState.init)

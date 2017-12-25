@@ -13,14 +13,15 @@ import ReactiveSwift
 import XCDYouTubeKit
 import SDWebImage
 import MusicFeeder
+import PlayerKit
 
 class TrackTableViewController: UITableViewController {
     var appDelegate: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
-    var player:     Player? { get { return appDelegate.player }}
+    var player:     QueuePlayer? { get { return appDelegate.player }}
     let tableCellReuseIdentifier = "trackTableViewCell"
     let cellHeight: CGFloat      = 80
 
-    class TrackTableViewPlayerObserver: PlayerObserver {
+    class TrackTableViewPlayerObserver: QueuePlayerObserver {
         let vc: TrackTableViewController
         init(viewController: TrackTableViewController) {
             vc = viewController
@@ -57,22 +58,22 @@ class TrackTableViewController: UITableViewController {
     }
 
     let playlistQueue = PlaylistQueue(playlists: [])
-    var _playlist: Playlist!
+    var _playlist: MusicFeeder.Playlist!
     var playlistLoader: PlaylistRepository!
     var indicator:  UIActivityIndicatorView!
     var playerObserver:   TrackTableViewPlayerObserver!
     var playlistObserver: Disposable?
     var disposable: Disposable?
 
-    var playlist: Playlist {
+    var playlist: MusicFeeder.Playlist {
         return _playlist
     }
 
-    var tracks: [Track] {
+    var tracks: [MusicFeeder.Track] {
         return playlist.getTracks()
     }
 
-    init(playlist: Playlist) {
+    init(playlist: MusicFeeder.Playlist) {
         self._playlist  = playlist
         playlistLoader = PlaylistRepository(playlist: playlist)
         super.init(nibName: nil, bundle: nil)
@@ -177,7 +178,7 @@ class TrackTableViewController: UITableViewController {
             appDelegate.player?.removeObserver(playerObserver)
         }
         playerObserver = TrackTableViewPlayerObserver(viewController: self)
-        appDelegate.player?.addObserver(playerObserver as PlayerObserver)
+        appDelegate.player?.addObserver(playerObserver as QueuePlayerObserver)
         updateSelection()
     }
 
@@ -220,16 +221,16 @@ class TrackTableViewController: UITableViewController {
 
     func isPlaylistPlaying() -> Bool {
         if let p = appDelegate.player {
-            if _playlist == p.currentPlaylist as? Playlist {
+            if _playlist == p.currentPlaylist as? MusicFeeder.Playlist {
                 return true
             }
         }
         return false
     }
 
-    func isTrackPlaying(_ track: Track) -> Bool {
+    func isTrackPlaying(_ track: MusicFeeder.Track) -> Bool {
         if isPlaylistPlaying() {
-            if let p = appDelegate.player, let t = p.currentTrack as? Track {
+            if let p = appDelegate.player, let t = p.currentTrack as? MusicFeeder.Track {
                 return t == track
             }
         }
@@ -243,8 +244,8 @@ class TrackTableViewController: UITableViewController {
             }
         } else {
             if let p = appDelegate.player {
-                if _playlist != p.currentPlaylist as? Playlist {
-                } else if let track = p.currentTrack as? Track {
+                if _playlist != p.currentPlaylist as? MusicFeeder.Playlist {
+                } else if let track = p.currentTrack as? MusicFeeder.Track {
                     if let index = _playlist.getTracks().index(of: track) {
                         tableView.selectRow(at: IndexPath(row: index, section: 0), animated: true, scrollPosition: UITableViewScrollPosition.none)
                     }
@@ -286,9 +287,9 @@ class TrackTableViewController: UITableViewController {
         tableView.setEditing(!tableView.isEditing, animated: true)
     }
 
-    func showSelectPlaylistViewController(_ tracks: [Track]) {
+    func showSelectPlaylistViewController(_ tracks: [MusicFeeder.Track]) {
         let ptc = SelectPlaylistTableViewController()
-        ptc.callback = {(playlist: Playlist?) in
+        ptc.callback = {(playlist: MusicFeeder.Playlist?) in
             if let p = playlist {
                 switch p.appendTracks(tracks) {
                 case .success: break
@@ -406,9 +407,10 @@ class TrackTableViewController: UITableViewController {
     // MARK: UITableViewDelegate
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let track = playlist.tracks[indexPath.item]
-        if track.streamURL != nil {
-            appDelegate.toggle(indexPath.item, playlist: playlist, playlistQueue: playlistQueue)
+        guard let index = playlistQueue.indexOf(playlist)     else { return }
+        guard let track = playlist.tracks.get(indexPath.item) else { return }
+        if track.isValid {
+            appDelegate.toggle(at: Index(track: indexPath.item, playlist: index), in: playlistQueue)
         } else {
             tableView.deselectRow(at: indexPath, animated: true)
         }
