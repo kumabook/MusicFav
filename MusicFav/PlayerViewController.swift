@@ -74,7 +74,7 @@ class PlayerViewController: PlayerKit.SimplePlayerViewController {
         rotateButton.setImage(UIImage(named: "rotate"), for: UIControlState())
         rotateButton.addTarget(self, action: #selector(PlayerViewController.rotateButtonTapped), for: UIControlEvents.touchUpInside)
         view.addSubview(rotateButton)
-        videoViewOriginalCenter = videoView.center
+        videoViewOriginalCenter = videoView?.center
         videoOrientation = VideoOrientation.portrait
     }
 
@@ -104,15 +104,15 @@ class PlayerViewController: PlayerKit.SimplePlayerViewController {
     func rotateButtonTapped() {
         videoOrientation = videoOrientation.rotateRight
         let isPortrait = self.videoOrientation.isPortrait
-        let views = [closeButton, likeButton, slider, titleLabel, subTitleLabel, currentLabel, totalLabel]
+        let views = [closeButton, likeButton, slider, titleLabel, subTitleLabel, currentLabel, totalLabel] as [UIView]
         UIView.animate(withDuration: 0.5, animations: {
             if isPortrait {
-                self.videoView.center = self.videoViewOriginalCenter
+                self.videoView?.center = self.videoViewOriginalCenter
             } else {
-                self.videoView.center = CGPoint(x: self.videoViewOriginalCenter.x, y: self.view.center.y)
+                self.videoView?.center = CGPoint(x: self.videoViewOriginalCenter.x, y: self.view.center.y)
             }
-            self.videoView.transform = self.videoOrientation.transfrom(self.view)
-            views.forEach { $0?.isHidden = !isPortrait }
+            self.videoView?.transform = self.videoOrientation.transfrom(self.view)
+            views.forEach { $0.isHidden = !isPortrait }
         }) 
     }
 
