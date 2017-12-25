@@ -64,7 +64,7 @@ class UpdateChecker {
                                                     perPage: perPage)
                 .map { $0.items }
         } else {
-            entriesSignal = StreamRepository().loadLocalSubscriptions()
+            entriesSignal = SubscriptionRepository().loadLocalSubscriptions()
                 .map { (table: [FeedlyKit.Category: [FeedlyKit.Stream]]) -> [FeedlyKit.Stream] in
                     return table.values.flatMap { $0 }
                 }.map { streams in

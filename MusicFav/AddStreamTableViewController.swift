@@ -17,13 +17,13 @@ class AddStreamTableViewController: UITableViewController {
     let cellHeight:        CGFloat = 100
     let accessoryWidth:    CGFloat = 30
     var isLoggedIn: Bool { return CloudAPIClient.account != nil }
-    let streamRepository: StreamRepository!
-    init(streamRepository: StreamRepository) {
-        self.streamRepository = streamRepository
+    let subscriptionRepository: SubscriptionRepository!
+    init(subscriptionRepository: SubscriptionRepository) {
+        self.subscriptionRepository = subscriptionRepository
         super.init(nibName: nil, bundle: nil)
     }
     required init(coder aDecoder: NSCoder) {
-        streamRepository = StreamRepository()
+        subscriptionRepository = SubscriptionRepository()
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -107,7 +107,7 @@ class AddStreamTableViewController: UITableViewController {
     func add() {
         let subscribables: [FeedlyKit.Stream] = getSubscribables()
         Logger.sendUIActionEvent(self, action: "add", label: "")
-        let ctc = CategoryTableViewController(subscribables: subscribables, streamRepository: streamRepository)
+        let ctc = CategoryTableViewController(subscribables: subscribables, subscriptionRepository: subscriptionRepository)
         navigationController?.pushViewController(ctc, animated: true)
     }
 }

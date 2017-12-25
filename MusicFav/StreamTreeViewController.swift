@@ -79,7 +79,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             case .pocket:         return []
             case .twitter:        return []
             case .feedlyCategory(let category):
-                if let streams = vc.streamRepository.streamListOfCategory[category] {
+                if let streams = vc.subscriptionRepository.streamListOfCategory[category] {
                     return streams[index]
                 } else {
                     return []
@@ -98,7 +98,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             case .pocket:         return 0
             case .twitter:        return 0
             case .feedlyCategory(let category):
-                if let streams = vc.streamRepository.streamListOfCategory[category] {
+                if let streams = vc.subscriptionRepository.streamListOfCategory[category] {
                     return streams.count
                 } else {
                     return 0
@@ -108,13 +108,13 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         }
     }
 
-    var treeView:              RATreeView?
-    var sections:              [Section]
-    var streamRepository:      StreamRepository
-    var observer:              Disposable?
-    var refreshDisposable:     Disposable?
-    var youtubeActivityLoader: YouTubeActivityLoader
-    var youtubeObserver:       Disposable?
+    var treeView:               RATreeView?
+    var sections:               [Section]
+    var subscriptionRepository: SubscriptionRepository
+    var observer:               Disposable?
+    var refreshDisposable:      Disposable?
+    var youtubeActivityLoader:  YouTubeActivityLoader
+    var youtubeObserver:        Disposable?
 
     var apiClient:   CloudAPIClient    { return CloudAPIClient.sharedInstance }
     var appDelegate: AppDelegate       { return UIApplication.shared.delegate as! AppDelegate }
@@ -137,16 +137,16 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
     }
 
     init() {
-        sections              = []
-        streamRepository      = StreamRepository()
-        youtubeActivityLoader = YouTubeActivityLoader()
+        sections               = []
+        subscriptionRepository = SubscriptionRepository()
+        youtubeActivityLoader  = YouTubeActivityLoader()
         super.init(nibName: nil, bundle: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
-        sections              = []
-        streamRepository      = StreamRepository()
-        youtubeActivityLoader = YouTubeActivityLoader()
+        sections               = []
+        subscriptionRepository = SubscriptionRepository()
+        youtubeActivityLoader  = YouTubeActivityLoader()
         super.init(coder: aDecoder)
     }
 
@@ -203,7 +203,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
     }
 
     func addStream() {
-        let admvc = AddStreamMenuViewController(streamRepository: streamRepository)
+        let admvc = AddStreamMenuViewController(subscriptionRepository: subscriptionRepository)
         root?.present(UINavigationController(rootViewController:admvc), animated: true, completion: nil)
     }
 
@@ -211,7 +211,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         if let profile = CloudAPIClient.profile {
             showStream(stream: FeedlyKit.Category.All(profile.id))
         } else {
-            let streams: [FeedlyKit.Stream] = streamRepository.streamListOfCategory.values.flatMap { $0 }
+            let streams: [FeedlyKit.Stream] = subscriptionRepository.streamListOfCategory.values.flatMap { $0 }
             if streams.count > 0 {
                 showStream(stream: streams[Int(arc4random_uniform(UInt32(streams.count)))])
             } else {
@@ -277,7 +277,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
 
     func observeStreamList() {
         observer?.dispose()
-        observer = streamRepository.signal.observeResult({ result in
+        observer = subscriptionRepository.signal.observeResult({ result in
             guard let event = result.value else { return }
             switch event {
             case .create(_):
@@ -286,12 +286,12 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             case .startLoading:
                 self.refreshControl?.beginRefreshing()
             case .completeLoading:
-                let categories = self.streamRepository.categories.filter({
-                    $0 != self.streamRepository.uncategorized
+                let categories = self.subscriptionRepository.categories.filter({
+                    $0 != self.subscriptionRepository.uncategorized
                 })
                 self.sections  = self.defaultSections()
                 self.sections.append(contentsOf: categories.map({ Section.feedlyCategory($0) }))
-                self.sections.append(contentsOf: self.streamRepository.uncategorizedStreams.map {
+                self.sections.append(contentsOf: self.subscriptionRepository.uncategorizedStreams.map {
                     if let subscription = $0 as? Subscription {
                         return Section.uncategorizedSubscription(subscription)
                     } else if let feed = $0 as? Feed {
@@ -318,7 +318,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             case .remove(let subscription):
                 MBProgressHUD.hide(for: self.view, animated: true)
                 let _ = MBProgressHUD.showCompletedHUDForView(self.navigationController!.view, animated: true, duration: 1.0, after: {
-                    let l = self.streamRepository
+                    let l = self.subscriptionRepository
                     subscription.categories.forEach { category in
                         if category == l.uncategorized {
                             let i = self.indexOfUncategorizedSubscription(subscription)
@@ -328,7 +328,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
                             self.sections.remove(at: i)
                             self.treeView!.reloadData()
                         } else {
-                            if let i = self.streamRepository.uncategorizedStreams.index(of: subscription) {
+                            if let i = self.subscriptionRepository.uncategorizedStreams.index(of: subscription) {
                                 self.treeView!.deleteItems(at: IndexSet([i]),
                                                            inParent: self.treeView!.parent(forItem: subscription),
                                                            with: RATreeViewRowAnimationRight)
@@ -386,11 +386,11 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         youtubeActivityLoader.clear()
         youtubeActivityLoader.fetchChannels()
         treeView?.reloadData()
-        streamRepository.refresh()
+        subscriptionRepository.refresh()
     }
 
     func unsubscribeTo(_ subscription: Subscription, index: Int, category: FeedlyKit.Category) {
-        let _ = streamRepository.unsubscribeTo(subscription)
+        let _ = subscriptionRepository.unsubscribeTo(subscription)
     }
 
     // MARK: - RATreeView data source
@@ -482,8 +482,8 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         if let index = item as? Int {
             switch sections[index] {
             case Section.uncategorizedSubscription(let subscription):
-                let uncategorized = streamRepository.uncategorized
-                if let i = streamRepository.uncategorizedStreams.index(of: subscription) {
+                let uncategorized = subscriptionRepository.uncategorized
+                if let i = subscriptionRepository.uncategorizedStreams.index(of: subscription) {
                     unsubscribeTo(subscription, index: i, category: uncategorized)
                 }
             default: break
@@ -492,7 +492,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             let sectionIndex = treeView.parent(forItem: item) as! Int
             switch sections[sectionIndex] {
             case .feedlyCategory(let category):
-                if let streams = streamRepository.streamListOfCategory[category] {
+                if let streams = subscriptionRepository.streamListOfCategory[category] {
                     let stream = item as! FeedlyKit.Stream
                     if let i = streams.index(of: stream) {
                         if let subscription = item as? Subscription {

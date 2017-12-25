@@ -70,8 +70,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var mainViewController: DrawerController? { return miniPlayerViewController?.drawlerController }
     var leftVisibleWidth:   CGFloat? { return mainViewController?.maximumLeftDrawerWidth }
     var rightVisibleWidth:  CGFloat? { return mainViewController?.maximumRightDrawerWidth }
-    var streamRepository: StreamRepository? {
-        return miniPlayerViewController?.streamTreeViewController?.streamRepository
+    var subscriptionRepository: SubscriptionRepository? {
+        return miniPlayerViewController?.streamTreeViewController?.subscriptionRepository
     }
 
     var userDefaults:          UserDefaults { return UserDefaults.standard }
@@ -250,9 +250,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func showAddStreamMenuViewController() {
-        if let repo = streamRepository {
+        if let repo = subscriptionRepository {
             let _ = repo.subscribeTo(RecommendFeed.sampleStream(), categories: [])
-            let stvc = AddStreamMenuViewController(streamRepository: repo)
+            let stvc = AddStreamMenuViewController(subscriptionRepository: repo)
             let delayTime = DispatchTime.now() + Double(Int64(0.3 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
             DispatchQueue.main.asyncAfter(deadline: delayTime) {
                self.miniPlayerViewController?.present(UINavigationController(rootViewController:stvc), animated: true, completion: nil)

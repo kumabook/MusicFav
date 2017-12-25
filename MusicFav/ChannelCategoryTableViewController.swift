@@ -63,9 +63,9 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
     var indicator:           UIActivityIndicatorView!
     var reloadButton:        UIButton!
 
-    init(streamRepository: StreamRepository, channelLoader: ChannelLoader) {
-        self.channelLoader    = channelLoader
-        super.init(streamRepository: streamRepository)
+    init(subscriptionRepository: SubscriptionRepository, channelLoader: ChannelLoader) {
+        self.channelLoader = channelLoader
+        super.init(subscriptionRepository: subscriptionRepository)
     }
 
     required init(coder aDecoder: NSCoder) {
@@ -250,9 +250,9 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
                 showYouTubeLoginViewController()
             }
         case .guideCategory:
-            let vc = ChannelTableViewController(streamRepository: streamRepository,
-                                                   channelLoader: channelLoader,
-                                                            type: .category(channelLoader.categories[indexPath.item]))
+            let vc = ChannelTableViewController(subscriptionRepository: subscriptionRepository,
+                                                         channelLoader: channelLoader,
+                                                                  type: .category(channelLoader.categories[indexPath.item]))
             navigationController?.pushViewController(vc, animated: true)
             tableView.deselectRow(at: indexPath, animated: true)
         }

@@ -37,10 +37,10 @@ class StreamTableViewController: AddStreamTableViewController, UISearchBarDelega
     let streamTableViewCellReuseIdentifier = "StreamTableViewCell"
     var type: ListType
 
-    init(streamRepository: StreamRepository, type: ListType) {
+    init(subscriptionRepository: SubscriptionRepository, type: ListType) {
         self.type     = type
         self._streams = []
-        super.init(streamRepository: streamRepository)
+        super.init(subscriptionRepository: subscriptionRepository)
     }
 
     required init(coder aDecoder: NSCoder) {

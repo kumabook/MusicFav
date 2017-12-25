@@ -94,6 +94,8 @@ class StreamTimelineTableViewController: TimelineTableViewController {
                 self.tableView.deleteRows(at: [indexPath], with: .fade)
             case .completeLoadingTrackDetail(_):
                 break
+            default:
+                break
             }
         })
     }

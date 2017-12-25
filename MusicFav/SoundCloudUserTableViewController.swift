@@ -37,10 +37,10 @@ class SoundCloudUserTableViewController: AddStreamTableViewController {
         }
     }
 
-    init(streamRepository: StreamRepository, userLoader: SoundCloudUserLoader, type: Type) {
+    init(subscriptionRepository: SubscriptionRepository, userLoader: SoundCloudUserLoader, type: Type) {
         self.userLoader = userLoader
         self.type       = type
-        super.init(streamRepository: streamRepository)
+        super.init(subscriptionRepository: subscriptionRepository)
     }
 
     required init(coder aDecoder: NSCoder) {

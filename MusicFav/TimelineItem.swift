@@ -79,7 +79,7 @@ enum TimelineItem {
     var dateString:   String? {
         switch self {
         case .entry(let entry, _):
-            return entry.passedTime
+            return entry.published.date.elapsedTime
         case .activity(let activity, _):
             return activity.createdAt.toDate()!.elapsedTime
         case .youTubePlaylist(let playlistItem, _):

@@ -60,29 +60,29 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
     var indicator: UIActivityIndicatorView!
     var searchBar: UISearchBar!
 
-    var streamRepository: StreamRepository!
-    var recommendFeeds:   [Feed]
-    let blogLoader:       BlogLoader
-    var blogObserver:     Disposable?
-    var channelLoader:    ChannelLoader!
-    var channelObserver:  Disposable?
-    var userLoader:       SoundCloudUserLoader!
-    var userObserver:     Disposable?
+    var subscriptionRepository: SubscriptionRepository!
+    var recommendFeeds:         [Feed]
+    let blogLoader:             BlogLoader
+    var blogObserver:           Disposable?
+    var channelLoader:          ChannelLoader!
+    var channelObserver:        Disposable?
+    var userLoader:             SoundCloudUserLoader!
+    var userObserver:           Disposable?
 
-    init(streamRepository: StreamRepository) {
-        self.streamRepository = streamRepository
-        self.blogLoader       = BlogLoader()
-        self.channelLoader    = ChannelLoader()
-        self.userLoader       = SoundCloudUserLoader()
-        self.recommendFeeds   = []
+    init(subscriptionRepository: SubscriptionRepository) {
+        self.subscriptionRepository = subscriptionRepository
+        self.blogLoader             = BlogLoader()
+        self.channelLoader          = ChannelLoader()
+        self.userLoader             = SoundCloudUserLoader()
+        self.recommendFeeds         = []
         super.init(nibName: nil, bundle: nil)
     }
 
     required init(coder aDecoder: NSCoder) {
-        streamRepository = StreamRepository()
-        blogLoader       = BlogLoader()
-        channelLoader    = ChannelLoader()
-        recommendFeeds   = []
+        subscriptionRepository = SubscriptionRepository()
+        blogLoader             = BlogLoader()
+        channelLoader          = ChannelLoader()
+        recommendFeeds         = []
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -192,9 +192,9 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
     // MARK: - UISearchBarDelegate
 
     func searchBarShouldBeginEditing(_ searchBar: UISearchBar) -> Bool {
-        let vc = SearchStreamPageMenuController(streamRepository: streamRepository,
-                                                      blogLoader: blogLoader,
-                                                   channelLoader: channelLoader)
+        let vc = SearchStreamPageMenuController(subscriptionRepository: subscriptionRepository,
+                                                            blogLoader: blogLoader,
+                                                         channelLoader: channelLoader)
         vc.modalTransitionStyle = UIModalTransitionStyle.flipHorizontal
         present(UINavigationController(rootViewController: vc), animated: true, completion: {})
         return false
@@ -223,29 +223,29 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
         if let menu = Menu(rawValue: indexPath.item) {
             switch menu {
             case .recommend:
-                let vc = StreamTableViewController(streamRepository: streamRepository,
-                                                               type: .recommend(recommendFeeds))
+                let vc = StreamTableViewController(subscriptionRepository: subscriptionRepository,
+                                                                     type: .recommend(recommendFeeds))
                 navigationController?.pushViewController(vc, animated: true)
             case .youTube:
-                let vc = ChannelCategoryTableViewController(streamRepository: streamRepository, channelLoader: channelLoader)
+                let vc = ChannelCategoryTableViewController(subscriptionRepository: subscriptionRepository, channelLoader: channelLoader)
                 navigationController?.pushViewController(vc, animated: true)
                 vc.showYouTubeLoginViewController()
             case .soundCloud:
                 if SoundCloudKit.APIClient.isLoggedIn {
-                    let vc = SoundCloudUserTableViewController(streamRepository: streamRepository,
-                                                                     userLoader: SoundCloudUserLoader(),
-                                                                           type: .followings)
+                    let vc = SoundCloudUserTableViewController(subscriptionRepository: subscriptionRepository,
+                                                                           userLoader: SoundCloudUserLoader(),
+                                                                                 type: .followings)
                     navigationController?.pushViewController(vc, animated: true)
                 } else {
-                    let vc = SoundCloudUserTableViewController(streamRepository: streamRepository,
-                                                                     userLoader: SoundCloudUserLoader(),
-                                                                           type: .search("rock"))
+                    let vc = SoundCloudUserTableViewController(subscriptionRepository: subscriptionRepository,
+                                                                           userLoader: SoundCloudUserLoader(),
+                                                                                 type: .search("rock"))
                     navigationController?.pushViewController(vc, animated: true)
                     vc.showSoundCloudLoginViewController()
                 }
             case .hypem:
-                let vc = StreamTableViewController(streamRepository: streamRepository,
-                                                               type: .hypem(blogLoader))
+                let vc = StreamTableViewController(subscriptionRepository: subscriptionRepository,
+                                                                     type: .hypem(blogLoader))
                 navigationController?.pushViewController(vc, animated: true)
             }
         }

@@ -37,10 +37,10 @@ class ChannelTableViewController: AddStreamTableViewController {
         }
     }
 
-    init(streamRepository: StreamRepository, channelLoader: ChannelLoader, type: ChannelType) {
+    init(subscriptionRepository: SubscriptionRepository, channelLoader: ChannelLoader, type: ChannelType) {
         self.channelLoader = channelLoader
         self.type          = type
-        super.init(streamRepository: streamRepository)
+        super.init(subscriptionRepository: subscriptionRepository)
     }
 
     required init(coder aDecoder: NSCoder) {

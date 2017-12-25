@@ -20,21 +20,21 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
     weak var channelTableViewController: ChannelTableViewController?
     weak var userTableViewController:    SoundCloudUserTableViewController?
 
-    var streamRepository: StreamRepository
-    var blogLoader:       BlogLoader
-    var channelLoader:    ChannelLoader
+    var subscriptionRepository: SubscriptionRepository
+    var blogLoader:             BlogLoader
+    var channelLoader:          ChannelLoader
 
-    init(streamRepository: StreamRepository, blogLoader: BlogLoader, channelLoader: ChannelLoader) {
-        self.streamRepository = streamRepository
-        self.blogLoader       = blogLoader
-        self.channelLoader    = channelLoader
+    init(subscriptionRepository: SubscriptionRepository, blogLoader: BlogLoader, channelLoader: ChannelLoader) {
+        self.subscriptionRepository = subscriptionRepository
+        self.blogLoader             = blogLoader
+        self.channelLoader          = channelLoader
         super.init(nibName: nil, bundle: nil)
     }
 
     required init?(coder aDecoder: NSCoder) {
-        streamRepository = StreamRepository()
-        blogLoader       = BlogLoader()
-        channelLoader    = ChannelLoader()
+        subscriptionRepository = SubscriptionRepository()
+        blogLoader             = BlogLoader()
+        channelLoader          = ChannelLoader()
         super.init(coder: aDecoder)
     }
 
@@ -59,8 +59,8 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
         navigationItem.titleView?.frame  = searchBar.frame
         searchBar.becomeFirstResponder()
         Logger.sendUIActionEvent(self, action: "searchFeeds", label: "")
-        let feedlyStreamVC = StreamTableViewController(streamRepository: streamRepository, type: .search(""))
-        let channelVC      = ChannelTableViewController(streamRepository: streamRepository, channelLoader: channelLoader, type: .search(""))
+        let feedlyStreamVC = StreamTableViewController(subscriptionRepository: subscriptionRepository, type: .search(""))
+        let channelVC      = ChannelTableViewController(subscriptionRepository: subscriptionRepository, channelLoader: channelLoader, type: .search(""))
 //        let userVC         = SoundCloudUserTableViewController(streamListLoader: streamListLoader, userLoader: SoundCloudUserLoader(), type: .Search(""))
 
         channelLoader.searchResults = []
@@ -117,7 +117,7 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
     }
 
     func add() {
-        let ctc = CategoryTableViewController(subscribables: getSubscribables(), streamRepository: streamRepository)
+        let ctc = CategoryTableViewController(subscribables: getSubscribables(), subscriptionRepository: subscriptionRepository)
         navigationController?.pushViewController(ctc, animated: true)
     }
 

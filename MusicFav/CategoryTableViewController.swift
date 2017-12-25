@@ -15,20 +15,20 @@ import MBProgressHUD
 class CategoryTableViewController: UITableViewController {
     let client = CloudAPIClient.sharedInstance
 
-    var subscribables:    [FeedlyKit.Stream]
-    var streamRepository: StreamRepository!
-    var observer:         Disposable?
+    var subscribables:          [FeedlyKit.Stream]
+    var subscriptionRepository: SubscriptionRepository!
+    var observer:               Disposable?
 
     var categories: [FeedlyKit.Category] {
-        let _categories   = streamRepository.streamListOfCategory.keys
-        var list          = [streamRepository.uncategorized]
-        list.append(contentsOf: _categories.filter({$0 != self.streamRepository.uncategorized }))
+        let _categories   = subscriptionRepository.streamListOfCategory.keys
+        var list          = [subscriptionRepository.uncategorized]
+        list.append(contentsOf: _categories.filter({$0 != self.subscriptionRepository.uncategorized }))
         return list
     }
 
-    init(subscribables: [FeedlyKit.Stream], streamRepository: StreamRepository) {
-        self.subscribables    = subscribables
-        self.streamRepository = streamRepository
+    init(subscribables: [FeedlyKit.Stream], subscriptionRepository: SubscriptionRepository) {
+        self.subscribables          = subscribables
+        self.subscriptionRepository = subscriptionRepository
         super.init(nibName: nil, bundle: nil)
     }
 
@@ -66,7 +66,7 @@ class CategoryTableViewController: UITableViewController {
 
     func observeStreamList() {
         observer?.dispose()
-        observer = streamRepository.signal.observeResult({ result in
+        observer = subscriptionRepository.signal.observeResult({ result in
             guard let event = result.value else { return }
             switch event {
             case .create(_):    break
@@ -90,7 +90,7 @@ class CategoryTableViewController: UITableViewController {
         ac.addAction(UIAlertAction(title: "OK".localize(), style: UIAlertActionStyle.default, handler: { (action) -> Void in
             if let text = ac.textFields?.first?.text {
                 Logger.sendUIActionEvent(self, action: "OK", label: "")
-                if let category = self.streamRepository.createCategory(text) {
+                if let category = self.subscriptionRepository.createCategory(text) {
                     self.subscribeTo(category)
                 }
             }
@@ -102,7 +102,7 @@ class CategoryTableViewController: UITableViewController {
 
     func _subscribeTo(_ category: FeedlyKit.Category) -> SignalProducer<[Subscription], NSError> {
         return subscribables.reduce(SignalProducer(value: [])) {
-            SignalProducer.combineLatest($0, streamRepository.subscribeTo($1, categories: [category])).map {
+            SignalProducer.combineLatest($0, subscriptionRepository.subscribeTo($1, categories: [category])).map {
                 var list = $0.0; list.append($0.1); return list
             }
         }
@@ -121,7 +121,7 @@ class CategoryTableViewController: UITableViewController {
             },
             completed: {
                 let _ = MBProgressHUD.showCompletedHUDForView(self.navigationController!.view, animated: true, duration: 1.0, after: {
-                    self.streamRepository.refresh()
+                    self.subscriptionRepository.refresh()
                     self.navigationController?.dismiss(animated: true, completion: nil)
                 })
             },
@@ -141,7 +141,7 @@ class CategoryTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-        if categories[indexPath.item] == streamRepository.uncategorized {
+        if categories[indexPath.item] == subscriptionRepository.uncategorized {
             cell.textLabel?.text = categories[indexPath.item].label.localize()
         } else {
             cell.textLabel?.text = categories[indexPath.item].label
