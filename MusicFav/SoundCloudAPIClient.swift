@@ -160,11 +160,9 @@ extension APIClient {
 
     public class func handleError(_ error: Error) {
         let e = error as NSError
-        if let dic = e.userInfo as NSDictionary? {
-            if let response:HTTPURLResponse = dic[errorResponseKey] as? HTTPURLResponse {
-                if response.statusCode == 401 {
-                    if isLoggedIn { clearAllAccount() }
-                }
+        if let response:HTTPURLResponse = e.userInfo[errorResponseKey] as? HTTPURLResponse {
+            if response.statusCode == 401 {
+                if isLoggedIn { clearAllAccount() }
             }
         }
     }
