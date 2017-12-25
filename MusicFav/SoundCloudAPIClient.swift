@@ -98,7 +98,7 @@ extension APIClient {
         get {
             if let m = _me { return m }
             if let data: Data = userDefaults.object(forKey: "soundcloud_me") as? Data {
-                return User(json: JSON(data: data, options: [], error: nil))
+                return try? User(json: JSON(data: data, options: []))
             }
             return nil
         }
