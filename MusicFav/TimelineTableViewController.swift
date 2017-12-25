@@ -74,8 +74,8 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
     /** should be override in subclass */
     var timelineTitle: String { return "" }
     func getItems() -> [TimelineItem] { return [] }
-    func fetchLatest() {}
-    func fetchNext() {}
+    @objc func fetchLatest() {}
+    @objc func fetchNext() {}
     func observeTimelineLoader() -> Disposable? { return nil }
     func getPlaylistQueue() -> PlaylistQueue { return PlaylistQueue(playlists: []) }
     /** end */
@@ -210,7 +210,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         }
     }
 
-    func showMenu() {
+    @objc func showMenu() {
         let vc = appDelegate.miniPlayerViewController
         vc?.showMenu()
     }
@@ -292,7 +292,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         appDelegate.toggle(at: Index(track: 0, playlist: index), in: queue)
     }
 
-    func showPlaylistList() {
+    @objc func showPlaylistList() {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.mainViewController?.openDrawerSide(DrawerSide.right, animated: true, completion: nil)
     }

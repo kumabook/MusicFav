@@ -135,7 +135,7 @@ class TimelineTableViewCell: MCSwipeTableViewCell {
         }
     }
 
-    func thumbImageTapped(_ sender: UITapGestureRecognizer) {
+    @objc func thumbImageTapped(_ sender: UITapGestureRecognizer) {
         if let playlist = self.playlist {
             if let d = timelineDelegate {
                 if let view = sender.view as? UIImageView {
@@ -147,15 +147,15 @@ class TimelineTableViewCell: MCSwipeTableViewCell {
         }
     }
 
-    func trackScrollViewMarginTouched(_ sender: UITapGestureRecognizer) {
+    @objc func trackScrollViewMarginTouched(_ sender: UITapGestureRecognizer) {
         timelineDelegate?.trackScrollViewMarginTouched(self, playlist: self.playlist)
     }
 
-    func playButtonTouched() {
+    @objc func playButtonTouched() {
         timelineDelegate?.playButtonTouched(self)
     }
 
-    func articleButtonTouched() {
+    @objc func articleButtonTouched() {
         timelineDelegate?.articleButtonTouched(self)
     }
 

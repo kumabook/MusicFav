@@ -73,7 +73,7 @@ class SoundCloudPlaylistTableViewController: UITableViewController {
         navigationItem.rightBarButtonItems = [showFavListButton]
     }
 
-    func showFavoritePlaylist() {
+    @objc func showFavoritePlaylist() {
         let _ = navigationController?.popToRootViewController(animated: true)
     }
 

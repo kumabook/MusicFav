@@ -197,12 +197,12 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         youtubeObserver?.dispose()
     }
 
-    func showPreference() {
+    @objc func showPreference() {
         let prefvc = PreferenceViewController()
         root?.present(UINavigationController(rootViewController:prefvc), animated: true, completion: nil)
     }
 
-    func addStream() {
+    @objc func addStream() {
         let admvc = AddStreamMenuViewController(subscriptionRepository: subscriptionRepository)
         root?.present(UINavigationController(rootViewController:admvc), animated: true, completion: nil)
     }
@@ -378,7 +378,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         return i
     }
 
-    func refresh() {
+    @objc func refresh() {
         observer?.dispose()
         observeStreamList()
         youtubeObserver?.dispose()

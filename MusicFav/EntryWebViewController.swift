@@ -170,17 +170,17 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         historyBackButton!.isEnabled    = webView!.canGoBack
     }
 
-    func showPlaylist() {
+    @objc func showPlaylist() {
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         appDelegate.mainViewController?.openDrawerSide(DrawerSide.right, animated: true, completion: nil)
     }
 
-    func historyBack() {
+    @objc func historyBack() {
         Logger.sendUIActionEvent(self, action: "goBack", label: "")
         let _ = webView?.goBack()
     }
 
-    func historyForward() {
+    @objc func historyForward() {
         Logger.sendUIActionEvent(self, action: "goForward", label: "")
         let _ = webView?.goForward()
     }
@@ -290,7 +290,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
         return nil
     }
 
-    func showEntryMenu() {
+    @objc func showEntryMenu() {
         if let menu = entryMenu {
             if menu.isHidden { menu.showWithNavigationBar(navigationController?.navigationBar) }
             else           { menu.hide() }

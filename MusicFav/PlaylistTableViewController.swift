@@ -104,12 +104,12 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         navigationItem.rightBarButtonItems = [newPlaylistButton, reorderButton]
     }
 
-    func newPlaylist() {
+    @objc func newPlaylist() {
         Logger.sendUIActionEvent(self, action: "newPlaylist", label: "")
         showTitleEditAlertViewAtIndex(NEW_PLAYLIST_INDEX)
     }
 
-    func reorder() {
+    @objc func reorder() {
         tableView.setEditing(!tableView.isEditing, animated: true)
     }
 

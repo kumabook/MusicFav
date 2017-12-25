@@ -81,7 +81,7 @@ class CategoryTableViewController: UITableViewController {
         })
     }
 
-    func newCategory() {
+    @objc func newCategory() {
         Logger.sendUIActionEvent(self, action: "newCategory", label: "")
         let ac = UIAlertController(title: "New Category".localize(), message: nil, preferredStyle: UIAlertControllerStyle.alert)
         ac.addAction(UIAlertAction(title: "Cancel".localize(), style: UIAlertActionStyle.cancel, handler: { (action) -> Void in

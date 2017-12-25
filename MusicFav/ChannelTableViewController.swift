@@ -142,7 +142,7 @@ class ChannelTableViewController: AddStreamTableViewController {
         self.tableView.tableFooterView = nil
     }
 
-    func fetchNext() {
+    @objc func fetchNext() {
         switch type {
         case .category(let category):
             channelLoader.fetchChannels(category)

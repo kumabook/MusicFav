@@ -264,7 +264,7 @@ class TrackTableViewController: UITableViewController {
         self.tableView.tableFooterView = nil
     }
 
-    func showFavoritePlaylist() {
+    @objc func showFavoritePlaylist() {
         let _ = navigationController?.popViewController(animated: true)
     }
     
@@ -278,12 +278,12 @@ class TrackTableViewController: UITableViewController {
         appDelegate.miniPlayerViewController?.playlistTableViewController.showSelectedPlaylist(true)
     }
     
-    func favPlaylist() {
+    @objc func favPlaylist() {
         Logger.sendUIActionEvent(self, action: "favPlaylist", label: "")
         showSelectPlaylistViewController(playlist.getTracks())
     }
 
-    func reorder() {
+    @objc func reorder() {
         tableView.setEditing(!tableView.isEditing, animated: true)
     }
 

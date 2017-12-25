@@ -89,7 +89,7 @@ class SelectPlaylistTableViewController: UITableViewController {
         }
     }
 
-    func newPlaylist() {
+    @objc func newPlaylist() {
         appDelegate.miniPlayerViewController?.playlistTableViewController.newPlaylist()
     }
 
@@ -97,7 +97,7 @@ class SelectPlaylistTableViewController: UITableViewController {
         appDelegate.miniPlayerViewController?.playlistTableViewController.showTitleEditAlertViewAtIndex(index)
     }
 
-    func close() {
+    @objc func close() {
         navigationController?.dismiss(animated: true, completion: {
             if let callback = self.callback {
                 callback(nil)

@@ -94,14 +94,14 @@ class PlayerViewController: PlayerKit.SimplePlayerViewController {
         }
     }
 
-    func likeButtonTapped() {
+    @objc func likeButtonTapped() {
         let app = UIApplication.shared.delegate as! AppDelegate
         if let track = app.player?.currentTrack as? MusicFeeder.Track{
             showSelectPlaylistViewController([track])
         }
     }
 
-    func rotateButtonTapped() {
+    @objc func rotateButtonTapped() {
         videoOrientation = videoOrientation.rotateRight
         let isPortrait = self.videoOrientation.isPortrait
         let views = [closeButton, likeButton, slider, titleLabel, subTitleLabel, currentLabel, totalLabel] as [UIView]

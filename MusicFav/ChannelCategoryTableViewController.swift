@@ -132,7 +132,7 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
         observer = nil
     }
 
-    func refresh() {
+    @objc func refresh() {
         channelLoader.fetchCategories()
     }
 

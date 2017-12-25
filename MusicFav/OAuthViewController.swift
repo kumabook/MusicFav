@@ -91,7 +91,7 @@ class OAuthViewController: UIViewController, UIWebViewDelegate {
         super.didReceiveMemoryWarning()
     }
 
-    func close() {
+    @objc func close() {
         if self.navigationController?.childViewControllers.count == 1 {
             self.navigationController?.dismiss(animated: true, completion: nil)
         } else {

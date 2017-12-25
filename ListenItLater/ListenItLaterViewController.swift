@@ -20,7 +20,7 @@ enum ListenItLaterResult {
         switch self {
         case .success(_):       return "Saved!".localize()
         case .alreadyExists(_): return "Saved!".localize()
-        case .error(_):         return "Sorry, something wrong".localize()
+        case .error:            return "Sorry, something wrong".localize()
         }
     }
 }

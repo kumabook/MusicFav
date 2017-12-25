@@ -196,7 +196,7 @@ open class EntryMenu: UIButton {
         superview?.bringSubview(toFront: self)
     }
 
-    func hide() {
+    @objc func hide() {
         if isAnimating { return }
         isAnimating = true
         UIView.animate(withDuration: animationDuration,
@@ -211,7 +211,7 @@ open class EntryMenu: UIButton {
         upArrow.removeFromSuperview()
     }
 
-    func menuSelected(_ sender: UIButton) {
+    @objc func menuSelected(_ sender: UIButton) {
         hide()
         delegate?.entryMenuSelected(items[sender.tag])
     }

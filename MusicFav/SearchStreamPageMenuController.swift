@@ -107,7 +107,7 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
         return subscribables
     }
 
-    func back() {
+    @objc func back() {
         dismiss(animated: true, completion: {})
     }
 
@@ -116,7 +116,7 @@ class SearchStreamPageMenuController: UIViewController, UISearchBarDelegate {
         navigationController?.presentingViewController?.dismiss(animated: true, completion: {})
     }
 
-    func add() {
+    @objc func add() {
         let ctc = CategoryTableViewController(subscribables: getSubscribables(), subscriptionRepository: subscriptionRepository)
         navigationController?.pushViewController(ctc, animated: true)
     }

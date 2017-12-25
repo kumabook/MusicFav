@@ -104,7 +104,7 @@ class AddStreamTableViewController: UITableViewController {
         self.navigationController?.dismiss(animated: true, completion: nil)
     }
 
-    func add() {
+    @objc func add() {
         let subscribables: [FeedlyKit.Stream] = getSubscribables()
         Logger.sendUIActionEvent(self, action: "add", label: "")
         let ctc = CategoryTableViewController(subscribables: subscribables, subscriptionRepository: subscriptionRepository)

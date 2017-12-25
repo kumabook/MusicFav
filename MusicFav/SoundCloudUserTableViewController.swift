@@ -142,7 +142,7 @@ class SoundCloudUserTableViewController: AddStreamTableViewController {
         self.tableView.tableFooterView = nil
     }
 
-    func fetchNext() {
+    @objc func fetchNext() {
         switch type {
         case .followings:
             userLoader.fetchFollowings()

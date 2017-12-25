@@ -52,7 +52,7 @@ class TutorialViewController: UIViewController, TutorialViewDelegate, OAuthViewD
         }
     }
 
-    func skipButtonTapped() {
+    @objc func skipButtonTapped() {
         Logger.sendUIActionEvent(self, action: "skipButtonTapped", label: "")
     }
 

@@ -133,7 +133,7 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
         userObserver?.dispose()
     }
 
-    func close() {
+    @objc func close() {
         dismiss(animated: true, completion: {})
     }
 

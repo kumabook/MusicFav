@@ -193,7 +193,7 @@ class PreferenceViewController: UITableViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func close() {
+    @objc func close() {
         self.navigationController?.dismiss(animated: true, completion: nil)
     }
 
