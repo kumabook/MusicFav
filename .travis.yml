@@ -5,7 +5,7 @@ install: bundle install --without=documentation
 before_script:
     - brew update
     - brew install carthage || true
-    - sh carthage_build.sh
+    - travis_wait 60 sh carthage_build.sh
     - pod install
 script: xcodebuild -workspace MusicFav.xcworkspace -scheme MusicFav
 cache:
