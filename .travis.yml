@@ -10,6 +10,7 @@ before_script:
     - pod install
 script: xcodebuild -workspace MusicFav.xcworkspace -scheme MusicFav
 cache:
+  bundler: true
+  cocoapods: true
   directories:
-  - Pods
   - Carthage
