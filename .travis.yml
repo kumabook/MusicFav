@@ -3,14 +3,15 @@ language: objective-c
 git:
   submodules: false
 before_install: rvm use 2.3 --install --binary --fuzzy
-install: bundle install --without=documentation
+install:
+  - bundle install --path=vendor/bundle --binstubs=vendor/bin
+  - bundle exec pod install
+  - bash -x carthage_checkout.sh
 before_script:
-    - carthage checkout --no-use-binaries
-    - travis_wait 60 carthage build --cache-builds --platform iOS
-    - pod install
+    - bash -x carthage_build.sh
 script: xcodebuild -workspace MusicFav.xcworkspace -scheme MusicFav -sdk iphonesimulator11.0 CODE_SIGNING_REQUIRED=NO
 cache:
-  bundler: true
-  cocoapods: true
   directories:
-  - Carthage
+    - vendor/bundle
+    - Pods
+    - Carthage
