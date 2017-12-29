@@ -8,7 +8,7 @@ before_script:
     - travis_wait 60 sh carthage_checkout.sh
     - travis_wait 60 bash -x carthage_build.sh
     - pod install
-script: xcodebuild -workspace MusicFav.xcworkspace -scheme MusicFav
+script: xcodebuild -workspace MusicFav.xcworkspace -scheme MusicFav CODE_SIGNING_REQUIRED=NO
 cache:
   bundler: true
   cocoapods: true
