@@ -5,8 +5,8 @@ git:
 before_install: rvm use 2.3 --install --binary --fuzzy
 install: bundle install --without=documentation
 before_script:
-    - travis_wait 60 sh carthage_checkout.sh
-    - travis_wait 60 bash -x carthage_build.sh
+    - carthage checkout --no-use-binaries
+    - travis_wait 60 carthage build --cache-builds --platform iOS
     - pod install
 script: xcodebuild -workspace MusicFav.xcworkspace -scheme MusicFav -sdk iphonesimulator11.0 CODE_SIGNING_REQUIRED=NO
 cache:
