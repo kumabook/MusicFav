@@ -8,7 +8,7 @@ install:
   - bundle exec pod install
   - bash -x carthage_checkout.sh
 before_script:
-    - bash -x carthage_build.sh
+  - travis_wait 60 carthage build --cache-builds --platform iOS
 script: xcodebuild -workspace MusicFav.xcworkspace -scheme MusicFav -sdk iphonesimulator11.0 CODE_SIGNING_REQUIRED=NO
 cache:
   directories:
