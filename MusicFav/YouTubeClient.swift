@@ -50,55 +50,38 @@ open class YouTubeAPIClient: MusicFeeder.YouTubeAPIClient {
     static var authUrl        = "\(baseUrl)/o/oauth2/auth"
     static var tokenUrl       = "\(baseUrl)/o/oauth2/token"
     static var scope          = Set(["https://gdata.youtube.com"])
-    static var redirectUrl    = "http://localhost/"
+    static var redirectUri    = ""
     static var accountType    = "YouTube"
     static var keyChainGroup  = "YouTube"
     static var API_KEY        = ""
     var API_KEY: String { return YouTubeAPIClient.API_KEY }
-    var oauth2clientDelegate: YouTubeOAuth2ClientDelegate
 
     var manager: Alamofire.SessionManager = Alamofire.SessionManager()
 
-    static var _account: NXOAuth2Account?
-    static var account: NXOAuth2Account? {
-        if let a = _account {
-            return a
+    static var credential: OAuthSwiftCredential? {
+        get {
+            return KeychainPreferences.sharedInstance[YouTubeAPIClient.keyChainGroup] as? OAuthSwiftCredential
         }
-        let store = NXOAuth2AccountStore.sharedStore() as! NXOAuth2AccountStore
-        for account in store.accounts as! [NXOAuth2Account] {
-            if account.accountType == "YouTube" {
-                _account = account
-                return account
-            }
+        set {
+            KeychainPreferences.sharedInstance[YouTubeAPIClient.keyChainGroup] = newValue
         }
-        return nil
     }
 
     static var isLoggedIn: Bool {
-        return account != nil
+        return credential != nil
     }
 
-    static func refreshAccount(_ account: NXOAuth2Account) {
+    static func refreshAccount(_ credential: OAuthSwiftCredential) {
         clearAllAccount()
-        let store = NXOAuth2AccountStore.sharedStore() as! NXOAuth2AccountStore
-        store.addAccount(account)
+        self.credential = credential
     }
 
     static func clearAllAccount() {
-        let store = NXOAuth2AccountStore.sharedStore() as! NXOAuth2AccountStore
-        for account in store.accounts as! [NXOAuth2Account] {
-            if account.accountType == "YouTube" {
-                store.removeAccount(account)
-            }
-        }
-        _account = nil
+        credential = nil
     }
 
     static var accessToken: String? {
-        if let token = account?.accessToken.accessToken {
-            return token
-        }
-        return nil
+        return credential?.oauthToken
     }
 
     fileprivate static func loadConfig() {
@@ -118,6 +101,9 @@ open class YouTubeAPIClient: MusicFeeder.YouTubeAPIClient {
                 if let secret = json["client_secret"].string {
                     clientSecret = secret
                 }
+                if let uri = json["redirect_uri"].string {
+                    redirectUri = uri
+                }
             }
         }
     }
@@ -127,25 +113,33 @@ open class YouTubeAPIClient: MusicFeeder.YouTubeAPIClient {
         sharedInstance.renewManager()
     }
 
-    init() {
-        typealias Y = YouTubeAPIClient
-        oauth2clientDelegate = YouTubeOAuth2ClientDelegate()
+    static var oauthswift: OAuth2Swift {
+        return OAuth2Swift(
+            consumerKey:    clientId,
+            consumerSecret: clientSecret,
+            authorizeUrl:   authUrl,
+            responseType:   "code token"
+        )
     }
 
-    var oauth2client: NXOAuth2Client? {
-        typealias Y = YouTubeAPIClient
-        if let accessToken = Y.account?.accessToken {
-            return NXOAuth2Client(clientID: Y.clientId,
-                              clientSecret: Y.clientSecret,
-                              authorizeURL: URL(string: Y.authUrl)!,
-                                  tokenURL: URL(string: Y.tokenUrl)!,
-                               accessToken: accessToken,
-                             keyChainGroup: Y.keyChainGroup,
-                                persistent: true,
-                                 delegate: oauth2clientDelegate)
-        } else {
-            return nil
-        }
+    static func authorize(_ viewController: UIViewController, callback: (() -> ())? = nil) {
+        oauthswift.authorizeURLHandler = SafariURLHandler(viewController: viewController, oauthSwift: oauthswift)
+        oauthswift.authorize(
+            withCallbackURL: URL(string: YouTubeAPIClient.redirectUri)!,
+            scope: YouTubeAPIClient.scope.joined(separator: ","),
+            state: "YouTube",
+            success: { credential, response, parameters in
+                YouTubeAPIClient.credential = credential
+                if let callback = callback {
+                    callback()
+                }
+        },
+            failure: { error in
+                print(error.localizedDescription)
+                if let callback = callback {
+                    callback()
+                }
+        })
     }
 
     func renewManager() {
@@ -165,16 +159,16 @@ open class YouTubeAPIClient: MusicFeeder.YouTubeAPIClient {
             .validate(statusCode: 200..<300)
             .validate(contentType: ["application/json"])
             .responseJSON(options: .allowFragments) { response in
-                if let r = response.request {
-                    if response.result.isFailure {
-                        if let oauth2client = self.oauth2client {
-                            self.oauth2clientDelegate.addPendingRequest(r, callback: callback)
-                            oauth2client.refreshAccessToken()
-                            return
-                        }
-                    }
+                if let t = YouTubeAPIClient.credential?.oauthRefreshToken {
+                    YouTubeAPIClient.oauthswift.renewAccessToken(withRefreshToken: t, success: { (credential, res, params) in
+                        YouTubeAPIClient.credential = credential
+                        let _ = self.request(url, method: method, parameters: parameters, encoding: encoding, callback: callback)
+                    }, failure: { (error) in
+                        callback(response)
+                    })
+                } else {
+                    callback(response)
                 }
-                callback(response)
         }
         return request
     }
@@ -310,35 +304,3 @@ open class YouTubeAPIClient: MusicFeeder.YouTubeAPIClient {
     }
 }
 
-open class YouTubeOAuth2ClientDelegate: NSObject, NXOAuth2ClientDelegate {
-    public typealias RequestCallback = (DataResponse<Any>) -> Void
-    open var pendingRequests: [(URLRequest, RequestCallback)]
-    public override init() {
-        pendingRequests = []
-    }
-    func addPendingRequest(_ request: URLRequest, callback: @escaping RequestCallback) {
-        pendingRequests.append((request, callback))
-    }
-    func restartPendingRequests() {
-        YouTubeAPIClient.sharedInstance.renewManager()
-        for req in pendingRequests {
-            YouTubeAPIClient.sharedInstance.manager
-                .request(req.0)
-                .responseJSON(options: .allowFragments, completionHandler: req.1)
-        }
-        pendingRequests = []
-    }
-    open func oauthClientNeedsAuthentication(_ client: NXOAuth2Client!) {}
-    open func oauthClientDidGetAccessToken(_ client: NXOAuth2Client!) {}
-    open func oauthClient(_ client: NXOAuth2Client!, didFailToGetAccessTokenWithError error: Error!) {
-        restartPendingRequests()
-    }
-    open func oauthClientDidLoseAccessToken(_ client: NXOAuth2Client!) {
-        restartPendingRequests()
-    }
-    open func oauthClientDidRefreshAccessToken(_ client: NXOAuth2Client!) {
-        YouTubeAPIClient.refreshAccount(NXOAuth2Account(accountWith: client.accessToken,
-                                                        accountType: YouTubeAPIClient.accountType))
-        restartPendingRequests()
-    }
-}

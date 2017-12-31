@@ -179,8 +179,7 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
 
     func showYouTubeLoginViewController() {
         if !YouTubeAPIClient.isLoggedIn {
-            let vc = YouTubeOAuthViewController()
-            navigationController?.pushViewController(vc, animated: true)
+            YouTubeAPIClient.authorize(self)
         }
     }
 

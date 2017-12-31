@@ -18,6 +18,7 @@ import XCDYouTubeKit
 import PlayerKit
 import SoundCloudKit
 import DrawerController
+import OAuthSwift
 
 public typealias PlaylistQueue = PlayerKit.PlaylistQueue
 
@@ -134,6 +135,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func startTutorial() {
         let vc = TutorialViewController()
         coverViewController?.present(vc, animated: true, completion: {})
+    }
+
+    func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
+        if url.absoluteString.hasPrefix(YouTubeAPIClient.redirectUri) {
+            OAuthSwift.handle(url: url)
+        }
+        return true
     }
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {

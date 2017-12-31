@@ -15,6 +15,7 @@ import XCDYouTubeKit
 import SoundCloudKit
 import StoreKit
 import MBProgressHUD
+import OAuthSwift
 
 class PreferenceViewController: UITableViewController {
     var appDelegate: AppDelegate { get { return UIApplication.shared.delegate as! AppDelegate } }
@@ -210,7 +211,7 @@ class PreferenceViewController: UITableViewController {
     }
 
     func showYouTubeLoginController() {
-        navigationController?.pushViewController(YouTubeOAuthViewController(), animated: true)
+        YouTubeAPIClient.authorize(self)
     }
 
     func showSoundCloudLoginController() {
