@@ -4,14 +4,17 @@ git:
   submodules: false
 before_install: rvm use 2.3 --install --binary --fuzzy
 install:
-  - bundle install --path=vendor/bundle --binstubs=vendor/bin
-  - bundle exec pod install --repo-update
-  - bash -x carthage_checkout.sh
+- bundle install --path=vendor/bundle --binstubs=vendor/bin
+- bundle exec pod install --repo-update
+- bash -x carthage_checkout.sh
 before_script:
-  - travis_wait 60 carthage build --cache-builds --platform iOS
+- travis_wait 60 carthage build --cache-builds --platform iOS
 script: xcodebuild -workspace MusicFav.xcworkspace -scheme MusicFav -sdk iphonesimulator11.0 CODE_SIGNING_REQUIRED=NO
 cache:
   directories:
-    - vendor/bundle
-    - Pods
-    - Carthage
+  - vendor/bundle
+  - Pods
+  - Carthage
+env:
+  global:
+  - secure: KPEZUpl1e9BTyAPPri6qFNJuMMXr3FVs5P7HuZuyh0hIzJ5N9WUJkUN+O7u73BnXHO4DLaFvhx0eRG4ggRn73M3N2WrQSdthEilMJtF5MJGB6UGW5Cy1WcBqYwCqpflevqLTS2EWhyHW9YrGuGGh4gzAxZphxdkA3fE/WcD+Kos=
