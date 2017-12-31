@@ -11,7 +11,6 @@ import ReactiveSwift
 import Result
 import Alamofire
 import SwiftyJSON
-import NXOAuth2Client
 import MusicFeeder
 import OAuthSwift
 import Prephirences
@@ -74,10 +73,15 @@ class ChannelStream: FeedlyKit.Stream {
     }
 }
 
-open class YouTubeOAuthRequestAdapter: OAuthRequestAdapter {
-    public override func refreshed() {
-        YouTubeAPIClient.credential = oauth.client.credential
-        YouTubeKit.APIClient.shared.accessToken = YouTubeAPIClient.accessToken
+open class YouTubeOAuthRequestRetrier: OAuthRequestRetrier {
+    public override func refreshed(_ succeeded: Bool) {
+        if succeeded {
+            APIClient.credential = oauth.client.credential
+            APIClient.shared.accessToken = oauth.client.credential.oauthToken
+        } else {
+            APIClient.credential = nil
+            APIClient.shared.accessToken = nil
+        }
     }
 }
 
@@ -142,32 +146,40 @@ open class YouTubeAPIClient: MusicFeeder.YouTubeAPIClient {
 
     open static func setup() {
         loadConfig()
-        sharedInstance.renewManager()
-    }
-
-    static var oauthswift: OAuth2Swift {
-        return OAuth2Swift(
+        oauth = OAuth2Swift(
             consumerKey:    clientId,
             consumerSecret: clientSecret,
             authorizeUrl:   authUrl,
-            responseType:   "code token"
+            accessTokenUrl: tokenUrl,
+            responseType:   "code"
         )
+        if let c = credential {
+            oauth.client.credential.oauthToken          = c.oauthToken
+            oauth.client.credential.oauthTokenSecret    = c.oauthTokenSecret
+            oauth.client.credential.oauthTokenExpiresAt = c.oauthTokenExpiresAt
+            oauth.client.credential.oauthRefreshToken   = c.oauthRefreshToken
+        }
+        YouTubeKit.APIClient.shared.accessToken     = credential?.oauthToken
+        YouTubeKit.APIClient.shared.manager.retrier = YouTubeOAuthRequestRetrier(oauth)
     }
 
+    static var oauth: OAuth2Swift!
+
     static func authorize(_ viewController: UIViewController, callback: (() -> ())? = nil) {
-        oauthswift.authorizeURLHandler = SafariURLHandler(viewController: viewController, oauthSwift: oauthswift)
-        oauthswift.authorize(
+        oauth.authorizeURLHandler = SafariURLHandler(viewController: viewController, oauthSwift: oauth)
+        let _ = oauth.authorize(
             withCallbackURL: URL(string: YouTubeAPIClient.redirectUri)!,
             scope: YouTubeAPIClient.scope.joined(separator: ","),
             state: "YouTube",
             success: { credential, response, parameters in
                 YouTubeAPIClient.credential = credential
+                APIClient.shared.accessToken = credential.oauthToken
+                AppDelegate.shared.reload()
                 if let callback = callback {
                     callback()
                 }
         },
             failure: { error in
-                print(error.localizedDescription)
                 if let callback = callback {
                     callback()
                 }

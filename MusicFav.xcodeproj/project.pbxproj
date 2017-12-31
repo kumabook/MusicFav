@@ -67,6 +67,7 @@
 		67428D571B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67428D561B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift */; };
 		67428D591B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67428D581B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift */; };
 		674AAC891B02D64E00C1FC18 /* UINotificationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */; };
+		674AE5C61FF8DD7A00E35A2C /* OAuthRequestRetrier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674AE5C51FF8DD7A00E35A2C /* OAuthRequestRetrier.swift */; };
 		674DF1281DD6BE36000C1B08 /* ReactiveSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 674DF1271DD6BE36000C1B08 /* ReactiveSwift.framework */; };
 		674DF1291DD6BE45000C1B08 /* ReactiveSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 674DF1271DD6BE36000C1B08 /* ReactiveSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		674DF12B1DD6BE6F000C1B08 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 674DF12A1DD6BE6F000C1B08 /* SDWebImage.framework */; };
@@ -323,6 +324,7 @@
 		67428D561B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubePlaylistTableViewController.swift; sourceTree = "<group>"; };
 		67428D581B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubePlaylistItemTableViewController.swift; sourceTree = "<group>"; };
 		674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINotificationExtension.swift; sourceTree = "<group>"; };
+		674AE5C51FF8DD7A00E35A2C /* OAuthRequestRetrier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthRequestRetrier.swift; sourceTree = "<group>"; };
 		674DF1271DD6BE36000C1B08 /* ReactiveSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveSwift.framework; path = Carthage/Build/iOS/ReactiveSwift.framework; sourceTree = "<group>"; };
 		674DF12A1DD6BE6F000C1B08 /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = Carthage/Build/iOS/SDWebImage.framework; sourceTree = "<group>"; };
 		6751509C1BA8542C00035DE6 /* SpecHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecHelper.swift; sourceTree = "<group>"; };
@@ -545,6 +547,7 @@
 				670505B81B6E23E5006EAA84 /* HypemAPIClient.swift */,
 				670505BA1B6E28E8006EAA84 /* CloudAPIClientExtension.swift */,
 				67D41CFE1B876AF90082454F /* SoundCloudAPIClient.swift */,
+				674AE5C51FF8DD7A00E35A2C /* OAuthRequestRetrier.swift */,
 			);
 			name = Net;
 			sourceTree = "<group>";
@@ -1231,6 +1234,7 @@
 				67C2921E1B7DCE8200EDA865 /* AddStreamMenuTableViewCell.swift in Sources */,
 				67C4146C1DE518F90013DC5D /* AnimatedLaunchScreen.swift in Sources */,
 				67554F091A4F127400F7AE72 /* TrackTableViewCell.swift in Sources */,
+				674AE5C61FF8DD7A00E35A2C /* OAuthRequestRetrier.swift in Sources */,
 				67311E301AF63BD500711DAC /* FeedbackWebViewController.swift in Sources */,
 				67CC023A1AF328EE005F5F3F /* GAIConfig.swift in Sources */,
 				67DA46651A87B49C0048B29C /* SelectPlaylistTableViewCell.swift in Sources */,
