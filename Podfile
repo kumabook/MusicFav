@@ -10,7 +10,7 @@ target "MusicFav" do
   pod 'Prephirences'
   pod 'NXOAuth2Client',       '>= 1.2.2'
   pod 'JASidePanels',         '>= 1.3'
-  pod 'MBProgressHUD',        '>= 0.8'
+  pod 'MBProgressHUD'
   pod 'MCSwipeTableViewCell', '>= 2.1.0'
   pod 'InAppSettingsKit'
   pod 'EAIntroView',          '~> 2.7.0'
