@@ -153,7 +153,6 @@
 		67D41D1C1B8F33020082454F /* TimelineTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D41D1A1B8F33020082454F /* TimelineTableViewCell.swift */; };
 		67D41D1D1B8F33020082454F /* TimelineTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67D41D1B1B8F33020082454F /* TimelineTableViewCell.xib */; };
 		67D8371B1B9AEFF30025B14B /* YouTubeActivityTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D8371A1B9AEFF30025B14B /* YouTubeActivityTableViewController.swift */; };
-		67D8371D1B9B3A510025B14B /* YouTubeOAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D8371C1B9B3A510025B14B /* YouTubeOAuthViewController.swift */; };
 		67D8371F1B9F1BAD0025B14B /* RecommendFeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D8371E1B9F1BAD0025B14B /* RecommendFeed.swift */; };
 		67DA465B1A8651CA0048B29C /* PlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DA46591A8651CA0048B29C /* PlaylistTableViewController.swift */; };
 		67DA465F1A8656A90048B29C /* PlaylistTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67DA465D1A8656A90048B29C /* PlaylistTableViewCell.swift */; };
@@ -399,7 +398,6 @@
 		67D41D1A1B8F33020082454F /* TimelineTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineTableViewCell.swift; sourceTree = "<group>"; };
 		67D41D1B1B8F33020082454F /* TimelineTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = TimelineTableViewCell.xib; sourceTree = "<group>"; };
 		67D8371A1B9AEFF30025B14B /* YouTubeActivityTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubeActivityTableViewController.swift; sourceTree = "<group>"; };
-		67D8371C1B9B3A510025B14B /* YouTubeOAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubeOAuthViewController.swift; sourceTree = "<group>"; };
 		67D8371E1B9F1BAD0025B14B /* RecommendFeed.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RecommendFeed.swift; path = MusicFav/RecommendFeed.swift; sourceTree = "<group>"; };
 		67DA46591A8651CA0048B29C /* PlaylistTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewController.swift; sourceTree = "<group>"; };
 		67DA465D1A8656A90048B29C /* PlaylistTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistTableViewCell.swift; sourceTree = "<group>"; };
@@ -728,7 +726,6 @@
 				67C1A8091B7B876A002A604C /* OAuthViewController.swift */,
 				67277CD91A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift */,
 				67D41D001B87812E0082454F /* SoundCloudOAuthViewController.swift */,
-				67D8371C1B9B3A510025B14B /* YouTubeOAuthViewController.swift */,
 				6727EDFC1A5AC1DE003C6A47 /* MiniPlayerViewController.swift */,
 				67B366DD1AE1CBA800E089B2 /* TutorialViewController.swift */,
 				67C1A7FB1B7B83A5002A604C /* PlayerViewController.swift */,
@@ -1298,7 +1295,6 @@
 				67DA46621A87B3AB0048B29C /* SelectPlaylistTableViewController.swift in Sources */,
 				67E5DEE31AEC4CEA000E016F /* FabricConfig.swift in Sources */,
 				67428D511B817980002FFA1A /* SearchStreamPageMenuController.swift in Sources */,
-				67D8371D1B9B3A510025B14B /* YouTubeOAuthViewController.swift in Sources */,
 				67428D571B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift in Sources */,
 				67F530901B7F815B00D8EEF1 /* StreamTreeViewCell.swift in Sources */,
 				67D8371B1B9AEFF30025B14B /* YouTubeActivityTableViewController.swift in Sources */,
