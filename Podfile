@@ -6,6 +6,8 @@ use_frameworks!
 project 'MusicFav'
 
 target "MusicFav" do
+  pod 'OAuthSwift'
+  pod 'Prephirences'
   pod 'NXOAuth2Client',       '>= 1.2.2'
   pod 'JASidePanels',         '>= 1.3'
   pod 'MBProgressHUD',        '>= 0.8'
