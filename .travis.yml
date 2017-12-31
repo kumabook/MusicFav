@@ -5,7 +5,7 @@ git:
 before_install: rvm use 2.3 --install --binary --fuzzy
 install:
   - bundle install --path=vendor/bundle --binstubs=vendor/bin
-  - bundle exec pod install
+  - bundle exec pod install --repo-update
   - bash -x carthage_checkout.sh
 before_script:
   - travis_wait 60 carthage build --cache-builds --platform iOS
