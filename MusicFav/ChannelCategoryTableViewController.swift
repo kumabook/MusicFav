@@ -12,6 +12,7 @@ import SwiftyJSON
 import FeedlyKit
 import MusicFeeder
 import MBProgressHUD
+import YouTubeKit
 
 class ChannelCategoryTableViewController: AddStreamTableViewController {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -75,7 +76,7 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
 
     override func getSubscribables() -> [FeedlyKit.Stream] {
         if let indexPaths = tableView.indexPathsForSelectedRows {
-            return indexPaths.map { Channel(subscription: self.channelLoader.subscriptions[$0.item]) }
+            return indexPaths.map { ChannelStream(channel: Channel(subscription: self.channelLoader.subscriptions[$0.item])) }
         } else {
             return []
         }

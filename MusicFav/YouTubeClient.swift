@@ -15,6 +15,8 @@ import NXOAuth2Client
 import MusicFeeder
 import OAuthSwift
 import Prephirences
+import YouTubeKit
+import FeedlyKit
 
 extension XCDYouTubeClient {
     func fetchVideo(_ identifier: String) -> SignalProducer<XCDYouTubeVideo, NSError> {

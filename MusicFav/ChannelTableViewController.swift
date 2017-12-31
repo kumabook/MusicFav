@@ -60,7 +60,7 @@ class ChannelTableViewController: AddStreamTableViewController {
 
     override func getSubscribables() -> [FeedlyKit.Stream] {
         if let indexPaths = tableView.indexPathsForSelectedRows {
-            return indexPaths.map { self.channels[$0.item] }
+            return indexPaths.map { ChannelStream(channel: self.channels[$0.item]) }
         } else {
             return []
         }
