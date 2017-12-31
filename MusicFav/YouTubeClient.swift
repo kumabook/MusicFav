@@ -38,6 +38,46 @@ extension XCDYouTubeClient {
 
 extension XCDYouTubeVideo: YouTubeVideo {
 }
+var StoredPropertyKeyForTrack: UInt8 = 0
+extension YouTubeKit.PlaylistItem {
+    public var track: Track {
+        if let t = objc_getAssociatedObject(self, &StoredPropertyKeyForTrack) as? Track {
+            return t
+        }
+        let t = Track(id: "\(Provider.youTube.rawValue)/\(videoId)",
+                provider: Provider.youTube,
+                     url: "https://www.youtube.com/watch?v=\(videoId)",
+              identifier: videoId,
+                   title: title)
+        objc_setAssociatedObject(self, &StoredPropertyKeyForTrack, t, .OBJC_ASSOCIATION_RETAIN)
+        return t
+    }
+    func toPlaylist() -> MusicFeeder.Playlist {
+        return MusicFeeder.Playlist(id: "youtube-track-\(id)", title: title, tracks: [track])
+    }
+}
+
+class ChannelStream: FeedlyKit.Stream {
+    let channel: Channel
+    init(channel: Channel) {
+        self.channel = channel
+    }
+    open override var streamTitle: String { return channel.title }
+    open override var streamId:    String { return "feed/https://www.youtube.com/feeds/videos.xml?channel_id=\(channel.id)" }
+    open override var thumbnailURL: URL? {
+        if let url = channel.thumbnails["default"] { return URL(string: url) }
+        else if let url = channel.thumbnails["medium"]  { return URL(string: url) }
+        else if let url = channel.thumbnails["high"]    { return URL(string: url) }
+        else                                            { return nil }
+    }
+}
+
+open class YouTubeOAuthRequestAdapter: OAuthRequestAdapter {
+    public override func refreshed() {
+        YouTubeAPIClient.credential = oauth.client.credential
+        YouTubeKit.APIClient.shared.accessToken = YouTubeAPIClient.accessToken
+    }
+}
 
 open class YouTubeAPIClient: MusicFeeder.YouTubeAPIClient {
     public func fetchVideo(_ identifier: String) -> SignalProducer<YouTubeVideo, NSError> {
@@ -55,10 +95,6 @@ open class YouTubeAPIClient: MusicFeeder.YouTubeAPIClient {
     static var redirectUri    = ""
     static var accountType    = "YouTube"
     static var keyChainGroup  = "YouTube"
-    static var API_KEY        = ""
-    var API_KEY: String { return YouTubeAPIClient.API_KEY }
-
-    var manager: Alamofire.SessionManager = Alamofire.SessionManager()
 
     static var credential: OAuthSwiftCredential? {
         get {
@@ -73,17 +109,9 @@ open class YouTubeAPIClient: MusicFeeder.YouTubeAPIClient {
         return credential != nil
     }
 
-    static func refreshAccount(_ credential: OAuthSwiftCredential) {
-        clearAllAccount()
-        self.credential = credential
-    }
-
     static func clearAllAccount() {
         credential = nil
-    }
-
-    static var accessToken: String? {
-        return credential?.oauthToken
+        APIClient.shared.accessToken = nil
     }
 
     fileprivate static func loadConfig() {
@@ -95,7 +123,7 @@ open class YouTubeAPIClient: MusicFeeder.YouTubeAPIClient {
             if let obj: AnyObject = jsonObject {
                 let json = JSON(obj)
                 if let apiKey = json["api_key"].string {
-                    API_KEY = apiKey
+                    YouTubeKit.APIClient.shared.API_KEY = apiKey
                 }
                 if let id = json["client_id"].string {
                     clientId = id
@@ -143,172 +171,129 @@ open class YouTubeAPIClient: MusicFeeder.YouTubeAPIClient {
                 }
         })
     }
+}
 
-    func renewManager() {
-        let configuration = manager.session.configuration
-        var headers = configuration.httpAdditionalHeaders ?? [:]
-        if let token = YouTubeAPIClient.accessToken {
-            headers["Authorization"] = "Bearer \(token)"
-        } else {
-            headers.removeValue(forKey: "Authorization")
-        }
-        configuration.httpAdditionalHeaders = headers
-        manager = Alamofire.SessionManager(configuration: configuration)
-    }
-
-    func request(_ url: URLConvertible, method: HTTPMethod, parameters: [String : Any]?, encoding: ParameterEncoding, callback: @escaping (DataResponse<Any>) -> Void) -> Alamofire.Request {
-        let request = manager.request(url, method: method, parameters: parameters, encoding: encoding)
-            .validate(statusCode: 200..<300)
-            .validate(contentType: ["application/json"])
-            .responseJSON(options: .allowFragments) { response in
-                if let t = YouTubeAPIClient.credential?.oauthRefreshToken {
-                    YouTubeAPIClient.oauthswift.renewAccessToken(withRefreshToken: t, success: { (credential, res, params) in
-                        YouTubeAPIClient.credential = credential
-                        let _ = self.request(url, method: method, parameters: parameters, encoding: encoding, callback: callback)
-                    }, failure: { (error) in
-                        callback(response)
-                    })
-                } else {
-                    callback(response)
-                }
-        }
-        return request
-    }
-
-    func fetchGuideCategories(_ pageToken: String?) -> SignalProducer<(items: [GuideCategory], nextPageToken: String?), NSError> {
-        return SignalProducer { (observer, disposable) in
-            let url = "https://www.googleapis.com/youtube/v3/guideCategories"
-            var params: [String: Any]
-            if let token = pageToken {
-                params = ["part": "snippet", "maxResults": 10, "regionCode": "JP", "pageToken": token]
-            } else {
-                params = ["part": "snippet", "maxResults": 10, "regionCode": "JP"]
-            }
-            if !YouTubeAPIClient.isLoggedIn {
-                params["key"] = self.API_KEY
-            }
-
-            let request = self.request(url, method: .get, parameters: params, encoding: URLEncoding.default) { response in
-                if let e = response.result.error {
-                    YouTubeAPIClient.clearAllAccount()
-                    observer.send(error: e as NSError)
-                } else if let obj = response.result.value {
-                    let json = JSON(obj)
-                    let val  = (items: json["items"].arrayValue.map { GuideCategory(json: $0) },
-                        nextPageToken: json["nextPageToken"].string)
-                    observer.send(value: val)
+extension YouTubeKit.APIClient {
+    func fetchGuideCategories(regionCode: String, pageToken: String?) -> SignalProducer<PaginatedResponse<GuideCategory>, NSError> {
+        return SignalProducer<PaginatedResponse<GuideCategory>, NSError> { observer , disposable in
+            let req = self.fetchGuideCategories(regionCode: regionCode, pageToken: pageToken) { response in
+                if let e = response.result.error as NSError? {
+                    observer.send(error: e)
+                } else if let value = response.result.value {
+                    observer.send(value: value)
                     observer.sendCompleted()
                 }
             }
             disposable.observeEnded {
-                request.cancel()
+                req.cancel()
             }
         }
     }
-
-    func fetchMyChannels(_ pageToken: String?) -> SignalProducer<(items: [MyChannel], nextPageToken: String?), NSError> {
-        if let token = pageToken {
-            return fetch(["part": "snippet, contentDetails", "mine": "true", "pageToken": token])
-        } else {
-            return fetch(["part": "snippet, contentDetails", "mine": "true"])
-        }
-    }
-
-    func fetchChannels(_ category: GuideCategory, pageToken: String?) -> SignalProducer<(items: [Channel], nextPageToken: String?), NSError> {
-        if let token = pageToken {
-            return fetch(["categoryId": category.id, "pageToken": token])
-        } else {
-            return fetch(["categoryId": category.id])
-        }
-    }
-
-    func fetchSubscriptions(_ pageToken: String?) -> SignalProducer<(items: [YouTubeSubscription], nextPageToken: String?), NSError> {
-        if let token = pageToken {
-            return fetch(["mine": "true", "pageToken": token])
-        } else {
-            return fetch(["mine": "true"])
-        }
-    }
-
-    func searchChannel(_ query: String?, pageToken: String?) -> SignalProducer<(items: [Channel], nextPageToken: String?), NSError> {
-        return SignalProducer { (observer, disposable) in
-            let url = "https://www.googleapis.com/youtube/v3/search"
-            var params: [String: Any] = ["part": "snippet",
-                                   "maxResults": 10,
-                                   "regionCode": "JP",
-                                         "type": "channel",
-                                  "channelType": "any"]
-            if let token = pageToken {
-                params["pageToken"] = token as Any?
-            }
-            if let q = query {
-                params["q"] = q as Any?
-            }
-            if !YouTubeAPIClient.isLoggedIn {
-                params["key"] = self.API_KEY
-            }
-            let request = self.request(url, method: .get, parameters: params, encoding: URLEncoding.default) { response in
-                if let e = response.result.error {
-                    YouTubeAPIClient.clearAllAccount()
-                    observer.send(error: e as NSError)
-                } else if let obj = response.result.value {
-                    let json = JSON(obj)
-                    let val  = (items: json["items"].arrayValue.map { Channel(json: $0) },
-                        nextPageToken: json["nextPageToken"].string)
-                    observer.send(value: val)
+    func fetchMyChannels(_ pageToken: String?) -> SignalProducer<PaginatedResponse<MyChannel>, NSError> {
+        return SignalProducer<PaginatedResponse<MyChannel>, NSError> { observer , disposable in
+            let req = self.fetchMyChannels(pageToken: pageToken) { response in
+                if let e = response.result.error as NSError? {
+                    observer.send(error: e)
+                } else if let value = response.result.value {
+                    observer.send(value: value)
                     observer.sendCompleted()
                 }
             }
             disposable.observeEnded {
-                request.cancel()
+                req.cancel()
             }
         }
     }
-
-    func fetch<T: YouTubeResource>(_ params: [String:String]) -> SignalProducer<(items: [T], nextPageToken: String?), NSError> {
-        return SignalProducer { (observer, disposable) in
-            var _params: [String: Any] = ["part": "snippet",
-                                    "maxResults": 10]
-            for k in params.keys {
-                _params[k] = params[k] as AnyObject?
-            }
-            if !YouTubeAPIClient.isLoggedIn {
-                _params["key"] = self.API_KEY
-            }
-            let request = self.request(T.url, method: .get, parameters: _params, encoding: URLEncoding.default) { response in
-                if let e = response.result.error {
-                    observer.send(error: e as NSError)
-                } else if let obj = response.result.value {
-                    let json = JSON(obj)
-                    let val  = (items: json["items"].arrayValue.map { T(json: $0) },
-                        nextPageToken: json["nextPageToken"].string)
-                    observer.send(value: val)
+    func fetchChannels(of category: GuideCategory, pageToken: String?) -> SignalProducer<PaginatedResponse<Channel>, NSError> {
+        return SignalProducer<PaginatedResponse<Channel>, NSError> { observer , disposable in
+            let req = self.fetchChannels(of: category, pageToken: pageToken) { response in
+                if let e = response.result.error as NSError? {
+                    observer.send(error: e)
+                } else if let value = response.result.value {
+                    observer.send(value: value)
                     observer.sendCompleted()
                 }
             }
             disposable.observeEnded {
-                request.cancel()
+                req.cancel()
             }
         }
     }
-    func fetchPlaylists(_ pageToken: String?) -> SignalProducer<(items: [YouTubePlaylist], nextPageToken: String?), NSError> {
-        if let token = pageToken {
-            return fetch(["pageToken": token, "mine": "true"])
-        } else {
-            return fetch(["mine": "true"])
+    func fetchSubscriptions(_ pageToken: String?) -> SignalProducer<PaginatedResponse<YouTubeKit.Subscription>, NSError> {
+        return SignalProducer<PaginatedResponse<YouTubeKit.Subscription>, NSError> { observer , disposable in
+            let req = self.fetchSubscriptions(pageToken: pageToken) { response in
+                if let e = response.result.error as NSError? {
+                    observer.send(error: e)
+                } else if let value = response.result.value {
+                    observer.send(value: value)
+                    observer.sendCompleted()
+                }
+            }
+            disposable.observeEnded {
+                req.cancel()
+            }
         }
     }
 
-    func fetchPlaylistItems(_ id: String, pageToken: String?) -> SignalProducer<(items: [YouTubePlaylistItem], nextPageToken: String?), NSError> {
-        if let token = pageToken {
-            return fetch(["pageToken": token, "playlistId": id, "part": "snippet, contentDetails"])
-        } else {
-            return fetch(["playlistId": id, "part": "snippet, contentDetails"])
+    func searchChannel(by query: String?, pageToken: String?) -> SignalProducer<PaginatedResponse<Channel>, NSError> {
+        return SignalProducer<PaginatedResponse<Channel>, NSError> { observer , disposable in
+            let req = self.searchChannel(by: query, pageToken: pageToken) { response in
+                if let e = response.result.error as NSError? {
+                    observer.send(error: e)
+                } else if let value = response.result.value {
+                    observer.send(value: value)
+                    observer.sendCompleted()
+                }
+            }
+            disposable.observeEnded {
+                req.cancel()
+            }
         }
     }
-
-    func fetchPlaylistItems(_ playlist: YouTubePlaylist, pageToken: String?) -> SignalProducer<(items: [YouTubePlaylistItem], nextPageToken: String?), NSError> {
-        return fetchPlaylistItems(playlist.id, pageToken: pageToken)
+    func fetchMyPlaylists(pageToken: String?) -> SignalProducer<PaginatedResponse<YouTubeKit.Playlist>, NSError> {
+        return SignalProducer<PaginatedResponse<YouTubeKit.Playlist>, NSError> { observer , disposable in
+            let req = self.fetchMyPlaylists(pageToken: pageToken) { response in
+                if let e = response.result.error as NSError? {
+                    observer.send(error: e)
+                } else if let value = response.result.value {
+                    observer.send(value: value)
+                    observer.sendCompleted()
+                }
+            }
+            disposable.observeEnded {
+                req.cancel()
+            }
+        }
+    }
+    func fetchPlaylistItems(_ id: String, pageToken: String?) -> SignalProducer<PaginatedResponse<YouTubeKit.PlaylistItem>, NSError> {
+        return SignalProducer<PaginatedResponse<YouTubeKit.PlaylistItem>, NSError> { observer , disposable in
+            let req = self.fetchPlaylistItems(id, pageToken: pageToken) { response in
+                if let e = response.result.error as NSError? {
+                    observer.send(error: e)
+                } else if let value = response.result.value {
+                    observer.send(value: value)
+                    observer.sendCompleted()
+                }
+            }
+            disposable.observeEnded {
+                req.cancel()
+            }
+        }
+    }
+    func fetchPlaylistItems(of playlist: YouTubeKit.Playlist, pageToken: String?) -> SignalProducer<PaginatedResponse<YouTubeKit.PlaylistItem>, NSError> {
+        return SignalProducer<PaginatedResponse<YouTubeKit.PlaylistItem>, NSError> { observer , disposable in
+            let req = self.fetchPlaylistItems(of: playlist, pageToken: pageToken) { response in
+                if let e = response.result.error as NSError? {
+                    observer.send(error: e)
+                } else if let value = response.result.value {
+                    observer.send(value: value)
+                    observer.sendCompleted()
+                }
+            }
+            disposable.observeEnded {
+                req.cancel()
+            }
+        }
     }
 }
 
