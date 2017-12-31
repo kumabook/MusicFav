@@ -9,9 +9,10 @@
 import UIKit
 import MusicFeeder
 import ReactiveSwift
+import YouTubeKit
 
 class YouTubePlaylistItemTableViewController: TrackTableViewController {
-    var youtubePlaylist:       YouTubePlaylist!
+    var youtubePlaylist:       YouTubeKit.Playlist!
     var youtubePlaylistLoader: YouTubePlaylistLoader!
     var observer:              Disposable?
 
@@ -19,7 +20,7 @@ class YouTubePlaylistItemTableViewController: TrackTableViewController {
         return .thirdParty
     }
 
-    init(playlist: YouTubePlaylist, playlistLoader: YouTubePlaylistLoader) {
+    init(playlist: YouTubeKit.Playlist, playlistLoader: YouTubePlaylistLoader) {
         youtubePlaylist       = playlist
         youtubePlaylistLoader = playlistLoader
         super.init(playlist: Playlist(id: youtubePlaylist.id, title: youtubePlaylist.title, tracks: []))

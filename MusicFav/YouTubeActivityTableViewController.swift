@@ -10,15 +10,16 @@ import UIKit
 import ReactiveSwift
 import SoundCloudKit
 import MusicFeeder
+import YouTubeKit
 
 class YouTubeActivityTableViewController: TimelineTableViewController {
     let activityLoader: YouTubeActivityLoader!
-    var playlist: YouTubePlaylist!
+    var playlist: YouTubeKit.Playlist!
     override func getPlaylistQueue() -> PlaylistQueue {
         return activityLoader.playlistQueue
     }
 
-   init(activityLoader: YouTubeActivityLoader, playlist: YouTubePlaylist) {
+   init(activityLoader: YouTubeActivityLoader, playlist: YouTubeKit.Playlist) {
         self.activityLoader = activityLoader
         self.playlist       = playlist
         super.init()

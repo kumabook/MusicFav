@@ -13,12 +13,13 @@ import MusicFeeder
 import RATreeView
 import MBProgressHUD
 import SoundCloudKit
+import YouTubeKit
 
 class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeViewDataSource {
     enum Section {
         case globalResource(FeedlyKit.Stream)
         case feedlyCategory(FeedlyKit.Category)
-        case uncategorizedSubscription(Subscription)
+        case uncategorizedSubscription(FeedlyKit.Subscription)
         case favorite
         case history
         case youTube
@@ -264,7 +265,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         appDelegate.miniPlayerViewController?.setCenterViewController(vc)
     }
 
-    func showYouTubeActivities(_ playlist: YouTubePlaylist) {
+    func showYouTubeActivities(_ playlist: YouTubeKit.Playlist) {
         let vc = YouTubeActivityTableViewController(activityLoader: youtubeActivityLoader, playlist: playlist)
         appDelegate.miniPlayerViewController?.setCenterViewController(vc)
     }
@@ -291,7 +292,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
                 self.sections  = self.defaultSections()
                 self.sections.append(contentsOf: categories.map({ Section.feedlyCategory($0) }))
                 self.sections.append(contentsOf: self.subscriptionRepository.uncategorizedStreams.map {
-                    if let subscription = $0 as? Subscription {
+                    if let subscription = $0 as? FeedlyKit.Subscription {
                         return Section.uncategorizedSubscription(subscription)
                     } else if let feed = $0 as? Feed {
                         return Section.uncategorizedSubscription(Subscription(feed: feed, categories: []))
@@ -365,7 +366,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         return i
     }
 
-    func indexOfUncategorizedSubscription(_ subscription: Subscription) -> Int {
+    func indexOfUncategorizedSubscription(_ subscription: FeedlyKit.Subscription) -> Int {
         var i = 0
         for section in sections {
             switch section {
@@ -388,7 +389,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         subscriptionRepository.refresh()
     }
 
-    func unsubscribeTo(_ subscription: Subscription, index: Int, category: FeedlyKit.Category) {
+    func unsubscribeTo(_ subscription: FeedlyKit.Subscription, index: Int, category: FeedlyKit.Category) {
         let _ = subscriptionRepository.unsubscribeTo(subscription)
     }
 
@@ -432,10 +433,10 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             }
         } else if let stream = item as? FeedlyKit.Stream {
             cell.textLabel?.text = stream.streamTitle
-            if let subscription = stream as? Subscription {
+            if let subscription = stream as? FeedlyKit.Subscription {
                 cell.imageView?.sd_setImage(with: subscription.thumbnailURL, placeholderImage: UIImage(named: "default_thumb"))
             }
-        } else if let playlist = item as? YouTubePlaylist {
+        } else if let playlist = item as? YouTubeKit.Playlist {
             cell.textLabel?.text = playlist.title.localize()
             cell.imageView?.sd_setImage(with: playlist.thumbnailURL, placeholderImage: UIImage(named: "default_thumb"))
         }
@@ -459,7 +460,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             showStream(section: sections[index])
         } else if let stream = item as? FeedlyKit.Stream {
             showStream(stream:stream)
-        } else if let playlist = item as? YouTubePlaylist {
+        } else if let playlist = item as? YouTubeKit.Playlist {
             showYouTubeActivities(playlist)
         }
     }
@@ -494,7 +495,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
                 if let streams = subscriptionRepository.streamListOfCategory[category] {
                     let stream = item as! FeedlyKit.Stream
                     if let i = streams.index(of: stream) {
-                        if let subscription = item as? Subscription {
+                        if let subscription = item as? FeedlyKit.Subscription {
                             unsubscribeTo(subscription, index: i, category: category)
                         }
                     }

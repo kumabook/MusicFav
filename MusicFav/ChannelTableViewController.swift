@@ -12,6 +12,7 @@ import SwiftyJSON
 import FeedlyKit
 import PageMenu
 import MusicFeeder
+import YouTubeKit
 
 class ChannelTableViewController: AddStreamTableViewController {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate

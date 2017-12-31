@@ -9,6 +9,7 @@
 import Foundation
 import ReactiveSwift
 import Result
+import YouTubeKit
 
 class YouTubePlaylistLoader {
     enum State {
@@ -24,8 +25,8 @@ class YouTubePlaylistLoader {
         case failToLoad
     }
 
-    var playlists:       [YouTubePlaylist]
-    var itemsOfPlaylist: [YouTubePlaylist: [YouTubePlaylistItem]]
+    var playlists:       [YouTubeKit.Playlist]
+    var itemsOfPlaylist: [YouTubeKit.Playlist: [YouTubeKit.PlaylistItem]]
 
     var state:          State
     var signal:         Signal<Event, NSError>
@@ -34,8 +35,8 @@ class YouTubePlaylistLoader {
     var playlistsPageToken:  String?
     var playlistsDisposable: Disposable?
 
-    var itemsPageTokenOfPlaylist:  [YouTubePlaylist: String]
-    var itemsDisposableOfPlaylist: [YouTubePlaylist: Disposable?]
+    var itemsPageTokenOfPlaylist:  [YouTubeKit.Playlist: String]
+    var itemsDisposableOfPlaylist: [YouTubeKit.Playlist: Disposable?]
 
     init() {
         playlists          = []
@@ -73,11 +74,11 @@ class YouTubePlaylistLoader {
         }
     }
 
-    func needFetchPlaylistItems(_ playlist: YouTubePlaylist) -> Bool {
+    func needFetchPlaylistItems(_ playlist: YouTubeKit.Playlist) -> Bool {
         return itemsPageTokenOfPlaylist[playlist] != nil
     }
 
-    func fetchPlaylistItems(_ playlist: YouTubePlaylist) {
+    func fetchPlaylistItems(_ playlist: YouTubeKit.Playlist) {
         if !needFetchPlaylistItems(playlist) { return }
         switch state {
         case .init:     playlistsDisposable = fetchNextPlaylistItems(playlist).start()
@@ -90,7 +91,7 @@ class YouTubePlaylistLoader {
     fileprivate func fetchNextPlaylists() -> SignalProducer<Void, NSError> {
         state = State.fetching
         observer.send(value: .startLoading)
-        return YouTubeAPIClient.sharedInstance.fetchPlaylists(playlistsPageToken).map {
+        return YouTubeKit.APIClient.shared.fetchMyPlaylists(pageToken: playlistsPageToken).map {
             self.playlists.append(contentsOf: $0.items)
             self.playlistsPageToken = $0.nextPageToken
             for i in $0.items {
@@ -102,11 +103,11 @@ class YouTubePlaylistLoader {
         }
     }
 
-    fileprivate func fetchNextPlaylistItems(_ playlist: YouTubePlaylist) -> SignalProducer<Void, NSError> {
+    fileprivate func fetchNextPlaylistItems(_ playlist: YouTubeKit.Playlist) -> SignalProducer<Void, NSError> {
         state = State.fetching
         observer.send(value: .startLoading)
         let pageToken = itemsPageTokenOfPlaylist[playlist]!
-        return YouTubeAPIClient.sharedInstance.fetchPlaylistItems(playlist, pageToken: pageToken).map {
+        return YouTubeKit.APIClient.shared.fetchPlaylistItems(of: playlist, pageToken: pageToken).map {
             self.itemsOfPlaylist[playlist]?.append(contentsOf: $0.items)
             self.itemsPageTokenOfPlaylist[playlist] = $0.nextPageToken
             self.observer.send(value: .completeLoading)

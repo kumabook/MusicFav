@@ -10,11 +10,12 @@ import Foundation
 import MusicFeeder
 import FeedlyKit
 import SoundCloudKit
+import YouTubeKit
 
 enum TimelineItem {
     case entry(FeedlyKit.Entry, MusicFeeder.Playlist?)
     case activity(SoundCloudKit.Activity, MusicFeeder.Playlist?)
-    case youTubePlaylist(YouTubePlaylistItem, MusicFeeder.Playlist?)
+    case youTubePlaylist(YouTubeKit.PlaylistItem, MusicFeeder.Playlist?)
     case trackHistory(MusicFeeder.History, MusicFeeder.Playlist?)
 
     var entry: FeedlyKit.Entry? {

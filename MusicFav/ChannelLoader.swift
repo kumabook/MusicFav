@@ -9,6 +9,7 @@
 import ReactiveSwift
 import Result
 import FeedlyKit
+import YouTubeKit
 
 class ChannelLoader {
     enum State {
@@ -32,7 +33,7 @@ class ChannelLoader {
     var signal:         Signal<Event, NSError>
     var observer:       Signal<Event, NSError>.Observer
 
-    var subscriptions:               [YouTubeSubscription]
+    var subscriptions:               [YouTubeKit.Subscription]
     var channels:                    [Channel]
     var searchResults:               [Channel]
     var channelsPageTokenOfCategory: [GuideCategory: String]
@@ -77,7 +78,7 @@ class ChannelLoader {
     fileprivate func fetchNextGuideCategory() -> SignalProducer<Void, NSError> {
         state = State.fetching
         observer.send(value: .startLoading)
-        return YouTubeAPIClient.sharedInstance.fetchGuideCategories(categoriesPageToken).map {
+        return YouTubeKit.APIClient.shared.fetchGuideCategories(regionCode: "JP", pageToken: categoriesPageToken).map {
             self.categories.append(contentsOf: $0.items)
             self.categoriesPageToken = $0.nextPageToken
             for c in $0.items {
@@ -97,7 +98,7 @@ class ChannelLoader {
     fileprivate func fetchNextChannels(_ category: GuideCategory) -> SignalProducer<Void, NSError> {
         state = State.fetching
         observer.send(value: .startLoading)
-        return YouTubeAPIClient.sharedInstance.fetchChannels(category, pageToken: channelsPageTokenOfCategory[category]).map {
+        return YouTubeKit.APIClient.shared.fetchChannels(of: category, pageToken: channelsPageTokenOfCategory[category]).map {
                 self.channelsOfCategory[category]?.append(contentsOf: $0.items)
                 self.channelsPageTokenOfCategory[category] = $0.nextPageToken
                 self.observer.send(value: .completeLoading)
@@ -108,7 +109,7 @@ class ChannelLoader {
     fileprivate func fetchNextSubscriptions() -> SignalProducer<Void, NSError> {
         state = State.fetching
         observer.send(value: .startLoading)
-        return YouTubeAPIClient.sharedInstance.fetchSubscriptions(subscriptionPageToken)
+        return YouTubeKit.APIClient.shared.fetchSubscriptions(pageToken: subscriptionPageToken)
             .map {
                 self.subscriptions.append(contentsOf: $0.items)
                 self.subscriptionPageToken = $0.nextPageToken
@@ -124,7 +125,7 @@ class ChannelLoader {
     fileprivate func searchNextChannels(_ query: String) -> SignalProducer<Void, NSError> {
         state = State.fetching
         observer.send(value: .startLoading)
-        return YouTubeAPIClient.sharedInstance.searchChannel(query, pageToken: searchPageToken)
+        return YouTubeKit.APIClient.shared.searchChannel(by: query, pageToken: searchPageToken)
             .map {
                 self.searchResults.append(contentsOf: $0.items)
                 self.searchPageToken = $0.nextPageToken
