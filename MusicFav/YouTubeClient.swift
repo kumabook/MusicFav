@@ -13,6 +13,8 @@ import Alamofire
 import SwiftyJSON
 import NXOAuth2Client
 import MusicFeeder
+import OAuthSwift
+import Prephirences
 
 extension XCDYouTubeClient {
     func fetchVideo(_ identifier: String) -> SignalProducer<XCDYouTubeVideo, NSError> {
@@ -178,10 +180,12 @@ open class YouTubeAPIClient: MusicFeeder.YouTubeAPIClient {
             let url = "https://www.googleapis.com/youtube/v3/guideCategories"
             var params: [String: Any]
             if let token = pageToken {
-                params = ["key": self.API_KEY
-                    , "part": "snippet", "maxResults": 10, "regionCode": "JP", "pageToken": token]
+                params = ["part": "snippet", "maxResults": 10, "regionCode": "JP", "pageToken": token]
             } else {
-                params = ["key": self.API_KEY, "part": "snippet", "maxResults": 10, "regionCode": "JP"]
+                params = ["part": "snippet", "maxResults": 10, "regionCode": "JP"]
+            }
+            if !YouTubeAPIClient.isLoggedIn {
+                params["key"] = self.API_KEY
             }
 
             let request = self.request(url, method: .get, parameters: params, encoding: URLEncoding.default) { response in
@@ -229,17 +233,19 @@ open class YouTubeAPIClient: MusicFeeder.YouTubeAPIClient {
     func searchChannel(_ query: String?, pageToken: String?) -> SignalProducer<(items: [Channel], nextPageToken: String?), NSError> {
         return SignalProducer { (observer, disposable) in
             let url = "https://www.googleapis.com/youtube/v3/search"
-            var params: [String: Any] = ["key": self.API_KEY as AnyObject,
-                                        "part": "snippet" as AnyObject,
-                                  "maxResults": 10 as AnyObject,
-                                  "regionCode": "JP" as AnyObject,
-                                        "type": "channel" as AnyObject,
-                                 "channelType": "any" as AnyObject]
+            var params: [String: Any] = ["part": "snippet",
+                                   "maxResults": 10,
+                                   "regionCode": "JP",
+                                         "type": "channel",
+                                  "channelType": "any"]
             if let token = pageToken {
                 params["pageToken"] = token as Any?
             }
             if let q = query {
                 params["q"] = q as Any?
+            }
+            if !YouTubeAPIClient.isLoggedIn {
+                params["key"] = self.API_KEY
             }
             let request = self.request(url, method: .get, parameters: params, encoding: URLEncoding.default) { response in
                 if let e = response.result.error {
@@ -261,11 +267,13 @@ open class YouTubeAPIClient: MusicFeeder.YouTubeAPIClient {
 
     func fetch<T: YouTubeResource>(_ params: [String:String]) -> SignalProducer<(items: [T], nextPageToken: String?), NSError> {
         return SignalProducer { (observer, disposable) in
-            var _params: [String: AnyObject] = ["key": self.API_KEY as AnyObject,
-                                               "part": "snippet" as AnyObject,
-                                         "maxResults": 10 as AnyObject]
+            var _params: [String: Any] = ["part": "snippet",
+                                    "maxResults": 10]
             for k in params.keys {
                 _params[k] = params[k] as AnyObject?
+            }
+            if !YouTubeAPIClient.isLoggedIn {
+                _params["key"] = self.API_KEY
             }
             let request = self.request(T.url, method: .get, parameters: _params, encoding: URLEncoding.default) { response in
                 if let e = response.result.error {
