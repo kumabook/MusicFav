@@ -120,7 +120,7 @@
 		67C1A8001B7B8712002A604C /* ChannelLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C1A7FE1B7B8712002A604C /* ChannelLoader.swift */; };
 		67C1A8041B7B8728002A604C /* ChannelCategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C1A8011B7B8728002A604C /* ChannelCategoryTableViewController.swift */; };
 		67C1A8051B7B8728002A604C /* ChannelTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C1A8021B7B8728002A604C /* ChannelTableViewController.swift */; };
-		67C1A8081B7B874A002A604C /* YouTubeClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C1A8071B7B874A002A604C /* YouTubeClient.swift */; };
+		67C1A8081B7B874A002A604C /* YouTubeAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C1A8071B7B874A002A604C /* YouTubeAPIClient.swift */; };
 		67C1A80A1B7B876A002A604C /* OAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C1A8091B7B876A002A604C /* OAuthViewController.swift */; };
 		67C1A80C1B7CCAB0002A604C /* AddStreamMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C1A80B1B7CCAB0002A604C /* AddStreamMenuViewController.swift */; };
 		67C2921E1B7DCE8200EDA865 /* AddStreamMenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C2921C1B7DCE8200EDA865 /* AddStreamMenuTableViewCell.swift */; };
@@ -367,7 +367,7 @@
 		67C1A7FE1B7B8712002A604C /* ChannelLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ChannelLoader.swift; path = MusicFav/ChannelLoader.swift; sourceTree = "<group>"; };
 		67C1A8011B7B8728002A604C /* ChannelCategoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelCategoryTableViewController.swift; sourceTree = "<group>"; };
 		67C1A8021B7B8728002A604C /* ChannelTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelTableViewController.swift; sourceTree = "<group>"; };
-		67C1A8071B7B874A002A604C /* YouTubeClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubeClient.swift; sourceTree = "<group>"; };
+		67C1A8071B7B874A002A604C /* YouTubeAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubeAPIClient.swift; sourceTree = "<group>"; };
 		67C1A8091B7B876A002A604C /* OAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuthViewController.swift; sourceTree = "<group>"; };
 		67C1A80B1B7CCAB0002A604C /* AddStreamMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddStreamMenuViewController.swift; sourceTree = "<group>"; };
 		67C2921C1B7DCE8200EDA865 /* AddStreamMenuTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddStreamMenuTableViewCell.swift; sourceTree = "<group>"; };
@@ -543,7 +543,7 @@
 		670505B31B6E230A006EAA84 /* Net */ = {
 			isa = PBXGroup;
 			children = (
-				67C1A8071B7B874A002A604C /* YouTubeClient.swift */,
+				67C1A8071B7B874A002A604C /* YouTubeAPIClient.swift */,
 				670505B81B6E23E5006EAA84 /* HypemAPIClient.swift */,
 				670505BA1B6E28E8006EAA84 /* CloudAPIClientExtension.swift */,
 				67D41CFE1B876AF90082454F /* SoundCloudAPIClient.swift */,
@@ -1264,7 +1264,7 @@
 				6794E7F51AE318720054B3DB /* TutorialView.swift in Sources */,
 				673C81BE1BC8C4A700EE6F70 /* OnpuIndicatorView.swift in Sources */,
 				67C1A80C1B7CCAB0002A604C /* AddStreamMenuViewController.swift in Sources */,
-				67C1A8081B7B874A002A604C /* YouTubeClient.swift in Sources */,
+				67C1A8081B7B874A002A604C /* YouTubeAPIClient.swift in Sources */,
 				674AAC891B02D64E00C1FC18 /* UINotificationExtension.swift in Sources */,
 				67277CDB1A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift in Sources */,
 				6783057F1B95DDC000A83F52 /* StreamTimelineTableViewController.swift in Sources */,
