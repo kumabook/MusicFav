@@ -17,6 +17,7 @@ import Crashlytics
 import XCDYouTubeKit
 import PlayerKit
 import SoundCloudKit
+import YouTubeKit
 import DrawerController
 import OAuthSwift
 
@@ -128,8 +129,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func setupAPIClient() {
         CloudAPIClient.setup()
         SoundCloudKit.APIClient.setup()
-        YouTubeAPIClient.setup()
-        MusicFeeder.Track.youtubeAPIClient = YouTubeAPIClient.sharedInstance
+        YouTubeKit.APIClient.setup()
+        MusicFeeder.Track.youtubeAPIClient = YouTubeKit.APIClient.shared
     }
 
     func startTutorial() {
@@ -138,7 +139,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func application(_ app: UIApplication, open url: URL, options: [UIApplicationOpenURLOptionsKey : Any] = [:]) -> Bool {
-        if url.absoluteString.hasPrefix(YouTubeAPIClient.redirectUri) {
+        if url.absoluteString.hasPrefix(YouTubeKit.APIClient.redirectUri) {
             OAuthSwift.handle(url: url)
         }
         return true

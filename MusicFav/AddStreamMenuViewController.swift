@@ -11,6 +11,7 @@ import ReactiveSwift
 import MusicFeeder
 import FeedlyKit
 import SoundCloudKit
+import YouTubeKit
 
 class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
     let reuseIdentifier = "reuseIdentifier"
@@ -40,7 +41,7 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
             case .recommend:
                 return vc.recommendFeeds.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
             case .youTube:
-                if YouTubeAPIClient.isLoggedIn {
+                if YouTubeKit.APIClient.isLoggedIn {
                     return vc.channelLoader.subscriptions.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
                 } else {
                     return vc.channelLoader.searchResults.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
@@ -105,7 +106,7 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
         observeUserLoader()
         fetchRecommendFeeds()
         fetchBlogs()
-        if YouTubeAPIClient.isLoggedIn {
+        if YouTubeKit.APIClient.isLoggedIn {
             channelLoader.fetchSubscriptions()
         } else {
             channelLoader.searchChannels("music")

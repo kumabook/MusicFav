@@ -13,6 +13,7 @@ import MusicFeeder
 import RMDateSelectionViewController
 import XCDYouTubeKit
 import SoundCloudKit
+import YouTubeKit
 import StoreKit
 import MBProgressHUD
 import OAuthSwift
@@ -73,7 +74,7 @@ class PreferenceViewController: UITableViewController {
                     return "Manage feeds with Feedly".localize()
                 }
             case .youTube:
-                if YouTubeAPIClient.isLoggedIn {
+                if YouTubeKit.APIClient.isLoggedIn {
                     return "Disconnect with YouTube".localize()
                 } else {
                     return "Connect with YouTube".localize()
@@ -211,7 +212,7 @@ class PreferenceViewController: UITableViewController {
     }
 
     func showYouTubeLoginController() {
-        YouTubeAPIClient.authorize(self)
+        YouTubeKit.APIClient.authorize(self)
     }
 
     func showSoundCloudLoginController() {
@@ -238,7 +239,7 @@ class PreferenceViewController: UITableViewController {
 
     func showDisonnectYouTubeDialog() {
         showConfirmDialog("Disconnect with YouTube", message: "Are you sure you want to disconnect with YouTube?") { (action) in
-            YouTubeAPIClient.clearAllAccount()
+            YouTubeKit.APIClient.clearAllAccount()
             self.tableView?.reloadData()
             self.appDelegate.reload()
         }
@@ -297,7 +298,7 @@ class PreferenceViewController: UITableViewController {
                     showLoginViewController()
                 }
             case .youTube:
-                if YouTubeAPIClient.isLoggedIn {
+                if YouTubeKit.APIClient.isLoggedIn {
                     showDisonnectYouTubeDialog()
                 } else {
                     showYouTubeLoginController()

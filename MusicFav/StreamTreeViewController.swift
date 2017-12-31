@@ -237,10 +237,10 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
                 present(vc, animated: true, completion: {})
             }
         case .youTube:
-            if YouTubeAPIClient.isLoggedIn {
+            if YouTubeKit.APIClient.isLoggedIn {
                 return
             } else {
-                YouTubeAPIClient.authorize(self)
+                YouTubeKit.APIClient.authorize(self)
             }
         case .pocket:         return
         case .twitter:        return

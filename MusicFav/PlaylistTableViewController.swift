@@ -10,6 +10,7 @@ import UIKit
 import ReactiveSwift
 import MusicFeeder
 import SoundCloudKit
+import YouTubeKit
 import Breit
 
 class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
@@ -384,10 +385,10 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         case .selected:
             showSelectedPlaylist(true)
         case .youTube:
-            if YouTubeAPIClient.isLoggedIn {
+            if YouTubeKit.APIClient.isLoggedIn {
                 showYouTubePlaylists()
             } else {
-                YouTubeAPIClient.authorize(self)
+                YouTubeKit.APIClient.authorize(self)
             }
         case .soundCloud:
             if SoundCloudKit.APIClient.isLoggedIn {

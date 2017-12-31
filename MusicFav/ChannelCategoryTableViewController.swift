@@ -24,7 +24,7 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
         var title: String? {
             switch self {
             case .subscriptions:
-                if YouTubeAPIClient.isLoggedIn {
+                if YouTubeKit.APIClient.isLoggedIn {
                     return "Your subscriptions"
                 } else {
                     return nil
@@ -36,7 +36,7 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
         var tableCellReuseIdentifier: String {
             switch self {
             case .subscriptions:
-                if YouTubeAPIClient.isLoggedIn {
+                if YouTubeKit.APIClient.isLoggedIn {
                     return "Subscriptions"
                 } else {
                     return "Login"
@@ -48,7 +48,7 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
         var cellHeight: CGFloat {
             switch self {
             case .subscriptions:
-                if YouTubeAPIClient.isLoggedIn {
+                if YouTubeKit.APIClient.isLoggedIn {
                     return 100
                 } else {
                     return 60
@@ -179,8 +179,8 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
     }
 
     func showYouTubeLoginViewController() {
-        if !YouTubeAPIClient.isLoggedIn {
-            YouTubeAPIClient.authorize(self)
+        if !YouTubeKit.APIClient.isLoggedIn {
+            YouTubeKit.APIClient.authorize(self)
         }
     }
 
@@ -201,7 +201,7 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch Section(rawValue: section)! {
         case .subscriptions:
-            if YouTubeAPIClient.isLoggedIn {
+            if YouTubeKit.APIClient.isLoggedIn {
                 return channelLoader.subscriptions.count
             } else {
                 return 1
@@ -215,7 +215,7 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
         let section = Section(rawValue: indexPath.section)!
         switch section {
         case .subscriptions:
-            if YouTubeAPIClient.isLoggedIn {
+            if YouTubeKit.APIClient.isLoggedIn {
                 let cell = tableView.dequeueReusableCell(withIdentifier: section.tableCellReuseIdentifier, for: indexPath) as! StreamTableViewCell
                 setAccessoryView(cell, indexPath: indexPath)
                 let subscription = channelLoader.subscriptions[indexPath.item]
@@ -244,7 +244,7 @@ class ChannelCategoryTableViewController: AddStreamTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch Section(rawValue: indexPath.section)! {
         case .subscriptions:
-            if YouTubeAPIClient.isLoggedIn {
+            if YouTubeKit.APIClient.isLoggedIn {
                 super.tableView(tableView, didSelectRowAt: indexPath)
             } else {
                 showYouTubeLoginViewController()

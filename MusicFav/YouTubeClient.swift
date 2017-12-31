@@ -85,13 +85,12 @@ open class YouTubeOAuthRequestRetrier: OAuthRequestRetrier {
     }
 }
 
-open class YouTubeAPIClient: MusicFeeder.YouTubeAPIClient {
+extension YouTubeKit.APIClient: MusicFeeder.YouTubeAPIClient {
     public func fetchVideo(_ identifier: String) -> SignalProducer<YouTubeVideo, NSError> {
         return XCDYouTubeClient().fetchVideo(identifier).map {
             $0 as YouTubeVideo
         }
     }
-    static var sharedInstance = YouTubeAPIClient()
     static var clientId       = ""
     static var clientSecret   = ""
     static var baseUrl        = "https://accounts.google.com"
@@ -104,10 +103,10 @@ open class YouTubeAPIClient: MusicFeeder.YouTubeAPIClient {
 
     static var credential: OAuthSwiftCredential? {
         get {
-            return KeychainPreferences.sharedInstance[YouTubeAPIClient.keyChainGroup] as? OAuthSwiftCredential
+            return KeychainPreferences.sharedInstance[APIClient.keyChainGroup] as? OAuthSwiftCredential
         }
         set {
-            KeychainPreferences.sharedInstance[YouTubeAPIClient.keyChainGroup] = newValue
+            KeychainPreferences.sharedInstance[APIClient.keyChainGroup] = newValue
         }
     }
 
@@ -168,11 +167,11 @@ open class YouTubeAPIClient: MusicFeeder.YouTubeAPIClient {
     static func authorize(_ viewController: UIViewController, callback: (() -> ())? = nil) {
         oauth.authorizeURLHandler = SafariURLHandler(viewController: viewController, oauthSwift: oauth)
         let _ = oauth.authorize(
-            withCallbackURL: URL(string: YouTubeAPIClient.redirectUri)!,
-            scope: YouTubeAPIClient.scope.joined(separator: ","),
+            withCallbackURL: URL(string: APIClient.redirectUri)!,
+            scope: YouTubeKit.APIClient.scope.joined(separator: ","),
             state: "YouTube",
             success: { credential, response, parameters in
-                YouTubeAPIClient.credential = credential
+                YouTubeKit.APIClient.credential = credential
                 APIClient.shared.accessToken = credential.oauthToken
                 AppDelegate.shared.reload()
                 if let callback = callback {
