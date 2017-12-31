@@ -1,4 +1,4 @@
-osx_image: xcode9
+osx_image: xcode9.2
 language: objective-c
 git:
   submodules: false
@@ -9,7 +9,7 @@ install:
 - bash -x carthage_checkout.sh
 before_script:
 - travis_wait 60 carthage build --cache-builds --platform iOS
-script: xcodebuild -workspace MusicFav.xcworkspace -scheme MusicFav -sdk iphonesimulator11.0 CODE_SIGNING_REQUIRED=NO
+script: xcodebuild -workspace MusicFav.xcworkspace -scheme MusicFav -sdk iphonesimulator11.2 CODE_SIGNING_REQUIRED=NO
 cache:
   directories:
   - vendor/bundle
