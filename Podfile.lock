@@ -14,7 +14,6 @@ PODS:
   - MarqueeLabel/ObjC (3.1.4)
   - MBProgressHUD (1.1.0)
   - MCSwipeTableViewCell (2.1.4)
-  - NXOAuth2Client (1.2.8)
   - OAuthSwift (1.2.0)
   - Prephirences (4.0.0):
     - Prephirences/Core (= 4.0.0)
@@ -36,7 +35,6 @@ DEPENDENCIES:
   - MarqueeLabel
   - MBProgressHUD
   - MCSwipeTableViewCell (>= 2.1.0)
-  - NXOAuth2Client (>= 1.2.2)
   - OAuthSwift
   - Prephirences
   - RATreeView (from `https://github.com/kumabook/RATreeView.git`, branch `pull_to_refresh`)
@@ -64,12 +62,11 @@ SPEC CHECKSUMS:
   MarqueeLabel: bf768455fe88d427f71476ebb23f9092b660f40b
   MBProgressHUD: e7baa36a220447d8aeb12769bf0585582f3866d9
   MCSwipeTableViewCell: 1b303e16c3a26b1982f3a68386e9b8c5fc8344c3
-  NXOAuth2Client: 98c4d4c594edd2b289cfc34a8928653e1dab7adf
   OAuthSwift: 7fd6855b8e4d58eb5a30d156ea9bed7a8aecd1ca
   Prephirences: d3f1d1db3959640f754d7c75325dccf78722cd12
   RATreeView: a97a08e63ed11d67788c2b8a399bd1ebbed89de1
   RMDateSelectionViewController: 5d4233ad5dca8baa375de41d20af1df86ed0465b
 
-PODFILE CHECKSUM: 46ad163e3682d371613dd14fe332da1c54f2dbba
+PODFILE CHECKSUM: 1540e9e0ce3d75552f8e3cc37738e32a1e07d9a2
 
 COCOAPODS: 1.4.0.rc.1

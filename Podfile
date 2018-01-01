@@ -8,7 +8,6 @@ project 'MusicFav'
 target "MusicFav" do
   pod 'OAuthSwift'
   pod 'Prephirences'
-  pod 'NXOAuth2Client',       '>= 1.2.2'
   pod 'JASidePanels',         '>= 1.3'
   pod 'MBProgressHUD'
   pod 'MCSwipeTableViewCell', '>= 2.1.0'
