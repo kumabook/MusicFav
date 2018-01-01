@@ -394,8 +394,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             if SoundCloudKit.APIClient.isLoggedIn {
                 showSoundCloudPlaylists()
             } else {
-                let vc = SoundCloudOAuthViewController()
-                present(UINavigationController(rootViewController: vc), animated: true, completion: {})
+                SoundCloudKit.APIClient.authorize(self)
             }
         case .favorites:
             let _ = showPlaylist(playlists[indexPath.item], animated: true)

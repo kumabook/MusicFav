@@ -213,11 +213,15 @@ class PreferenceViewController: UITableViewController {
     }
 
     func showYouTubeLoginController() {
-        YouTubeKit.APIClient.authorize(self)
+        YouTubeKit.APIClient.authorize(self) {
+            self.tableView?.reloadData()
+        }
     }
 
     func showSoundCloudLoginController() {
-        navigationController?.pushViewController(SoundCloudOAuthViewController(), animated: true)
+        SoundCloudKit.APIClient.authorize(self) {
+            self.tableView?.reloadData()
+        }
     }
 
     func showConfirmDialog(_ title: String, message: String, action: @escaping ((UIAlertAction!) -> Void)) {

@@ -9,7 +9,6 @@
 import Foundation
 import SoundCloudKit
 import SwiftyJSON
-import NXOAuth2Client
 import ReactiveSwift
 import Alamofire
 import OAuthSwift

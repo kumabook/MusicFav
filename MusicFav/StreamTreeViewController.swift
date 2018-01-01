@@ -233,8 +233,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             if SoundCloudKit.APIClient.isLoggedIn {
                 showSoundCloudActivities()
             } else {
-                let vc = UINavigationController(rootViewController: SoundCloudOAuthViewController())
-                present(vc, animated: true, completion: {})
+                SoundCloudKit.APIClient.authorize(self)
             }
         case .youTube:
             if YouTubeKit.APIClient.isLoggedIn {
