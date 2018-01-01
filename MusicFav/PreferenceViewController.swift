@@ -207,8 +207,9 @@ class PreferenceViewController: UITableViewController {
     }
     
     func showLoginViewController() {
-        let oauthvc = FeedlyOAuthViewController()
-        navigationController?.pushViewController(oauthvc, animated: true)
+        CloudAPIClient.authorize(self) {
+            self.tableView?.reloadData()
+        }
     }
 
     func showYouTubeLoginController() {

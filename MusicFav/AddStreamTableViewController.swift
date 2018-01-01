@@ -16,7 +16,6 @@ import PageMenu
 class AddStreamTableViewController: UITableViewController {
     let cellHeight:        CGFloat = 100
     let accessoryWidth:    CGFloat = 30
-    var isLoggedIn: Bool { return CloudAPIClient.account != nil }
     let subscriptionRepository: SubscriptionRepository!
     init(subscriptionRepository: SubscriptionRepository) {
         self.subscriptionRepository = subscriptionRepository

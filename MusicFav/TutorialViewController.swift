@@ -8,9 +8,9 @@
 
 import UIKit
 import EAIntroView
-import NXOAuth2Client
+import FeedlyKit
 
-class TutorialViewController: UIViewController, TutorialViewDelegate, OAuthViewDelegate {
+class TutorialViewController: UIViewController, TutorialViewDelegate {
     var appDelegate: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
     var tutorialView: TutorialView!
 
@@ -56,21 +56,13 @@ class TutorialViewController: UIViewController, TutorialViewDelegate, OAuthViewD
         Logger.sendUIActionEvent(self, action: "skipButtonTapped", label: "")
     }
 
-    // MARK: - FeedlyOAuthViewDelegate
-
-    func onLoggedIn(_ account: NXOAuth2Account) {
-        Logger.sendUIActionEvent(self, action: "onLoggedIn", label: "")
-        close()
-    }
-
     // MARK: - TutorialViewDelegate
 
     func tutorialLoginButtonTapped() {
         Logger.sendUIActionEvent(self, action: "tutorialLoginButtonTapped", label: "")
-        let oauthvc = FeedlyOAuthViewController()
-        oauthvc.delegate = self
-        let vc = UINavigationController(rootViewController: oauthvc)
-        self.present(vc, animated: true, completion: {})
+        CloudAPIClient.authorize(self) {
+            self.close()
+        }
     }
 
     // MARK: - EAIntroDelegate

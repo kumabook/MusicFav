@@ -44,6 +44,9 @@ class AppPlayerObserver: QueuePlayerObserver {
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
+    static var shared: AppDelegate {
+        return UIApplication.shared.delegate as! AppDelegate
+    }
     enum Event {
         case willResignActive
         case didEnterBackground

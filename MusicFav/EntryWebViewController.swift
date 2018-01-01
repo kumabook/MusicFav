@@ -242,8 +242,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
                 }
             })
         } else {
-            let vc = UINavigationController(rootViewController: FeedlyOAuthViewController())
-            navigationController?.present(vc, animated: true, completion: {})
+            CloudAPIClient.authorize(self)
         }
     }
 
