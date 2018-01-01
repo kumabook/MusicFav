@@ -10,12 +10,24 @@ import Foundation
 
 import SwiftyJSON
 import FeedlyKit
-import NXOAuth2Client
+import OAuthSwift
+import Prephirences
+
+open class FeedlyOAuthRequestRetrier: OAuthRequestRetrier {
+    public override func refreshed(_ succeeded: Bool) {
+        if succeeded {
+            CloudAPIClient.credential = oauth.client.credential
+            CloudAPIClient.setAccessToken(oauth.client.credential.oauthToken)
+        } else {
+            CloudAPIClient.credential = nil
+            CloudAPIClient.logout()
+        }
+    }
+}
+
 
 public extension CloudAPIClient {
     fileprivate static let userDefaults = UserDefaults.standard
-    fileprivate static var oauth2clientDelegate = FeedlyOAuth2ClientDelegate()
-    fileprivate static var _account:                    NXOAuth2Account?
     fileprivate static var _profile:                    Profile?
     fileprivate static var _notificationDateComponents: DateComponents?
     fileprivate static var _lastChecked:                Date?
@@ -39,51 +51,49 @@ public extension CloudAPIClient {
             _profile = profile
         }
     }
+
+    static var oauth: OAuth2Swift!
     
-    public static var account: NXOAuth2Account? {
+    static var credential: OAuthSwiftCredential? {
         get {
-            if let a = _account {
-                return a
-            }
-            let store = NXOAuth2AccountStore.sharedStore() as! NXOAuth2AccountStore
-            for account in store.accounts as! [NXOAuth2Account] {
-                if account.accountType == "Feedly" {
-                    _account = account
-                    return account
-                }
-            }
-            return nil
+            return KeychainPreferences.sharedInstance[CloudAPIClient.keyChainGroup] as? OAuthSwiftCredential
+        }
+        set {
+            KeychainPreferences.sharedInstance[CloudAPIClient.keyChainGroup] = newValue
         }
     }
 
     public static var isExpired: Bool {
-        if let expiresAt = account?.accessToken.expiresAt {
-            return NSDate().compare(expiresAt) != ComparisonResult.orderedAscending
-        }
-        return false
+        return credential?.isTokenExpired() ?? true
     }
 
-    public static func refreshAccessToken(_ account: NXOAuth2Account) {
-        typealias C = CloudAPIClient
-        let oauth2client = NXOAuth2Client(clientID: C.clientId,
-                                      clientSecret: C.clientSecret,
-                                      authorizeURL: NSURL(string: C.shared.authUrl)! as URL!,
-                                          tokenURL: NSURL(string: C.shared.tokenUrl)! as URL!,
-                                       accessToken: account.accessToken,
-                                     keyChainGroup: C.keyChainGroup,
-                                        persistent: true,
-                                          delegate: CloudAPIClient.oauth2clientDelegate)
-        oauth2client?.refreshAccessToken()
+    static func authorize(_ viewController: UIViewController, callback: (() -> ())? = nil) {
+        let vc = OAuthViewController()
+        viewController.addChildViewController(vc)
+        oauth.authorizeURLHandler = vc
+        let _ = oauth.authorize(
+            withCallbackURL: URL(string: CloudAPIClient.redirectUrl)!,
+            scope: CloudAPIClient.scope.joined(separator: ","),
+            state: "Feedly",
+            success: { credential, response, parameters in
+                CloudAPIClient.credential = credential
+                CloudAPIClient.setAccessToken(credential.oauthToken)
+                let _ = CloudAPIClient.shared.fetchProfile().on(
+                    failed: { error in
+                        if let callback = callback { callback() }
+                }, value: { profile in
+                    CloudAPIClient.login(profile: profile, token: credential.oauthToken)
+                    AppDelegate.shared.reload()
+                    if let callback = callback { callback() }
+                }).start()
+        },
+            failure: { error in
+                if let callback = callback {
+                    callback()
+                }
+        })
     }
 
-    static func refreshAccount(_ account: NXOAuth2Account) {
-        clearAllAccount()
-        let store = NXOAuth2AccountStore.sharedStore() as! NXOAuth2AccountStore
-        store.addAccount(account)
-        if let p = profile, let token = account.accessToken.accessToken {
-            CloudAPIClient.login(profile: p, token: token)
-        }
-    }
 
     public static var notificationDateComponents: DateComponents? {
         get {
@@ -126,15 +136,8 @@ public extension CloudAPIClient {
     }
 
     fileprivate static func clearAllAccount() {
-        guard let store    = NXOAuth2AccountStore.sharedStore() as? NXOAuth2AccountStore else { return }
-        guard let accounts = store.accounts as? [NXOAuth2Account]                        else { return }
-        for account in accounts {
-            if account.accountType == "Feedly" {
-                store.removeAccount(account)
-            }
-        }
-        _account = nil
-        profile = nil
+        credential = nil
+        logout()
     }
     
     fileprivate static func loadConfig() {
@@ -162,42 +165,32 @@ public extension CloudAPIClient {
 
     public static func setup() {
         loadConfig()
-        if let p = profile, let a = account, let token = a.accessToken.accessToken {
-            CloudAPIClient.login(profile: p, token: token)
-            if isExpired {
-                refreshAccessToken(a)
-            }
-        } else {
-            profile = nil
-            clearAllAccount()
+        oauth = OAuth2Swift(
+            consumerKey:    clientId,
+            consumerSecret: clientSecret,
+            authorizeUrl:   shared.authUrl,
+            accessTokenUrl: shared.tokenUrl,
+            responseType:   "code"
+        )
+        if let c = credential {
+            oauth.client.credential.oauthToken          = c.oauthToken
+            oauth.client.credential.oauthTokenSecret    = c.oauthTokenSecret
+            oauth.client.credential.oauthTokenExpiresAt = c.oauthTokenExpiresAt
+            oauth.client.credential.oauthRefreshToken   = c.oauthRefreshToken
         }
+        if let p = profile, let c = credential {
+            CloudAPIClient.login(profile: p, token: c.oauthToken)
+        }
+        shared.manager.retrier = FeedlyOAuthRequestRetrier(oauth)
         CloudAPIClient.sharedPipe.0.observeResult({ result in
             guard let event = result.value else { return }
             switch event {
             case .Login(let profile):
                 self.profile = profile
             case .Logout:
-                if self.isExpired {
-                    self.refreshAccessToken(self.account!)
-                } else {
-                    self.clearAllAccount()
-                }
+                self.profile = nil
+                self.credential = nil
             }
         })
-    }
-}
-
-open class FeedlyOAuth2ClientDelegate: NSObject, NXOAuth2ClientDelegate {
-    public override init() {
-    }
-    open func oauthClientNeedsAuthentication(_ client: NXOAuth2Client!) {}
-    open func oauthClientDidGetAccessToken(_ client: NXOAuth2Client!) {}
-    open func oauthClient(_ client: NXOAuth2Client!, didFailToGetAccessTokenWithError error: Error!) {
-    }
-    open func oauthClientDidLoseAccessToken(_ client: NXOAuth2Client!) {
-    }
-    open func oauthClientDidRefreshAccessToken(_ client: NXOAuth2Client!) {
-        CloudAPIClient.refreshAccount(NXOAuth2Account(accountWith: client.accessToken,
-            accountType: CloudAPIClient.accountType))
     }
 }
