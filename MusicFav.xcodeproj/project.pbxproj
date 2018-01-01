@@ -31,7 +31,6 @@
 		67277CB11A434304002FD3E0 /* MusicFav.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 67277CAF1A434304002FD3E0 /* MusicFav.xcdatamodeld */; };
 		67277CB81A434304002FD3E0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 67277CB71A434304002FD3E0 /* Images.xcassets */; };
 		67277CBB1A434304002FD3E0 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67277CB91A434304002FD3E0 /* LaunchScreen.xib */; };
-		67277CDB1A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67277CD91A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift */; };
 		67277CE01A46F4BC002FD3E0 /* StreamTreeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67277CDF1A46F4BC002FD3E0 /* StreamTreeViewController.swift */; };
 		6727EDFE1A5AC1DE003C6A47 /* MiniPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6727EDFC1A5AC1DE003C6A47 /* MiniPlayerViewController.swift */; };
 		6728FA391A60580A00F693B3 /* PreferenceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6728FA371A60580A00F693B3 /* PreferenceViewController.swift */; };
@@ -68,6 +67,7 @@
 		67428D591B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67428D581B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift */; };
 		674AAC891B02D64E00C1FC18 /* UINotificationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */; };
 		674AE5C61FF8DD7A00E35A2C /* OAuthRequestRetrier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674AE5C51FF8DD7A00E35A2C /* OAuthRequestRetrier.swift */; };
+		674AE5C81FF95CEF00E35A2C /* OAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674AE5C71FF95CEF00E35A2C /* OAuthViewController.swift */; };
 		674DF1281DD6BE36000C1B08 /* ReactiveSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 674DF1271DD6BE36000C1B08 /* ReactiveSwift.framework */; };
 		674DF1291DD6BE45000C1B08 /* ReactiveSwift.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 674DF1271DD6BE36000C1B08 /* ReactiveSwift.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		674DF12B1DD6BE6F000C1B08 /* SDWebImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 674DF12A1DD6BE6F000C1B08 /* SDWebImage.framework */; };
@@ -121,7 +121,6 @@
 		67C1A8041B7B8728002A604C /* ChannelCategoryTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C1A8011B7B8728002A604C /* ChannelCategoryTableViewController.swift */; };
 		67C1A8051B7B8728002A604C /* ChannelTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C1A8021B7B8728002A604C /* ChannelTableViewController.swift */; };
 		67C1A8081B7B874A002A604C /* YouTubeAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C1A8071B7B874A002A604C /* YouTubeAPIClient.swift */; };
-		67C1A80A1B7B876A002A604C /* OAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C1A8091B7B876A002A604C /* OAuthViewController.swift */; };
 		67C1A80C1B7CCAB0002A604C /* AddStreamMenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C1A80B1B7CCAB0002A604C /* AddStreamMenuViewController.swift */; };
 		67C2921E1B7DCE8200EDA865 /* AddStreamMenuTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67C2921C1B7DCE8200EDA865 /* AddStreamMenuTableViewCell.swift */; };
 		67C2921F1B7DCE8200EDA865 /* AddStreamMenuTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 67C2921D1B7DCE8200EDA865 /* AddStreamMenuTableViewCell.xib */; };
@@ -141,7 +140,6 @@
 		67CC023C1AF33AFC005F5F3F /* google_analytics.json in Resources */ = {isa = PBXBuildFile; fileRef = 67CC023B1AF33AFC005F5F3F /* google_analytics.json */; };
 		67CC023E1AF33B58005F5F3F /* GAIConfigSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67CC023D1AF33B58005F5F3F /* GAIConfigSpec.swift */; };
 		67D41CFF1B876AF90082454F /* SoundCloudAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D41CFE1B876AF90082454F /* SoundCloudAPIClient.swift */; };
-		67D41D011B87812E0082454F /* SoundCloudOAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D41D001B87812E0082454F /* SoundCloudOAuthViewController.swift */; };
 		67D41D031B878D120082454F /* SoundCloudPlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D41D021B878D120082454F /* SoundCloudPlaylistTableViewController.swift */; };
 		67D41D051B878DCB0082454F /* SoundCloudPlaylistLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D41D041B878DCB0082454F /* SoundCloudPlaylistLoader.swift */; };
 		67D41D071B88BEF30082454F /* SoundCloudTrackTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67D41D061B88BEF30082454F /* SoundCloudTrackTableViewController.swift */; };
@@ -292,7 +290,6 @@
 		67277CBA1A434304002FD3E0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		67277CC01A434304002FD3E0 /* UnitTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UnitTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		67277CC51A434304002FD3E0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		67277CD91A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FeedlyOAuthViewController.swift; sourceTree = "<group>"; };
 		67277CDF1A46F4BC002FD3E0 /* StreamTreeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTreeViewController.swift; sourceTree = "<group>"; };
 		6727EDFC1A5AC1DE003C6A47 /* MiniPlayerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerViewController.swift; sourceTree = "<group>"; };
 		6728FA371A60580A00F693B3 /* PreferenceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreferenceViewController.swift; sourceTree = "<group>"; };
@@ -325,6 +322,7 @@
 		67428D581B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubePlaylistItemTableViewController.swift; sourceTree = "<group>"; };
 		674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINotificationExtension.swift; sourceTree = "<group>"; };
 		674AE5C51FF8DD7A00E35A2C /* OAuthRequestRetrier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthRequestRetrier.swift; sourceTree = "<group>"; };
+		674AE5C71FF95CEF00E35A2C /* OAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthViewController.swift; sourceTree = "<group>"; };
 		674DF1271DD6BE36000C1B08 /* ReactiveSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveSwift.framework; path = Carthage/Build/iOS/ReactiveSwift.framework; sourceTree = "<group>"; };
 		674DF12A1DD6BE6F000C1B08 /* SDWebImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SDWebImage.framework; path = Carthage/Build/iOS/SDWebImage.framework; sourceTree = "<group>"; };
 		6751509C1BA8542C00035DE6 /* SpecHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpecHelper.swift; sourceTree = "<group>"; };
@@ -368,7 +366,6 @@
 		67C1A8011B7B8728002A604C /* ChannelCategoryTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelCategoryTableViewController.swift; sourceTree = "<group>"; };
 		67C1A8021B7B8728002A604C /* ChannelTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChannelTableViewController.swift; sourceTree = "<group>"; };
 		67C1A8071B7B874A002A604C /* YouTubeAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubeAPIClient.swift; sourceTree = "<group>"; };
-		67C1A8091B7B876A002A604C /* OAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OAuthViewController.swift; sourceTree = "<group>"; };
 		67C1A80B1B7CCAB0002A604C /* AddStreamMenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddStreamMenuViewController.swift; sourceTree = "<group>"; };
 		67C2921C1B7DCE8200EDA865 /* AddStreamMenuTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddStreamMenuTableViewCell.swift; sourceTree = "<group>"; };
 		67C2921D1B7DCE8200EDA865 /* AddStreamMenuTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddStreamMenuTableViewCell.xib; sourceTree = "<group>"; };
@@ -385,7 +382,6 @@
 		67CC023B1AF33AFC005F5F3F /* google_analytics.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = google_analytics.json; path = ../config/google_analytics.json; sourceTree = "<group>"; };
 		67CC023D1AF33B58005F5F3F /* GAIConfigSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GAIConfigSpec.swift; sourceTree = "<group>"; };
 		67D41CFE1B876AF90082454F /* SoundCloudAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundCloudAPIClient.swift; sourceTree = "<group>"; };
-		67D41D001B87812E0082454F /* SoundCloudOAuthViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundCloudOAuthViewController.swift; sourceTree = "<group>"; };
 		67D41D021B878D120082454F /* SoundCloudPlaylistTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundCloudPlaylistTableViewController.swift; sourceTree = "<group>"; };
 		67D41D041B878DCB0082454F /* SoundCloudPlaylistLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SoundCloudPlaylistLoader.swift; path = MusicFav/SoundCloudPlaylistLoader.swift; sourceTree = "<group>"; };
 		67D41D061B88BEF30082454F /* SoundCloudTrackTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundCloudTrackTableViewController.swift; sourceTree = "<group>"; };
@@ -720,12 +716,10 @@
 		6728FA361A604C7300F693B3 /* Global */ = {
 			isa = PBXGroup;
 			children = (
-				67C1A8091B7B876A002A604C /* OAuthViewController.swift */,
-				67277CD91A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift */,
-				67D41D001B87812E0082454F /* SoundCloudOAuthViewController.swift */,
 				6727EDFC1A5AC1DE003C6A47 /* MiniPlayerViewController.swift */,
 				67B366DD1AE1CBA800E089B2 /* TutorialViewController.swift */,
 				67C1A7FB1B7B83A5002A604C /* PlayerViewController.swift */,
+				674AE5C71FF95CEF00E35A2C /* OAuthViewController.swift */,
 			);
 			name = Global;
 			sourceTree = "<group>";
@@ -1166,7 +1160,6 @@
 				"${BUILT_PRODUCTS_DIR}/MBProgressHUD/MBProgressHUD.framework",
 				"${BUILT_PRODUCTS_DIR}/MCSwipeTableViewCell/MCSwipeTableViewCell.framework",
 				"${BUILT_PRODUCTS_DIR}/MarqueeLabel/MarqueeLabel.framework",
-				"${BUILT_PRODUCTS_DIR}/NXOAuth2Client/NXOAuth2Client.framework",
 				"${BUILT_PRODUCTS_DIR}/OAuthSwift/OAuthSwift.framework",
 				"${BUILT_PRODUCTS_DIR}/Prephirences/Prephirences.framework",
 				"${BUILT_PRODUCTS_DIR}/RATreeView/RATreeView.framework",
@@ -1182,7 +1175,6 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MBProgressHUD.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MCSwipeTableViewCell.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/MarqueeLabel.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/NXOAuth2Client.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/OAuthSwift.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Prephirences.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RATreeView.framework",
@@ -1235,6 +1227,7 @@
 				67C4146C1DE518F90013DC5D /* AnimatedLaunchScreen.swift in Sources */,
 				67554F091A4F127400F7AE72 /* TrackTableViewCell.swift in Sources */,
 				674AE5C61FF8DD7A00E35A2C /* OAuthRequestRetrier.swift in Sources */,
+				674AE5C81FF95CEF00E35A2C /* OAuthViewController.swift in Sources */,
 				67311E301AF63BD500711DAC /* FeedbackWebViewController.swift in Sources */,
 				67CC023A1AF328EE005F5F3F /* GAIConfig.swift in Sources */,
 				67DA46651A87B49C0048B29C /* SelectPlaylistTableViewCell.swift in Sources */,
@@ -1243,7 +1236,6 @@
 				677AB67C1DE8FFCA00879B00 /* NavigationBarScrollable.swift in Sources */,
 				6729DE5E1BC160FD00543E84 /* Shortcut.swift in Sources */,
 				67FBBDF91B6CD46B00B567CB /* UpdateChecker.swift in Sources */,
-				67C1A80A1B7B876A002A604C /* OAuthViewController.swift in Sources */,
 				67FA09671AF8CA570086AA45 /* AccessibilityLabel.swift in Sources */,
 				670505B61B6E2348006EAA84 /* Blog.swift in Sources */,
 				675AB3411AD3E3DA0003824C /* StringExtension.swift in Sources */,
@@ -1252,7 +1244,6 @@
 				67F530891B7F518500D8EEF1 /* AddStreamTableViewController.swift in Sources */,
 				6762EE0B1BCB36C700EA90DC /* SavedStreamTimelineTableViewController.swift in Sources */,
 				67D41D071B88BEF30082454F /* SoundCloudTrackTableViewController.swift in Sources */,
-				67D41D011B87812E0082454F /* SoundCloudOAuthViewController.swift in Sources */,
 				6727EDFE1A5AC1DE003C6A47 /* MiniPlayerViewController.swift in Sources */,
 				670576161BDD2DC30087063A /* HistoryManager.swift in Sources */,
 				6728FA391A60580A00F693B3 /* PreferenceViewController.swift in Sources */,
@@ -1266,7 +1257,6 @@
 				67C1A80C1B7CCAB0002A604C /* AddStreamMenuViewController.swift in Sources */,
 				67C1A8081B7B874A002A604C /* YouTubeAPIClient.swift in Sources */,
 				674AAC891B02D64E00C1FC18 /* UINotificationExtension.swift in Sources */,
-				67277CDB1A46DE0E002FD3E0 /* FeedlyOAuthViewController.swift in Sources */,
 				6783057F1B95DDC000A83F52 /* StreamTimelineTableViewController.swift in Sources */,
 				6762EE091BCAC10100EA90DC /* MusicFavError.swift in Sources */,
 				67DA465F1A8656A90048B29C /* PlaylistTableViewCell.swift in Sources */,
