@@ -76,9 +76,9 @@ open class SoundCloudActivityLoader {
         observer.send(value: .startLoadingLatest)
         var producer: SignalProducer<ActivityList, NSError>
         if let href = futureHref {
-            producer = APIClient.sharedInstance.fetchLatestActivities(href)
+            producer = APIClient.shared.fetchLatestActivities(href)
         } else {
-            producer = APIClient.sharedInstance.fetchActivities()
+            producer = APIClient.shared.fetchActivities()
         }
         producer
             .start(on: UIScheduler())
@@ -114,9 +114,9 @@ open class SoundCloudActivityLoader {
         var producer: SignalProducer<ActivityList, NSError>
         let href = nextHref!
         if href.isEmpty {
-            producer = APIClient.sharedInstance.fetchActivities()
+            producer = APIClient.shared.fetchActivities()
         } else {
-            producer = APIClient.sharedInstance.fetchNextActivities(href)
+            producer = APIClient.shared.fetchNextActivities(href)
         }
         producer
             .start(on: UIScheduler())
@@ -156,7 +156,7 @@ open class SoundCloudActivityLoader {
     open func fetchPlaylist(_ activity: Activity) -> SignalProducer<MusicFeeder.Playlist, NSError> {
         switch activity.origin {
         case .playlist(let playlist):
-            return APIClient.sharedInstance.fetchPlaylist(playlist.id).map { $0.toPlaylist() }
+            return APIClient.shared.fetchPlaylist(playlist.id).map { $0.toPlaylist() }
         case .track(let track):
             return SignalProducer(value: MusicFeeder.Playlist(id: "sc_track_\(track.id)", title: track.title, tracks: [track.toTrack()]))
         }

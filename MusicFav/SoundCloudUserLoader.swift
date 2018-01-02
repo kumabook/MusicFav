@@ -75,7 +75,7 @@ class SoundCloudUserLoader {
         if user == nil { return SignalProducer.empty }
         state = State.fetching
         observer.send(value: .startLoading)
-        return APIClient.sharedInstance.fetchFollowingsOf(user!).map {
+        return APIClient.shared.fetchFollowingsOf(user!).map {
             self.hasNextFollowings = false
             self.followings.append(contentsOf: $0)
             self.observer.send(value: .completeLoading)
@@ -106,7 +106,7 @@ class SoundCloudUserLoader {
         if state == State.fetching { return }
         state = State.fetching
         observer.send(value: .startLoading)
-        APIClient.sharedInstance.fetchUsers(query).on(
+        APIClient.shared.fetchUsers(query).on(
             failed: { e in
                 self.hasNextSearch = true
                 self.observer.send(error: e)

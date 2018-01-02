@@ -80,7 +80,7 @@ class PreferenceViewController: UITableViewController {
                     return "Connect with YouTube".localize()
                 }
             case .soundCloud:
-                if SoundCloudKit.APIClient.isLoggedIn {
+                if SoundCloudKit.APIClient.shared.isLoggedIn {
                     return "Disconnect with SoundCloud".localize()
                 } else {
                     return "Connect with SoundCloud".localize()
@@ -309,7 +309,7 @@ class PreferenceViewController: UITableViewController {
                     showYouTubeLoginController()
                 }
             case .soundCloud:
-                if SoundCloudKit.APIClient.isLoggedIn {
+                if SoundCloudKit.APIClient.shared.isLoggedIn {
                     showDisonnectSoundCloudDialog()
                 } else {
                     showSoundCloudLoginController()

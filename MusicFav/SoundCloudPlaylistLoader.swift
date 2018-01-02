@@ -88,7 +88,7 @@ class SoundCloudPlaylistLoader {
     fileprivate func fetchNextPlaylists() -> SignalProducer<Void, NSError> {
         state = State.fetching
         observer.send(value: .startLoading)
-        return APIClient.sharedInstance.fetchPlaylistsOf(user).map {
+        return APIClient.shared.fetchPlaylistsOf(user).map {
             self.hasNextPlaylists = false
             self.playlists.append(contentsOf: $0)
             self.observer.send(value: .completeLoading)
@@ -118,7 +118,7 @@ class SoundCloudPlaylistLoader {
     fileprivate func fetchNextFavorites() -> SignalProducer<Void, NSError> {
         state = State.fetching
         observer.send(value: .startLoading)
-        return APIClient.sharedInstance.fetchFavoritesOf(user)
+        return APIClient.shared.fetchFavoritesOf(user)
             .map {
                 self.hasNextFavorites = false
                 self.favorites.append(contentsOf: $0)

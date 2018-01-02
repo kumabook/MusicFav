@@ -230,7 +230,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         case .history:
             showHistory()
         case .soundCloud:
-            if SoundCloudKit.APIClient.isLoggedIn {
+            if SoundCloudKit.APIClient.shared.isLoggedIn {
                 showSoundCloudActivities()
             } else {
                 SoundCloudKit.APIClient.authorize(self)

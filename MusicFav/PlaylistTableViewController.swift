@@ -391,7 +391,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
                 YouTubeKit.APIClient.authorize(self)
             }
         case .soundCloud:
-            if SoundCloudKit.APIClient.isLoggedIn {
+            if SoundCloudKit.APIClient.shared.isLoggedIn {
                 showSoundCloudPlaylists()
             } else {
                 SoundCloudKit.APIClient.authorize(self)

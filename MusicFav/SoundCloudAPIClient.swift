@@ -18,10 +18,10 @@ open class SoundCloudOAuthRequestRetrier: OAuthRequestRetrier {
     public override func refreshed(_ succeeded: Bool) {
         if succeeded {
             APIClient.credential = oauth.client.credential
-            APIClient.accessToken = oauth.client.credential.oauthToken
+            APIClient.shared.accessToken = oauth.client.credential.oauthToken
         } else {
             APIClient.credential = nil
-            APIClient.accessToken = nil
+            APIClient.shared.accessToken = nil
         }
     }
 }
@@ -70,13 +70,13 @@ extension APIClient {
 
     public static func clearAllAccount() {
         credential = nil
-        SoundCloudKit.APIClient.accessToken = nil
+        SoundCloudKit.APIClient.shared.accessToken = nil
     }
 
     public class func setup() {
         loadConfig()
         oauth = OAuth2Swift(
-            consumerKey:    clientId,
+            consumerKey:    shared.clientId,
             consumerSecret: clientSecret,
             authorizeUrl:   authUrl,
             accessTokenUrl: tokenUrl,
@@ -87,10 +87,10 @@ extension APIClient {
             oauth.client.credential.oauthTokenSecret    = c.oauthTokenSecret
             oauth.client.credential.oauthTokenExpiresAt = c.oauthTokenExpiresAt
             oauth.client.credential.oauthRefreshToken   = c.oauthRefreshToken
-            APIClient.sharedInstance.manager.session.configuration.httpAdditionalHeaders = ["Authorization": "Bearer \(c.oauthToken)"]
+            APIClient.shared.manager.session.configuration.httpAdditionalHeaders = ["Authorization": "Bearer \(c.oauthToken)"]
         }
-        APIClient.sharedInstance.manager.retrier = SoundCloudOAuthRequestRetrier(oauth)
-        APIClient.accessToken = credential?.oauthToken
+        APIClient.shared.manager.retrier = SoundCloudOAuthRequestRetrier(oauth)
+        APIClient.shared.accessToken = credential?.oauthToken
     }
 
     static func authorize(_ viewController: UIViewController, callback: (() -> ())? = nil) {
@@ -103,8 +103,8 @@ extension APIClient {
             state: "SoundCloud",
             success: { credential, response, parameters in
                 APIClient.credential = credential
-                APIClient.accessToken = credential.oauthToken
-                APIClient.sharedInstance.fetchMe().on(
+                APIClient.shared.accessToken = credential.oauthToken
+                APIClient.shared.fetchMe().on(
                     failed: { error in
                         if let callback = callback { callback() }
                 }, value: { user in
@@ -127,7 +127,7 @@ extension APIClient {
             if let obj: AnyObject = jsonObject {
                 let json = JSON(obj)
                 if let clientId = json["client_id"].string {
-                    APIClient.clientId = clientId
+                    APIClient.shared.clientId = clientId
                 }
                 if let clientSecret = json["client_secret"].string {
                     APIClient.clientSecret = clientSecret
@@ -140,25 +140,22 @@ extension APIClient {
         let e = error as NSError
         if let response:HTTPURLResponse = e.userInfo[errorResponseKey] as? HTTPURLResponse {
             if response.statusCode == 401 {
-                if isLoggedIn { clearAllAccount() }
+                if shared.isLoggedIn { clearAllAccount() }
             }
         }
     }
 
 
     func fetchItem<T: JSONInitializable>(_ route: Router) -> SignalProducer<T, NSError> {
-        return SignalProducer { observer, disposable in
-            let req = self.manager.request(route).validate(statusCode: 200..<300).responseJSON(options: .allowFragments) {(response: DataResponse<Any>) -> Void in
-                if let e = response.result.error as NSError? {
-                    if let r = response.response {
-                        observer.send(error: NSError(domain: e.domain, code: e.code, userInfo: [APIClient.errorResponseKey:r]))
-                    } else {
-                        observer.send(error: e)
-                    }
-                } else if let obj = response.result.value {
-                    observer.send(value: T(json: JSON(obj)))
-                    observer.sendCompleted()
+        return SignalProducer<T, NSError> { observer, disposable in
+            let req = self.fetchItem(route) { (request: URLRequest?, response: HTTPURLResponse?, result: Result<T>) in
+                if let e = result.error {
+                    observer.send(error: e as NSError)
                 }
+                if let value = result.value {
+                    observer.send(value: value)
+                }
+                observer.sendCompleted()
             }
             disposable.observeEnded {
                 req.cancel()
@@ -167,18 +164,15 @@ extension APIClient {
     }
 
     func fetchItems<T: JSONInitializable>(_ route: Router) -> SignalProducer<[T], NSError> {
-        return SignalProducer { observer, disposable in
-            let req = self.manager.request(route).validate(statusCode: 200..<300).responseJSON(options: .allowFragments) {(response: DataResponse<Any>) -> Void in
-                if let e = response.result.error as NSError? {
-                    if let r = response.response {
-                        observer.send(error: NSError(domain: e.domain, code: e.code, userInfo: [APIClient.errorResponseKey:r]))
-                    } else {
-                        observer.send(error: e)
-                    }
-                } else if let obj = response.result.value {
-                    observer.send(value: JSON(obj).arrayValue.map { T(json: $0) })
-                    observer.sendCompleted()
+        return SignalProducer<[T], NSError> { observer, disposable in
+            let req = self.fetchItems(route) { (request: URLRequest?, response: HTTPURLResponse?, result: Result<[T]>) -> Void in
+                if let e = result.error {
+                    observer.send(error: e as NSError)
                 }
+                if let value = result.value {
+                    observer.send(value: value)
+                }
+                observer.sendCompleted()
             }
             disposable.observeEnded {
                 req.cancel()

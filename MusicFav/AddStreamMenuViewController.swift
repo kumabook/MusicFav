@@ -47,7 +47,7 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
                     return vc.channelLoader.searchResults.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
                 }
             case .soundCloud:
-                if SoundCloudKit.APIClient.isLoggedIn {
+                if SoundCloudKit.APIClient.shared.isLoggedIn {
                     return vc.userLoader.followings.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
                 } else {
                     return vc.userLoader.searchResults.flatMap { $0.thumbnailURL.map { [$0] } ?? [] }
@@ -111,7 +111,7 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
         } else {
             channelLoader.searchChannels("music")
         }
-        if SoundCloudKit.APIClient.isLoggedIn {
+        if SoundCloudKit.APIClient.shared.isLoggedIn {
             userLoader.fetchFollowings()
         } else {
             userLoader.searchUsers("rock")
@@ -232,7 +232,7 @@ class AddStreamMenuViewController: UITableViewController, UISearchBarDelegate {
                 navigationController?.pushViewController(vc, animated: true)
                 vc.showYouTubeLoginViewController()
             case .soundCloud:
-                if SoundCloudKit.APIClient.isLoggedIn {
+                if SoundCloudKit.APIClient.shared.isLoggedIn {
                     let vc = SoundCloudUserTableViewController(subscriptionRepository: subscriptionRepository,
                                                                            userLoader: SoundCloudUserLoader(),
                                                                                  type: .followings)

@@ -17,7 +17,7 @@ open class FeedlyOAuthRequestRetrier: OAuthRequestRetrier {
     public override func refreshed(_ succeeded: Bool) {
         if succeeded {
             CloudAPIClient.credential = oauth.client.credential
-            CloudAPIClient.setAccessToken(oauth.client.credential.oauthToken)
+            CloudAPIClient.shared.updateAccessToken(oauth.client.credential.oauthToken)
         } else {
             CloudAPIClient.credential = nil
             CloudAPIClient.logout()
@@ -77,7 +77,7 @@ public extension CloudAPIClient {
             state: "Feedly",
             success: { credential, response, parameters in
                 CloudAPIClient.credential = credential
-                CloudAPIClient.setAccessToken(credential.oauthToken)
+                CloudAPIClient.shared.updateAccessToken(credential.oauthToken)
                 let _ = CloudAPIClient.shared.fetchProfile().on(
                     failed: { error in
                         if let callback = callback { callback() }
