@@ -388,13 +388,13 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
             if YouTubeKit.APIClient.isLoggedIn {
                 showYouTubePlaylists()
             } else {
-                YouTubeKit.APIClient.authorize(self)
+                YouTubeKit.APIClient.authorize()
             }
         case .soundCloud:
             if SoundCloudKit.APIClient.shared.isLoggedIn {
                 showSoundCloudPlaylists()
             } else {
-                SoundCloudKit.APIClient.authorize(self)
+                SoundCloudKit.APIClient.authorize()
             }
         case .favorites:
             let _ = showPlaylist(playlists[indexPath.item], animated: true)

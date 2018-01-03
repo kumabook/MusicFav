@@ -60,7 +60,7 @@ class TutorialViewController: UIViewController, TutorialViewDelegate {
 
     func tutorialLoginButtonTapped() {
         Logger.sendUIActionEvent(self, action: "tutorialLoginButtonTapped", label: "")
-        CloudAPIClient.authorize(self) {
+        CloudAPIClient.authorize() {
             self.close()
         }
     }

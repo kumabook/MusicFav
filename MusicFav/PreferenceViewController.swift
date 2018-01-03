@@ -207,19 +207,19 @@ class PreferenceViewController: UITableViewController {
     }
     
     func showLoginViewController() {
-        CloudAPIClient.authorize(self) {
+        CloudAPIClient.authorize() {
             self.tableView?.reloadData()
         }
     }
 
     func showYouTubeLoginController() {
-        YouTubeKit.APIClient.authorize(self) {
+        YouTubeKit.APIClient.authorize() {
             self.tableView?.reloadData()
         }
     }
 
     func showSoundCloudLoginController() {
-        SoundCloudKit.APIClient.authorize(self) {
+        SoundCloudKit.APIClient.authorize() {
             self.tableView?.reloadData()
         }
     }

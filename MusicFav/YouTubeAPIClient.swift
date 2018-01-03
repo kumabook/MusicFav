@@ -164,7 +164,11 @@ extension YouTubeKit.APIClient: MusicFeeder.YouTubeAPIClient {
 
     static var oauth: OAuth2Swift!
 
-    static func authorize(_ viewController: UIViewController, callback: (() -> ())? = nil) {
+    static func authorize(callback: (() -> ())? = nil) {
+        guard let viewController = AppDelegate.shared.coverViewController else {
+            callback?()
+            return
+        }
         oauth.authorizeURLHandler = SafariURLHandler(viewController: viewController, oauthSwift: oauth)
         let _ = oauth.authorize(
             withCallbackURL: URL(string: APIClient.redirectUri)!,

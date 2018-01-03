@@ -67,9 +67,8 @@ public extension CloudAPIClient {
         return credential?.isTokenExpired() ?? true
     }
 
-    static func authorize(_ viewController: UIViewController, callback: (() -> ())? = nil) {
-        let vc = OAuthViewController()
-        viewController.addChildViewController(vc)
+    static func authorize(callback: (() -> ())? = nil) {
+        let vc = OAuthViewController(oauth: oauth)
         oauth.authorizeURLHandler = vc
         let _ = oauth.authorize(
             withCallbackURL: URL(string: CloudAPIClient.redirectUrl)!,
@@ -80,17 +79,15 @@ public extension CloudAPIClient {
                 CloudAPIClient.shared.updateAccessToken(credential.oauthToken)
                 let _ = CloudAPIClient.shared.fetchProfile().on(
                     failed: { error in
-                        if let callback = callback { callback() }
+                        callback?()
                 }, value: { profile in
                     CloudAPIClient.login(profile: profile, token: credential.oauthToken)
                     AppDelegate.shared.reload()
-                    if let callback = callback { callback() }
+                    callback?()
                 }).start()
         },
             failure: { error in
-                if let callback = callback {
-                    callback()
-                }
+                callback?()
         })
     }
 

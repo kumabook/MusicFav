@@ -242,7 +242,7 @@ class EntryWebViewController: UIViewController, WKNavigationDelegate, WKScriptMe
                 }
             })
         } else {
-            CloudAPIClient.authorize(self)
+            CloudAPIClient.authorize()
         }
     }
 

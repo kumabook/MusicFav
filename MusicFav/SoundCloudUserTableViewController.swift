@@ -153,7 +153,7 @@ class SoundCloudUserTableViewController: AddStreamTableViewController {
 
     func showSoundCloudLoginViewController() {
         if !SoundCloudKit.APIClient.shared.isLoggedIn {
-            SoundCloudKit.APIClient.authorize(self)
+            SoundCloudKit.APIClient.authorize()
         }
     }
 

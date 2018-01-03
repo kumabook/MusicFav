@@ -93,9 +93,8 @@ extension APIClient {
         APIClient.shared.accessToken = credential?.oauthToken
     }
 
-    static func authorize(_ viewController: UIViewController, callback: (() -> ())? = nil) {
-        let vc = OAuthViewController()
-        viewController.addChildViewController(vc)
+    static func authorize(callback: (() -> ())? = nil) {
+        let vc = OAuthViewController(oauth: oauth)
         oauth.authorizeURLHandler = vc
         let _ = oauth.authorize(
             withCallbackURL: URL(string: APIClient.redirectUri)!,
@@ -106,15 +105,15 @@ extension APIClient {
                 APIClient.shared.accessToken = credential.oauthToken
                 APIClient.shared.fetchMe().on(
                     failed: { error in
-                        if let callback = callback { callback() }
+                        callback?()
                 }, value: { user in
                     APIClient.me = user
                     AppDelegate.shared.reload()
-                    if let callback = callback { callback() }
+                    callback?()
                 }).start()
         },
             failure: { error in
-                if let callback = callback { callback() }
+                callback?()
         })
     }
 

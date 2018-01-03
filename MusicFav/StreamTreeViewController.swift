@@ -233,13 +233,13 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             if SoundCloudKit.APIClient.shared.isLoggedIn {
                 showSoundCloudActivities()
             } else {
-                SoundCloudKit.APIClient.authorize(self)
+                SoundCloudKit.APIClient.authorize()
             }
         case .youTube:
             if YouTubeKit.APIClient.isLoggedIn {
                 return
             } else {
-                YouTubeKit.APIClient.authorize(self)
+                YouTubeKit.APIClient.authorize()
             }
         case .pocket:         return
         case .twitter:        return
