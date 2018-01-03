@@ -134,6 +134,10 @@ public extension CloudAPIClient {
 
     fileprivate static func clearAllAccount() {
         credential = nil
+        oauth.client.credential.oauthToken          = ""
+        oauth.client.credential.oauthTokenSecret    = ""
+        oauth.client.credential.oauthTokenExpiresAt = nil
+        oauth.client.credential.oauthRefreshToken   = ""
         logout()
     }
     

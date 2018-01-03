@@ -116,6 +116,10 @@ extension YouTubeKit.APIClient: MusicFeeder.YouTubeAPIClient {
 
     static func clearAllAccount() {
         credential = nil
+        oauth.client.credential.oauthToken          = ""
+        oauth.client.credential.oauthTokenSecret    = ""
+        oauth.client.credential.oauthTokenExpiresAt = nil
+        oauth.client.credential.oauthRefreshToken   = ""
         APIClient.shared.accessToken = nil
     }
 

@@ -70,7 +70,11 @@ extension APIClient {
 
     public static func clearAllAccount() {
         credential = nil
-        SoundCloudKit.APIClient.shared.accessToken = nil
+        oauth.client.credential.oauthToken          = ""
+        oauth.client.credential.oauthTokenSecret    = ""
+        oauth.client.credential.oauthTokenExpiresAt = nil
+        oauth.client.credential.oauthRefreshToken   = ""
+        APIClient.shared.accessToken = nil
     }
 
     public class func setup() {
