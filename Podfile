@@ -21,6 +21,7 @@ target "MusicFav" do
   pod 'ISAlternativeRefreshControl'
   pod 'RATreeView',           :git => 'https://github.com/kumabook/RATreeView.git',
                            :branch => 'pull_to_refresh'
+  pod 'Spotify-iOS-SDK'
 
   target "UnitTests" do
     inherit! :search_paths
