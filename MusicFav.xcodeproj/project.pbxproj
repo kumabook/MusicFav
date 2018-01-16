@@ -66,6 +66,7 @@
 		67428D571B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67428D561B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift */; };
 		67428D591B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67428D581B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift */; };
 		674A2ED020024C3200CBDC68 /* SpotifyAPIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674A2ECF20024C3200CBDC68 /* SpotifyAPIClient.swift */; };
+		674A2ED220024C3E00CBDC68 /* SpotifyPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674A2ED120024C3E00CBDC68 /* SpotifyPlayer.swift */; };
 		674AAC891B02D64E00C1FC18 /* UINotificationExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */; };
 		674AE5C61FF8DD7A00E35A2C /* OAuthRequestRetrier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674AE5C51FF8DD7A00E35A2C /* OAuthRequestRetrier.swift */; };
 		674AE5C81FF95CEF00E35A2C /* OAuthViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 674AE5C71FF95CEF00E35A2C /* OAuthViewController.swift */; };
@@ -323,6 +324,7 @@
 		67428D561B8369E0002FFA1A /* YouTubePlaylistTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubePlaylistTableViewController.swift; sourceTree = "<group>"; };
 		67428D581B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YouTubePlaylistItemTableViewController.swift; sourceTree = "<group>"; };
 		674A2ECF20024C3200CBDC68 /* SpotifyAPIClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyAPIClient.swift; sourceTree = "<group>"; };
+		674A2ED120024C3E00CBDC68 /* SpotifyPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyPlayer.swift; sourceTree = "<group>"; };
 		674AAC881B02D64E00C1FC18 /* UINotificationExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINotificationExtension.swift; sourceTree = "<group>"; };
 		674AE5C51FF8DD7A00E35A2C /* OAuthRequestRetrier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthRequestRetrier.swift; sourceTree = "<group>"; };
 		674AE5C71FF95CEF00E35A2C /* OAuthViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OAuthViewController.swift; sourceTree = "<group>"; };
@@ -499,6 +501,7 @@
 		6701D4A91A94F308006BFEC6 /* Util */ = {
 			isa = PBXGroup;
 			children = (
+				674A2ED120024C3E00CBDC68 /* SpotifyPlayer.swift */,
 				67C7518A1FF0CD6200E02654 /* Index.swift */,
 				6701D4AC1A95048C006BFEC6 /* HUDExtension.swift */,
 				6724E1C41A9C9E9900D8E0FA /* UIColorExtenstion.swift */,
@@ -1288,6 +1291,7 @@
 				6724E1C91A9CA19800D8E0FA /* AppearanceManager.swift in Sources */,
 				670505BB1B6E28E8006EAA84 /* CloudAPIClientExtension.swift in Sources */,
 				67254C7C1A4968F50064E5DF /* EntryWebViewController.swift in Sources */,
+				674A2ED220024C3E00CBDC68 /* SpotifyPlayer.swift in Sources */,
 				6724E1C51A9C9E9900D8E0FA /* UIColorExtenstion.swift in Sources */,
 				6705761E1BDE75870087063A /* HistoryTableViewController.swift in Sources */,
 				675553051C0743BE00E3241C /* EntryMenu.swift in Sources */,

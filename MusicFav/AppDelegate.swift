@@ -98,6 +98,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         player                       = QueuePlayer()
         appearanceManager            = AppearanceManager()
         appearanceManager?.apply()
+        player?.addPlayer(SpotifyPlayer())
         player?.addObserver(playerObserver)
         player?.addObserver(NowPlayingInfoCenter(player: player!))
         window                       = UIWindow(frame: UIScreen.main.bounds)
