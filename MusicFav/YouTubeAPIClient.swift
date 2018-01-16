@@ -168,8 +168,9 @@ extension YouTubeKit.APIClient: MusicFeeder.YouTubeAPIClient {
 
     static var oauth: OAuth2Swift!
 
-    static func authorize(callback: (() -> ())? = nil) {
-        guard let viewController = AppDelegate.shared.coverViewController else {
+    static func authorize(_ viewController: UIViewController? = nil, callback: (() -> ())? = nil) {
+        let vc = viewController ?? AppDelegate.shared.coverViewController
+        guard let viewController = vc else {
             callback?()
             return
         }

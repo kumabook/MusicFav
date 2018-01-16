@@ -97,8 +97,9 @@ extension APIClient {
         APIClient.shared.accessToken = credential?.oauthToken
     }
 
-    static func authorize(callback: (() -> ())? = nil) {
+    static func authorize(_ viewController: UINavigationController? = nil, callback: (() -> ())? = nil) {
         let vc = OAuthViewController(oauth: oauth)
+        viewController?.pushViewController(vc, animated: true)
         oauth.authorizeURLHandler = vc
         let _ = oauth.authorize(
             withCallbackURL: URL(string: APIClient.redirectUri)!,

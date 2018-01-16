@@ -44,8 +44,10 @@ class OAuthViewController: OAuthWebViewController {
     }
 
     override func doHandle(_ url: URL) {
-        let nav = UINavigationController(rootViewController: self)
-        AppDelegate.shared.coverViewController?.present(nav, animated: true)
+        if navigationController == nil {
+            let nav = UINavigationController(rootViewController: self)
+            AppDelegate.shared.coverViewController?.present(nav, animated: true)
+        }
     }
 
     override func dismissWebViewController() {

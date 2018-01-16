@@ -213,13 +213,13 @@ class PreferenceViewController: UITableViewController {
     }
 
     func showYouTubeLoginController() {
-        YouTubeKit.APIClient.authorize() {
+        YouTubeKit.APIClient.authorize(self) {
             self.tableView?.reloadData()
         }
     }
 
     func showSoundCloudLoginController() {
-        SoundCloudKit.APIClient.authorize() {
+        SoundCloudKit.APIClient.authorize(self.navigationController) {
             self.tableView?.reloadData()
         }
     }
