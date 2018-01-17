@@ -334,7 +334,7 @@ class PreferenceViewController: UITableViewController {
                     showSoundCloudLoginController()
                 }
             case .spotify:
-                if SpotifyAPIClient.sharedInstance.isLoggedIn {
+                if SpotifyAPIClient.shared.isLoggedIn {
                     showDisonnectSpotifyDialog()
                 } else {
                     showSpotifyLoginController()
