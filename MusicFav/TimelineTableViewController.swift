@@ -399,4 +399,8 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return self.cellHeight
     }
+
+    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return self.cellHeight
+    }
 }
