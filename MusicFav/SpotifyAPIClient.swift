@@ -43,8 +43,10 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
         SPTAuthUserFollowReadScope
     ]
     static var shared       = SpotifyAPIClient()
-    static var clientId     = ""
-    static var clientSecret = ""
+    static var clientId        = ""
+    static var clientSecret    = ""
+    static var tokenSwapUrl    = ""
+    static var tokenRefreshUrl = ""
     public fileprivate(set) var auth: SPTAuth!
     var player: SPTAudioStreamingController!
     var authViewController: UIViewController?
@@ -54,6 +56,8 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
         auth.clientID               = clientId
         auth.requestedScopes        = scopes
         auth.redirectURL            = URL(string: "io.kumabook.musicfav.spotify-auth://callback")!
+        auth.tokenSwapURL           = URL(string: SpotifyAPIClient.tokenSwapUrl)!
+        auth.tokenRefreshURL        = URL(string: SpotifyAPIClient.tokenRefreshUrl)!
         auth.sessionUserDefaultsKey = "SpotifySession"
         shared.auth                 = auth
         let player                  = SPTAudioStreamingController.sharedInstance() as SPTAudioStreamingController
@@ -84,6 +88,12 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
                 }
                 if let secret = json["client_secret"].string {
                     clientSecret = secret
+                }
+                if let url = json["token_swap_url"].string {
+                    tokenSwapUrl = url
+                }
+                if let url = json["token_refresh_url"].string {
+                    tokenRefreshUrl = url
                 }
             }
         }
