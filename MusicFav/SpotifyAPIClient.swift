@@ -12,6 +12,7 @@ import Spotify
 import SafariServices
 import MusicFeeder
 import ReactiveSwift
+import Result
 
 public enum SpotifyError: Error {
     case networkError(NSError)
@@ -48,6 +49,7 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
     static var tokenSwapUrl    = ""
     static var tokenRefreshUrl = ""
     public fileprivate(set) var auth: SPTAuth!
+    public let pipe = Signal<Void, NoError>.pipe()
     var player: SPTAudioStreamingController!
     var authViewController: UIViewController?
     open static func setup() {
@@ -104,7 +106,9 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
     }
     func logout() {
         UserDefaults.standard.removeObject(forKey: auth.sessionUserDefaultsKey)
+        auth.session = nil
         player.logout()
+        pipe.input.send(value: ())
     }
     func startAuthenticationFlow(viewController: UIViewController) {
         let authURL = self.auth.spotifyWebAuthenticationURL()
@@ -115,10 +119,11 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
         if auth.canHandle(url) {
             let _ = self.authViewController?.dismiss(animated: true)
             self.authViewController = nil;
-            auth.handleAuthCallback(withTriggeredAuthURL: url, callback: { (e: Error?, session: SPTSession?) in
+            auth.handleAuthCallback(withTriggeredAuthURL: url) { (e: Error?, session: SPTSession?) in
                 guard let session = session else { return }
                 self.player.login(withAccessToken: session.accessToken)
-            })
+                self.pipe.input.send(value: ())
+            }
             return true
         }
         return false

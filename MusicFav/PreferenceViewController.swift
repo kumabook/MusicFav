@@ -186,6 +186,9 @@ class PreferenceViewController: UITableViewController {
         super.viewWillAppear(animated)
         appDelegate.paymentManager?.viewController = self
         Logger.sendScreenView(self)
+        SpotifyAPIClient.shared.pipe.output.observeValues { [weak self] in
+            self?.tableView.reloadData()
+        }
     }
 
     override func viewDidAppear(_ animated: Bool) {
