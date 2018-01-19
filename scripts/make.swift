@@ -38,6 +38,7 @@ enum Target: String {
     var youtubeConfig:    String { return "config/youtube.json.production" }
     var soundCloudConfig: String { return "config/soundcloud.json.production" }
     var fabricConfig:     String { return "config/fabric.json.production" }
+    var spotifyConfig:    String { return "config/spotify.json.production" }
     var gaConfig:         String {
         switch self {
         case .Production: return "config/google_analytics.json.production"
@@ -53,6 +54,7 @@ enum Target: String {
     var youtubeConfigDst:    String { return "config/youtube.json" }
     var soundCloudConfigDst: String { return "config/soundcloud.json" }
     var fabricConfigDst:     String { return "config/fabric.json" }
+    var spotifyConfigDst:    String { return "config/spotify.json" }
     var gaConfigDst:         String { return "config/google_analytics.json" }
     var deliverfileDst:      String { return "fastlane/Deliverfile" }
     var appfileDst:          String { return "fastlane/Appfile" }
@@ -62,6 +64,7 @@ enum Target: String {
         let _ = shell(cp, args: "\(youtubeConfig)"   , "\(youtubeConfigDst)")
         let _ = shell(cp, args: "\(soundCloudConfig)", "\(soundCloudConfigDst)")
         let _ = shell(cp, args: "\(fabricConfig)"    , "\(fabricConfigDst)")
+        let _ = shell(cp, args: "\(spotifyConfig)"   , "\(spotifyConfigDst)")
         let _ = shell(cp, args: "\(deliverfile)"     , "\(deliverfileDst)")
         let _ = shell(cp, args: "\(appfile)"         , "\(appfileDst)")
     }
@@ -73,6 +76,7 @@ enum Target: String {
         let _ = shell(git, args: "checkout", "HEAD", "\(youtubeConfigDst)")
         let _ = shell(git, args: "checkout", "HEAD", "\(soundCloudConfigDst)")
         let _ = shell(git, args: "checkout", "HEAD", "\(fabricConfigDst)")
+        let _ = shell(git, args: "checkout", "HEAD", "\(spotifyConfigDst)")
         let _ = shell(git, args: "checkout", "HEAD", "\(gaConfigDst)")
         let _ = shell(git, args: "checkout", "HEAD", "\(deliverfileDst)")
         let _ = shell(git, args: "checkout", "HEAD", "\(appfileDst)")
@@ -108,7 +112,6 @@ func shell(_ command : String, args : String...) -> String {
     task.standardOutput = outpipe
     let errpipe = Pipe()
     task.standardError = errpipe
-    
     task.launch()
     
     let outdata = outpipe.fileHandleForReading.readDataToEndOfFile()
@@ -124,6 +127,7 @@ func shell(_ command : String, args : String...) -> String {
     
     task.waitUntilExit()
     let _ = task.terminationStatus
+    print("\(command) \(args) \(output)") 
     
     return output[0]
 }
@@ -157,12 +161,6 @@ func main(task: Task, target: Target) {
     case .Version: nextVersion()
     }
 }
-
-let feedlyConfig     = "config/feedly.json"
-let youtubeConfig    = "config/youtube.json"
-let soundCloudConfig = "config/soundcloud.json"
-let fabricConfig     = "config/fabric.json"
-let gaConfig         = "config/google_analytics.json"
 
 let args = ProcessInfo.processInfo.arguments as [String]
 var _task   = args[args.count - 2]

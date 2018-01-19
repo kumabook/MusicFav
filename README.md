@@ -24,6 +24,8 @@ but is available via TestFlight Beta Testing.
       - Put your [SoundCloud API][] app Client ID
     - config/fabric.json (not necessary)
       - Put your [Fabric][] api key and build secret
+    - config/spotify.json (not necessary)
+      - Put your [Spotify][] client id and client secret
 - Open and build MusicFav.xcworkspace with xcode
 
 [Carthage]:                 https://github.com/Carthage/Carthage
@@ -31,4 +33,5 @@ but is available via TestFlight Beta Testing.
 [Feedly Cloud API]:         https://developer.feedly.com/
 [SoundCloud API]:           https://developers.soundcloud.com/
 [Fabric]:                   https://get.fabric.io/
+[Spotify]:                  https://developer.spotify.com/
 [TestFlight Beta Testing]:  http://musicfav.github.io//flight/

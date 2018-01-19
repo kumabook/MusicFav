@@ -1,0 +1,6 @@
+{
+  "client_id": "xxxx",
+  "client_secret": "xxxx",
+  "token_swap_url": "https://xxxxx/tokens/swap",
+  "token_refresh_url": "https://xxxxx/tokens/refresh"
+}
