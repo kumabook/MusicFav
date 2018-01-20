@@ -299,6 +299,14 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
 
     // MARK: - PlaylistStreamTableViewDelegate
 
+    func albumSelected(_ sender: TimelineTableViewCell, album: Album) {
+        // TODO
+    }
+
+    func playlistSelected(_ sender: TimelineTableViewCell, playlist: ServicePlaylist) {
+        // TODO
+    }
+
     func trackSelected(_ sender: TimelineTableViewCell, index: Int, track: Track, playlist: Playlist) {
         let queue = getPlaylistQueue()
         guard let playlistIndex = queue.indexOf(playlist) else { return }
@@ -306,7 +314,7 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         tableView.reloadData()
     }
 
-    func trackScrollViewMarginTouched(_ sender: TimelineTableViewCell, playlist: Playlist?) {
+    func scrollViewMarginTouched(_ sender: TimelineTableViewCell, playlist: Playlist?) {
         if let playlist = playlist, playlist.validTracksCount > 0 {
             showPlaylist(playlist)
         }
@@ -381,8 +389,8 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
         cell.articleButton.isHidden = item.entry == nil
         cell.trackNumLabel.text     = item.trackNumString
         cell.timelineDelegate       = self
+        cell.setTimelineItem(item)
         if let playlist = item.playlist {
-            cell.loadThumbnails(playlist)
             updatePlayerIcon(cell, playlist: playlist)
             cell.observePlaylist(playlist)
         } else {

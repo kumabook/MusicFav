@@ -24,4 +24,5 @@ extension UIColor {
     class var lightGreen:  UIColor { return build(r: 110/255, g: 234/255, b: 155/255, a: 1.0) }
     class var lightTheme:  UIColor { return build(r: 255/255, g: 160/255, b:  80/255, a: 0.8) }
     class var lightBlue:   UIColor { return build(r: 130/255, g: 180/255, b: 227/255, a: 1.0) }
+    class var imageCover:  UIColor { return build(r:   0/255, g:   0/255, b:   0/255, a: 0.3) }
 }
