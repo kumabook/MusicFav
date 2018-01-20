@@ -20,7 +20,7 @@ class HistoryTableViewController: StreamTimelineTableViewController {
             switch $0.type {
             case .Entry:
                 guard let entry = $0.entry else { return nil }
-                return TimelineItem.entry(entry, historyRepository.playlistsOfHistory[$0])
+                return TimelineItem.entry(entry)
             case .Track:
                 return TimelineItem.trackHistory($0, historyRepository.playlistsOfHistory[$0])
             }

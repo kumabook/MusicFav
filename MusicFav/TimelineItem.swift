@@ -13,14 +13,14 @@ import SoundCloudKit
 import YouTubeKit
 
 enum TimelineItem {
-    case entry(FeedlyKit.Entry, MusicFeeder.Playlist?)
+    case entry(FeedlyKit.Entry)
     case activity(SoundCloudKit.Activity, MusicFeeder.Playlist?)
     case youTubePlaylist(YouTubeKit.PlaylistItem, MusicFeeder.Playlist?)
     case trackHistory(MusicFeeder.History, MusicFeeder.Playlist?)
 
     var entry: FeedlyKit.Entry? {
         switch self {
-        case .entry(let entry, _): return entry
+        case .entry(let entry):    return entry
         case .activity(_, _):      return nil
         case .youTubePlaylist(_):  return nil
         case .trackHistory(_):     return nil
@@ -29,17 +29,35 @@ enum TimelineItem {
 
     var playlist: MusicFeeder.Playlist? {
         switch self {
-        case .entry(_, let playlist):           return playlist
+        case .entry(let entry):                 return entry.playlist
         case .activity(_, let playlist):        return playlist
         case .youTubePlaylist(_, let playlist): return playlist
         case .trackHistory(_, let playlist):    return playlist
         }
     }
 
+    var playlists: [ServicePlaylist] {
+        switch self {
+        case .entry(let entry):      return entry.playlists
+        case .activity(_, _):        return []
+        case .youTubePlaylist(_, _): return []
+        case .trackHistory(_, _):    return []
+        }
+    }
+
+    var albums: [Album] {
+        switch self {
+        case .entry(let entry):      return entry.albums
+        case .activity(_, _):        return []
+        case .youTubePlaylist(_, _): return []
+        case .trackHistory(_, _):    return []
+        }
+    }
+
     var title: String? {
         switch self {
-        case .entry(let entry, let playlist):
-            return entry.title ?? playlist?.title
+        case .entry(let entry):
+            return entry.title
         case .activity(let activity, let playlist):
             switch activity.origin {
             case .playlist:         return playlist?.title ?? ""
@@ -51,8 +69,8 @@ enum TimelineItem {
     }
     var thumbnailURL: URL?  {
         switch self {
-        case .entry(let entry, let playlist):
-            return entry.thumbnailURL ?? playlist?.thumbnailUrl
+        case .entry(let entry):
+            return entry.thumbnailURL ?? entry.playlistifiedEntry?.visualUrl
         case .activity(let activity, _):
             switch activity.origin {
             case .playlist(let playlist): return playlist.thumbnailURL
@@ -64,7 +82,7 @@ enum TimelineItem {
     }
     var description:  String? {
         switch self {
-        case .entry(let entry, _):
+        case .entry(let entry):
             return entry.origin?.title
         case .activity(let activity, _):
             switch activity.origin {
@@ -79,7 +97,7 @@ enum TimelineItem {
 
     var dateString:   String? {
         switch self {
-        case .entry(let entry, _):
+        case .entry(let entry):
             return entry.published.date.elapsedTime
         case .activity(let activity, _):
             return activity.createdAt.toDate()!.elapsedTime
@@ -99,8 +117,8 @@ enum TimelineItem {
 
     var trackCount:   Int? {
         switch self {
-        case .entry(_, let playlist):
-            return playlist?.tracks.count
+        case .entry(let entry):
+            return entry.playlistifiedEntry?.tracks.count
         case .activity(let activity, let playlist):
             switch activity.origin {
             case .playlist: return playlist?.tracks.count

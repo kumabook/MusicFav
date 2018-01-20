@@ -31,7 +31,7 @@ class StreamTimelineTableViewController: TimelineTableViewController {
     override var timelineTitle: String { return entryRepository.stream.streamTitle }
 
     override func getItems() -> [TimelineItem] {
-        return entryRepository.items.map { TimelineItem.entry($0, self.entryRepository.playlistsOfEntry[$0]) }
+        return entryRepository.items.map { TimelineItem.entry($0) }
     }
     override func getPlaylistQueue() -> PlaylistQueue {
         return entryRepository.playlistQueue
