@@ -18,14 +18,24 @@ extension MBProgressHUD {
         return hud
     }
 
+    class func showHUDForView(_ view: UIView, message: String, animated: Bool, duration: TimeInterval, after: @escaping () -> Void) -> MBProgressHUD {
+        let hud = MBProgressHUD(view: view)
+        hud.label.text = message
+        return hud.show(view, animated: animated, duration: duration, after: after)
+    }
+
     class func showCompletedHUDForView(_ view: UIView, animated: Bool, duration: TimeInterval, after: @escaping () -> Void) -> MBProgressHUD {
         let hud = MBProgressHUD.createCompletedHUD(view)
-        view.addSubview(hud)
-        hud.show(true, duration: duration, after: {
-            hud.removeFromSuperview()
+        return hud.show(view, animated: animated, duration: duration, after: after)
+    }
+
+    fileprivate func show(_ view: UIView, animated: Bool, duration: TimeInterval, after: @escaping () -> Void) -> MBProgressHUD {
+        view.addSubview(self)
+        self.show(true, duration: duration, after: {
+            self.removeFromSuperview()
             after()
         })
-        return hud
+        return self
     }
 
     func show(_ animated:Bool, duration:TimeInterval, after:@escaping () -> Void) {

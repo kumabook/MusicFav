@@ -104,6 +104,7 @@
 "Sorry. Failed to purchase \"%@\"."               = "申し訳ございません。「%@」の購入ができませんでした。";
 "Sorry. In-App Purchase is restricted"            = "申し訳ございません。アプリ内課金が制限されています。";
 "Sorry. Failed to restore."                       = "申し訳ございません。復元できませんでした。";
+"Sorry, fail to get url."                         = "申し訳ございません。URLの取得に失敗しました";
 "Playlist number is limited to %d."               = "プレイリストの数は%d個に制限されています。";
 "Track number of per playlist is limited to %d."  = "プレイリストあたりのトラックの数は%d個に制限されています。";
 "Do you want to purchase \"Unlock Everything\"."  = "購入して制限を解除しますか？";

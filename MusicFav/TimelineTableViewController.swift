@@ -300,11 +300,21 @@ class TimelineTableViewController: UITableViewController, TimelineTableViewCellD
     // MARK: - PlaylistStreamTableViewDelegate
 
     func albumSelected(_ sender: TimelineTableViewCell, album: Album) {
-        // TODO
+        guard let url = album.permalinkUrl else {
+            let message = "Sorry, fail to get url.".localize()
+            let _ = MBProgressHUD.showHUDForView(view, message: message, animated: true, duration: 1.5) {}
+            return
+        }
+        UIApplication.shared.openURL(url)
     }
 
     func playlistSelected(_ sender: TimelineTableViewCell, playlist: ServicePlaylist) {
-        // TODO
+        guard let url = playlist.permalinkUrl else {
+            let message = "Sorry, fail to get url.".localize()
+            let _ = MBProgressHUD.showHUDForView(view, message: message, animated: true, duration: 1.5) {}
+            return
+        }
+        UIApplication.shared.openURL(url)
     }
 
     func trackSelected(_ sender: TimelineTableViewCell, index: Int, track: Track, playlist: Playlist) {
