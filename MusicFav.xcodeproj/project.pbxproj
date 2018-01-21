@@ -99,6 +99,8 @@
 		6767AE5E1ADBECCC00A92497 /* StreamTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6767AE5C1ADBECCC00A92497 /* StreamTableViewCell.xib */; };
 		676CB8761DD7E8B50010EA30 /* DrawerController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 676CB8751DD7E8B50010EA30 /* DrawerController.framework */; };
 		676CB8771DD7E8CD0010EA30 /* DrawerController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 676CB8751DD7E8B50010EA30 /* DrawerController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		6773C0D320146BE400CCF3E5 /* SpotifyPlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6773C0D220146BE400CCF3E5 /* SpotifyPlaylistTableViewController.swift */; };
+		6773C0D520146E2D00CCF3E5 /* SpotifyPlaylistRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6773C0D420146E2D00CCF3E5 /* SpotifyPlaylistRepository.swift */; };
 		677AB6791DE74DD600879B00 /* AMScrollingNavbar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 677AB6781DE74DD600879B00 /* AMScrollingNavbar.framework */; };
 		677AB67A1DE8FB2200879B00 /* AMScrollingNavbar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 677AB6781DE74DD600879B00 /* AMScrollingNavbar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		677AB67C1DE8FFCA00879B00 /* NavigationBarScrollable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 677AB67B1DE8FFCA00879B00 /* NavigationBarScrollable.swift */; };
@@ -348,6 +350,8 @@
 		6767AE5B1ADBECCC00A92497 /* StreamTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTableViewCell.swift; sourceTree = "<group>"; };
 		6767AE5C1ADBECCC00A92497 /* StreamTableViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = StreamTableViewCell.xib; sourceTree = "<group>"; };
 		676CB8751DD7E8B50010EA30 /* DrawerController.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DrawerController.framework; path = Carthage/Build/iOS/DrawerController.framework; sourceTree = "<group>"; };
+		6773C0D220146BE400CCF3E5 /* SpotifyPlaylistTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyPlaylistTableViewController.swift; sourceTree = "<group>"; };
+		6773C0D420146E2D00CCF3E5 /* SpotifyPlaylistRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SpotifyPlaylistRepository.swift; path = MusicFav/SpotifyPlaylistRepository.swift; sourceTree = "<group>"; };
 		677AB6781DE74DD600879B00 /* AMScrollingNavbar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AMScrollingNavbar.framework; path = Carthage/Build/iOS/AMScrollingNavbar.framework; sourceTree = "<group>"; };
 		677AB67B1DE8FFCA00879B00 /* NavigationBarScrollable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationBarScrollable.swift; sourceTree = "<group>"; };
 		6783057E1B95DDC000A83F52 /* StreamTimelineTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTimelineTableViewController.swift; sourceTree = "<group>"; };
@@ -538,6 +542,7 @@
 				67EFB1541B933B46008A84DF /* TimelineItem.swift */,
 				67D8371E1B9F1BAD0025B14B /* RecommendFeed.swift */,
 				670576151BDD2DC30087063A /* HistoryManager.swift */,
+				6773C0D420146E2D00CCF3E5 /* SpotifyPlaylistRepository.swift */,
 			);
 			name = Model;
 			path = ..;
@@ -718,6 +723,7 @@
 				67428D581B8374DA002FFA1A /* YouTubePlaylistItemTableViewController.swift */,
 				67D41D021B878D120082454F /* SoundCloudPlaylistTableViewController.swift */,
 				67D41D061B88BEF30082454F /* SoundCloudTrackTableViewController.swift */,
+				6773C0D220146BE400CCF3E5 /* SpotifyPlaylistTableViewController.swift */,
 			);
 			name = Right;
 			sourceTree = "<group>";
@@ -1254,7 +1260,9 @@
 				67B366DE1AE1CBA800E089B2 /* TutorialViewController.swift in Sources */,
 				67C1A8051B7B8728002A604C /* ChannelTableViewController.swift in Sources */,
 				67F530891B7F518500D8EEF1 /* AddStreamTableViewController.swift in Sources */,
+				6773C0D320146BE400CCF3E5 /* SpotifyPlaylistTableViewController.swift in Sources */,
 				6762EE0B1BCB36C700EA90DC /* SavedStreamTimelineTableViewController.swift in Sources */,
+				6773C0D520146E2D00CCF3E5 /* SpotifyPlaylistRepository.swift in Sources */,
 				67D41D071B88BEF30082454F /* SoundCloudTrackTableViewController.swift in Sources */,
 				6727EDFE1A5AC1DE003C6A47 /* MiniPlayerViewController.swift in Sources */,
 				670576161BDD2DC30087063A /* HistoryManager.swift in Sources */,
