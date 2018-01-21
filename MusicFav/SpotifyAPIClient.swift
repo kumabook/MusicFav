@@ -322,6 +322,43 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
             }
         }
     }
+
+    open func playlistsOfNextPage(_ playlistList: SPTPlaylistList) -> SignalProducer<SPTPlaylistList, SpotifyError> {
+        return SignalProducer { (observer, disposable) in
+            guard let s = self.auth.session, let accessToken = s.accessToken else {
+                observer.send(error: .notLoggedIn)
+                return
+            }
+            let result = Result<URLRequest, NSError> { try playlistList.createRequestForNextPage(withAccessToken: accessToken) }
+            guard let req = result.value else {
+                if let error = result.error {
+                    observer.send(error: .networkError(error))
+                }
+                return
+            }
+            SPTRequest.sharedHandler().perform(req) { error, res, data in
+                if let e = error as NSError? {
+                    observer.send(error: .networkError(e))
+                    return
+                }
+                if let r = res as? HTTPURLResponse {
+                    if r.statusCode < 200 && r.statusCode >= 400 {
+                        observer.send(error: .networkError(NSError(domain: "spotify", code: r.statusCode, userInfo: ["error":r.statusCode])))
+                        return
+                    }
+                }
+                do {
+                    let p = try SPTPlaylistList(from: data, with: res)
+                    observer.send(value: p)
+                    observer.sendCompleted()
+                } catch let error as NSError {
+                    observer.send(error: .networkError(error))
+                    return
+                }
+            }
+        }
+    }
+
     open class func alertController(error: SpotifyError, handler: @escaping (UIAlertAction!) -> Void) -> UIAlertController {
         let ac = UIAlertController(title: error.title.localize(),
                                    message: error.message.localize(),
