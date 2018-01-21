@@ -137,6 +137,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         YouTubeKit.APIClient.setup()
         MusicFeeder.Track.youtubeAPIClient = YouTubeKit.APIClient.shared
         SpotifyAPIClient.setup()
+        if #available(iOS 9.3, *) {
+            AppleMusicClient.shared.connect(silent: true).start()
+        }
     }
 
     func startTutorial() {

@@ -65,7 +65,8 @@ class PreferenceViewController: UITableViewController {
         case youTube     = 1
         case soundCloud  = 2
         case spotify     = 3
-        static let count = 4
+        case appleMusic  = 4
+        static let count = 5
         var title: String {
             switch self {
             case .feedly:
@@ -91,6 +92,21 @@ class PreferenceViewController: UITableViewController {
                     return "Disconnect with Spotify".localize()
                 } else {
                     return "Connect with Spotify".localize()
+                }
+            case .appleMusic:
+                if #available(iOS 9.3, *) {
+                    switch AppleMusicClient.shared.authroizationStatus {
+                    case .notDetermined:
+                        return "Connect Apple Music".localize()
+                    case .denied:
+                        return "Connect Apple Music".localize()
+                    case .restricted:
+                        return "Can not connect Apple Music".localize()
+                    case .authorized:
+                        return "Connected Apple Music".localize()
+                    }
+                } else {
+                    return "Can not connect Apple Music".localize()
                 }
             }
         }
@@ -341,6 +357,17 @@ class PreferenceViewController: UITableViewController {
                     showDisonnectSpotifyDialog()
                 } else {
                     showSpotifyLoginController()
+                }
+            case .appleMusic:
+                if #available(iOS 9.3, *) {
+                    switch AppleMusicClient.shared.authroizationStatus {
+                    case .notDetermined:
+                        AppleMusicClient.shared.connect(silent: false).start()
+                    case .denied:
+                        UIApplication.shared.openURL(URL(string: "app-settings:")!)
+                    default:
+                        break
+                    }
                 }
             }
         case .behavior:

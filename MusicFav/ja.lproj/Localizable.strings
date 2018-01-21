@@ -90,11 +90,14 @@
 "Manage feeds with Feedly"          = "Feedlyと連携してフィードを管理";
 "Connect with YouTube"              = "YouTubeと連携";
 "Connect with SoundCloud"           = "SoundCloudと連携";
-"Connect with Spotify"              = "Spotify連携";
+"Connect with Spotify"              = "Spotifyと連携";
+"Connect Apple Music"               = "AppleMusicと連携";
+"Connected Apple Music"             = "AppleMusicと連携中";
 "Disconnect with Feedly"            = "Feedlyとの連携を解除";
 "Disconnect with YouTube"           = "YouTubeとの連携を解除";
 "Disconnect with SoundCloud"        = "SoundCloudとの連携を解除";
 "Disconnect with Spotify"           = "Spotifyとの連携を解除";
+"Can not connect Apple Music"       = "Apple Musicと連携できません";
 "MusicFav Recommend"                = "MusicFavのおすすめ";
 "Hype machine featured"             = "Hype machine featured";
 "Login failed."                     = "ログインできませんでした。";
