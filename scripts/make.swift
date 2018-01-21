@@ -15,7 +15,7 @@ let cp         = "/bin/cp"
 let xcodebuild = "/usr/bin/xcodebuild"
 let carthage   = "/usr/local/bin/carthage"
 let agvtool    = "/usr/bin/agvtool"
-let version    = "0.5.1"
+let version    = "0.5.2"
 
 enum Task: String {
     case Config  = "config"
