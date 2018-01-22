@@ -143,6 +143,9 @@ class SpotifyPlaylistTableViewController: UITableViewController {
         observer = nil
         switch Section(rawValue: indexPath.section)! {
         case .playlists:
+            let playlist = playlistRepository.playlists[indexPath.item]
+            let vc = SpotifyTrackTableViewController(playlist: playlist)
+            navigationController?.pushViewController(vc, animated: true)
             break
         }
     }
