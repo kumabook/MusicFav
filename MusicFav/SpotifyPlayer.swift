@@ -52,8 +52,9 @@ class SpotifyPlayer: PlayerKit.SpotifyPlayer, SPTAudioStreamingPlaybackDelegate 
         }
         return nil
     }
-    
+
     override func seekToTime(_ time: TimeInterval) {
+        if !streamingController.loggedIn { return }
         streamingController.seek(to: time) { e in
             if let e = e {
                 print("spotify seek error \(e)")
@@ -61,16 +62,16 @@ class SpotifyPlayer: PlayerKit.SpotifyPlayer, SPTAudioStreamingPlaybackDelegate 
             }
             self.notify(.timeUpdated)
         }
-        
     }
-    
+
     open func keepPlaying() {
         if state.isPlaying {
             play()
         }
     }
-    
+
     override func play() {
+        if !streamingController.loggedIn { return }
         state = .loadToPlay
         streamingController.setIsPlaying(true) { e in
             if let e = e {
@@ -79,8 +80,9 @@ class SpotifyPlayer: PlayerKit.SpotifyPlayer, SPTAudioStreamingPlaybackDelegate 
             }
         }
     }
-    
+
     open override func pause() {
+        if !streamingController.loggedIn { return }
         state = .load
         streamingController.setIsPlaying(false) { e in
             self.state = .pause
@@ -90,17 +92,25 @@ class SpotifyPlayer: PlayerKit.SpotifyPlayer, SPTAudioStreamingPlaybackDelegate 
             }
         }
     }
-    
+
     override func clearPlayer() {
+        if !streamingController.loggedIn { return }
         streamingController.setIsPlaying(false) { e in }
         streamingController.playbackDelegate = nil
     }
-    
+
     override func preparePlayer() {
+        if !streamingController.loggedIn { return }
         guard let track = track, let uri = track.spotifyURI, track.isValid else { return }
         streamingController.playbackDelegate = self
         streamingController.seek(to: 0.0) { e in }
         streamingController.playSpotifyURI(uri, startingWith: 0, startingWithPosition: 0) { e in
+            switch self.state {
+            case .loadToPlay, .play:
+                self.streamingController.setIsPlaying(true) {e in }
+            default:
+                self.streamingController.setIsPlaying(false) {e in }
+            }
             if let e = e {
                 print("Failed to play uri \(uri): \(e)")
                 return
@@ -108,3 +118,4 @@ class SpotifyPlayer: PlayerKit.SpotifyPlayer, SPTAudioStreamingPlaybackDelegate 
         }
     }
 }
+
