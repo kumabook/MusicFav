@@ -51,8 +51,10 @@ class PlayerViewController: PlayerKit.SimplePlayerViewController {
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     let buttonSize:    CGFloat = 40.0
     let buttonPadding: CGFloat = 20.0
-    var likeButton:   UIButton!
-    var rotateButton: UIButton!
+
+    var likeButton:     UIButton!
+    var providerButton: UIButton!
+    var rotateButton:   UIButton!
 
     var videoViewOriginalCenter: CGPoint!
     var videoOrientation: VideoOrientation!
@@ -66,14 +68,18 @@ class PlayerViewController: PlayerKit.SimplePlayerViewController {
         likeButton = UIButton(type: UIButtonType.system)
         likeButton.tintColor = UIColor.white
         likeButton.setImage(UIImage(named: "like"), for: UIControlState())
-        likeButton.addTarget(self, action: #selector(PlayerViewController.likeButtonTapped), for: UIControlEvents.touchUpInside)
+        likeButton.addTarget(self, action: #selector(PlayerViewController.likeButtonTapped), for: .touchUpInside)
         view.addSubview(likeButton)
 
         rotateButton = UIButton(type: UIButtonType.system)
         rotateButton.tintColor = UIColor.white
         rotateButton.setImage(UIImage(named: "rotate"), for: UIControlState())
-        rotateButton.addTarget(self, action: #selector(PlayerViewController.rotateButtonTapped), for: UIControlEvents.touchUpInside)
+        rotateButton.addTarget(self, action: #selector(PlayerViewController.rotateButtonTapped), for: .touchUpInside)
         view.addSubview(rotateButton)
+        providerButton = UIButton(type: UIButtonType.custom)
+        providerButton.addTarget(self, action: #selector(PlayerViewController.providerButtonTapped), for: .touchUpInside)
+        providerButton.imageView?.contentMode = .scaleAspectFit
+        view.addSubview(providerButton)
         videoViewOriginalCenter = videoView?.center
         videoOrientation = VideoOrientation.portrait
     }
@@ -86,8 +92,14 @@ class PlayerViewController: PlayerKit.SimplePlayerViewController {
             make.width.equalTo(self.buttonSize)
             make.height.equalTo(self.buttonSize)
         }
-        rotateButton.snp.makeConstraints { make in
+        providerButton.snp.makeConstraints { make in
             make.right.equalTo(self.view.snp.right).offset(-self.buttonPadding)
+            make.bottom.equalTo(self.view.snp.bottom).offset(-self.buttonPadding*1.5)
+            make.width.equalTo(self.buttonSize)
+            make.height.equalTo(self.buttonSize)
+        }
+        rotateButton.snp.makeConstraints { make in
+            make.right.equalTo(self.view.snp.right).offset(-self.buttonPadding*2 - self.buttonSize)
             make.bottom.equalTo(self.view.snp.bottom).offset(-self.buttonPadding*1.5)
             make.width.equalTo(self.buttonSize)
             make.height.equalTo(self.buttonSize)
@@ -96,9 +108,8 @@ class PlayerViewController: PlayerKit.SimplePlayerViewController {
 
     @objc func likeButtonTapped() {
         let app = UIApplication.shared.delegate as! AppDelegate
-        if let track = app.player?.currentTrack as? MusicFeeder.Track{
-            showSelectPlaylistViewController([track])
-        }
+        guard let track = app.player?.currentTrack as? MusicFeeder.Track else { return }
+        showSelectPlaylistViewController([track])
     }
 
     @objc func rotateButtonTapped() {
@@ -116,9 +127,18 @@ class PlayerViewController: PlayerKit.SimplePlayerViewController {
         }) 
     }
 
+    @objc func providerButtonTapped() {
+        let app = UIApplication.shared.delegate as! AppDelegate
+        guard let track = app.player?.currentTrack as? MusicFeeder.Track else { return }
+        track.open()
+    }
+
     override func updateViewWithTrack(_ track: PlayerKit.Track, animated: Bool) {
         super.updateViewWithTrack(track, animated: animated)
         rotateButton.isHidden = !track.isVideo
+        if let track = track as? MusicFeeder.Track {
+            providerButton.setImage(UIImage(named: track.provider.iconImageName), for: UIControlState.normal)
+        }
     }
 
     func showSelectPlaylistViewController(_ tracks: [MusicFeeder.Track]) {
