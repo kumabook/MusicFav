@@ -13,11 +13,13 @@ import SafariServices
 import MusicFeeder
 import ReactiveSwift
 import Result
+import Alamofire
 
 public enum SpotifyError: Error {
     case networkError(NSError)
     case notLoggedIn
     case parseError
+    case sessionExpired(NSError?)
     var title: String {
         return "Error with Spotify"
     }
@@ -27,31 +29,64 @@ public enum SpotifyError: Error {
             return "Not logged in spotify"
         case .networkError(let e):
             return e.localizedDescription
+        case .sessionExpired(_):
+            return "session expired"
         default:
             return "Sorry, unknown error occured"
         }
     }
 }
 
+public struct Token {
+    public var accessToken: String
+    public var tokenType:   String
+    public var expiresIn:   Int64
+    public var expiresAt:   Int64
+    init(json: JSON) {
+        accessToken = json["access_token"].stringValue
+        tokenType   = json["token_type"].stringValue
+        expiresIn   = json["expires_in"].int64Value
+        expiresAt   = Date().timestamp + expiresIn * 1000
+    }
+    public var isValid: Bool {
+        return Date().timestamp <= expiresAt
+    }
+}
+
 open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
     static var scopes       = [
         SPTAuthStreamingScope,
+        SPTAuthPlaylistReadPrivateScope,
         SPTAuthPlaylistModifyPublicScope,
         SPTAuthPlaylistModifyPrivateScope,
         SPTAuthUserLibraryModifyScope,
         SPTAuthUserLibraryReadScope,
         SPTAuthUserFollowModifyScope,
-        SPTAuthUserFollowReadScope
+        SPTAuthUserFollowReadScope,
+        SPTAuthUserReadPrivateScope
     ]
-    static var shared       = SpotifyAPIClient()
+    static var shared          = SpotifyAPIClient()
     static var clientId        = ""
     static var clientSecret    = ""
     static var tokenSwapUrl    = ""
     static var tokenRefreshUrl = ""
     public fileprivate(set) var auth: SPTAuth!
     public let pipe = Signal<Void, NoError>.pipe()
-    var player: SPTAudioStreamingController!
+    public var player: SPTAudioStreamingController!
+    public var user:   SPTUser? {
+        didSet {
+            switch user?.product ?? .unknown {
+            case .premium:
+                Track.isSpotifyPremiumUser = true
+            case .free, .unlimited, .unknown:
+                Track.isSpotifyPremiumUser = false
+            }
+        }
+    }
     var authViewController: UIViewController?
+    var token: Token?
+    var disposable: Disposable?
+
     open static func setup() {
         loadConfig()
         let auth: SPTAuth           = SPTAuth.defaultInstance()
@@ -65,24 +100,25 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
         let player                  = SPTAudioStreamingController.sharedInstance() as SPTAudioStreamingController
         player.delegate             = shared
         shared.player               = player
-        do {
-            try shared.player.start(withClientId: auth.clientID, audioController: nil, allowCaching: true)
-            shared.player.diskCache = SPTDiskCache(capacity: 1024 * 1024 * 64)
-            if let accessToken = auth.session?.accessToken {
-                shared.player.login(withAccessToken: accessToken)
-            } else {
-                print("Spotify hasn't logged in yet")
+        if let session = auth.session {
+            shared.renewSessionIfNeeded(session: session).startWithResult { result in
+                switch result {
+                case .success(let session):
+                    shared.startIfUserIsPremium(with: session)
+                case .failure(_):
+                    print("Failed to renew session")
+                }
             }
-        } catch {
-            print("Failed to setup spotify client")
+        } else {
+            print("Spotify hasn't logged in yet")
         }
     }
+
     fileprivate static func loadConfig() {
         let bundle = Bundle.main
         if let path = bundle.path(forResource: "spotify", ofType: "json") {
             let data = try? Data(contentsOf: URL(fileURLWithPath: path))
-            let jsonObject: AnyObject? = try! JSONSerialization.jsonObject(with: data!,
-                                                                           options: JSONSerialization.ReadingOptions.mutableContainers) as AnyObject?
+            let jsonObject: AnyObject? = try! JSONSerialization.jsonObject(with: data!, options: JSONSerialization.ReadingOptions.mutableContainers) as AnyObject?
             if let obj: AnyObject = jsonObject {
                 let json = JSON(obj)
                 if let id = json["client_id"].string {
@@ -102,12 +138,74 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
     }
     var isLoggedIn: Bool {
         guard let session = auth?.session else { return false }
-        return session.isValid()
+        return session.isValid() && user != nil
     }
+
+    var accessToken: String? {
+        return auth.session?.accessToken ?? token?.accessToken
+    }
+
+    func fetchTokenWithClientCredentials() -> SignalProducer<Token, SpotifyError> {
+        return SignalProducer { (observer, disposable) in
+            let url = "https://accounts.spotify.com/api/token"
+            var headers = ["Content-Type":"application/x-www-form-urlencoded"]
+            if let header = Alamofire.Request.authorizationHeader(user: SpotifyAPIClient.clientId, password: SpotifyAPIClient.clientSecret) {
+                headers[header.key] = header.value
+            }
+            let request = Alamofire.request(url, method: .post, parameters: ["grant_type":"client_credentials"], encoding: URLEncoding.default, headers: headers)
+                .authenticate(user: SpotifyAPIClient.clientId, password: SpotifyAPIClient.clientSecret)
+                .responseJSON {  response in
+                    if let value = response.result.value {
+                        observer.send(value: Token(json: JSON(value)))
+                        observer.sendCompleted()
+                        return
+                    }
+                    if let error = response.result.error as NSError?{
+                        observer.send(error: SpotifyError.networkError(error))
+                    } else {
+                        observer.send(error: SpotifyError.parseError)
+                    }
+            }
+            disposable.observeEnded() {
+                request.cancel()
+            }
+        }
+    }
+
+    func fetchTokenIfNeeded() -> SignalProducer<(), SpotifyError> {
+        guard let s = auth.session, let _ = s.accessToken else {
+            guard let token = token, token.isValid else {
+                return fetchTokenWithClientCredentials().map {
+                    self.token = $0
+                    return
+                }
+            }
+            return SignalProducer(value: ())
+        }
+        return renewSessionIfNeeded(session: auth.session).map {
+            self.startIfUserIsPremium(with: $0)
+            return
+        }
+    }
+
     func logout() {
-        UserDefaults.standard.removeObject(forKey: auth.sessionUserDefaultsKey)
+        user = nil
+        if player.loggedIn {
+            player.logout()
+        } else {
+            didLogout()
+        }
+    }
+    func start(with session: SPTSession) throws {
+        try player.start(withClientId: auth.clientID, audioController: nil, allowCaching: true)
+        player.diskCache = SPTDiskCache(capacity: 1024 * 1024 * 64)
+        player.login(withAccessToken: session.accessToken)
+    }
+    func close() {
+        try? player.stop()
+        user = nil
         auth.session = nil
-        player.logout()
+        UserDefaults.standard.removeObject(forKey: auth.sessionUserDefaultsKey)
         pipe.input.send(value: ())
     }
     func startAuthenticationFlow(viewController: UIViewController) {
@@ -116,32 +214,65 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
         viewController.present(authViewController!, animated: true, completion: nil)
     }
     func handleURL(url: URL) -> Bool {
+        let _ = self.authViewController?.dismiss(animated: true)
+        self.authViewController = nil;
         if auth.canHandle(url) {
-            let _ = self.authViewController?.dismiss(animated: true)
-            self.authViewController = nil;
             auth.handleAuthCallback(withTriggeredAuthURL: url) { (e: Error?, session: SPTSession?) in
                 guard let session = session else { return }
-                self.player.login(withAccessToken: session.accessToken)
-                self.pipe.input.send(value: ())
+                self.startIfUserIsPremium(with: session)
             }
             return true
         }
         return false
     }
+
+    private func startIfUserIsPremium(with session: SPTSession) {
+        self.disposable = self.fetchMe().on(failed: { error in
+            self.close()
+            self.authViewController?.dismiss(animated: true, completion: {})
+            self.authViewController = nil;
+            self.pipe.input.send(value: ())
+        }, value: { user in
+            self.user = user
+            switch user.product {
+            case .premium:
+                do {
+                    try self.start(with: session)
+                } catch {
+                    self.didLogin()
+                }
+            case .free, .unlimited, .unknown:
+                self.didLogin()
+            }
+        }).start()
+    }
+
+    private func didLogin() {
+        self.authViewController?.dismiss(animated: true, completion: {})
+        self.authViewController = nil;
+        self.pipe.input.send(value: ())
+    }
+    private func didLogout() {
+        close()
+        self.pipe.input.send(value: ())
+    }
     public func audioStreamingDidLogout(_ audioStreaming: SPTAudioStreamingController!) {
-        print("spotify did logout")
-        Track.isSpotifyPremiumUser = false
-        try? player.stop()
-        auth.session = nil
+        didLogout()
     }
     public func audioStreaming(_ audioStreaming: SPTAudioStreamingController!, didReceiveError error: Error!) {
-        if let e = error {
-            print("spotify didReceiveError: \(e)")
+        guard let e = error else { return }
+        print("audioStreaming didReceiveError \(e)")
+        disposable = renewSessionIfNeeded(session: auth.session).startWithResult { result in
+            switch result {
+            case .success(_):
+                print("Succeeded in renewing session")
+            case .failure(_):
+                print("Failed to renew session")
+            }
         }
     }
     public func audioStreamingDidLogin(_ audioStreaming: SPTAudioStreamingController!) {
-        print("spotify did login")
-        Track.isSpotifyPremiumUser = true
+        didLogin()
     }
     #if os(iOS)
     open func open(track: Track) {
@@ -159,18 +290,76 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
             UIApplication.shared.openURL(url)
         }
     }
-    fileprivate func validate(response: URLResponse) -> SpotifyError? {
+    open class func alertController(error: SpotifyError, handler: @escaping (UIAlertAction!) -> Void) -> UIAlertController {
+        let ac = UIAlertController(title: error.title.localize(),
+                                   message: error.message.localize(),
+                                   preferredStyle: UIAlertControllerStyle.alert)
+        let okAction = UIAlertAction(title: "OK".localize(), style: UIAlertActionStyle.default, handler: handler)
+        ac.addAction(okAction)
+        return ac
+    }
+    public func audioStreamingDidEncounterTemporaryConnectionError(_ audioStreaming: SPTAudioStreamingController!) {
+        disposable = renewSessionIfNeeded(session: auth.session).startWithResult { result in
+            switch result {
+            case .success(_):
+                print("Succeeded in renewing session")
+            case .failure(_):
+                print("Failed to renew session")
+            }
+        }
+    }
+
+    fileprivate func validate(response: URLResponse?) -> SpotifyError? {
         guard let r = response as? HTTPURLResponse else {
             return  .networkError(NSError(domain: "spotify", code: 0, userInfo: ["error": "Not HTTPURLResponse"]))
         }
-        if r.statusCode < 200 && r.statusCode >= 400 {
+        if r.statusCode < 200 || r.statusCode >= 400 {
             return  .networkError(NSError(domain: "spotify", code: r.statusCode, userInfo: ["error": r.statusCode]))
         }
         return nil
     }
-    open func track(from track: Track) -> SignalProducer<SPTTrack, SpotifyError> {
+
+    open func renewSessionIfNeeded(session: SPTSession) -> SignalProducer<SPTSession, SpotifyError> {
+        if session.isValid() {
+            return SignalProducer(value: session)
+        }
+        return SignalProducer { (observer, disposable) in
+            self.auth.renewSession(session) { error, session in
+                self.auth.session = session
+                if let session = session {
+                    observer.send(value: session)
+                } else if let error = error {
+                    observer.send(error: SpotifyError.sessionExpired(error as NSError))
+                } else {
+                    observer.send(error: SpotifyError.sessionExpired(nil))
+                }
+            }
+        }
+    }
+    #endif
+    open func fetchMe() -> SignalProducer<SPTUser, SpotifyError> {
         return SignalProducer { (observer, disposable) in
             guard let s = self.auth.session, let accessToken = s.accessToken else {
+                observer.send(error: .notLoggedIn)
+                return
+            }
+            SPTUser.requestCurrentUser(withAccessToken: accessToken) { e, object in
+                if let e = e as NSError? {
+                    observer.send(error: .networkError(e))
+                    return
+                }
+                if let user = object as? SPTUser {
+                    observer.send(value: user)
+                    observer.sendCompleted()
+                } else {
+                    observer.send(error: .parseError)
+                }
+            }
+        }
+    }
+    open func track(from track: Track) -> SignalProducer<SPTTrack, SpotifyError> {
+        return fetchTokenIfNeeded().flatMap(FlattenStrategy.concat) { () -> SignalProducer<SPTTrack, SpotifyError> in return SignalProducer { (observer, disposable) in
+            guard let accessToken = self.accessToken else {
                 observer.send(error: .notLoggedIn)
                 return
             }
@@ -186,11 +375,33 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
                     observer.send(error: .parseError)
                 }
             }
+            }}
+    }
+    open func album(from url: URL) -> SignalProducer<SPTAlbum, SpotifyError> {
+        return fetchTokenIfNeeded().flatMap(FlattenStrategy.concat) { () -> SignalProducer<SPTAlbum, SpotifyError> in
+            return SignalProducer { (observer, disposable) in
+                guard let accessToken = self.accessToken else {
+                    observer.send(error: .notLoggedIn)
+                    return
+                }
+                SPTAlbum.album(withURI: url, accessToken: accessToken, market: nil) { e, object in
+                    if let e = e as NSError? {
+                        observer.send(error: .networkError(e))
+                        return
+                    }
+                    if let v = object as? SPTAlbum {
+                        observer.send(value: v)
+                        observer.sendCompleted()
+                    } else {
+                        observer.send(error: .parseError)
+                    }
+                }
+            }
         }
     }
     open func playlist(from url: URL) -> SignalProducer<SPTPlaylistSnapshot, SpotifyError> {
-        return SignalProducer { (observer, disposable) in
-            guard let s = self.auth.session, let accessToken = s.accessToken else {
+        return fetchTokenIfNeeded().flatMap(FlattenStrategy.concat) { () -> SignalProducer<SPTPlaylistSnapshot, SpotifyError> in return SignalProducer { (observer, disposable) in
+            guard let accessToken = self.accessToken else {
                 observer.send(error: .notLoggedIn)
                 return
             }
@@ -205,7 +416,7 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
                 } else {
                     observer.send(error: .parseError)
                 }
-            }
+            }}
         }
     }
     open func addToLibrary(track: Track) -> SignalProducer<Void, SpotifyError> {
@@ -247,7 +458,7 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
         }
     }
     open func addToLibrary(album: Album) -> SignalProducer<Void, SpotifyError> {
-        return SignalProducer { (observer, disposable) in
+        return fetchTokenIfNeeded().flatMap(.concat) { () -> SignalProducer<Void, SpotifyError> in return SignalProducer { (observer, disposable) in
             guard let accessToken = self.auth.session?.accessToken else {
                 observer.send(error: .notLoggedIn)
                 return
@@ -261,22 +472,20 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
                         observer.send(error: .networkError(e))
                         return
                     }
-                    if let r = res as? HTTPURLResponse {
-                        if r.statusCode < 200 && r.statusCode >= 400 {
-                            observer.send(error: .networkError(NSError(domain: "spotify", code: r.statusCode, userInfo: ["error":r.statusCode])))
-                            return
-                        }
+                    if let e = self.validate(response: res) {
+                        observer.send(error: e)
+                        return
                     }
                     observer.send(value: ())
                     observer.sendCompleted()
                 }
-            } catch let error as NSError {
+            } catch  let error as NSError {
                 observer.send(error: .networkError(error))
-            }
+            }}
         }
     }
     open func addToLibrary(playlist: ServicePlaylist) -> SignalProducer<Void, SpotifyError> {
-        return SignalProducer { (observer, disposable) in
+        return fetchTokenIfNeeded().flatMap(.concat) { () -> SignalProducer<Void, SpotifyError> in return SignalProducer { (observer, disposable) in
             guard let accessToken = self.auth.session?.accessToken else {
                 observer.send(error: .notLoggedIn)
                 return
@@ -288,11 +497,9 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
                         observer.send(error: .networkError(e))
                         return
                     }
-                    if let r = res as? HTTPURLResponse {
-                        if r.statusCode < 200 && r.statusCode >= 400 {
-                            observer.send(error: .networkError(NSError(domain: "spotify", code: r.statusCode, userInfo: ["error":r.statusCode])))
-                            return
-                        }
+                    if let e = self.validate(response: res) {
+                        observer.send(error: e)
+                        return
                     }
                     observer.send(value: ())
                     observer.sendCompleted()
@@ -300,10 +507,70 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
             } catch  let error as NSError {
                 observer.send(error: .networkError(error))
             }
-        }
+            }}
+    }
+    open func removeFromLibrary(playlist: ServicePlaylist) -> SignalProducer<Void, SpotifyError> {
+        return fetchTokenIfNeeded().flatMap(.concat) { () -> SignalProducer<Void, SpotifyError> in return SignalProducer { (observer, disposable) in
+            guard let accessToken = self.auth.session?.accessToken else {
+                observer.send(error: .notLoggedIn)
+                return
+            }
+            do {
+                let req = try SPTFollow.createRequest(forUnfollowingPlaylist: playlist.url.toURL(), withAccessToken: accessToken)
+                SPTRequest.sharedHandler().perform(req) { error, res, data in
+                    if let e = error as NSError? {
+                        observer.send(error: .networkError(e))
+                        return
+                    }
+                    if let e = self.validate(response: res) {
+                        observer.send(error: e)
+                        return
+                    }
+                    observer.send(value: ())
+                    observer.sendCompleted()
+                }
+            } catch  let error as NSError {
+                observer.send(error: .networkError(error))
+            }
+            }}
+    }
+    open func checkIsFollowing(playlist: ServicePlaylist) -> SignalProducer<Bool, SpotifyError> {
+        return fetchTokenIfNeeded().flatMap(.concat) { () -> SignalProducer<Bool, SpotifyError> in return SignalProducer { (observer, disposable) in
+            guard let accessToken = self.auth.session?.accessToken else {
+                observer.send(error: .notLoggedIn)
+                return
+            }
+            do {
+                let req = try SPTFollow.createRequest(forCheckingIfUsers: [self.user!.canonicalUserName], areFollowingPlaylist: playlist.url.toURL(), withAccessToken: accessToken)
+                SPTRequest.sharedHandler().perform(req) { error, res, data in
+                    if let e = error as NSError? {
+                        observer.send(error: .networkError(e))
+                        return
+                    }
+                    if let e = self.validate(response: res) {
+                        observer.send(error: e)
+                        return
+                    }
+                    do {
+                        let result = try SPTFollow.followingResult(from: data, with: res)
+                        guard let v = result[0] as? Bool else {
+                            observer.send(error: .parseError)
+                            return
+                        }
+                        observer.send(value: v)
+                    } catch let error as NSError {
+                        observer.send(error: .networkError(error))
+                        return
+                    }
+                    observer.sendCompleted()
+                }
+            } catch  let error as NSError {
+                observer.send(error: .networkError(error))
+            }
+            }}
     }
     open func fetchMyPlaylists() -> SignalProducer<SPTPlaylistList, SpotifyError> {
-        return SignalProducer { (observer, disposable) in
+        return fetchTokenIfNeeded().flatMap(.concat) { () -> SignalProducer<SPTPlaylistList, SpotifyError> in return SignalProducer { (observer, disposable) in
             guard let s = self.auth.session, let accessToken = s.accessToken, let name = s.canonicalUsername else {
                 observer.send(error: .notLoggedIn)
                 return
@@ -320,52 +587,57 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
                     observer.send(error: .parseError)
                 }
             }
-        }
+            }}
     }
-
     open func playlistsOfNextPage(_ playlistList: SPTPlaylistList) -> SignalProducer<SPTPlaylistList, SpotifyError> {
         return SignalProducer { (observer, disposable) in
             guard let s = self.auth.session, let accessToken = s.accessToken else {
                 observer.send(error: .notLoggedIn)
                 return
             }
-            let result = Result<URLRequest, NSError> { try playlistList.createRequestForNextPage(withAccessToken: accessToken) }
-            guard let req = result.value else {
-                if let error = result.error {
-                    observer.send(error: .networkError(error))
-                }
-                return
-            }
-            SPTRequest.sharedHandler().perform(req) { error, res, data in
-                if let e = error as NSError? {
-                    observer.send(error: .networkError(e))
-                    return
-                }
-                if let r = res as? HTTPURLResponse {
-                    if r.statusCode < 200 && r.statusCode >= 400 {
-                        observer.send(error: .networkError(NSError(domain: "spotify", code: r.statusCode, userInfo: ["error":r.statusCode])))
+            do {
+                let req = try playlistList.createRequestForNextPage(withAccessToken: accessToken)
+                SPTRequest.sharedHandler().perform(req) { error, res, data in
+                    if let e = error as NSError? {
+                        observer.send(error: .networkError(e))
                         return
                     }
-                }
-                do {
-                    let p = try SPTPlaylistList(from: data, with: res)
-                    observer.send(value: p)
+                    if let e = self.validate(response: res) {
+                        observer.send(error: e)
+                        return
+                    }
+                    do {
+                        let p = try SPTPlaylistList(from: data, with: res)
+                        observer.send(value: p)
+                    } catch let error as NSError {
+                        observer.send(error: .networkError(error))
+                        return
+                    }
                     observer.sendCompleted()
-                } catch let error as NSError {
-                    observer.send(error: .networkError(error))
-                    return
                 }
+            } catch  let error as NSError {
+                observer.send(error: .networkError(error))
             }
         }
     }
-
-    open class func alertController(error: SpotifyError, handler: @escaping (UIAlertAction!) -> Void) -> UIAlertController {
-        let ac = UIAlertController(title: error.title.localize(),
-                                   message: error.message.localize(),
-                                   preferredStyle: UIAlertControllerStyle.alert)
-        let okAction = UIAlertAction(title: "OK".localize(), style: UIAlertActionStyle.default, handler: handler)
-        ac.addAction(okAction)
-        return ac
+    open func createPlaylist(_ album: SPTAlbum) -> MusicFeeder.Playlist {
+        var tracks: [MusicFeeder.Track] = []
+        for item in album.firstTrackPage?.items ?? [] {
+            if let track = item as? SPTPartialTrack {
+                tracks.append(Track(spotifyTrack: track, spotifyAlbum: album))
+            }
+        }
+        let playlist = MusicFeeder.Playlist(id: album.identifier, title: album.name, tracks: tracks)
+        return playlist
     }
-    #endif
+    open func createPlaylist(_ snapshot: SPTPlaylistSnapshot) -> MusicFeeder.Playlist {
+        var tracks: [MusicFeeder.Track] = []
+        for item in snapshot.firstTrackPage?.items ?? [] {
+            if let track = item as? SPTPartialTrack {
+                tracks.append(Track(spotifyTrack: track))
+            }
+        }
+        let playlist = MusicFeeder.Playlist(id: snapshot.snapshotId, title: snapshot.name, tracks: tracks)
+        return playlist
+    }
 }
