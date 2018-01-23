@@ -24,6 +24,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         case history
         case youTube
         case soundCloud
+        case spotify
         case pocket
         case twitter
 
@@ -34,6 +35,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             case .history:                                     return "History".localize()
             case .youTube:                                     return "YouTube"
             case .soundCloud:                                  return "SoundCloud"
+            case .spotify:                                     return "Spotify Top Tracks"
             case .pocket:                                      return "Pocket"
             case .twitter:                                     return "Twitter"
             case .feedlyCategory(let category):                return category.label
@@ -60,6 +62,8 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
                 view?.image = UIImage(named: "youtube")
             case .soundCloud:
                 view?.image = UIImage(named: "soundcloud_icon")
+            case .spotify:
+                view?.image = UIImage(named: "spotify")
             case .pocket:  break
             case .twitter: break
             case .feedlyCategory:
@@ -77,6 +81,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
                 let i = vc.youtubeActivityLoader.itemsOfPlaylist.index(vc.youtubeActivityLoader.itemsOfPlaylist.startIndex, offsetBy: index)
                 return vc.youtubeActivityLoader.itemsOfPlaylist.keys[i]
             case .soundCloud:     return []
+            case .spotify:        return []
             case .pocket:         return []
             case .twitter:        return []
             case .feedlyCategory(let category):
@@ -96,6 +101,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             case .youTube:
                 return vc.youtubeActivityLoader.itemsOfPlaylist.count
             case .soundCloud:     return 0
+            case .spotify:        return 0
             case .pocket:         return 0
             case .twitter:        return 0
             case .feedlyCategory(let category):
@@ -134,6 +140,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
         sections.append(.history)
         sections.append(.youTube)
         sections.append(.soundCloud)
+        sections.append(.spotify)
         return sections
     }
 
@@ -241,6 +248,12 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             } else {
                 YouTubeKit.APIClient.authorize()
             }
+        case .spotify:
+            if SpotifyAPIClient.shared.isLoggedIn {
+                showSpotifyTopTracks()
+            } else if let vc = appDelegate.coverViewController {
+                SpotifyAPIClient.shared.startAuthenticationFlow(viewController: vc)
+            }
         case .pocket:         return
         case .twitter:        return
         case .feedlyCategory: return
@@ -271,6 +284,11 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
 
     func showSoundCloudActivities() {
         let vc = SoundCloudActivityTableViewController()
+        appDelegate.miniPlayerViewController?.setCenterViewController(vc)
+    }
+
+    func showSpotifyTopTracks() {
+        let vc = SpotifyTopTracksTableViewController()
         appDelegate.miniPlayerViewController?.setCenterViewController(vc)
     }
 

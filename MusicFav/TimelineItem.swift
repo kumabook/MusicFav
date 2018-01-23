@@ -11,11 +11,13 @@ import MusicFeeder
 import FeedlyKit
 import SoundCloudKit
 import YouTubeKit
+import Spotify
 
 enum TimelineItem {
     case entry(FeedlyKit.Entry)
     case activity(SoundCloudKit.Activity, MusicFeeder.Playlist?)
     case youTubePlaylist(YouTubeKit.PlaylistItem, MusicFeeder.Playlist?)
+    case spotifyTopTrack(SPTTrack, MusicFeeder.Playlist?)
     case trackHistory(MusicFeeder.History, MusicFeeder.Playlist?)
 
     var entry: FeedlyKit.Entry? {
@@ -23,6 +25,7 @@ enum TimelineItem {
         case .entry(let entry):    return entry
         case .activity(_, _):      return nil
         case .youTubePlaylist(_):  return nil
+        case .spotifyTopTrack(_):  return nil
         case .trackHistory(_):     return nil
         }
     }
@@ -32,25 +35,28 @@ enum TimelineItem {
         case .entry(let entry):                 return entry.playlist
         case .activity(_, let playlist):        return playlist
         case .youTubePlaylist(_, let playlist): return playlist
+        case .spotifyTopTrack(_, let playlist): return playlist
         case .trackHistory(_, let playlist):    return playlist
         }
     }
 
     var playlists: [ServicePlaylist] {
         switch self {
-        case .entry(let entry):      return entry.playlists
-        case .activity(_, _):        return []
-        case .youTubePlaylist(_, _): return []
-        case .trackHistory(_, _):    return []
+        case .entry(let entry): return entry.playlists
+        case .activity:         return []
+        case .youTubePlaylist:  return []
+        case .spotifyTopTrack:  return []
+        case .trackHistory:     return []
         }
     }
 
     var albums: [Album] {
         switch self {
-        case .entry(let entry):      return entry.albums
-        case .activity(_, _):        return []
-        case .youTubePlaylist(_, _): return []
-        case .trackHistory(_, _):    return []
+        case .entry(let entry): return entry.albums
+        case .activity:         return []
+        case .youTubePlaylist:  return []
+        case .spotifyTopTrack:  return []
+        case .trackHistory:     return []
         }
     }
 
@@ -64,6 +70,7 @@ enum TimelineItem {
             case .track(let track): return track.title
             }
         case .youTubePlaylist(let playlistItem, _): return playlistItem.title
+        case .spotifyTopTrack(let track, _): return track.name
         case .trackHistory(_, let playlist): return playlist?.title
         }
     }
@@ -77,6 +84,7 @@ enum TimelineItem {
             case .track(let track):       return track.thumbnailURL
             }
         case .youTubePlaylist(let playlistItem, _): return playlistItem.thumbnailURL
+        case .spotifyTopTrack(let track, _): return track.album?.largestCover?.imageURL
         case .trackHistory(_, let playlist): return playlist?.thumbnailUrl
         }
     }
@@ -91,7 +99,10 @@ enum TimelineItem {
             }
         case .youTubePlaylist(let playlistItem, _):
             return playlistItem.description
-        case .trackHistory(_, _): return nil
+        case .spotifyTopTrack(let track, _):
+            return track.album?.name
+        case .trackHistory(_, _):
+            return nil
         }
     }
 
@@ -103,7 +114,11 @@ enum TimelineItem {
             return activity.createdAt.toDate()!.elapsedTime
         case .youTubePlaylist(let playlistItem, _):
             return playlistItem.publishedAt?.toDate()?.elapsedTime
-        case .trackHistory(let history, _): return history.timestamp.date.elapsedTime
+        case .spotifyTopTrack(let track, _):
+            guard let artist = track.artists?.first as? SPTPartialArtist else { return nil }
+            return artist.name
+        case .trackHistory(let history, _):
+            return history.timestamp.date.elapsedTime
         }
     }
 
@@ -126,7 +141,10 @@ enum TimelineItem {
             }
         case .youTubePlaylist:
             return 1
-        case .trackHistory(_, _): return 1
+        case .spotifyTopTrack:
+            return 1
+        case .trackHistory:
+            return 1
         }
     }
 }

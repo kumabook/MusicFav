@@ -103,6 +103,7 @@
 		6773C0D520146E2D00CCF3E5 /* SpotifyPlaylistRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6773C0D420146E2D00CCF3E5 /* SpotifyPlaylistRepository.swift */; };
 		6773C0D92015C41E00CCF3E5 /* SpotifyTrackTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6773C0D82015C41E00CCF3E5 /* SpotifyTrackTableViewController.swift */; };
 		6773C0DB2015C6D300CCF3E5 /* Track.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6773C0DA2015C6D300CCF3E5 /* Track.swift */; };
+		6773C0E12016023A00CCF3E5 /* SpotifyTopTracksTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6773C0E02016023A00CCF3E5 /* SpotifyTopTracksTableViewController.swift */; };
 		6773C0E3201603D500CCF3E5 /* SpotifyTopItemRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6773C0E2201603D500CCF3E5 /* SpotifyTopItemRepository.swift */; };
 		677AB6791DE74DD600879B00 /* AMScrollingNavbar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 677AB6781DE74DD600879B00 /* AMScrollingNavbar.framework */; };
 		677AB67A1DE8FB2200879B00 /* AMScrollingNavbar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 677AB6781DE74DD600879B00 /* AMScrollingNavbar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -357,6 +358,7 @@
 		6773C0D420146E2D00CCF3E5 /* SpotifyPlaylistRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SpotifyPlaylistRepository.swift; path = MusicFav/SpotifyPlaylistRepository.swift; sourceTree = "<group>"; };
 		6773C0D82015C41E00CCF3E5 /* SpotifyTrackTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SpotifyTrackTableViewController.swift; sourceTree = "<group>"; };
 		6773C0DA2015C6D300CCF3E5 /* Track.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Track.swift; path = MusicFav/Track.swift; sourceTree = "<group>"; };
+		6773C0E02016023A00CCF3E5 /* SpotifyTopTracksTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyTopTracksTableViewController.swift; sourceTree = "<group>"; };
 		6773C0E2201603D500CCF3E5 /* SpotifyTopItemRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SpotifyTopItemRepository.swift; path = MusicFav/SpotifyTopItemRepository.swift; sourceTree = "<group>"; };
 		677AB6781DE74DD600879B00 /* AMScrollingNavbar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AMScrollingNavbar.framework; path = Carthage/Build/iOS/AMScrollingNavbar.framework; sourceTree = "<group>"; };
 		677AB67B1DE8FFCA00879B00 /* NavigationBarScrollable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationBarScrollable.swift; sourceTree = "<group>"; };
@@ -703,6 +705,7 @@
 				6783057E1B95DDC000A83F52 /* StreamTimelineTableViewController.swift */,
 				67D8371A1B9AEFF30025B14B /* YouTubeActivityTableViewController.swift */,
 				67D41D181B8F2DB50082454F /* SoundCloudActivityTableViewController.swift */,
+				6773C0E02016023A00CCF3E5 /* SpotifyTopTracksTableViewController.swift */,
 				6762EE0A1BCB36C700EA90DC /* SavedStreamTimelineTableViewController.swift */,
 				6705761D1BDE75870087063A /* HistoryTableViewController.swift */,
 			);
@@ -1254,6 +1257,7 @@
 				67C4146C1DE518F90013DC5D /* AnimatedLaunchScreen.swift in Sources */,
 				67554F091A4F127400F7AE72 /* TrackTableViewCell.swift in Sources */,
 				674AE5C61FF8DD7A00E35A2C /* OAuthRequestRetrier.swift in Sources */,
+				6773C0E12016023A00CCF3E5 /* SpotifyTopTracksTableViewController.swift in Sources */,
 				674AE5C81FF95CEF00E35A2C /* OAuthViewController.swift in Sources */,
 				67311E301AF63BD500711DAC /* FeedbackWebViewController.swift in Sources */,
 				67CC023A1AF328EE005F5F3F /* GAIConfig.swift in Sources */,
