@@ -15,6 +15,12 @@ import ReactiveSwift
 import Result
 import Alamofire
 
+public enum PersonalizeTimeRange: String {
+    case shortTerm  = "short_term"
+    case mediumTerm = "medium_term"
+    case longTerm   = "long_term"
+}
+
 public enum SpotifyError: Error {
     case networkError(NSError)
     case notLoggedIn
@@ -63,7 +69,8 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
         SPTAuthUserLibraryReadScope,
         SPTAuthUserFollowModifyScope,
         SPTAuthUserFollowReadScope,
-        SPTAuthUserReadPrivateScope
+        SPTAuthUserReadPrivateScope,
+        SPTAuthUserReadTopScope,
     ]
     static var shared          = SpotifyAPIClient()
     static var clientId        = ""
@@ -639,5 +646,37 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
         }
         let playlist = MusicFeeder.Playlist(id: snapshot.snapshotId, title: snapshot.name, tracks: tracks)
         return playlist
+    }
+    open func fetchTopTracks(_ offset: Int, limit: Int, timeRange: PersonalizeTimeRange) -> SignalProducer<SPTListPage, SpotifyError> {
+        return fetchTokenIfNeeded().flatMap(.concat) { () -> SignalProducer<SPTListPage, SpotifyError> in return SignalProducer { (observer, disposable) in
+            guard let s = self.auth.session, let accessToken = s.accessToken else {
+                observer.send(error: .notLoggedIn)
+                return
+            }
+            let url = URL(string: "https://api.spotify.com/v1/me/top/tracks")
+            let values: [String: Any] = ["limit": limit, "offset": offset, "time_range": timeRange.rawValue]
+            do {
+                let req = try SPTRequest.createRequest(for: url, withAccessToken: accessToken, httpMethod: "GET", values: values, valueBodyIsJSON: true, sendDataAsQueryString: false)
+                SPTRequest.sharedHandler().perform(req) { error, res, data in
+                    if let e = error as NSError? {
+                        observer.send(error: .networkError(e))
+                        return
+                    }
+                    if let e = self.validate(response: res) {
+                        observer.send(error: e)
+                        return
+                    }
+                    do {
+                        let page = try SPTListPage(from: data, with: res, expectingPartialChildren: false, rootObjectKey: nil)
+                        observer.send(value: page)
+                        observer.sendCompleted()
+                    } catch let error as NSError {
+                        observer.send(error: .networkError(error))
+                    }
+                }
+            } catch let error as NSError {
+                observer.send(error: .networkError(error))
+            }}
+        }
     }
 }
