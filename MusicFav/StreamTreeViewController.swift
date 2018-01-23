@@ -34,7 +34,7 @@ class StreamTreeViewController: UIViewController, RATreeViewDelegate, RATreeView
             case .favorite:                                    return "Favorite".localize()
             case .history:                                     return "History".localize()
             case .youTube:                                     return "YouTube"
-            case .soundCloud:                                  return "SoundCloud"
+            case .soundCloud:                                  return "SoundCloud Timeline"
             case .spotify:                                     return "Spotify Top Tracks"
             case .pocket:                                      return "Pocket"
             case .twitter:                                     return "Twitter"
