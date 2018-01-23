@@ -39,6 +39,7 @@ enum Target: String {
     var soundCloudConfig: String { return "config/soundcloud.json.production" }
     var fabricConfig:     String { return "config/fabric.json.production" }
     var spotifyConfig:    String { return "config/spotify.json.production" }
+    var appleMusicConfig: String { return "config/apple_music.json.production" }
     var gaConfig:         String {
         switch self {
         case .Production: return "config/google_analytics.json.production"
@@ -56,6 +57,7 @@ enum Target: String {
     var fabricConfigDst:     String { return "config/fabric.json" }
     var spotifyConfigDst:    String { return "config/spotify.json" }
     var gaConfigDst:         String { return "config/google_analytics.json" }
+    var appleMusicConfigDst: String { return "config/apple_music.json" }
     var deliverfileDst:      String { return "fastlane/Deliverfile" }
     var appfileDst:          String { return "fastlane/Appfile" }
     func config() {
@@ -65,6 +67,8 @@ enum Target: String {
         let _ = shell(cp, args: "\(soundCloudConfig)", "\(soundCloudConfigDst)")
         let _ = shell(cp, args: "\(fabricConfig)"    , "\(fabricConfigDst)")
         let _ = shell(cp, args: "\(spotifyConfig)"   , "\(spotifyConfigDst)")
+        let _ = shell(cp, args: "\(appleMusicConfig)", "\(appleMusicConfigDst)")
+        let _ = shell(cp, args: "\(gaConfig)"        , "\(gaConfigDst)")
         let _ = shell(cp, args: "\(deliverfile)"     , "\(deliverfileDst)")
         let _ = shell(cp, args: "\(appfile)"         , "\(appfileDst)")
     }
@@ -77,6 +81,7 @@ enum Target: String {
         let _ = shell(git, args: "checkout", "HEAD", "\(soundCloudConfigDst)")
         let _ = shell(git, args: "checkout", "HEAD", "\(fabricConfigDst)")
         let _ = shell(git, args: "checkout", "HEAD", "\(spotifyConfigDst)")
+        let _ = shell(git, args: "checkout", "HEAD", "\(appleMusicConfigDst)")
         let _ = shell(git, args: "checkout", "HEAD", "\(gaConfigDst)")
         let _ = shell(git, args: "checkout", "HEAD", "\(deliverfileDst)")
         let _ = shell(git, args: "checkout", "HEAD", "\(appfileDst)")
