@@ -108,6 +108,7 @@
 		6773C0E5201709C600CCF3E5 /* apple_music.json in Resources */ = {isa = PBXBuildFile; fileRef = 6773C0E4201709C600CCF3E5 /* apple_music.json */; };
 		6773C0EC2017984600CCF3E5 /* AppleMusicPlaylistTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6773C0EB2017984600CCF3E5 /* AppleMusicPlaylistTableViewController.swift */; };
 		6773C0EE2017990000CCF3E5 /* AppleMusicPlaylistRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6773C0ED201798FF00CCF3E5 /* AppleMusicPlaylistRepository.swift */; };
+		6773C0F12018492600CCF3E5 /* AppleMusicTrackTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6773C0F02018492600CCF3E5 /* AppleMusicTrackTableViewController.swift */; };
 		677AB6791DE74DD600879B00 /* AMScrollingNavbar.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 677AB6781DE74DD600879B00 /* AMScrollingNavbar.framework */; };
 		677AB67A1DE8FB2200879B00 /* AMScrollingNavbar.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 677AB6781DE74DD600879B00 /* AMScrollingNavbar.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		677AB67C1DE8FFCA00879B00 /* NavigationBarScrollable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 677AB67B1DE8FFCA00879B00 /* NavigationBarScrollable.swift */; };
@@ -366,6 +367,7 @@
 		6773C0E4201709C600CCF3E5 /* apple_music.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = apple_music.json; path = config/apple_music.json; sourceTree = SOURCE_ROOT; };
 		6773C0EB2017984600CCF3E5 /* AppleMusicPlaylistTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMusicPlaylistTableViewController.swift; sourceTree = "<group>"; };
 		6773C0ED201798FF00CCF3E5 /* AppleMusicPlaylistRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = AppleMusicPlaylistRepository.swift; path = MusicFav/AppleMusicPlaylistRepository.swift; sourceTree = "<group>"; };
+		6773C0F02018492600CCF3E5 /* AppleMusicTrackTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMusicTrackTableViewController.swift; sourceTree = "<group>"; };
 		677AB6781DE74DD600879B00 /* AMScrollingNavbar.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AMScrollingNavbar.framework; path = Carthage/Build/iOS/AMScrollingNavbar.framework; sourceTree = "<group>"; };
 		677AB67B1DE8FFCA00879B00 /* NavigationBarScrollable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationBarScrollable.swift; sourceTree = "<group>"; };
 		6783057E1B95DDC000A83F52 /* StreamTimelineTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StreamTimelineTableViewController.swift; sourceTree = "<group>"; };
@@ -745,6 +747,7 @@
 				6773C0D220146BE400CCF3E5 /* SpotifyPlaylistTableViewController.swift */,
 				6773C0D82015C41E00CCF3E5 /* SpotifyTrackTableViewController.swift */,
 				6773C0EB2017984600CCF3E5 /* AppleMusicPlaylistTableViewController.swift */,
+				6773C0F02018492600CCF3E5 /* AppleMusicTrackTableViewController.swift */,
 			);
 			name = Right;
 			sourceTree = "<group>";
@@ -1308,6 +1311,7 @@
 				67D41D051B878DCB0082454F /* SoundCloudPlaylistLoader.swift in Sources */,
 				67277CAE1A434304002FD3E0 /* AppDelegate.swift in Sources */,
 				6767AE541ADAC70500A92497 /* IASKAppSettingsViewControllerExtension.swift in Sources */,
+				6773C0F12018492600CCF3E5 /* AppleMusicTrackTableViewController.swift in Sources */,
 				670505B91B6E23E5006EAA84 /* HypemAPIClient.swift in Sources */,
 				6701D4A81A93A3D5006BFEC6 /* CategoryTableViewController.swift in Sources */,
 				67D41D1C1B8F33020082454F /* TimelineTableViewCell.swift in Sources */,

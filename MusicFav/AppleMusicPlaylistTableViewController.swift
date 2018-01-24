@@ -11,7 +11,7 @@ import UIKit
 import ReactiveSwift
 import SoundCloudKit
 
-@available(iOS 9.3, *)
+@available(iOS 10.3, *)
 class AppleMusicPlaylistTableViewController: UITableViewController {
     let tableCellReuseIdentifier = "playlistTableViewCell"
     let cellHeight: CGFloat      = 80
@@ -130,7 +130,11 @@ class AppleMusicPlaylistTableViewController: UITableViewController {
             let playlist = playlistRepository.playlists[indexPath.item]
             cell.titleLabel.text    = playlist.name
             cell.trackNumLabel.text = playlist.descriptionText
-            cell.thumbImageView.image = UIImage(named: "apple_music_icon")
+            if let image = playlist.items.first?.artwork?.image(at: cell.thumbImageView.frame.size) {
+                cell.thumbImageView.image = image
+            } else {
+                cell.thumbImageView.image = UIImage(named: "apple_music_icon")
+            }
         }
         return cell
     }
@@ -140,7 +144,9 @@ class AppleMusicPlaylistTableViewController: UITableViewController {
         observer = nil
         switch Section(rawValue: indexPath.section)! {
         case .playlists:
-            break
+            let playlist = playlistRepository.playlists[indexPath.item]
+            let vc = AppleMusicTrackTableViewController(playlist: playlist)
+            navigationController?.pushViewController(vc, animated: true)
         }
     }
 }

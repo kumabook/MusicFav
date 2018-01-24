@@ -408,7 +408,7 @@ class TrackTableViewController: UITableViewController {
 
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let index = playlistQueue.indexOf(playlist)     else { return }
-        guard let track = playlist.tracks.get(indexPath.item) else { return }
+        guard let track = playlist.getTracks().get(indexPath.item) else { return }
         if track.isValid {
             appDelegate.toggle(at: Index(track: indexPath.item, playlist: index), in: playlistQueue)
         } else {

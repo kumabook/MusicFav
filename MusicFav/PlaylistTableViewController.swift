@@ -160,7 +160,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
 
     func showAppleMusicPlaylists() {
         Logger.sendUIActionEvent(self, action: "showAppleMusicPlaylists", label: "")
-        if #available(iOS 9.3, *) {
+        if #available(iOS 10.3, *) {
             let vc = AppleMusicPlaylistTableViewController()
             navigationController?.pushViewController(vc, animated: true)
         } else {
