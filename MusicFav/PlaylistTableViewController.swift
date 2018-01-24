@@ -22,8 +22,9 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         case youTube     = 2
         case soundCloud  = 3
         case spotify     = 4
-        case favorites   = 5
-        static let count = 6
+        case appleMusic  = 5
+        case favorites   = 6
+        static let count = 7
         var title: String? {
             switch self {
             case .youTube:   return " "
@@ -157,6 +158,15 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         navigationController?.pushViewController(vc, animated: true)
     }
 
+    func showAppleMusicPlaylists() {
+        Logger.sendUIActionEvent(self, action: "showAppleMusicPlaylists", label: "")
+        if #available(iOS 9.3, *) {
+            let vc = AppleMusicPlaylistTableViewController()
+            navigationController?.pushViewController(vc, animated: true)
+        } else {
+        }
+    }
+
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
     }
@@ -282,6 +292,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         case .youTube:    return 1
         case .soundCloud: return 1
         case .spotify:    return 1
+        case .appleMusic: return 1
         case .favorites:  return playlists.count
         }
     }
@@ -324,6 +335,11 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         case .spotify:
             cell.titleLabel.text = "Spotify Playlists"
             cell.thumbImageView.image = UIImage(named: "spotify")
+            cell.trackNumLabel.text = ""
+            return cell
+        case .appleMusic:
+            cell.titleLabel.text = "AppleMusic Playlists"
+            cell.thumbImageView.image = UIImage(named: "apple_music_icon")
             cell.trackNumLabel.text = ""
             return cell
         }
@@ -383,6 +399,7 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
         case .youTube:    return false
         case .soundCloud: return false
         case .spotify:    return false
+        case .appleMusic: return false
         case .favorites:  return tableView.isEditing
         }
     }
@@ -415,6 +432,20 @@ class PlaylistTableViewController: UITableViewController, UIAlertViewDelegate {
                 showSpotifyPlaylists()
             } else if let vc = AppDelegate.shared.coverViewController {
                 SpotifyAPIClient.shared.startAuthenticationFlow(viewController: vc)
+            }
+        case .appleMusic:
+            if #available(iOS 9.3, *) {
+                switch AppleMusicClient.shared.authroizationStatus {
+                case .authorized:
+                    showAppleMusicPlaylists()
+                case .notDetermined:
+                    break
+                case .restricted:
+                    break
+                case .denied:
+                    break
+                }
+            } else {
             }
         case .favorites:
             let _ = showPlaylist(playlists[indexPath.item], animated: true)
