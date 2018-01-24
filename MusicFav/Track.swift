@@ -12,7 +12,7 @@ import MusicFeeder
 
 extension Track {
     convenience init(spotifyTrack spt: SPTPartialTrack) {
-        self.init(id:           "",
+        self.init(id:           spt.uri.absoluteString,
                   provider:     .spotify,
                   url:          spt.uri.absoluteString,
                   identifier:   spt.identifier,
@@ -26,7 +26,7 @@ extension Track {
                   status:       .available)
     }
     convenience init(spotifyTrack spt: SPTPartialTrack, spotifyAlbum album: SPTAlbum) {
-        self.init(id:           "",
+        self.init(id:           spt.uri.absoluteString,
                   provider:     .spotify,
                   url:          spt.uri.absoluteString,
                   identifier:   spt.identifier,
