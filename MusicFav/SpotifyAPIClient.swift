@@ -14,6 +14,7 @@ import MusicFeeder
 import ReactiveSwift
 import Result
 import Alamofire
+import MBProgressHUD
 
 public enum PersonalizeTimeRange: String {
     case shortTerm  = "short_term"
@@ -221,14 +222,23 @@ open class SpotifyAPIClient: NSObject, SPTAudioStreamingDelegate {
         viewController.present(authViewController!, animated: true, completion: nil)
     }
     func handleURL(url: URL) -> Bool {
-        let _ = self.authViewController?.dismiss(animated: true)
-        self.authViewController = nil;
+        var progress: MBProgressHUD?
         if auth.canHandle(url) {
+            if let view = authViewController?.view {
+                progress = MBProgressHUD.showAdded(to: view, animated: true)
+            }
             auth.handleAuthCallback(withTriggeredAuthURL: url) { (e: Error?, session: SPTSession?) in
-                guard let session = session else { return }
-                self.startIfUserIsPremium(with: session)
+                let _ = self.authViewController?.dismiss(animated: true)
+                self.authViewController = nil
+                progress?.hide(animated: true)
+                if let session = session {
+                    self.startIfUserIsPremium(with: session)
+                }
             }
             return true
+        } else {
+            let _ = self.authViewController?.dismiss(animated: true)
+            self.authViewController = nil
         }
         return false
     }
