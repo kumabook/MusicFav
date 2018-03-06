@@ -1456,7 +1456,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Developer: hiroki kumamoto (354XT663D2)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer: hiroki kumamoto (354XT663D2)";
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 78;
+				CURRENT_PROJECT_VERSION = 82;
 				ENABLE_BITCODE = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -1516,7 +1516,7 @@
 				CODE_SIGN_IDENTITY = "iPhone Distribution: hiroki kumamoto (7AK92UN63W)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: hiroki kumamoto (7AK92UN63W)";
 				COPY_PHASE_STRIP = YES;
-				CURRENT_PROJECT_VERSION = 78;
+				CURRENT_PROJECT_VERSION = 82;
 				ENABLE_BITCODE = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
