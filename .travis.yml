@@ -4,12 +4,14 @@ git:
   submodules: false
 before_install: rvm use 2.3 --install --binary --fuzzy
 install:
+- brew install blender/homebrew-tap/rome
 - bundle install --path=vendor/bundle --binstubs=vendor/bin
 - bundle exec pod install --repo-update
-- carthage checkout
 before_script:
-- travis_wait 60 carthage build --cache-builds --platform iOS
-script: xcodebuild -workspace MusicFav.xcworkspace -scheme MusicFav -sdk iphonesimulator11.2 CODE_SIGNING_REQUIRED=NO
+- rome download --platform iOS
+- rome list --missing --platform ios | awk '{print $1}' | xargs carthage update --platform ios --cache-builds
+script:
+- xcodebuild -workspace MusicFav.xcworkspace -scheme MusicFav -sdk iphonesimulator11.2 CODE_SIGNING_REQUIRED=NO
 cache:
   directories:
   - vendor/bundle
