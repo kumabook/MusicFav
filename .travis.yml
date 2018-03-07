@@ -8,6 +8,8 @@ install:
 - bundle install --path=vendor/bundle --binstubs=vendor/bin
 - bundle exec pod install --repo-update
 before_script:
+- mkdir ~/.aws
+- cp aws_config ~/.aws/config
 - rome download --platform iOS
 - rome list --missing --platform ios | awk '{print $1}' | xargs carthage update --platform ios --cache-builds
 script:
