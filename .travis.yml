@@ -18,6 +18,7 @@ cache:
   directories:
   - vendor/bundle
   - Pods
+  - ~/Library/Caches/Rome
 env:
   global:
   - secure: KPEZUpl1e9BTyAPPri6qFNJuMMXr3FVs5P7HuZuyh0hIzJ5N9WUJkUN+O7u73BnXHO4DLaFvhx0eRG4ggRn73M3N2WrQSdthEilMJtF5MJGB6UGW5Cy1WcBqYwCqpflevqLTS2EWhyHW9YrGuGGh4gzAxZphxdkA3fE/WcD+Kos=
