@@ -1,0 +1,8 @@
+[Cache]
+  S3-Bucket = musicfav-rome-ios-cache
+  local = ~/Library/Caches/Rome/
+
+[RepositoryMap]
+  realm-cocoa = Realm, RealmSwift
+  youtube-ios-player-helper = YouTubeiOSPlayerHelper
+
